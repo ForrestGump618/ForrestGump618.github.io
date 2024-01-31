@@ -7,6 +7,30 @@
 ]]></content>
   </entry>
   <entry>
+    <title>celltogwas：细胞类型注释到基因组的工具包</title>
+    <url>/2023/08/19/celltogwas%EF%BC%9A%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8B%E6%B3%A8%E9%87%8A%E5%88%B0%E5%9F%BA%E5%9B%A0%E7%BB%84%E7%9A%84%E5%B7%A5%E5%85%B7%E5%8C%85/</url>
+    <content><![CDATA[<h2 id="celltogwas"><a href="#celltogwas" class="headerlink" title="celltogwas"></a>celltogwas</h2><p>This code is a toolkit for genomic analysis. It includes several functions and helper functions to extract gene information from a genomic annotation file, merge gene intervals, generate genomic ranges based on cell types and window size, and annotate GWAS (Genome-Wide Association Study) data.</p>
+<h2 id="Explanation-of-each-function"><a href="#Explanation-of-each-function" class="headerlink" title="Explanation of each function"></a>Explanation of each function</h2><p><strong>extract_gene_info(gtf_file)</strong>: Extracts gene information from a genomic annotation file. It opens a gzip-compressed file, reads it line by line, and extracts gene name, chromosome, start position, and end position from each line. The extracted data is then stored in a Pandas DataFrame and returned.</p>
+<p><strong>merge_intervals(intervals)</strong>: Merges overlapping intervals. This function takes a list of intervals as input and merges overlapping intervals into larger intervals. It first sorts the intervals based on their start positions, then iterates through the intervals. If the current interval does not overlap with the merged interval, it adds the current interval to the merged list. Otherwise, it updates the end position of the merged interval. Finally, it returns the merged interval list.</p>
+<p><strong>celltype_genome_range(cell_gene_dict, gene_info, windowsize)</strong>: Generates genomic ranges based on cell types and window size. This function takes a dictionary mapping cell types to gene lists, a DataFrame of gene information, and a window size as input. It retrieves the gene list corresponding to each cell type from the dictionary and performs an inner join with the gene information to obtain the chromosome, start position, and end position of the corresponding genes. It then adjusts the start and end positions based on the window size and converts the data into a specific format of a list. Finally, it stores the genomic ranges for each cell type in a dictionary and returns it.</p>
+<p><strong>check_value_in_intervals(intervals, value)</strong>: Checks if a value is within the intervals. This function takes a list of intervals and a value as input. It uses binary search to determine if the value falls within the intervals. It first extracts the left boundaries of the intervals, then performs a binary search to find the position of the value in the left boundary list. If the position is less than the length of the interval list, it retrieves the corresponding interval and checks if the value falls within that interval. If the value is within the interval, it returns True; otherwise, it returns False.</p>
+<p><strong>gwas_annotaion(gwas, celltype_range)</strong>: Annotates GWAS data based on genomic ranges. This function takes a DataFrame of GWAS data and a dictionary of genomic ranges as input. It first retrieves the list of chromosomes from the GWAS data. Then, it iterates through the genomic ranges for each cell type. For each chromosome, it retrieves the subset of GWAS data corresponding to that chromosome and the annotation ranges from the genomic ranges. It then iterates through each data item in the subset and uses the check_value_in_intervals function to check if the position of the data item falls within the annotation ranges. If it does, the data item is marked as annotated. Finally, it stores the annotation results for all cell types in a dictionary and returns it.</p>
+<h2 id="File-format"><a href="#File-format" class="headerlink" title="File format"></a><a href="#File-format" title="File format"></a>File format</h2><p><strong>gtf_file</strong>: Include CHR, START, END, Other info(GENE Symbol);</p>
+<p><strong>cell_gene_dict</strong>: A dictionary:(1) key:celltype’s name;(2)value:a list of genes;</p>
+<p><strong>gene_info</strong>: Output file from <strong>extract_gene_info(gtf_file)</strong>: Include: GENE, CHR, START, END;</p>
+<p><strong>gwas</strong>: First teo columns: chr, pos;</p>
+<p><strong>celltype_range</strong>: A dictionary:(1) key:celltype’s name;(2)value:a list of genome position:[chr, start, end];</p>
+<p><strong>output_file</strong>: A dictionary:(1) key:celltype’s name;(2)value:[chr, pos ,…… , annotation] (annotation: 1 for anntation and 0 for null).</p>
+]]></content>
+      <categories>
+        <category>生物信息学</category>
+      </categories>
+      <tags>
+        <tag>GWAS</tag>
+        <tag>python</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>scDRS：基于GWAS和scRNA评估细胞类型和生物学过程的疾病相关性</title>
     <url>/2023/08/11/scDRS%EF%BC%9A%E5%9F%BA%E4%BA%8EGWAS%E5%92%8CscRNA%E8%AF%84%E4%BC%B0%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8B%E5%92%8C%E7%94%9F%E7%89%A9%E5%AD%A6%E8%BF%87%E7%A8%8B%E7%9A%84%E7%96%BE%E7%97%85%E7%9B%B8%E5%85%B3%E6%80%A7/</url>
     <content><![CDATA[<h2 id="方法学概述"><a href="#方法学概述" class="headerlink" title="方法学概述"></a>方法学概述</h2><p>&emsp;&emsp;scDRS的核心思想是建立合适的权重从而根据基因的表达对基因程序进行评分，即加权基因表达量。其算法可概述为：首先将基因根据MAGMA得到的gene-level z-scores从大到小排列（也可以自定义基因程序）, 选择潜在的致病基因。基于致病基因的表达量和权重接着计算致病基因程序加权表达量。从而评估该细胞的基因程序和疾病的相关度。<br>&emsp;&emsp;算法对z-score采用算数加权，对技术噪声指标采用逆加权。也就是说，在GWAS中鉴定出的越相关的，且测序过程中技术原因造成误差较小的基因。根据输入数据集的基因表达，在蒙特卡洛随机模拟生成的B个对照组中，从而推断分布，进而对研究的疾病进行统计检验。利用这样的方法，我们可以计算单个细胞和疾病的相关性，以及鉴定相应的驱动基因，并基于此进行下游分析。</p>
@@ -54,33 +78,9 @@
         <category>生物信息学</category>
       </categories>
       <tags>
+        <tag>GWAS</tag>
         <tag>生物信息学</tag>
-        <tag>GWAS</tag>
         <tag>单细胞测序</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>celltogwas：细胞类型注释到基因组的工具包</title>
-    <url>/2023/08/19/celltogwas%EF%BC%9A%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8B%E6%B3%A8%E9%87%8A%E5%88%B0%E5%9F%BA%E5%9B%A0%E7%BB%84%E7%9A%84%E5%B7%A5%E5%85%B7%E5%8C%85/</url>
-    <content><![CDATA[<h2 id="celltogwas"><a href="#celltogwas" class="headerlink" title="celltogwas"></a>celltogwas</h2><p>This code is a toolkit for genomic analysis. It includes several functions and helper functions to extract gene information from a genomic annotation file, merge gene intervals, generate genomic ranges based on cell types and window size, and annotate GWAS (Genome-Wide Association Study) data.</p>
-<h2 id="Explanation-of-each-function"><a href="#Explanation-of-each-function" class="headerlink" title="Explanation of each function"></a>Explanation of each function</h2><p><strong>extract_gene_info(gtf_file)</strong>: Extracts gene information from a genomic annotation file. It opens a gzip-compressed file, reads it line by line, and extracts gene name, chromosome, start position, and end position from each line. The extracted data is then stored in a Pandas DataFrame and returned.</p>
-<p><strong>merge_intervals(intervals)</strong>: Merges overlapping intervals. This function takes a list of intervals as input and merges overlapping intervals into larger intervals. It first sorts the intervals based on their start positions, then iterates through the intervals. If the current interval does not overlap with the merged interval, it adds the current interval to the merged list. Otherwise, it updates the end position of the merged interval. Finally, it returns the merged interval list.</p>
-<p><strong>celltype_genome_range(cell_gene_dict, gene_info, windowsize)</strong>: Generates genomic ranges based on cell types and window size. This function takes a dictionary mapping cell types to gene lists, a DataFrame of gene information, and a window size as input. It retrieves the gene list corresponding to each cell type from the dictionary and performs an inner join with the gene information to obtain the chromosome, start position, and end position of the corresponding genes. It then adjusts the start and end positions based on the window size and converts the data into a specific format of a list. Finally, it stores the genomic ranges for each cell type in a dictionary and returns it.</p>
-<p><strong>check_value_in_intervals(intervals, value)</strong>: Checks if a value is within the intervals. This function takes a list of intervals and a value as input. It uses binary search to determine if the value falls within the intervals. It first extracts the left boundaries of the intervals, then performs a binary search to find the position of the value in the left boundary list. If the position is less than the length of the interval list, it retrieves the corresponding interval and checks if the value falls within that interval. If the value is within the interval, it returns True; otherwise, it returns False.</p>
-<p><strong>gwas_annotaion(gwas, celltype_range)</strong>: Annotates GWAS data based on genomic ranges. This function takes a DataFrame of GWAS data and a dictionary of genomic ranges as input. It first retrieves the list of chromosomes from the GWAS data. Then, it iterates through the genomic ranges for each cell type. For each chromosome, it retrieves the subset of GWAS data corresponding to that chromosome and the annotation ranges from the genomic ranges. It then iterates through each data item in the subset and uses the check_value_in_intervals function to check if the position of the data item falls within the annotation ranges. If it does, the data item is marked as annotated. Finally, it stores the annotation results for all cell types in a dictionary and returns it.</p>
-<h2 id="File-format"><a href="#File-format" class="headerlink" title="File format"></a><a href="#File-format" title="File format"></a>File format</h2><p><strong>gtf_file</strong>: Include CHR, START, END, Other info(GENE Symbol);</p>
-<p><strong>cell_gene_dict</strong>: A dictionary:(1) key:celltype’s name;(2)value:a list of genes;</p>
-<p><strong>gene_info</strong>: Output file from <strong>extract_gene_info(gtf_file)</strong>: Include: GENE, CHR, START, END;</p>
-<p><strong>gwas</strong>: First teo columns: chr, pos;</p>
-<p><strong>celltype_range</strong>: A dictionary:(1) key:celltype’s name;(2)value:a list of genome position:[chr, start, end];</p>
-<p><strong>output_file</strong>: A dictionary:(1) key:celltype’s name;(2)value:[chr, pos ,…… , annotation] (annotation: 1 for anntation and 0 for null).</p>
-]]></content>
-      <categories>
-        <category>生物信息学</category>
-      </categories>
-      <tags>
-        <tag>GWAS</tag>
-        <tag>python</tag>
       </tags>
   </entry>
   <entry>
@@ -132,8 +132,8 @@
         <category>生物信息学</category>
       </categories>
       <tags>
-        <tag>生物信息学</tag>
         <tag>GWAS</tag>
+        <tag>生物信息学</tag>
         <tag>单细胞测序</tag>
       </tags>
   </entry>
@@ -158,30 +158,6 @@
 </ol>
 <h2 id="一些牢骚"><a href="#一些牢骚" class="headerlink" title="一些牢骚"></a>一些牢骚</h2><p>&emsp;&emsp;大一，医用物理学的最后一章——混沌理论，采用数学的方法建模复杂动力学系统的运行规律，并提出了一点轻微的初值改变就可以让整个系统天翻地覆，即著名的蝴蝶定律。<br>&emsp;&emsp;当然，这并不意味着倘若那只蝴蝶扇动翅膀，就必然会引起飓风；但若我们逮到所有的蝴蝶，那么飓风可以预测。这强烈提示人们一种认知观点，复杂的现象背后可以拆解为简单的论断；基于底层法则，自然界得以混沌。<br>&emsp;&emsp;生命是自然界最复杂的现象，就在您读这句话的一刹那，组成我们身体的亿万细胞正发生着无法计数的生命事件，伴随着无法计数的化学物质数量和性质的变化。医学发展的某些部分，尤其是中医学，习惯用系统论的思维去认识生命活动，化繁为简，这方便了知识的理解，也让机械零碎的医学知识得到整合，但其似乎无法回答最根本的问题——生命究竟是什么？<br>&emsp;&emsp;还原论把知识构建在底层逻辑上，如薛定谔尝试用基本的物理学去解释生命发生。但还原论有时会陷入机械唯物论的窠臼。<br>&emsp;&emsp;人类的智慧在于突破概念，不必困惑在还原论和系统论的是非之中。认识世界的方向一定是刨根问底，寻根思因的；在其中，系统论帮助我们更进一步了解可能的逻辑……但这是符合人类思维的逻辑，人类是否能认知最后的核心还不得而知。<br>&emsp;&emsp;对于生命而言，其现象本身是基于自然界的物理规律。故探根问底，也会在我们能理解的知识结构内。<br>&emsp;&emsp;如何寻找生命科学的原子命题？我想，就不能完全依靠传统生命科学逐个知识的积累，而应该充分利用生物数据去解析其背后的模式。<br>&emsp;&emsp;感谢大一时的计算机课，感谢大一时候用免疫学逻辑启蒙我的刘文涛教授，给我打开一扇理解世界的门。<br>&emsp;&emsp;看似的有序中，人们会发现无序。而我们的梦想就是，发现无序背后更深刻的有序，那么我们就有可能进一步探索用现有范式所不能描述、解释或预测的现象。</p>
 <h2 id="学习体会"><a href="#学习体会" class="headerlink" title="学习体会"></a>学习体会</h2><p>&emsp;&emsp;陷于晋升、升学的要求，互联网上主要是快餐式的学习，一些便捷的工具也层出不穷。<br>&emsp;&emsp;基于应用的学习并不困难，许多优秀的公众号和博客，以及Github上有丰富的资源。但是大家未必有这个意识，从而形成所谓壁垒，构建了虚伪的不可替代性，而实际上人人都应该能获取这样的知识。<br>&emsp;&emsp;但，如果有兴趣，我们可以尝试啃一啃硬骨头，理解其基本原理，掌握基本的思维方法，从中认识到人类思维探索的规律。<br>&emsp;&emsp;我的学习路径，是从应用式的学习开始：<br>（1）统计学理论（掌握统计学的基本思维模式，所以了解知识的来历很重要）：生物统计学基础（Fundamentals of Biostatistics；Bernard Rosner）；<br>（2）流行病学理论（掌握流行病学的基本思想，我觉得流行病学最核心观点是比较，而由于主要研究样本，所以如何妥善解决样本相关问题占据了流行病学中大部分内容（可以概括为代表性和可比性）。重点是要能够设计合理的研究框架）：流行病学（人民卫生出版社；沈洪兵）；<br>（3）公众号（主要的反而不是里面的代码，而是推送的文章，文章里面会采用各种统计模型；善于用微信搜索东西，但是……看多了也会信息爆炸）：生信技能树（转录组学）；灵活胖子的科研进步之路（临床统计等）；<br>（4）编程：Python；R语言（mlr3包弥补了R语言机器学习较弱的历史）：推荐《R语言编程—基于tidyverse》；张敬信；C++（Python和R处理矩阵读写非常耗时间，C++可以有效解决这一问题）；Linux（linux学习后，对于计算机会用得更加得心应手，习惯用命令行解决问题后效率会大大提高）：系统架构的原理，基本命令的掌握。<br>（5）其他人的文章；<br>（6）基础数学（和几个高中同学一直保持联系，感受到数学系的同学的确是有一种独特的思维特性去思考问题的，而且我这个时候也遇上了数学基础不够深入理解原理的瓶颈）：《数学分析》（主要是基本的微积分，多元函数看一部分；用《高等数学》（同济）或者《数学分析》（复旦）都可以）；《线性代数》（对于处理生物数据非常重要！但医学生往往不深入学习这个。理解线性代数的基本思想，推荐上海交通大学的《线性代数》）；《概率论和数理统计》（生物统计学那本书里面只会关注基本的统计检验，对于不同的统计学学派，原理不会过多介绍。但概率论和数理统计中大量的数学推导就要求有数学分析的基础）。<br>&emsp;&emsp;其他：<br>&emsp;&emsp;对于基础数学部分，推荐《鸢尾花书：从加减乘除到机器学习》。这套书在Github有开源版本，里面丰富的可视化对于理解线性代数相关知识非常直观。<br>&emsp;&emsp;机器学习部分推荐从《统计学习方法》入门，先修分析学、线性代数和概率论。周志华的《机器学习》实际上数学理论比《统计学习方法》低一点，能够构建对机器学习是什么的认知。<br>&emsp;&emsp;上述理论部分所蕴含的思维方法对于认识世界是一种角度，同时上述的技术部分也的确在方便我们生活，发散我们思维，所以感觉是充实的。<br>&emsp;&emsp;期间，可能需要对遗传学、尤其是基因组学数据有深入了解。可以去啃一下国外的《遗传学基础》（可以当作工具书）。<br>&emsp;&emsp;有时候会有点间断，这个时候会想起已故南大计算机教授徐家福教授八十多岁跨界学习量子力学的实例，共勉~</p>
-]]></content>
-      <categories>
-        <category>随笔</category>
-      </categories>
-      <tags>
-        <tag>统计学</tag>
-        <tag>交叉学科</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>记录的目的</title>
-    <url>/2023/10/11/%E8%AE%B0%E5%BD%95%E7%9A%84%E7%9B%AE%E7%9A%84/</url>
-    <content><![CDATA[<p>&emsp;&emsp;我是一个普通的医学生，没有系统的计算机训练，没有系统学习数学课程。</p>
-<p>&emsp;&emsp;为啥会对这一切感兴趣，在上一个笔记里面说过啦~ <a href="https://forrestgump618.github.io/2023/10/04/%E4%B8%80%E8%B5%B7%E6%9D%A5%E6%84%9F%E5%8F%97%E6%95%B0%E6%8D%AE%E4%B9%8B%E7%BE%8E%E5%90%A7%EF%BC%81/">一起来感受数据之美吧！ | 一个夏天的年少 (forrestgump618.github.io)</a></p>
-<p>&emsp;&emsp;从不了解生信、统计，到自己真正涉猎，我花了很长时间。获取这些知识的过程是非常不易的。</p>
-<p>&emsp;&emsp;而当自己真正去解决相关问题的时候，才发现更不方便的还在后面：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">有时会为了一个公式的使用从bing查到google，从文献查到专著，最狠的一次是查了50篇文献结果大家都对此语焉不详；</span><br><span class="line">很多事情花了大把的时间但最后并没有结果，甚至考试月也是如此；</span><br><span class="line">越向下学发现数学知识成为阻碍进步的门槛；</span><br><span class="line">化用太多的方法发现自己思考的很少，会怀疑自己的意义。</span><br><span class="line">…………</span><br></pre></td></tr></table></figure>
-
-<p>&emsp;&emsp;许多个日夜，真希望有个人能将我想知道的问题放在了网上。<br>&emsp;&emsp;很多时候，国内网站搜不到的问题都能在bing和google上搜到。<br>&emsp;&emsp;在知识上，很佩服老外们的分享能力。</p>
-<p>&emsp;&emsp;印象最深的是和一位国外大咖的请教，在极短的时间内回复了邮件，估摸着大概是凌晨的2点钟。让我十分惶恐隔了许久才回信。</p>
-<p>&emsp;&emsp;太多的时候，不是知识抽象。而是一座大厦建立起来，需要有个人告诉你，这个大厦里面哪个电梯可以到哪。<br>&emsp;&emsp;但太多时候，独自在大厦的摸索中，看到更多的是抽象名词所累积起来的水泥板。<br>&emsp;&emsp;有幸还有些走过的人给你插个指向标。</p>
-<p>&emsp;&emsp;因此我在想，我把我自己的用过的方法，想过的事情，分享出来，让一些想获取类似问题解答方法的人能够获得启发。</p>
-<p>&emsp;&emsp;而一点点私心是，找个小站安放自己。</p>
-<p>&emsp;&emsp;我的学习之路是踩着别人的石头过来的，希望自己也能够给需要的人带来一些帮助~</p>
 ]]></content>
       <categories>
         <category>随笔</category>
@@ -222,6 +198,30 @@
       <tags>
         <tag>生物信息学</tag>
         <tag>单细胞测序</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>记录的目的</title>
+    <url>/2023/10/11/%E8%AE%B0%E5%BD%95%E7%9A%84%E7%9B%AE%E7%9A%84/</url>
+    <content><![CDATA[<p>&emsp;&emsp;我是一个普通的医学生，没有系统的计算机训练，没有系统学习数学课程。</p>
+<p>&emsp;&emsp;为啥会对这一切感兴趣，在上一个笔记里面说过啦~ <a href="https://forrestgump618.github.io/2023/10/04/%E4%B8%80%E8%B5%B7%E6%9D%A5%E6%84%9F%E5%8F%97%E6%95%B0%E6%8D%AE%E4%B9%8B%E7%BE%8E%E5%90%A7%EF%BC%81/">一起来感受数据之美吧！ | 一个夏天的年少 (forrestgump618.github.io)</a></p>
+<p>&emsp;&emsp;从不了解生信、统计，到自己真正涉猎，我花了很长时间。获取这些知识的过程是非常不易的。</p>
+<p>&emsp;&emsp;而当自己真正去解决相关问题的时候，才发现更不方便的还在后面：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">有时会为了一个公式的使用从bing查到google，从文献查到专著，最狠的一次是查了50篇文献结果大家都对此语焉不详；</span><br><span class="line">很多事情花了大把的时间但最后并没有结果，甚至考试月也是如此；</span><br><span class="line">越向下学发现数学知识成为阻碍进步的门槛；</span><br><span class="line">化用太多的方法发现自己思考的很少，会怀疑自己的意义。</span><br><span class="line">…………</span><br></pre></td></tr></table></figure>
+
+<p>&emsp;&emsp;许多个日夜，真希望有个人能将我想知道的问题放在了网上。<br>&emsp;&emsp;很多时候，国内网站搜不到的问题都能在bing和google上搜到。<br>&emsp;&emsp;在知识上，很佩服老外们的分享能力。</p>
+<p>&emsp;&emsp;印象最深的是和一位国外大咖的请教，在极短的时间内回复了邮件，估摸着大概是凌晨的2点钟。让我十分惶恐隔了许久才回信。</p>
+<p>&emsp;&emsp;太多的时候，不是知识抽象。而是一座大厦建立起来，需要有个人告诉你，这个大厦里面哪个电梯可以到哪。<br>&emsp;&emsp;但太多时候，独自在大厦的摸索中，看到更多的是抽象名词所累积起来的水泥板。<br>&emsp;&emsp;有幸还有些走过的人给你插个指向标。</p>
+<p>&emsp;&emsp;因此我在想，我把我自己的用过的方法，想过的事情，分享出来，让一些想获取类似问题解答方法的人能够获得启发。</p>
+<p>&emsp;&emsp;而一点点私心是，找个小站安放自己。</p>
+<p>&emsp;&emsp;我的学习之路是踩着别人的石头过来的，希望自己也能够给需要的人带来一些帮助~</p>
+]]></content>
+      <categories>
+        <category>随笔</category>
+      </categories>
+      <tags>
+        <tag>统计学</tag>
+        <tag>交叉学科</tag>
       </tags>
   </entry>
 </search>
