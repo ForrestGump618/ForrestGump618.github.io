@@ -22,21 +22,21 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="生物信息学教程和资源聚合">
+  <meta name="description" content="本工具包用于从基因组注释文件中提取基因信息，合并基因区间，基于细胞类型和窗口大小生成基因组范围，以及注释GWAS（全基因组关联研究）数据。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="单细胞测序教程资源聚合">
-<meta property="og:url" content="http://example.com/2023/08/12/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E6%95%99%E7%A8%8B%E5%92%8C%E8%B5%84%E6%BA%90%E8%81%9A%E5%90%88/index.html">
+<meta property="og:title" content="celltogwas：细胞类型注释到基因组的工具包">
+<meta property="og:url" content="http://example.com/2023/08/19/celltogwas%EF%BC%9A%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8B%E6%B3%A8%E9%87%8A%E5%88%B0%E5%9F%BA%E5%9B%A0%E7%BB%84%E7%9A%84%E5%B7%A5%E5%85%B7%E5%8C%85/index.html">
 <meta property="og:site_name" content="一个夏天的年少">
-<meta property="og:description" content="生物信息学教程和资源聚合">
+<meta property="og:description" content="本工具包用于从基因组注释文件中提取基因信息，合并基因区间，基于细胞类型和窗口大小生成基因组范围，以及注释GWAS（全基因组关联研究）数据。">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-08-12T00:00:00.000Z">
-<meta property="article:modified_time" content="2024-01-31T04:45:00.367Z">
+<meta property="article:published_time" content="2023-08-19T00:00:00.000Z">
+<meta property="article:modified_time" content="2024-01-31T05:08:57.453Z">
 <meta property="article:author" content="庄清源">
-<meta property="article:tag" content="单细胞测序">
-<meta property="article:tag" content="生物信息学">
+<meta property="article:tag" content="GWAS">
+<meta property="article:tag" content="python">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://example.com/2023/08/12/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E6%95%99%E7%A8%8B%E5%92%8C%E8%B5%84%E6%BA%90%E8%81%9A%E5%90%88/">
+<link rel="canonical" href="http://example.com/2023/08/19/celltogwas%EF%BC%9A%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8B%E6%B3%A8%E9%87%8A%E5%88%B0%E5%9F%BA%E5%9B%A0%E7%BB%84%E7%9A%84%E5%B7%A5%E5%85%B7%E5%8C%85/">
 
 
 <script id="page-configurations">
@@ -49,7 +49,7 @@
   };
 </script>
 
-  <title>单细胞测序教程资源聚合 | 一个夏天的年少</title>
+  <title>celltogwas：细胞类型注释到基因组的工具包 | 一个夏天的年少</title>
   
 
 
@@ -170,7 +170,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/08/12/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E6%95%99%E7%A8%8B%E5%92%8C%E8%B5%84%E6%BA%90%E8%81%9A%E5%90%88/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/08/19/celltogwas%EF%BC%9A%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8B%E6%B3%A8%E9%87%8A%E5%88%B0%E5%9F%BA%E5%9B%A0%E7%BB%84%E7%9A%84%E5%B7%A5%E5%85%B7%E5%8C%85/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -183,7 +183,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          单细胞测序教程资源聚合
+          celltogwas：细胞类型注释到基因组的工具包
         </h1>
 
         <div class="post-meta">
@@ -193,14 +193,14 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2023-08-12 08:00:00" itemprop="dateCreated datePublished" datetime="2023-08-12T08:00:00+08:00">2023-08-12</time>
+              <time title="创建时间：2023-08-19 08:00:00" itemprop="dateCreated datePublished" datetime="2023-08-19T08:00:00+08:00">2023-08-19</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-01-31 12:45:00" itemprop="dateModified" datetime="2024-01-31T12:45:00+08:00">2024-01-31</time>
+                <time title="修改时间：2024-01-31 13:08:57" itemprop="dateModified" datetime="2024-01-31T13:08:57+08:00">2024-01-31</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -220,7 +220,7 @@
               <span class="post-meta-item-text">阅读次数：</span>
               <span id="busuanzi_value_page_pv"></span>
             </span>
-            <div class="post-description">生物信息学教程和资源聚合</div>
+            <div class="post-description">本工具包用于从基因组注释文件中提取基因信息，合并基因区间，基于细胞类型和窗口大小生成基因组范围，以及注释GWAS（全基因组关联研究）数据。</div>
 
         </div>
       </header>
@@ -231,27 +231,18 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="教程"><a href="#教程" class="headerlink" title="教程"></a>教程</h2><h4 id="单细胞测序"><a href="#单细胞测序" class="headerlink" title="单细胞测序"></a>单细胞测序</h4><ol>
-<li>单细胞测序-最佳的分析Pipeline <a target="_blank" rel="noopener" href="https://single-cell-tutorial.readthedocs.io/zh/latest/">单细胞测序-最佳的分析Pipeline</a> ：Zehua Zeng等为主要作者，包括详细的原理和处理流程（Python）；其中重点介绍了Omicverse的使用。  </li>
-<li>哈佛大学单细胞中文笔记：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/209018565">哈佛大学单细胞中文笔记</a> 陈同博士撰写。主要包括原理和Seurat的使用。<a target="_blank" rel="noopener" href="https://hbctraining.github.io/main">原版教程</a></li>
-</ol>
-<h2 id="资源"><a href="#资源" class="headerlink" title="资源"></a>资源</h2><h4 id="肿瘤生信"><a href="#肿瘤生信" class="headerlink" title="肿瘤生信"></a>肿瘤生信</h4><ol>
-<li>GEPIA2：GEPIA2是一个无代码可视化平台，其数据来源于TCGA和GTEx数据库，用户可以自由探索指定基因的在肿瘤组织中的表达情况以及和预后的关系。<a target="_blank" rel="noopener" href="http://gepia2.cancer-pku.cn/">GEPIA2</a></li>
-<li>Prognoscan：Prognoscan整合了2010年以前GEO上Microarray和相应临床信息，可以探索制定基因自不同数据集中和预后的关系。<a target="_blank" rel="noopener" href="http://dna00.bio.kyutech.ac.jp/PrognoScan/">PrognoScan</a></li>
-<li>TIMER：TIMER用于分析不同癌症类型的免疫浸润（数据来自于TCGA）。<a target="_blank" rel="noopener" href="http://timer.cistrome.org/">TIMER2.0</a></li>
-</ol>
-<h4 id="GWAS"><a href="#GWAS" class="headerlink" title="GWAS"></a>GWAS</h4><ol>
-<li>IEU OPEN GWAS：包含42,484 个GWAS摘要数据集的214,725,223,303 个遗传关联的数据库。<a target="_blank" rel="noopener" href="https://gwas.mrcieu.ac.uk/">IEU OpenGWAS</a></li>
-<li>PheWeb：包含Biobank Japan，以及UKB等欧洲样本的GWAS结果。<a target="_blank" rel="noopener" href="https://pheweb.jp/downloads">PheWeb</a></li>
-<li>GWAS catalog：内容较全，网页比较慢，建议使用特殊方式访问。<a target="_blank" rel="noopener" href="https://www.ebi.ac.uk/gwas/downloads/summary-statistics">GWAS catalog</a>:</li>
-<li>EGG：早期生长联盟数据，包含出生体重，出生头围等。<a target="_blank" rel="noopener" href="http://egg-consortium.org/index.html">EGG</a></li>
-<li>CKDGEN：包含慢性肾病、MA、eGFR等。<a target="_blank" rel="noopener" href="http://ckdgen.imbi.uni-freiburg.de/?tdsourcetag=s_pctim_aiomsg">CKDGEN</a></li>
-<li>GLGC：血脂GWAS数据库。<a target="_blank" rel="noopener" href="http://csg.sph.umich.edu/willer/public/glgc-lipids2021/">GLGC</a></li>
-<li>PGC：精神病学基因组学联盟。<a target="_blank" rel="noopener" href="https://www.med.unc.edu/pgc/results-and-downloads/downloads">PGC</a></li>
-<li>GEFOS：骨质疏松联盟。<a target="_blank" rel="noopener" href="http://www.gefos.org/">GEFOS</a></li>
-<li>DIAGRAM：二型糖尿病数据库。<a target="_blank" rel="noopener" href="http://diagram-consortium.org/downloads.html">DIAGRAM</a>: </li>
-<li>代谢组学数据库：<a target="_blank" rel="noopener" href="http://www.metabolomix.com/list-of-all-published-gwas-with-metabolomics/">A Table of all published GWAS with metabolomics</a></li>
-</ol>
+        <h2 id="celltogwas"><a href="#celltogwas" class="headerlink" title="celltogwas"></a>celltogwas</h2><p>This code is a toolkit for genomic analysis. It includes several functions and helper functions to extract gene information from a genomic annotation file, merge gene intervals, generate genomic ranges based on cell types and window size, and annotate GWAS (Genome-Wide Association Study) data.</p>
+<h2 id="Explanation-of-each-function"><a href="#Explanation-of-each-function" class="headerlink" title="Explanation of each function"></a>Explanation of each function</h2><p><strong>extract_gene_info(gtf_file)</strong>: Extracts gene information from a genomic annotation file. It opens a gzip-compressed file, reads it line by line, and extracts gene name, chromosome, start position, and end position from each line. The extracted data is then stored in a Pandas DataFrame and returned.</p>
+<p><strong>merge_intervals(intervals)</strong>: Merges overlapping intervals. This function takes a list of intervals as input and merges overlapping intervals into larger intervals. It first sorts the intervals based on their start positions, then iterates through the intervals. If the current interval does not overlap with the merged interval, it adds the current interval to the merged list. Otherwise, it updates the end position of the merged interval. Finally, it returns the merged interval list.</p>
+<p><strong>celltype_genome_range(cell_gene_dict, gene_info, windowsize)</strong>: Generates genomic ranges based on cell types and window size. This function takes a dictionary mapping cell types to gene lists, a DataFrame of gene information, and a window size as input. It retrieves the gene list corresponding to each cell type from the dictionary and performs an inner join with the gene information to obtain the chromosome, start position, and end position of the corresponding genes. It then adjusts the start and end positions based on the window size and converts the data into a specific format of a list. Finally, it stores the genomic ranges for each cell type in a dictionary and returns it.</p>
+<p><strong>check_value_in_intervals(intervals, value)</strong>: Checks if a value is within the intervals. This function takes a list of intervals and a value as input. It uses binary search to determine if the value falls within the intervals. It first extracts the left boundaries of the intervals, then performs a binary search to find the position of the value in the left boundary list. If the position is less than the length of the interval list, it retrieves the corresponding interval and checks if the value falls within that interval. If the value is within the interval, it returns True; otherwise, it returns False.</p>
+<p><strong>gwas_annotaion(gwas, celltype_range)</strong>: Annotates GWAS data based on genomic ranges. This function takes a DataFrame of GWAS data and a dictionary of genomic ranges as input. It first retrieves the list of chromosomes from the GWAS data. Then, it iterates through the genomic ranges for each cell type. For each chromosome, it retrieves the subset of GWAS data corresponding to that chromosome and the annotation ranges from the genomic ranges. It then iterates through each data item in the subset and uses the check_value_in_intervals function to check if the position of the data item falls within the annotation ranges. If it does, the data item is marked as annotated. Finally, it stores the annotation results for all cell types in a dictionary and returns it.</p>
+<h2 id="File-format"><a href="#File-format" class="headerlink" title="File format"></a><a href="#File-format" title="File format"></a>File format</h2><p><strong>gtf_file</strong>: Include CHR, START, END, Other info(GENE Symbol);</p>
+<p><strong>cell_gene_dict</strong>: A dictionary:(1) key:celltype’s name;(2)value:a list of genes;</p>
+<p><strong>gene_info</strong>: Output file from <strong>extract_gene_info(gtf_file)</strong>: Include: GENE, CHR, START, END;</p>
+<p><strong>gwas</strong>: First teo columns: chr, pos;</p>
+<p><strong>celltype_range</strong>: A dictionary:(1) key:celltype’s name;(2)value:a list of genome position:[chr, start, end];</p>
+<p><strong>output_file</strong>: A dictionary:(1) key:celltype’s name;(2)value:[chr, pos ,…… , annotation] (annotation: 1 for anntation and 0 for null).</p>
 
     </div>
 
@@ -267,7 +258,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://example.com/2023/08/12/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E6%95%99%E7%A8%8B%E5%92%8C%E8%B5%84%E6%BA%90%E8%81%9A%E5%90%88/" title="单细胞测序教程资源聚合">http://example.com/2023/08/12/生物信息学教程和资源聚合/</a>
+    <a href="http://example.com/2023/08/19/celltogwas%EF%BC%9A%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8B%E6%B3%A8%E9%87%8A%E5%88%B0%E5%9F%BA%E5%9B%A0%E7%BB%84%E7%9A%84%E5%B7%A5%E5%85%B7%E5%8C%85/" title="celltogwas：细胞类型注释到基因组的工具包">http://example.com/2023/08/19/celltogwas：细胞类型注释到基因组的工具包/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -297,8 +288,8 @@
 
       <footer class="post-footer">
           <div class="post-tags">
-              <a href="/tags/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F/" rel="tag"># 单细胞测序</a>
-              <a href="/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/" rel="tag"># 生物信息学</a>
+              <a href="/tags/GWAS/" rel="tag"># GWAS</a>
+              <a href="/tags/python/" rel="tag"># python</a>
           </div>
 
         
@@ -307,12 +298,12 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2023/08/11/scDRS%EF%BC%9A%E5%9F%BA%E4%BA%8EGWAS%E5%92%8CscRNA%E8%AF%84%E4%BC%B0%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8B%E5%92%8C%E7%94%9F%E7%89%A9%E5%AD%A6%E8%BF%87%E7%A8%8B%E7%9A%84%E7%96%BE%E7%97%85%E7%9B%B8%E5%85%B3%E6%80%A7/" rel="prev" title="scDRS：基于GWAS和scRNA评估细胞类型和生物学过程的疾病相关性">
-      <i class="fa fa-chevron-left"></i> scDRS：基于GWAS和scRNA评估细胞类型和生物学过程的疾病相关性
+    <a href="/2023/08/12/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E6%95%99%E7%A8%8B%E5%92%8C%E8%B5%84%E6%BA%90%E8%81%9A%E5%90%88/" rel="prev" title="单细胞测序教程资源聚合">
+      <i class="fa fa-chevron-left"></i> 单细胞测序教程资源聚合
     </a></div>
       <div class="post-nav-item">
-    <a href="/2023/08/19/celltogwas%EF%BC%9A%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8B%E6%B3%A8%E9%87%8A%E5%88%B0%E5%9F%BA%E5%9B%A0%E7%BB%84%E7%9A%84%E5%B7%A5%E5%85%B7%E5%8C%85/" rel="next" title="celltogwas：细胞类型注释到基因组的工具包">
-      celltogwas：细胞类型注释到基因组的工具包 <i class="fa fa-chevron-right"></i>
+    <a href="/2023/08/25/scPagwas%E2%80%94%E2%80%94%E6%95%B4%E5%90%88scRNA%E5%92%8CGWAS%E8%AF%86%E5%88%AB%E7%96%BE%E7%97%85%E7%9A%84%E9%A9%B1%E5%8A%A8%E5%9F%BA%E5%9B%A0%E5%92%8C%E5%85%B3%E9%94%AE%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8B/" rel="next" title="scPagwas——整合scRNA和GWAS识别疾病的驱动基因和关键细胞类型">
+      scPagwas——整合scRNA和GWAS识别疾病的驱动基因和关键细胞类型 <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -372,7 +363,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%99%E7%A8%8B"><span class="nav-number">1.</span> <span class="nav-text">教程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F"><span class="nav-number">1.0.1.</span> <span class="nav-text">单细胞测序</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B5%84%E6%BA%90"><span class="nav-number">2.</span> <span class="nav-text">资源</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%82%BF%E7%98%A4%E7%94%9F%E4%BF%A1"><span class="nav-number">2.0.1.</span> <span class="nav-text">肿瘤生信</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#GWAS"><span class="nav-number">2.0.2.</span> <span class="nav-text">GWAS</span></a></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#celltogwas"><span class="nav-number">1.</span> <span class="nav-text">celltogwas</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Explanation-of-each-function"><span class="nav-number">2.</span> <span class="nav-text">Explanation of each function</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#File-format"><span class="nav-number">3.</span> <span class="nav-text">File format</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
