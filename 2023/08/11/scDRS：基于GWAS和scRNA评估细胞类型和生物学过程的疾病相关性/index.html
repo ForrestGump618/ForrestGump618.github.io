@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+  <link rel="stylesheet" href="/lib/pace/pace-theme-minimal.min.css">
+  <script src="/lib/pace/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
+  </script>
+
+  <meta name="description" content="Jinye Zhang教授的scDRS工具简介和实操">
+<meta property="og:type" content="article">
+<meta property="og:title" content="scDRS：基于GWAS和scRNA评估细胞类型和生物学过程的疾病相关性">
+<meta property="og:url" content="http://example.com/2023/08/11/scDRS%EF%BC%9A%E5%9F%BA%E4%BA%8EGWAS%E5%92%8CscRNA%E8%AF%84%E4%BC%B0%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8B%E5%92%8C%E7%94%9F%E7%89%A9%E5%AD%A6%E8%BF%87%E7%A8%8B%E7%9A%84%E7%96%BE%E7%97%85%E7%9B%B8%E5%85%B3%E6%80%A7/index.html">
+<meta property="og:site_name" content="一个夏天的年少">
+<meta property="og:description" content="Jinye Zhang教授的scDRS工具简介和实操">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-08-11T00:00:00.000Z">
+<meta property="article:modified_time" content="2024-01-31T04:28:03.220Z">
+<meta property="article:author" content="庄清源">
+<meta property="article:tag" content="生物信息学">
+<meta property="article:tag" content="GWAS">
+<meta property="article:tag" content="单细胞测序">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="http://example.com/2023/08/11/scDRS%EF%BC%9A%E5%9F%BA%E4%BA%8EGWAS%E5%92%8CscRNA%E8%AF%84%E4%BC%B0%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8B%E5%92%8C%E7%94%9F%E7%89%A9%E5%AD%A6%E8%BF%87%E7%A8%8B%E7%9A%84%E7%96%BE%E7%97%85%E7%9B%B8%E5%85%B3%E6%80%A7/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>scDRS：基于GWAS和scRNA评估细胞类型和生物学过程的疾病相关性 | 一个夏天的年少</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">一个夏天的年少</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-tags">
+
+    <a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a>
+
+  </li>
+        <li class="menu-item menu-item-categories">
+
+    <a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a>
+
+  </li>
+        <li class="menu-item menu-item-archives">
+
+    <a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a>
+
+  </li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/08/11/scDRS%EF%BC%9A%E5%9F%BA%E4%BA%8EGWAS%E5%92%8CscRNA%E8%AF%84%E4%BC%B0%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8B%E5%92%8C%E7%94%9F%E7%89%A9%E5%AD%A6%E8%BF%87%E7%A8%8B%E7%9A%84%E7%96%BE%E7%97%85%E7%9B%B8%E5%85%B3%E6%80%A7/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="庄清源">
+      <meta itemprop="description" content="冰棒汽水的味道，一个夏天的年少。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="一个夏天的年少">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          scDRS：基于GWAS和scRNA评估细胞类型和生物学过程的疾病相关性
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2023-08-11 08:00:00" itemprop="dateCreated datePublished" datetime="2023-08-11T08:00:00+08:00">2023-08-11</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2024-01-31 12:28:03" itemprop="dateModified" datetime="2024-01-31T12:28:03+08:00">2024-01-31</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/" itemprop="url" rel="index"><span itemprop="name">生物信息学</span></a>
+                </span>
+            </span>
+
+          
+            <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">阅读次数：</span>
+              <span id="busuanzi_value_page_pv"></span>
+            </span>
+            <div class="post-description">Jinye Zhang教授的scDRS工具简介和实操</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="方法学概述"><a href="#方法学概述" class="headerlink" title="方法学概述"></a>方法学概述</h2><p>&emsp;&emsp;scDRS的核心思想是建立合适的权重从而根据基因的表达对基因程序进行评分，即加权基因表达量。其算法可概述为：首先将基因根据MAGMA得到的gene-level z-scores从大到小排列（也可以自定义基因程序）, 选择潜在的致病基因。基于致病基因的表达量和权重接着计算致病基因程序加权表达量。从而评估该细胞的基因程序和疾病的相关度。<br>&emsp;&emsp;算法对z-score采用算数加权，对技术噪声指标采用逆加权。也就是说，在GWAS中鉴定出的越相关的，且测序过程中技术原因造成误差较小的基因。根据输入数据集的基因表达，在蒙特卡洛随机模拟生成的B个对照组中，从而推断分布，进而对研究的疾病进行统计检验。利用这样的方法，我们可以计算单个细胞和疾病的相关性，以及鉴定相应的驱动基因，并基于此进行下游分析。</p>
+<span id="more"></span>
+
+<h2 id="使用scdrs包在Python中进行分析"><a href="#使用scdrs包在Python中进行分析" class="headerlink" title="使用scdrs包在Python中进行分析"></a>使用scdrs包在Python中进行分析</h2><h4 id="载入程序包"><a href="#载入程序包" class="headerlink" title="载入程序包"></a>载入程序包</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> scanpy <span class="keyword">as</span> sc</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> scdrs</span><br></pre></td></tr></table></figure>
+
+<h4 id="基础参数设置"><a href="#基础参数设置" class="headerlink" title="基础参数设置"></a>基础参数设置</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sc.settings.verbosity = <span class="number">3</span> <span class="comment"># 设置日志等级:errors(0),warnings(1),info(2),hints(3)  </span></span><br><span class="line">sc.logging.print_header() <span class="comment"># 输出版本号</span></span><br><span class="line">sc.settings.set_figure_params(dpi=<span class="number">300</span>, facecolor=<span class="string">&#x27;white&#x27;</span>) <span class="comment"># 设置图片的分辨率300dpi</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="读取计数矩阵和预处理"><a href="#读取计数矩阵和预处理" class="headerlink" title="读取计数矩阵和预处理"></a>读取计数矩阵和预处理</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">adata = sc.read_csv(<span class="string">&quot;heart.csv&quot;</span>) <span class="comment"># 注意，这里的heart.csv列为细胞，行为基因，这一点和seurat框架是不同的。</span></span><br><span class="line"><span class="comment"># 其他的读取方法可参考scanpy的文档。</span></span><br><span class="line">adata.var_names_make_unique()</span><br><span class="line">adata.obs_names_make_unique()</span><br><span class="line">adata.var.head() <span class="comment"># 基因特征的摘要</span></span><br><span class="line">adata.obs.head() <span class="comment"># 细胞特征的摘要</span></span><br><span class="line">adata <span class="comment"># 返回矩阵大小，基因相关的变量以及细胞相关的变量数据  </span></span><br><span class="line">sc.pl.highest_expr_genes(adata, n_top=<span class="number">20</span>) <span class="comment"># 显示在全部单个细胞中基因读数占总读数的百分比排名前20的基因</span></span><br></pre></td></tr></table></figure>
+<h4 id="质量控制"><a href="#质量控制" class="headerlink" title="质量控制"></a>质量控制</h4><p>&emsp;&emsp;质量控制，大部分都是针对细胞（obs）的质量控制。<br>&emsp;&emsp;细胞质控通常对以下三个质控协变量进行：  </p>
+<ol>
+<li>每个条形码的计数数量（计数深度）  </li>
+<li>每个条形码的基因数量  </li>
+<li>每个条形码的线粒体基因计数比例<br>&emsp;&emsp;如果一个细胞正在死亡，其mRNA被释放到内环境，导致线粒体基因的比例较高，所以我们可以通过线粒体基因的比例来过滤掉低质量的单细胞测序数据。但是如果仅考虑一个变量可能会造成生物学误差，共同考虑三个 QC 协变量至关重要。例如，线粒体计数相对较高的细胞可能参与呼吸过程，不应被过滤掉。然而，计数低或高的细胞可能对应于静止细胞群或尺寸较大的细胞。故我们在过滤低质量细胞的时候，要同时考虑不同的QC协变量之间的关系。</li>
+</ol>
+<h4 id="质控指标的计算"><a href="#质控指标的计算" class="headerlink" title="质控指标的计算"></a>质控指标的计算</h4><p>&emsp;&emsp;首先采用正则表达式识别线粒体；接着，我们将根据识别的结果进行比例的计算。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">adata.var[<span class="string">&quot;mt&quot;</span>] = adata.var_names.<span class="built_in">str</span>.startswith(<span class="string">&quot;MT-&quot;</span>)  </span><br><span class="line">sc.pp.calculate_qc_metrics(adata, qc_vars=[<span class="string">&quot;mt&quot;</span>], inplace=<span class="literal">True</span>, percent_top=[<span class="number">20</span>], log1p=<span class="literal">True</span>) <span class="comment"># 此处可以计算其他给定基因；该步骤之后，才可以得到n_counts等数据。</span></span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;通过上面的计算和adata.obs固有的数据，我们可以得到三个质控协变量：  </p>
+<ol>
+<li>n_genes_by_counts&#x2F;detected_genes: 一个细胞中发现的有效基因数量（即表达量不为0）  </li>
+<li>total_counts&#x2F;nUMIs: 一个细胞中发现的分子数量（UMI），通常也可以被认为是这个细胞的文库大小  </li>
+<li>pct_counts_mt&#x2F;mito_perc: 一个细胞中线粒体基因的表达计数占比<br>&emsp;&emsp;可以绘制三个协变量的分布图。<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line">mito_filter = <span class="number">25</span> <span class="comment"># 根据数据集合设定，注意，心室肌等组织富含线粒体，需要根据情况进行更改。</span></span><br><span class="line">n_counts_filter = <span class="number">4300</span> <span class="comment"># 根据上述的MAD方法进行设定，官方教程认为counts数过多可能是双细胞，但是下面采用scrublet方法进行双细胞识别。</span></span><br><span class="line">fig, axs = plt.subplots(ncols = <span class="number">2</span>, figsize = (<span class="number">8</span>,<span class="number">4</span>))</span><br><span class="line">sc.pl.scatter(adata, x=<span class="string">&#x27;total_counts&#x27;</span>, y=<span class="string">&#x27;pct_counts_mt&#x27;</span>,ax = axs[<span class="number">0</span>], show=<span class="literal">False</span>)  </span><br><span class="line">sc.pl.scatter(adata, x=<span class="string">&#x27;total_counts&#x27;</span>, y=<span class="string">&#x27;n_genes_by_counts&#x27;</span>,ax = axs[<span class="number">1</span>], show = <span class="literal">False</span>) </span><br><span class="line"><span class="comment"># draw horizontal red lines indicating thresholds.</span></span><br><span class="line">axs[<span class="number">0</span>].hlines(y = mito_filter, xmin = <span class="number">0</span>, xmax = <span class="built_in">max</span>(adata.obs[<span class="string">&#x27;total_counts&#x27;</span>]), color = <span class="string">&#x27;red&#x27;</span>, ls = <span class="string">&#x27;dashed&#x27;</span>) </span><br><span class="line">axs[<span class="number">1</span>].hlines(y = n_counts_filter, xmin = <span class="number">0</span>, xmax = <span class="built_in">max</span>(adata.obs[<span class="string">&#x27;total_counts&#x27;</span>]), color = <span class="string">&#x27;red&#x27;</span>, ls = <span class="string">&#x27;dashed&#x27;</span>)</span><br><span class="line">fig.tight_layout()  </span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+&emsp;&emsp;也可以采用小提琴图。<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sc.pl.violin(adata, [<span class="string">&#x27;n_genes_by_counts&#x27;</span>, <span class="string">&#x27;total_counts&#x27;</span>, <span class="string">&#x27;pct_counts_mt&#x27;</span>],jitter=<span class="number">0.4</span>, multi_panel=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
+&emsp;&emsp;还可以采用直方图。<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> seaborn <span class="keyword">as</span> sns  </span><br><span class="line">sns.histplot(adata.obs[<span class="string">&quot;n_genes_by_counts&quot;</span>], bins=<span class="number">100</span>, kde=<span class="literal">False</span>)  </span><br><span class="line">sns.histplot(adata.obs[<span class="string">&quot;total_counts&quot;</span>], bins=<span class="number">100</span>, kde=<span class="literal">False</span>) </span><br></pre></td></tr></table></figure></li>
+</ol>
+<h4 id="双细胞过滤"><a href="#双细胞过滤" class="headerlink" title="双细胞过滤"></a>双细胞过滤</h4><p>&emsp;&emsp;双细胞被定义为在相同的细胞条形码（barcode）下进行测序的两个细胞，例如，如果它们被捕获在同一个液滴（droplet）中。双细胞由同型（homotypic）与异型（heterotypic）所构成 ：</p>
+<ol>
+<li>同型：同型通常被认为是不影响下游分析的，因为其是由一类相同的细胞中的两个所构成，所以这部分细胞不是我们所需要过滤的对象；  </li>
+<li>异型：异型通常是由来自两类不同的细胞所构成的，异型的存在会使得我们后续的细胞分类出现错误，因为其独特的数据分布特征。<br>&emsp;&emsp;我们可以通过人工构建双细胞进行模拟识别，以排除异型的存在。我们将使用scrublet来完成双细胞的识别。<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sc.external.pp.scrublet(adata, random_state=<span class="number">112</span>) </span><br><span class="line">adata = adata[adata.obs[<span class="string">&#x27;predicted_doublet&#x27;</span>]==<span class="literal">False</span>, :]</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h4 id="低质量细胞过滤"><a href="#低质量细胞过滤" class="headerlink" title="低质量细胞过滤"></a>低质量细胞过滤</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">adata = adata[adata.obs.pct_counts_mt &lt; <span class="number">25</span>, :]  </span><br><span class="line">adata = adata[adata.obs.n_genes_by_counts &gt; <span class="number">200</span>, :]  </span><br><span class="line">adata = adata[adata.obs.total_counts &gt; <span class="number">300</span>, :]  </span><br><span class="line">sc.pp.filter_cells(adata, min_genes=<span class="number">200</span>)  </span><br><span class="line">sc.pp.filter_genes(adata, min_cells=<span class="number">3</span>)  </span><br><span class="line">  </span><br><span class="line"><span class="comment"># 小提琴图可视化  </span></span><br><span class="line">sc.pl.violin(adata, [<span class="string">&#x27;n_genes_by_counts&#x27;</span>, <span class="string">&#x27;total_counts&#x27;</span>, <span class="string">&#x27;pct_counts_mt&#x27;</span>],jitter=<span class="number">0.4</span>, multi_panel=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
+<h4 id="保存结果用于scDRS的分析"><a href="#保存结果用于scDRS的分析" class="headerlink" title="保存结果用于scDRS的分析"></a>保存结果用于scDRS的分析</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">adata_raw = adata.copy()  </span><br><span class="line">adata_raw.write_h5ad(<span class="string">f&quot;./output/<span class="subst">&#123;sample&#125;</span>/expr.h5ad&quot;</span>)  </span><br><span class="line">  </span><br><span class="line">df_cov = pd.DataFrame(index=adata_raw.obs.index)  </span><br><span class="line">df_cov[<span class="string">&quot;const&quot;</span>] = <span class="number">1</span>  </span><br><span class="line">df_cov[<span class="string">&quot;n_genes&quot;</span>] = adata_raw.obs[<span class="string">&quot;n_genes&quot;</span>]  </span><br><span class="line">df_cov.to_csv(<span class="string">f&quot;./output/<span class="subst">&#123;sample&#125;</span>/cov.tsv&quot;</span>, sep=<span class="string">&quot;\t&quot;</span>)  </span><br><span class="line">  </span><br><span class="line">summary = pd.DataFrame(adata_raw.obs)  </span><br><span class="line">summary.to_csv(<span class="string">f&quot;./output/<span class="subst">&#123;sample&#125;</span>/summary.tsv&quot;</span>, sep=<span class="string">&quot;\t&quot;</span>)</span><br></pre></td></tr></table></figure>
+<h4 id="scDRS分析"><a href="#scDRS分析" class="headerlink" title="scDRS分析"></a>scDRS分析</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">adata = scdrs.util.load_h5ad(h5ad_file=<span class="string">f&quot;./output/<span class="subst">&#123;sample&#125;</span>/expr.h5ad&quot;</span>, flag_filter_data=<span class="literal">False</span>, flag_raw_count=<span class="literal">True</span>)  </span><br><span class="line">dict_gs = scdrs.util.load_gs(<span class="string">&quot;./output/CHD.gs&quot;</span>, src_species=<span class="string">&quot;human&quot;</span>, dst_species=<span class="string">&quot;human&quot;</span>,to_intersect=adata.var_names)  </span><br><span class="line">df_cov = pd.read_csv(<span class="string">f&quot;./output/<span class="subst">&#123;sample&#125;</span>/cov.tsv&quot;</span>, sep=<span class="string">&quot;\t&quot;</span>, index_col=<span class="number">0</span>)  </span><br><span class="line">adata_analysis = scdrs.preprocess(adata, cov=df_cov, n_mean_bin=<span class="number">20</span>, n_var_bin=<span class="number">20</span>, copy=<span class="literal">True</span>)  </span><br><span class="line">dict_df_score = <span class="built_in">dict</span>()  </span><br><span class="line"><span class="keyword">for</span> trait <span class="keyword">in</span> dict_gs:  </span><br><span class="line">	gene_list, gene_weights = dict_gs[trait]  </span><br><span class="line">	dict_df_score[trait] = scdrs.score_cell(  </span><br><span class="line">		data=adata_analysis,  </span><br><span class="line">		gene_list=gene_list,  </span><br><span class="line">		gene_weight=gene_weights,  </span><br><span class="line">		ctrl_match_key=<span class="string">&quot;mean_var&quot;</span>,  </span><br><span class="line">		n_ctrl=<span class="number">1000</span>,  </span><br><span class="line">		weight_opt=<span class="string">&quot;vs&quot;</span>,  </span><br><span class="line">		return_ctrl_raw_score=<span class="literal">False</span>,  </span><br><span class="line">		return_ctrl_norm_score=<span class="literal">True</span>,  </span><br><span class="line">		verbose=<span class="literal">False</span>,  </span><br><span class="line">	)  </span><br><span class="line">chd = dict_df_score[<span class="string">&quot;CHD&quot;</span>]  </span><br><span class="line">chd.to_csv(<span class="string">f&quot;./output/<span class="subst">&#123;sample&#125;</span>/CHD.csv&quot;</span>)</span><br></pre></td></tr></table></figure>
+<h4 id="可视化"><a href="#可视化" class="headerlink" title="可视化"></a>可视化</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">sc.pp.highly_variable_genes(adata, n_top_genes=<span class="number">2000</span>)  </span><br><span class="line">adata = adata[:, adata.var.highly_variable]  </span><br><span class="line">sc.pp.regress_out(adata, [<span class="string">&#x27;total_counts&#x27;</span>, <span class="string">&#x27;pct_counts_mt&#x27;</span>])  </span><br><span class="line"><span class="comment">#归一化 (事实上，只有PCA才采用归一化数据，使得不同PC的数据规模接近。)  </span></span><br><span class="line">sc.pp.scale(adata, max_value=<span class="number">10</span>)  </span><br><span class="line"><span class="comment">#主成分分析  </span></span><br><span class="line">sc.tl.pca(adata, svd_solver=<span class="string">&quot;arpack&quot;</span>)  </span><br><span class="line">  </span><br><span class="line">sc.pp.neighbors(adata, n_neighbors=<span class="number">10</span>, n_pcs=<span class="number">40</span>) <span class="comment">#KNN算法，此处参数：n_neighbours更大，则聚类可能会变少；n_pcs一般为40，可参考碎石图。  </span></span><br><span class="line">sc.tl.umap(adata)  </span><br><span class="line">sc.tl.leiden(adata)  </span><br><span class="line">sc.pl.umap(adata, color=[<span class="string">&#x27;leiden&#x27;</span>],save=<span class="string">f&quot;<span class="subst">&#123;sample&#125;</span>_original.png&quot;</span>)  </span><br><span class="line"><span class="comment">#非参数检验方法  </span></span><br><span class="line">sc.tl.rank_genes_groups(adata, <span class="string">&#x27;leiden&#x27;</span>, method=<span class="string">&#x27;wilcoxon&#x27;</span>)  </span><br><span class="line">sc.pl.rank_genes_groups(adata, n_genes=<span class="number">25</span>, sharey=<span class="literal">False</span>)  </span><br><span class="line">  </span><br><span class="line"><span class="comment"># 结果写入，方便后续可视化  </span></span><br><span class="line">pd.DataFrame(adata.uns[<span class="string">&#x27;rank_genes_groups&#x27;</span>][<span class="string">&#x27;names&#x27;</span>]).head(<span class="number">5</span>)  </span><br><span class="line">result = adata.uns[<span class="string">&#x27;rank_genes_groups&#x27;</span>]  </span><br><span class="line">groups = result[<span class="string">&#x27;names&#x27;</span>].dtype.names  </span><br><span class="line">pd.DataFrame(adata.uns[<span class="string">&#x27;rank_genes_groups&#x27;</span>][<span class="string">&#x27;names&#x27;</span>]).to_csv(<span class="string">f&quot;./output/<span class="subst">&#123;sample&#125;</span>/marker.csv&quot;</span>)  </span><br><span class="line"><span class="keyword">for</span> trait <span class="keyword">in</span> dict_df_score:  </span><br><span class="line">	adata.obs[trait] = dict_df_score[trait][<span class="string">&quot;raw_score&quot;</span>]  </span><br><span class="line"><span class="keyword">for</span> trait <span class="keyword">in</span> dict_df_score:  </span><br><span class="line">	adata.obs[<span class="string">f&quot;<span class="subst">&#123;trait&#125;</span>_norm&quot;</span>] = dict_df_score[trait][<span class="string">&quot;norm_score&quot;</span>]  </span><br><span class="line">sc.pl.umap(adata,color=dict_df_score.keys(),ncols=<span class="number">1</span>,color_map=<span class="string">&quot;RdBu_r&quot;</span>,save=<span class="string">f&quot;<span class="subst">&#123;sample&#125;</span>_disease.png&quot;</span>)  </span><br><span class="line">df_group = adata.obs  </span><br><span class="line">l = [<span class="string">&quot;a&quot;</span>,<span class="string">&quot;b&quot;</span>,<span class="string">&quot;c&quot;</span>,<span class="string">&quot;d&quot;</span>,<span class="string">&quot;e&quot;</span>,<span class="string">&quot;f&quot;</span>,<span class="string">&quot;g&quot;</span>,<span class="string">&quot;h&quot;</span>,<span class="string">&quot;i&quot;</span>,<span class="string">&quot;j&quot;</span>,<span class="string">&quot;k&quot;</span>,<span class="string">&quot;l&quot;</span>,<span class="string">&quot;m&quot;</span>,<span class="string">&quot;n&quot;</span>,<span class="string">&quot;o&quot;</span>,<span class="string">&quot;p&quot;</span>,<span class="string">&quot;q&quot;</span>,<span class="string">&quot;r&quot;</span>,<span class="string">&quot;s&quot;</span>,<span class="string">&quot;t&quot;</span>,<span class="string">&quot;u&quot;</span>,<span class="string">&quot;v&quot;</span>,<span class="string">&quot;w&quot;</span>,<span class="string">&quot;x&quot;</span>,<span class="string">&quot;y&quot;</span>,<span class="string">&quot;z&quot;</span>]  </span><br><span class="line">map_list = &#123;&#125;  </span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(l)):  </span><br><span class="line">	map_list[<span class="built_in">str</span>(i)] = l[i]  </span><br><span class="line">df_group[<span class="string">&quot;group&quot;</span>] = df_group[<span class="string">&quot;leiden&quot;</span>].<span class="built_in">map</span>(map_list)  </span><br><span class="line">df_group.to_csv(<span class="string">f&quot;./output/<span class="subst">&#123;sample&#125;</span>/leiden score.csv&quot;</span>)  </span><br><span class="line">df_gene = scdrs.method.downstream_gene_analysis(adata=adata, df_full_score=dict_df_score[<span class="string">&quot;CHD&quot;</span>])  </span><br><span class="line">df_gene.to_csv(<span class="string">f&quot;./output/<span class="subst">&#123;sample&#125;</span>/key gene.csv&quot;</span>)  </span><br><span class="line">df_group_analysis = scdrs.method.downstream_group_analysis(adata=adata, df_full_score=dict_df_score[<span class="string">&quot;CHD&quot;</span>], group_cols=[<span class="string">&quot;group&quot;</span>])</span><br></pre></td></tr></table></figure>
+<h2 id="在命令行中使用scdrs"><a href="#在命令行中使用scdrs" class="headerlink" title="在命令行中使用scdrs"></a>在命令行中使用scdrs</h2><h4 id="计算每个细胞的疾病富集分数"><a href="#计算每个细胞的疾病富集分数" class="headerlink" title="计算每个细胞的疾病富集分数"></a>计算每个细胞的疾病富集分数</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># Shell</span></span><br><span class="line">scdrs compute-score \  </span><br><span class="line">    --h5ad-file data/expr.h5ad \  </span><br><span class="line">    --h5ad-species human \  </span><br><span class="line">    --gs-file data/processed_geneset.gs \  </span><br><span class="line">    --gs-species human \  </span><br><span class="line">    --cov-file data/cov.tsv \  </span><br><span class="line">    --flag-filter-data True \  </span><br><span class="line">    --flag-raw-count True \  </span><br><span class="line">    --flag-return-ctrl-raw-score False \  </span><br><span class="line">    --flag-return-ctrl-norm-score True \  </span><br><span class="line">    --out-folder data/  </span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line"><span class="comment"># 可视化 python  </span></span><br><span class="line">df_gs.index = [<span class="string">&#x27;CHD&#x27;</span>,<span class="string">&#x27;Height&#x27;</span>]  </span><br><span class="line">dict_score = &#123;  </span><br><span class="line">    trait: pd.read_csv(f<span class="string">&quot;data/&#123;trait&#125;.full_score.gz&quot;</span>, sep=<span class="string">&quot;\t&quot;</span>, index_col=0)  </span><br><span class="line">    <span class="keyword">for</span> trait <span class="keyword">in</span> df_gs.index  </span><br><span class="line">&#125;  </span><br><span class="line">  </span><br><span class="line"><span class="keyword">for</span> trait <span class="keyword">in</span> dict_score:  </span><br><span class="line">    adata.obs[trait] = dict_score[trait][<span class="string">&quot;norm_score&quot;</span>]  </span><br><span class="line">  </span><br><span class="line">sc.set_figure_params(figsize=[2.5, 2.5], dpi=150)  </span><br><span class="line">sc.pl.umap(  </span><br><span class="line">    adata,  </span><br><span class="line">    color=dict_score.keys(),  </span><br><span class="line">    ncols=1,  </span><br><span class="line">    color_map=<span class="string">&quot;RdBu_r&quot;</span>,  </span><br><span class="line">    vmin=-5,  </span><br><span class="line">    vmax=5,  </span><br><span class="line">)  </span><br><span class="line">  </span><br><span class="line">sc.pl.umap(  </span><br><span class="line">    adata,  </span><br><span class="line">    color=dict_score.keys(),  </span><br><span class="line">    color_map=<span class="string">&quot;RdBu_r&quot;</span>,  </span><br><span class="line">    vmin=-5,  </span><br><span class="line">    vmax=5,  </span><br><span class="line">    s=20,  </span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;基于单个细胞的疾病富集分数，我们可以充分探索下游分析的方式。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li>Zhang, M.J., Hou, K., Dey, K.K. et al. Polygenic enrichment distinguishes disease associations of individual cells in single-cell RNA-seq data. Nat Genet 54, 1572–1580 (2022).<a target="_blank" rel="noopener" href="https://doi.org/10.1038/s41588-022-01167-z">DOI</a>.</li>
+<li>scDRS的Github项目：<a target="_blank" rel="noopener" href="https://github.com/martinjzhang/scDRS">martinjzhang&#x2F;scDRS</a>。</li>
+<li>scDRS的官方文档：<a target="_blank" rel="noopener" href="https://martinjzhang.github.io/scDRS/">scDRS</a>。</li>
+</ol>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>庄清源
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="http://example.com/2023/08/11/scDRS%EF%BC%9A%E5%9F%BA%E4%BA%8EGWAS%E5%92%8CscRNA%E8%AF%84%E4%BC%B0%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8B%E5%92%8C%E7%94%9F%E7%89%A9%E5%AD%A6%E8%BF%87%E7%A8%8B%E7%9A%84%E7%96%BE%E7%97%85%E7%9B%B8%E5%85%B3%E6%80%A7/" title="scDRS：基于GWAS和scRNA评估细胞类型和生物学过程的疾病相关性">http://example.com/2023/08/11/scDRS：基于GWAS和scRNA评估细胞类型和生物学过程的疾病相关性/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/" rel="tag"># 生物信息学</a>
+              <a href="/tags/GWAS/" rel="tag"># GWAS</a>
+              <a href="/tags/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F/" rel="tag"># 单细胞测序</a>
+          </div>
+
+        
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2023/08/10/Hello%20World%EF%BC%81/" rel="prev" title="Hello World！">
+      <i class="fa fa-chevron-left"></i> Hello World！
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2023/08/12/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E6%95%99%E7%A8%8B%E5%92%8C%E8%B5%84%E6%BA%90%E8%81%9A%E5%90%88/" rel="next" title="单细胞测序教程资源聚合">
+      单细胞测序教程资源聚合 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%96%B9%E6%B3%95%E5%AD%A6%E6%A6%82%E8%BF%B0"><span class="nav-number">1.</span> <span class="nav-text">方法学概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8scdrs%E5%8C%85%E5%9C%A8Python%E4%B8%AD%E8%BF%9B%E8%A1%8C%E5%88%86%E6%9E%90"><span class="nav-number">2.</span> <span class="nav-text">使用scdrs包在Python中进行分析</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%BD%BD%E5%85%A5%E7%A8%8B%E5%BA%8F%E5%8C%85"><span class="nav-number">2.0.1.</span> <span class="nav-text">载入程序包</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E5%8F%82%E6%95%B0%E8%AE%BE%E7%BD%AE"><span class="nav-number">2.0.2.</span> <span class="nav-text">基础参数设置</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AF%BB%E5%8F%96%E8%AE%A1%E6%95%B0%E7%9F%A9%E9%98%B5%E5%92%8C%E9%A2%84%E5%A4%84%E7%90%86"><span class="nav-number">2.0.3.</span> <span class="nav-text">读取计数矩阵和预处理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B4%A8%E9%87%8F%E6%8E%A7%E5%88%B6"><span class="nav-number">2.0.4.</span> <span class="nav-text">质量控制</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%B4%A8%E6%8E%A7%E6%8C%87%E6%A0%87%E7%9A%84%E8%AE%A1%E7%AE%97"><span class="nav-number">2.0.5.</span> <span class="nav-text">质控指标的计算</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%8C%E7%BB%86%E8%83%9E%E8%BF%87%E6%BB%A4"><span class="nav-number">2.0.6.</span> <span class="nav-text">双细胞过滤</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BD%8E%E8%B4%A8%E9%87%8F%E7%BB%86%E8%83%9E%E8%BF%87%E6%BB%A4"><span class="nav-number">2.0.7.</span> <span class="nav-text">低质量细胞过滤</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BF%9D%E5%AD%98%E7%BB%93%E6%9E%9C%E7%94%A8%E4%BA%8EscDRS%E7%9A%84%E5%88%86%E6%9E%90"><span class="nav-number">2.0.8.</span> <span class="nav-text">保存结果用于scDRS的分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#scDRS%E5%88%86%E6%9E%90"><span class="nav-number">2.0.9.</span> <span class="nav-text">scDRS分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8F%AF%E8%A7%86%E5%8C%96"><span class="nav-number">2.0.10.</span> <span class="nav-text">可视化</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9C%A8%E5%91%BD%E4%BB%A4%E8%A1%8C%E4%B8%AD%E4%BD%BF%E7%94%A8scdrs"><span class="nav-number">3.</span> <span class="nav-text">在命令行中使用scdrs</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%AE%A1%E7%AE%97%E6%AF%8F%E4%B8%AA%E7%BB%86%E8%83%9E%E7%9A%84%E7%96%BE%E7%97%85%E5%AF%8C%E9%9B%86%E5%88%86%E6%95%B0"><span class="nav-number">3.0.1.</span> <span class="nav-text">计算每个细胞的疾病富集分数</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-number">4.</span> <span class="nav-text">参考</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">庄清源</p>
+  <div class="site-description" itemprop="description">冰棒汽水的味道，一个夏天的年少。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+          
+        <span class="site-state-item-count">1</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+          
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ForrestGump618" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ForrestGump618" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhuangqingyuan@foxmail.com" title="E-Mail → mailto:zhuangqingyuan@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/zhuang-qing-yuan-18" title="Zhihu → https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;zhuang-qing-yuan-18" rel="noopener" target="_blank"><i class="fab fa-zhihu fa-fw"></i>Zhihu</a>
+      </span>
+  </div>
+
+
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div class="copyright">
+  
+  &copy; 2023-08 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">庄清源</span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" class="theme-link" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.org/" class="theme-link" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+
+
+<div class="theme-info">
+  <div class="powered-by"></div>
+  <span class="post-count">博客全站共2.9k字</span>
+</div>
+
+
+
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+    <span id="busuanzi_container_site_pv">总访问量<span id="busuanzi_value_site_pv"></span>次</span>
+    <span class="post-meta-divider">|</span>
+    <span id="busuanzi_container_site_uv">总访客数<span id="busuanzi_value_site_uv"></span>人</span>
+    <span class="post-meta-divider">|</span>
+<!-- 不蒜子计数初始值纠正 -->
+<script>
+$(document).ready(function() {
+
+    var int = setInterval(fixCount, 50);  // 50ms周期检测函数
+    var countOffset = 20000;  // 初始化首次数据
+
+    function fixCount() {            
+       if (document.getElementById("busuanzi_container_site_pv").style.display != "none")
+        {
+            $("#busuanzi_value_site_pv").html(parseInt($("#busuanzi_value_site_pv").html()) + countOffset); 
+            clearInterval(int);
+        }                  
+        if ($("#busuanzi_container_site_pv").css("display") != "none")
+        {
+            $("#busuanzi_value_site_uv").html(parseInt($("#busuanzi_value_site_uv").html()) + countOffset); // 加上初始数据 
+            clearInterval(int); // 停止检测
+        }  
+    }
+       	
+});
+</script> 
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-divider">|</span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  
+  <script color='0,0,255' opacity='0.5' zIndex='-1' count='99' src="/lib/canvas-nest/canvas-nest.min.js"></script>
+  <script src="/lib/anime.min.js"></script>
+  <script src="/lib/velocity/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/pisces.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+</body>
+</html>
