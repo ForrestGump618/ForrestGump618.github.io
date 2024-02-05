@@ -29,8 +29,8 @@
 <meta property="og:site_name" content="一个夏天的年少">
 <meta property="og:description" content="阐述测序原理，为转录组学数据挖掘打下基础。">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2024-02-05T11:23:00.000Z">
-<meta property="article:modified_time" content="2024-02-05T15:10:27.682Z">
+<meta property="article:published_time" content="2024-02-05T15:25:37.000Z">
+<meta property="article:modified_time" content="2024-02-05T15:30:25.775Z">
 <meta property="article:author" content="庄清源">
 <meta property="article:tag" content="生物信息学">
 <meta property="article:tag" content="转录组学">
@@ -194,7 +194,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2024-02-05 19:23:00 / 修改时间：23:10:27" itemprop="dateCreated datePublished" datetime="2024-02-05T19:23:00+08:00">2024-02-05</time>
+              <time title="创建时间：2024-02-05 23:25:37 / 修改时间：23:30:25" itemprop="dateCreated datePublished" datetime="2024-02-05T23:25:37+08:00">2024-02-05</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -275,15 +275,15 @@
 <li>文库构建：将片段化的DNA样本连接到适当的测序适配器上，形成文库。适配器中包含了特定的序列，用于后续的扩增和测序。</li>
 <li>扩增：将文库中的DNA片段进行扩增，通常采用PCR（聚合酶链式反应）方法。扩增后的文库可以包含成百上千万个DNA片段的复制。</li>
 <li>测序：将扩增的文库加载到下一代测序仪中，进行高通量的并行测序。不同的下一代测序技术会使用不同的原理和方法，如Illumina的测序-by-synthesis技术、Ion Torrent的测序-by-detection技术等。</li>
-<li>数据分析：通过计算和分析，将测序仪输出的原始数据转化为DNA序列信息。这包括图像处理、碱基识别、序列拼接、质量控制和变异检测等步骤。![[v2-5ef7a9fd4eb6a430a2ee8481285e6e1a_r.jpg]]</li>
+<li>数据分析：通过计算和分析，将测序仪输出的原始数据转化为DNA序列信息。这包括图像处理、碱基识别、序列拼接、质量控制和变异检测等步骤。![[Pasted image 20240205211755.png]]</li>
 </ol>
 </li>
 <li><strong>步骤（细节）</strong> ：<ol>
-<li>目前很多PCR使用的高保真Pfu聚合酶产生的片段末端是平齐的（即没有不配对的碱基）；鸟枪法产生的片段则是随机断裂，其末端可能是平齐的也可能是不平的，那么我们首先可以使用Taq聚合酶补齐不平的末端，在DNA双链的末端（3‘ 端），我们添加突出的A碱基，以为连接接头做准备（Adaptor）；</li>
+<li>目前很多PCR使用的高保真Pfu聚合酶产生的片段末端是平齐的（即没有不配对的碱基）；鸟枪法产生的片段则是随机断裂，其末端可能是平齐的也可能是不平的，那么我们首先可以使用Taq聚合酶补齐不平的末端，在DNA双链的末端（3‘ 端），我们添加突出的A碱基，以为连接接头做准备（Adaptor）；![[Pasted image 20240205212151.png]]</li>
 <li>接头有突出的T，上述操作的DNA双链末端有突出的A，恰能配对。通过连接酶将接头连接上到DNA上；</li>
 <li>NEBNext接头是一个U碱基在中间的环形接头，连接上DNA后将U碱基删除，从而形成“Y形“末端；</li>
 <li>接头添加的目的是作为引物实现这些序列的扩增：文库index（Barcode）、PCR引物Rd1 SP&#x2F;Rd2 SP，以及和测序平台互补的寡核苷酸链扩增（P7、P5）【其中与P5端连接的Index称为Index 2，又称之为i5；与P7端连接的称为Index1，也称为i7】；</li>
-<li>Y形接头的设计，确保了DNA链两端是不配对的碱基序列引物，从而能够结合不同寡核苷酸序列，实现PCR中DNA链两端不会结合同一段序列（index、PCR引物以及和测序平台互补的寡核苷酸链），为后面的桥式扩增做准备；![[Pasted image 20240205212604.png]]</li>
+<li>Y形接头的设计，确保了DNA链两端是不配对的碱基序列引物，从而能够结合不同寡核苷酸序列，实现PCR中DNA链两端不会结合同一段序列（index、PCR引物以及和测序平台互补的寡核苷酸链），为后面的桥式扩增做准备；</li>
 <li>Illumina平台的测序技术为基于<strong>基因芯片的边合成边测序</strong>：在Illumina测序平台的流通池（Flow cell）表面（如下图），通过基因芯片技术交错固定了无数条分别文库接头中P5和P7互补的寡核苷酸链（即短核苷酸链），单链化的文库DNA片段进入流通池后，可以与表面的寡核苷酸结合，从而进入测序过程。![[Pasted image 20240205212658.png]]</li>
 <li>由于单链DNA的另一端具有不同的接头序列，因此它可以与相邻的另一种寡核苷酸互补配对，从而进行”桥”式扩增。假设第一次配对的接头是P7，一旦复制完成并洗脱模板后，DNA顶端可以与相邻的P5接头互补配对，形成一个”桥”结构。然后，以P5为引物进行复制。复制完成后，再次解链，并与相邻的不同种类接头结合，以进行下一轮复制。这个过程不断重复。25-28个循环完成后，原来散布在表面的核苷酸序列变成散布的DNA簇【何为散布的核苷酸序列？即一开始结合在P5或者P7上的序列】；![[Pasted image 20240205231007.png]]</li>
 <li>接着，再次解链线性化，切割并洗去连接在P5上的DNA链，只留下P7上的DNA单链【仅保留正向链，即一开始进入flowcell的模板链】；</li>
