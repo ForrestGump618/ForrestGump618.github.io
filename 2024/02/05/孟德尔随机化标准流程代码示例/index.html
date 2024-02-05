@@ -22,21 +22,23 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="本工具包用于从基因组注释文件中提取基因信息，合并基因区间，基于细胞类型和窗口大小生成基因组范围，以及注释GWAS（全基因组关联研究）数据。">
+  <meta name="description" content="孟德尔随机化标准流程（无额外分析）">
 <meta property="og:type" content="article">
-<meta property="og:title" content="celltogwas：细胞类型注释到基因组的工具包">
-<meta property="og:url" content="http://example.com/2023/08/19/celltogwas%EF%BC%9A%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8B%E6%B3%A8%E9%87%8A%E5%88%B0%E5%9F%BA%E5%9B%A0%E7%BB%84%E7%9A%84%E5%B7%A5%E5%85%B7%E5%8C%85/index.html">
+<meta property="og:title" content="孟德尔随机化标准流程代码示例">
+<meta property="og:url" content="http://example.com/2024/02/05/%E5%AD%9F%E5%BE%B7%E5%B0%94%E9%9A%8F%E6%9C%BA%E5%8C%96%E6%A0%87%E5%87%86%E6%B5%81%E7%A8%8B%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B/index.html">
 <meta property="og:site_name" content="一个夏天的年少">
-<meta property="og:description" content="本工具包用于从基因组注释文件中提取基因信息，合并基因区间，基于细胞类型和窗口大小生成基因组范围，以及注释GWAS（全基因组关联研究）数据。">
+<meta property="og:description" content="孟德尔随机化标准流程（无额外分析）">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-08-19T00:00:00.000Z">
-<meta property="article:modified_time" content="2024-01-31T05:57:34.317Z">
+<meta property="article:published_time" content="2024-02-05T15:52:37.000Z">
+<meta property="article:modified_time" content="2024-02-05T15:53:21.431Z">
 <meta property="article:author" content="庄清源">
 <meta property="article:tag" content="GWAS">
-<meta property="article:tag" content="python">
+<meta property="article:tag" content="统计学">
+<meta property="article:tag" content="孟德尔随机化">
+<meta property="article:tag" content="流行病学">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://example.com/2023/08/19/celltogwas%EF%BC%9A%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8B%E6%B3%A8%E9%87%8A%E5%88%B0%E5%9F%BA%E5%9B%A0%E7%BB%84%E7%9A%84%E5%B7%A5%E5%85%B7%E5%8C%85/">
+<link rel="canonical" href="http://example.com/2024/02/05/%E5%AD%9F%E5%BE%B7%E5%B0%94%E9%9A%8F%E6%9C%BA%E5%8C%96%E6%A0%87%E5%87%86%E6%B5%81%E7%A8%8B%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B/">
 
 
 <script id="page-configurations">
@@ -49,7 +51,7 @@
   };
 </script>
 
-  <title>celltogwas：细胞类型注释到基因组的工具包 | 一个夏天的年少</title>
+  <title>孟德尔随机化标准流程代码示例 | 一个夏天的年少</title>
   
 
 
@@ -170,7 +172,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/08/19/celltogwas%EF%BC%9A%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8B%E6%B3%A8%E9%87%8A%E5%88%B0%E5%9F%BA%E5%9B%A0%E7%BB%84%E7%9A%84%E5%B7%A5%E5%85%B7%E5%8C%85/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/02/05/%E5%AD%9F%E5%BE%B7%E5%B0%94%E9%9A%8F%E6%9C%BA%E5%8C%96%E6%A0%87%E5%87%86%E6%B5%81%E7%A8%8B%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -183,7 +185,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          celltogwas：细胞类型注释到基因组的工具包
+          孟德尔随机化标准流程代码示例
         </h1>
 
         <div class="post-meta">
@@ -192,23 +194,17 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2023-08-19 08:00:00" itemprop="dateCreated datePublished" datetime="2023-08-19T08:00:00+08:00">2023-08-19</time>
+              <time title="创建时间：2024-02-05 23:52:37 / 修改时间：23:53:21" itemprop="dateCreated datePublished" datetime="2024-02-05T23:52:37+08:00">2024-02-05</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-01-31 13:57:34" itemprop="dateModified" datetime="2024-01-31T13:57:34+08:00">2024-01-31</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/" itemprop="url" rel="index"><span itemprop="name">生物信息学</span></a>
+                  <a href="/categories/%E6%B5%81%E8%A1%8C%E7%97%85%E5%AD%A6/" itemprop="url" rel="index"><span itemprop="name">流行病学</span></a>
                 </span>
             </span>
 
@@ -225,16 +221,16 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>580</span>
+              <span>189</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>2 分钟</span>
+              <span>1 分钟</span>
             </span>
-            <div class="post-description">本工具包用于从基因组注释文件中提取基因信息，合并基因区间，基于细胞类型和窗口大小生成基因组范围，以及注释GWAS（全基因组关联研究）数据。</div>
+            <div class="post-description">孟德尔随机化标准流程（无额外分析）</div>
 
         </div>
       </header>
@@ -245,18 +241,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="celltogwas"><a href="#celltogwas" class="headerlink" title="celltogwas"></a>celltogwas</h2><p>This code is a toolkit for genomic analysis. It includes several functions and helper functions to extract gene information from a genomic annotation file, merge gene intervals, generate genomic ranges based on cell types and window size, and annotate GWAS (Genome-Wide Association Study) data.</p>
-<h2 id="Explanation-of-each-function"><a href="#Explanation-of-each-function" class="headerlink" title="Explanation of each function"></a>Explanation of each function</h2><p><strong>extract_gene_info(gtf_file)</strong>: Extracts gene information from a genomic annotation file. It opens a gzip-compressed file, reads it line by line, and extracts gene name, chromosome, start position, and end position from each line. The extracted data is then stored in a Pandas DataFrame and returned.</p>
-<p><strong>merge_intervals(intervals)</strong>: Merges overlapping intervals. This function takes a list of intervals as input and merges overlapping intervals into larger intervals. It first sorts the intervals based on their start positions, then iterates through the intervals. If the current interval does not overlap with the merged interval, it adds the current interval to the merged list. Otherwise, it updates the end position of the merged interval. Finally, it returns the merged interval list.</p>
-<p><strong>celltype_genome_range(cell_gene_dict, gene_info, windowsize)</strong>: Generates genomic ranges based on cell types and window size. This function takes a dictionary mapping cell types to gene lists, a DataFrame of gene information, and a window size as input. It retrieves the gene list corresponding to each cell type from the dictionary and performs an inner join with the gene information to obtain the chromosome, start position, and end position of the corresponding genes. It then adjusts the start and end positions based on the window size and converts the data into a specific format of a list. Finally, it stores the genomic ranges for each cell type in a dictionary and returns it.</p>
-<p><strong>check_value_in_intervals(intervals, value)</strong>: Checks if a value is within the intervals. This function takes a list of intervals and a value as input. It uses binary search to determine if the value falls within the intervals. It first extracts the left boundaries of the intervals, then performs a binary search to find the position of the value in the left boundary list. If the position is less than the length of the interval list, it retrieves the corresponding interval and checks if the value falls within that interval. If the value is within the interval, it returns True; otherwise, it returns False.</p>
-<p><strong>gwas_annotaion(gwas, celltype_range)</strong>: Annotates GWAS data based on genomic ranges. This function takes a DataFrame of GWAS data and a dictionary of genomic ranges as input. It first retrieves the list of chromosomes from the GWAS data. Then, it iterates through the genomic ranges for each cell type. For each chromosome, it retrieves the subset of GWAS data corresponding to that chromosome and the annotation ranges from the genomic ranges. It then iterates through each data item in the subset and uses the check_value_in_intervals function to check if the position of the data item falls within the annotation ranges. If it does, the data item is marked as annotated. Finally, it stores the annotation results for all cell types in a dictionary and returns it.</p>
-<h2 id="File-format"><a href="#File-format" class="headerlink" title="File format"></a><a href="#File-format" title="File format"></a>File format</h2><p><strong>gtf_file</strong>: Include CHR, START, END, Other info(GENE Symbol);</p>
-<p><strong>cell_gene_dict</strong>: A dictionary:(1) key:celltype’s name;(2)value:a list of genes;</p>
-<p><strong>gene_info</strong>: Output file from <strong>extract_gene_info(gtf_file)</strong>: Include: GENE, CHR, START, END;</p>
-<p><strong>gwas</strong>: First teo columns: chr, pos;</p>
-<p><strong>celltype_range</strong>: A dictionary:(1) key:celltype’s name;(2)value:a list of genome position:[chr, start, end];</p>
-<p><strong>output_file</strong>: A dictionary:(1) key:celltype’s name;(2)value:[chr, pos ,…… , annotation] (annotation: 1 for anntation and 0 for null).</p>
+        <figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">####TSMR####</span></span><br><span class="line">library<span class="punctuation">(</span>TwoSampleMR<span class="punctuation">)</span></span><br><span class="line">library<span class="punctuation">(</span>MRPRESSO<span class="punctuation">)</span></span><br><span class="line"><span class="comment">####NAFLD - COVID 19####</span></span><br><span class="line"><span class="comment">####RCT####</span></span><br><span class="line"></span><br><span class="line"><span class="comment">####NAFLD_exposure####</span></span><br><span class="line">exposure_dat<span class="operator">&lt;-</span>read_exposure_data<span class="punctuation">(</span>filename <span class="operator">=</span> <span class="string">&quot;./NAFLD.txt&quot;</span><span class="punctuation">,</span>sep<span class="operator">=</span><span class="string">&quot;\t&quot;</span><span class="punctuation">,</span></span><br><span class="line">                                 snp_col <span class="operator">=</span> <span class="string">&quot;rsids&quot;</span><span class="punctuation">,</span>effect_allele_col <span class="operator">=</span> <span class="string">&quot;alt&quot;</span><span class="punctuation">,</span>other_allele_col <span class="operator">=</span> <span class="string">&quot;ref&quot;</span><span class="punctuation">,</span></span><br><span class="line">                                 beta_col <span class="operator">=</span> <span class="string">&quot;beta&quot;</span><span class="punctuation">,</span>se_col <span class="operator">=</span> <span class="string">&quot;sebeta&quot;</span><span class="punctuation">,</span>pval_col <span class="operator">=</span> <span class="string">&quot;pval&quot;</span><span class="punctuation">,</span>eaf_col <span class="operator">=</span> <span class="string">&quot;af_alt&quot;</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">##看目录下的文件进行对应，如果读一个完整的文件，需要进行P值筛选</span></span><br><span class="line"></span><br><span class="line">exposure_dat<span class="operator">$</span>phenotype<span class="operator">&lt;-</span><span class="string">&quot;NAFLD&quot;</span></span><br><span class="line"><span class="comment">##命名性状，方便结果输出</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#### kb=10000;r2=0.001;</span></span><br><span class="line"><span class="comment">#### kb=500;r2=0.1.</span></span><br><span class="line">exposure_dat<span class="operator">&lt;-</span>clump_data<span class="punctuation">(</span>exposure_dat<span class="punctuation">)</span></span><br><span class="line"><span class="comment">##连锁不平衡去除</span></span><br><span class="line"></span><br><span class="line"><span class="comment">####COVID19_OUTCOME####</span></span><br><span class="line">outcome_dat<span class="operator">&lt;-</span>extract_outcome_data<span class="punctuation">(</span>outcomes <span class="operator">=</span> <span class="string">&quot;ebi-a-GCST011081&quot;</span><span class="punctuation">,</span>snps <span class="operator">=</span> exposure_dat<span class="operator">$</span>SNP<span class="punctuation">)</span></span><br><span class="line"><span class="comment">##在线读取</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#####Harmonization####</span></span><br><span class="line">dat<span class="operator">&lt;-</span>harmonise_data<span class="punctuation">(</span>exposure_dat <span class="operator">=</span> exposure_dat</span><br><span class="line">                    <span class="punctuation">,</span>outcome_dat <span class="operator">=</span> outcome_dat<span class="punctuation">,</span></span><br><span class="line">                    action <span class="operator">=</span> <span class="number">2</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">##dat协调，去除回文序列，错配</span></span><br><span class="line"></span><br><span class="line"><span class="comment">####F&gt;10####</span></span><br><span class="line">dat<span class="operator">$</span><span class="built_in">F</span><span class="operator">&lt;-</span><span class="punctuation">(</span>dat<span class="operator">$</span>beta.exposure<span class="operator">/</span>dat<span class="operator">$</span>se.exposure<span class="punctuation">)</span><span class="operator">**</span><span class="number">2</span></span><br><span class="line">dat<span class="operator">&lt;-</span>subset<span class="punctuation">(</span>dat<span class="punctuation">,</span><span class="built_in">F</span><span class="operator">&gt;</span><span class="number">10</span><span class="punctuation">)</span></span><br><span class="line">mr_result <span class="operator">&lt;-</span> mr<span class="punctuation">(</span>dat<span class="punctuation">)</span></span><br><span class="line"><span class="comment">##F值-遗传力计算</span></span><br><span class="line"></span><br><span class="line"><span class="comment">####Sensitivity,p&gt;0.05####</span></span><br><span class="line">het<span class="operator">&lt;-</span>mr_heterogeneity<span class="punctuation">(</span>dat<span class="punctuation">)</span></span><br><span class="line">ple<span class="operator">&lt;-</span>mr_pleiotropy_test<span class="punctuation">(</span>dat<span class="punctuation">)</span></span><br><span class="line"><span class="comment">###sNP pleiotropy: Phennoscaner; MR-PRESSO</span></span><br><span class="line">mr_presso<span class="punctuation">(</span>data <span class="operator">=</span> dat<span class="punctuation">,</span>BetaOutcome <span class="operator">=</span> <span class="string">&quot;beta.outcome&quot;</span><span class="punctuation">,</span>BetaExposure <span class="operator">=</span> <span class="string">&quot;beta.exposure&quot;</span><span class="punctuation">,</span>SdOutcome <span class="operator">=</span> <span class="string">&quot;se.outcome&quot;</span><span class="punctuation">,</span>SdExposure <span class="operator">=</span> <span class="string">&quot;se.exposure&quot;</span><span class="punctuation">)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">####Graph####</span></span><br><span class="line">mr_funnel_plot<span class="punctuation">(</span>singlesnp_results <span class="operator">=</span> mr_singlesnp<span class="punctuation">(</span>dat<span class="punctuation">)</span><span class="punctuation">)</span> <span class="comment">###het p</span></span><br><span class="line">mr_forest_plot<span class="punctuation">(</span>mr_singlesnp<span class="punctuation">(</span>dat<span class="punctuation">)</span><span class="punctuation">)</span></span><br><span class="line">mr_scatter_plot<span class="punctuation">(</span>mr_results <span class="operator">=</span> mr_result<span class="punctuation">,</span>dat <span class="operator">=</span> dat<span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
 
     </div>
 
@@ -272,7 +257,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://example.com/2023/08/19/celltogwas%EF%BC%9A%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8B%E6%B3%A8%E9%87%8A%E5%88%B0%E5%9F%BA%E5%9B%A0%E7%BB%84%E7%9A%84%E5%B7%A5%E5%85%B7%E5%8C%85/" title="celltogwas：细胞类型注释到基因组的工具包">http://example.com/2023/08/19/celltogwas：细胞类型注释到基因组的工具包/</a>
+    <a href="http://example.com/2024/02/05/%E5%AD%9F%E5%BE%B7%E5%B0%94%E9%9A%8F%E6%9C%BA%E5%8C%96%E6%A0%87%E5%87%86%E6%B5%81%E7%A8%8B%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B/" title="孟德尔随机化标准流程代码示例">http://example.com/2024/02/05/孟德尔随机化标准流程代码示例/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -303,7 +288,9 @@
       <footer class="post-footer">
           <div class="post-tags">
               <a href="/tags/GWAS/" rel="tag"># GWAS</a>
-              <a href="/tags/python/" rel="tag"># python</a>
+              <a href="/tags/%E7%BB%9F%E8%AE%A1%E5%AD%A6/" rel="tag"># 统计学</a>
+              <a href="/tags/%E5%AD%9F%E5%BE%B7%E5%B0%94%E9%9A%8F%E6%9C%BA%E5%8C%96/" rel="tag"># 孟德尔随机化</a>
+              <a href="/tags/%E6%B5%81%E8%A1%8C%E7%97%85%E5%AD%A6/" rel="tag"># 流行病学</a>
           </div>
 
         
@@ -312,13 +299,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2023/08/12/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E6%95%99%E7%A8%8B%E5%92%8C%E8%B5%84%E6%BA%90%E8%81%9A%E5%90%88/" rel="prev" title="单细胞测序教程资源聚合">
-      <i class="fa fa-chevron-left"></i> 单细胞测序教程资源聚合
+    <a href="/2024/02/05/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E8%BD%AC%E5%BD%95%E7%BB%84%E6%B5%8B%E5%BA%8F%E6%8A%80%E6%9C%AF/" rel="prev" title="生物信息学笔记（一）：转录组测序技术">
+      <i class="fa fa-chevron-left"></i> 生物信息学笔记（一）：转录组测序技术
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2023/08/25/scPagwas%E2%80%94%E2%80%94%E6%95%B4%E5%90%88scRNA%E5%92%8CGWAS%E8%AF%86%E5%88%AB%E7%96%BE%E7%97%85%E7%9A%84%E9%A9%B1%E5%8A%A8%E5%9F%BA%E5%9B%A0%E5%92%8C%E5%85%B3%E9%94%AE%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8B/" rel="next" title="scPagwas——整合scRNA和GWAS识别疾病的驱动基因和关键细胞类型">
-      scPagwas——整合scRNA和GWAS识别疾病的驱动基因和关键细胞类型 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -377,7 +361,6 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#celltogwas"><span class="nav-text">celltogwas</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Explanation-of-each-function"><span class="nav-text">Explanation of each function</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#File-format"><span class="nav-text">File format</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
