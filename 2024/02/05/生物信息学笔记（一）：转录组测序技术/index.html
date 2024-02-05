@@ -22,21 +22,21 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="生物信息学教程和资源聚合">
+  <meta name="description" content="阐述测序原理，为转录组学数据挖掘打下基础。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="单细胞测序教程资源聚合">
-<meta property="og:url" content="http://example.com/2023/08/12/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E6%95%99%E7%A8%8B%E5%92%8C%E8%B5%84%E6%BA%90%E8%81%9A%E5%90%88/index.html">
+<meta property="og:title" content="生物信息学笔记（一）：转录组测序技术">
+<meta property="og:url" content="http://example.com/2024/02/05/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E8%BD%AC%E5%BD%95%E7%BB%84%E6%B5%8B%E5%BA%8F%E6%8A%80%E6%9C%AF/index.html">
 <meta property="og:site_name" content="一个夏天的年少">
-<meta property="og:description" content="生物信息学教程和资源聚合">
+<meta property="og:description" content="阐述测序原理，为转录组学数据挖掘打下基础。">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-08-12T00:00:00.000Z">
-<meta property="article:modified_time" content="2024-01-31T05:57:40.006Z">
+<meta property="article:published_time" content="2024-02-05T11:23:00.000Z">
+<meta property="article:modified_time" content="2024-02-05T15:10:27.682Z">
 <meta property="article:author" content="庄清源">
 <meta property="article:tag" content="生物信息学">
-<meta property="article:tag" content="单细胞测序">
+<meta property="article:tag" content="转录组学">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://example.com/2023/08/12/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E6%95%99%E7%A8%8B%E5%92%8C%E8%B5%84%E6%BA%90%E8%81%9A%E5%90%88/">
+<link rel="canonical" href="http://example.com/2024/02/05/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E8%BD%AC%E5%BD%95%E7%BB%84%E6%B5%8B%E5%BA%8F%E6%8A%80%E6%9C%AF/">
 
 
 <script id="page-configurations">
@@ -49,7 +49,7 @@
   };
 </script>
 
-  <title>单细胞测序教程资源聚合 | 一个夏天的年少</title>
+  <title>生物信息学笔记（一）：转录组测序技术 | 一个夏天的年少</title>
   
 
 
@@ -170,7 +170,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/08/12/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E6%95%99%E7%A8%8B%E5%92%8C%E8%B5%84%E6%BA%90%E8%81%9A%E5%90%88/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2024/02/05/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E8%BD%AC%E5%BD%95%E7%BB%84%E6%B5%8B%E5%BA%8F%E6%8A%80%E6%9C%AF/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -183,7 +183,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          单细胞测序教程资源聚合
+          生物信息学笔记（一）：转录组测序技术
         </h1>
 
         <div class="post-meta">
@@ -192,16 +192,10 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
+              
 
-              <time title="创建时间：2023-08-12 08:00:00" itemprop="dateCreated datePublished" datetime="2023-08-12T08:00:00+08:00">2023-08-12</time>
+              <time title="创建时间：2024-02-05 19:23:00 / 修改时间：23:10:27" itemprop="dateCreated datePublished" datetime="2024-02-05T19:23:00+08:00">2024-02-05</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-01-31 13:57:40" itemprop="dateModified" datetime="2024-01-31T13:57:40+08:00">2024-01-31</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -225,16 +219,16 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>399</span>
+              <span>2.3k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
+              <span>8 分钟</span>
             </span>
-            <div class="post-description">生物信息学教程和资源聚合</div>
+            <div class="post-description">阐述测序原理，为转录组学数据挖掘打下基础。</div>
 
         </div>
       </header>
@@ -245,26 +239,68 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="教程"><a href="#教程" class="headerlink" title="教程"></a>教程</h2><h4 id="单细胞测序"><a href="#单细胞测序" class="headerlink" title="单细胞测序"></a>单细胞测序</h4><ol>
-<li>单细胞测序-最佳的分析Pipeline <a target="_blank" rel="noopener" href="https://single-cell-tutorial.readthedocs.io/zh/latest/">单细胞测序-最佳的分析Pipeline</a> ：Zehua Zeng等为主要作者，包括详细的原理和处理流程（Python）；其中重点介绍了Omicverse的使用。  </li>
-<li>哈佛大学单细胞中文笔记：<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/209018565">哈佛大学单细胞中文笔记</a> 陈同博士撰写。主要包括原理和Seurat的使用。<a target="_blank" rel="noopener" href="https://hbctraining.github.io/main">原版教程</a></li>
+        <h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>&emsp;&emsp;<strong>转录组</strong>是特定组织或细胞在某一发育阶段或功能状态下转录出来的所有RNA的集合，包括编码蛋白质的mRNA和非编码RNA（non coding RNA, ncRNA）。<strong>转录组测序</strong>是指利用第二代高通量测序技术进行<strong>cDNA</strong>测序，全面快速地获取某一物种特定器官或组织在某一状态下的几乎所有转录本。<br>&emsp;&emsp;转录组分析的主要目标是：</p>
+<ol>
+<li>对所有的转录产物进行分类；</li>
+<li>确定基因的转录结构，如其起始位点，5′和3′末端，剪接模式和其他转录后修饰；</li>
+<li>量化各转录本在发育过程中和不同条件下(如生理&#x2F;病理)表达水平的变化。<br>&emsp;&emsp;在更早的科学研究中，人们主要利用芯片杂交平台，预先设计基因探针从而完成测序。下一代测序（Next generation sequencing, NGS）的发展变革了测序方法，实现了单核苷酸水平的精准识别，人们不必预先设计探针，并能探索基因精细、稀有的转录结构。</li>
 </ol>
-<h2 id="资源"><a href="#资源" class="headerlink" title="资源"></a>资源</h2><h4 id="肿瘤生信"><a href="#肿瘤生信" class="headerlink" title="肿瘤生信"></a>肿瘤生信</h4><ol>
-<li>GEPIA2：GEPIA2是一个无代码可视化平台，其数据来源于TCGA和GTEx数据库，用户可以自由探索指定基因的在肿瘤组织中的表达情况以及和预后的关系。<a target="_blank" rel="noopener" href="http://gepia2.cancer-pku.cn/">GEPIA2</a></li>
-<li>Prognoscan：Prognoscan整合了2010年以前GEO上Microarray和相应临床信息，可以探索制定基因自不同数据集中和预后的关系。<a target="_blank" rel="noopener" href="http://dna00.bio.kyutech.ac.jp/PrognoScan/">PrognoScan</a></li>
-<li>TIMER：TIMER用于分析不同癌症类型的免疫浸润（数据来自于TCGA）。<a target="_blank" rel="noopener" href="http://timer.cistrome.org/">TIMER2.0</a></li>
+<h2 id="基因芯片"><a href="#基因芯片" class="headerlink" title="基因芯片"></a>基因芯片</h2><p>&emsp;&emsp;虽然本文主要介绍RNA-seq这一技术，但实际上RNA-seq的目的和最终获得的数据格式与基因芯片有着相似之处，即都是以数据矩阵的形式呈现。因此，在介绍RNA-seq之前，我们有必要先了解一下基因芯片。</p>
+<ul>
+<li><strong>原理</strong>：基于分子杂交技术，基因芯片主要依赖于印刷有荧光标记的探针来实现。例如，基因组芯片是一种常见的基因芯片类型，它集成了高密度的探针，具有高达几个碱基对到100个碱基对的分辨率。通过将样品与这些探针进行杂交，并使用荧光染料进行显色，可以揭示转录组的信息。这一原理与血浆cfDNA的测定方法非常相似（即使用<strong>分光光度仪</strong>）。</li>
+<li><strong>流程</strong>：<ol>
+<li>标记mRNA或cDNA文库；</li>
+<li>与设计好的探针相杂交；</li>
+<li>洗脱之后，只有与探针特异性结合的cDNA得以保留；</li>
+<li>成像系统拍照捕捉信息；</li>
 </ol>
-<h4 id="GWAS"><a href="#GWAS" class="headerlink" title="GWAS"></a>GWAS</h4><ol>
-<li>IEU OPEN GWAS：包含42,484 个GWAS摘要数据集的214,725,223,303 个遗传关联的数据库。<a target="_blank" rel="noopener" href="https://gwas.mrcieu.ac.uk/">IEU OpenGWAS</a></li>
-<li>PheWeb：包含Biobank Japan，以及UKB等欧洲样本的GWAS结果。<a target="_blank" rel="noopener" href="https://pheweb.jp/downloads">PheWeb</a></li>
-<li>GWAS catalog：内容较全，网页比较慢，建议使用特殊方式访问。<a target="_blank" rel="noopener" href="https://www.ebi.ac.uk/gwas/downloads/summary-statistics">GWAS catalog</a>:</li>
-<li>EGG：早期生长联盟数据，包含出生体重，出生头围等。<a target="_blank" rel="noopener" href="http://egg-consortium.org/index.html">EGG</a></li>
-<li>CKDGEN：包含慢性肾病、MA、eGFR等。<a target="_blank" rel="noopener" href="http://ckdgen.imbi.uni-freiburg.de/?tdsourcetag=s_pctim_aiomsg">CKDGEN</a></li>
-<li>GLGC：血脂GWAS数据库。<a target="_blank" rel="noopener" href="http://csg.sph.umich.edu/willer/public/glgc-lipids2021/">GLGC</a></li>
-<li>PGC：精神病学基因组学联盟。<a target="_blank" rel="noopener" href="https://www.med.unc.edu/pgc/results-and-downloads/downloads">PGC</a></li>
-<li>GEFOS：骨质疏松联盟。<a target="_blank" rel="noopener" href="http://www.gefos.org/">GEFOS</a></li>
-<li>DIAGRAM：二型糖尿病数据库。<a target="_blank" rel="noopener" href="http://diagram-consortium.org/downloads.html">DIAGRAM</a>: </li>
-<li>代谢组学数据库：<a target="_blank" rel="noopener" href="http://www.metabolomix.com/list-of-all-published-gwas-with-metabolomics/">A Table of all published GWAS with metabolomics</a></li>
+</li>
+<li><strong>原始数据</strong>：由仪器对杂交结果照像生成的图片，保存格式为CEL格式；</li>
+<li><strong>参考数据</strong>：基因芯片探针排布的信息，保存为CDF格式；</li>
+<li><strong>优点</strong>：高度集成，易于应用，成本低；</li>
+<li><strong>缺点</strong>：  <ol>
+<li>高度地依赖已知信息；  </li>
+<li>高背景噪音，非特异杂交会带来的<strong>无法分辨弱信号</strong>和<strong>信号过饱和</strong>的问题；  </li>
+<li>在不同样品的比较当中，甚至在同一芯片内部，都存在杂交不均匀带来的各种问题，需要<strong>标准化</strong>等统计学方法来对结果校正；  </li>
+<li>无法对可变剪接进行分析。<br>&emsp;&emsp;数据清洗和标准化我们会在后续章节进行阐述。</li>
+</ol>
+</li>
+</ul>
+<h2 id="NGS"><a href="#NGS" class="headerlink" title="NGS"></a>NGS</h2><p>&emsp;&emsp;NGS是一种高通量、高效率的基因组测序技术，它在基因组学和生物学研究中具有广泛的应用。下一代测序相对于传统的Sanger测序方法，具有更快速、更经济、更高通量的特点。</p>
+<ul>
+<li><strong>原理</strong>：将待测DNA样本分离成小片段，并使用特定的方法进行扩增、捕获和测序。然后在高通量平台上进行并行测序，生成大量的序列片段。这些片段随后通过计算和分析，可以重构原始的DNA序列信息。</li>
+<li><strong>步骤</strong>：<ol>
+<li>分离样本中的RNA，反转录为DNA；</li>
+<li>样品制备：DNA样本需要被处理和准备成适合测序的库。这包括DNA提取、片段化和标记等步骤。</li>
+<li>文库构建：将片段化的DNA样本连接到适当的测序适配器上，形成文库。适配器中包含了特定的序列，用于后续的扩增和测序。</li>
+<li>扩增：将文库中的DNA片段进行扩增，通常采用PCR（聚合酶链式反应）方法。扩增后的文库可以包含成百上千万个DNA片段的复制。</li>
+<li>测序：将扩增的文库加载到下一代测序仪中，进行高通量的并行测序。不同的下一代测序技术会使用不同的原理和方法，如Illumina的测序-by-synthesis技术、Ion Torrent的测序-by-detection技术等。</li>
+<li>数据分析：通过计算和分析，将测序仪输出的原始数据转化为DNA序列信息。这包括图像处理、碱基识别、序列拼接、质量控制和变异检测等步骤。![[v2-5ef7a9fd4eb6a430a2ee8481285e6e1a_r.jpg]]</li>
+</ol>
+</li>
+<li><strong>步骤（细节）</strong> ：<ol>
+<li>目前很多PCR使用的高保真Pfu聚合酶产生的片段末端是平齐的（即没有不配对的碱基）；鸟枪法产生的片段则是随机断裂，其末端可能是平齐的也可能是不平的，那么我们首先可以使用Taq聚合酶补齐不平的末端，在DNA双链的末端（3‘ 端），我们添加突出的A碱基，以为连接接头做准备（Adaptor）；</li>
+<li>接头有突出的T，上述操作的DNA双链末端有突出的A，恰能配对。通过连接酶将接头连接上到DNA上；</li>
+<li>NEBNext接头是一个U碱基在中间的环形接头，连接上DNA后将U碱基删除，从而形成“Y形“末端；</li>
+<li>接头添加的目的是作为引物实现这些序列的扩增：文库index（Barcode）、PCR引物Rd1 SP&#x2F;Rd2 SP，以及和测序平台互补的寡核苷酸链扩增（P7、P5）【其中与P5端连接的Index称为Index 2，又称之为i5；与P7端连接的称为Index1，也称为i7】；</li>
+<li>Y形接头的设计，确保了DNA链两端是不配对的碱基序列引物，从而能够结合不同寡核苷酸序列，实现PCR中DNA链两端不会结合同一段序列（index、PCR引物以及和测序平台互补的寡核苷酸链），为后面的桥式扩增做准备；![[Pasted image 20240205212604.png]]</li>
+<li>Illumina平台的测序技术为基于<strong>基因芯片的边合成边测序</strong>：在Illumina测序平台的流通池（Flow cell）表面（如下图），通过基因芯片技术交错固定了无数条分别文库接头中P5和P7互补的寡核苷酸链（即短核苷酸链），单链化的文库DNA片段进入流通池后，可以与表面的寡核苷酸结合，从而进入测序过程。![[Pasted image 20240205212658.png]]</li>
+<li>由于单链DNA的另一端具有不同的接头序列，因此它可以与相邻的另一种寡核苷酸互补配对，从而进行”桥”式扩增。假设第一次配对的接头是P7，一旦复制完成并洗脱模板后，DNA顶端可以与相邻的P5接头互补配对，形成一个”桥”结构。然后，以P5为引物进行复制。复制完成后，再次解链，并与相邻的不同种类接头结合，以进行下一轮复制。这个过程不断重复。25-28个循环完成后，原来散布在表面的核苷酸序列变成散布的DNA簇【何为散布的核苷酸序列？即一开始结合在P5或者P7上的序列】；![[Pasted image 20240205231007.png]]</li>
+<li>接着，再次解链线性化，切割并洗去连接在P5上的DNA链，只留下P7上的DNA单链【仅保留正向链，即一开始进入flowcell的模板链】；</li>
+<li>边合成边测序技术：合成过程发出碱基特异荧光信号被捕捉，合成循环数决定读取长度，对于某一特定的DNA簇，相同的DNA链会被同时读取【为什么要用簇？是为了增强信号】。</li>
+<li>接着测序index序列，从而提示样本来源；</li>
+<li>我们接着进行模板链的另一端开始的测序，这一次也能同时完成index2的测序，双端测序有利于纠正首尾错配：步骤是再次桥式扩增（但一次循环就够了），然后如前测序；</li>
+<li>测序完成，按照相同index进行分类，样本内具有相似base call的序列被聚类，正向和反向read被配为连续序列；</li>
+<li>连续序列和参考基因组进行比对，确定基因和突变。</li>
+</ol>
+</li>
+</ul>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>&emsp;&emsp;对实验原理的透彻理解，是数据分析的基础。后续的归一化、标准化等数据清洗要求都是建立在实验原理上。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/282790878">第二章：NGS原理解析01：二代测序流程 - 知乎 (zhihu.com)</a></li>
+<li><a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/371040548#:~:text=Index%20%E5%8F%88%E7%A7%B0%20Barcode,%EF%BC%8C%E6%98%AF%E6%88%91%E4%BB%AC%E8%BF%9B%E8%A1%8C%20%E6%96%87%E5%BA%93%E6%B7%B7%E5%90%88%E6%B5%8B%E5%BA%8F%E6%97%B6%E7%94%A8%E4%BA%8E%E6%95%B0%E6%8D%AE%E6%8B%86%E5%88%86%E7%9A%84%E4%B8%80%E4%B8%AA%E6%A0%87%E7%AD%BE%20%EF%BC%8C%E5%85%B6%E4%B8%AD%E4%B8%8EP5%E7%AB%AF%E8%BF%9E%E6%8E%A5%E7%9A%84Index%E7%A7%B0%E4%B8%BAIndex%202%EF%BC%8C%E5%8F%88%E7%A7%B0%E4%B9%8B%E4%B8%BAi5%EF%BC%9B%E4%B8%8EP7%E7%AB%AF%E8%BF%9E%E6%8E%A5%E7%9A%84%E7%A7%B0%E4%B8%BAIndex1%EF%BC%8C%E4%B9%9F%E7%A7%B0%E4%B8%BAi7%E3%80%82">干货 | Index这件小事，你get了吗？ - 知乎 (zhihu.com)</a></li>
+<li><a target="_blank" rel="noopener" href="https://microbeonline.com/next-generation-sequencing/">Next Generation Sequencing: Principle, Steps Involved, and Applications • Microbe Online</a></li>
+<li><a target="_blank" rel="noopener" href="https://www.thermofisher.com/us/en/home/life-science/cloning/cloning-learning-center/invitrogen-school-of-molecular-biology/next-generation-sequencing/illumina-workflow.html">Next-Generation Sequencing Illumina Workflow–4 Key Steps | Thermo Fisher Scientific - US</a></li>
 </ol>
 
     </div>
@@ -281,7 +317,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://example.com/2023/08/12/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E6%95%99%E7%A8%8B%E5%92%8C%E8%B5%84%E6%BA%90%E8%81%9A%E5%90%88/" title="单细胞测序教程资源聚合">http://example.com/2023/08/12/生物信息学教程和资源聚合/</a>
+    <a href="http://example.com/2024/02/05/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E8%BD%AC%E5%BD%95%E7%BB%84%E6%B5%8B%E5%BA%8F%E6%8A%80%E6%9C%AF/" title="生物信息学笔记（一）：转录组测序技术">http://example.com/2024/02/05/生物信息学笔记（一）：转录组测序技术/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -312,7 +348,7 @@
       <footer class="post-footer">
           <div class="post-tags">
               <a href="/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/" rel="tag"># 生物信息学</a>
-              <a href="/tags/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F/" rel="tag"># 单细胞测序</a>
+              <a href="/tags/%E8%BD%AC%E5%BD%95%E7%BB%84%E5%AD%A6/" rel="tag"># 转录组学</a>
           </div>
 
         
@@ -321,13 +357,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2023/08/11/scDRS%EF%BC%9A%E5%9F%BA%E4%BA%8EGWAS%E5%92%8CscRNA%E8%AF%84%E4%BC%B0%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8B%E5%92%8C%E7%94%9F%E7%89%A9%E5%AD%A6%E8%BF%87%E7%A8%8B%E7%9A%84%E7%96%BE%E7%97%85%E7%9B%B8%E5%85%B3%E6%80%A7/" rel="prev" title="scDRS：基于GWAS和scRNA评估细胞类型和生物学过程的疾病相关性">
-      <i class="fa fa-chevron-left"></i> scDRS：基于GWAS和scRNA评估细胞类型和生物学过程的疾病相关性
+    <a href="/2023/10/11/%E8%AE%B0%E5%BD%95%E7%9A%84%E7%9B%AE%E7%9A%84/" rel="prev" title="记录的目的">
+      <i class="fa fa-chevron-left"></i> 记录的目的
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2023/08/19/celltogwas%EF%BC%9A%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8B%E6%B3%A8%E9%87%8A%E5%88%B0%E5%9F%BA%E5%9B%A0%E7%BB%84%E7%9A%84%E5%B7%A5%E5%85%B7%E5%8C%85/" rel="next" title="celltogwas：细胞类型注释到基因组的工具包">
-      celltogwas：细胞类型注释到基因组的工具包 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -386,7 +419,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%99%E7%A8%8B"><span class="nav-text">教程</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F"><span class="nav-text">单细胞测序</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B5%84%E6%BA%90"><span class="nav-text">资源</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E8%82%BF%E7%98%A4%E7%94%9F%E4%BF%A1"><span class="nav-text">肿瘤生信</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#GWAS"><span class="nav-text">GWAS</span></a></li></ol></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%99%E5%9C%A8%E5%89%8D%E9%9D%A2"><span class="nav-text">写在前面</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E5%9B%A0%E8%8A%AF%E7%89%87"><span class="nav-text">基因芯片</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#NGS"><span class="nav-text">NGS</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E8%AF%AD"><span class="nav-text">结语</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E8%80%83"><span class="nav-text">参考</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 

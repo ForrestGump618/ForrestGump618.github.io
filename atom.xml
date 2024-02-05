@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2024-01-31T05:28:18.296Z</updated>
+  <updated>2024-02-05T15:10:27.682Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -15,6 +15,27 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>生物信息学笔记（一）：转录组测序技术</title>
+    <link href="http://example.com/2024/02/05/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E8%BD%AC%E5%BD%95%E7%BB%84%E6%B5%8B%E5%BA%8F%E6%8A%80%E6%9C%AF/"/>
+    <id>http://example.com/2024/02/05/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E8%BD%AC%E5%BD%95%E7%BB%84%E6%B5%8B%E5%BA%8F%E6%8A%80%E6%9C%AF/</id>
+    <published>2024-02-05T11:23:00.000Z</published>
+    <updated>2024-02-05T15:10:27.682Z</updated>
+    
+    
+    <summary type="html">阐述测序原理，为转录组学数据挖掘打下基础。</summary>
+    
+    
+    
+    <category term="生物信息学" scheme="http://example.com/categories/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
+    
+    
+    <category term="生物信息学" scheme="http://example.com/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
+    
+    <category term="转录组学" scheme="http://example.com/tags/%E8%BD%AC%E5%BD%95%E7%BB%84%E5%AD%A6/"/>
+    
+  </entry>
   
   <entry>
     <title>记录的目的</title>
@@ -73,11 +94,11 @@
     <category term="生物信息学" scheme="http://example.com/categories/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
     
     
+    <category term="生物信息学" scheme="http://example.com/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
+    
     <category term="GWAS" scheme="http://example.com/tags/GWAS/"/>
     
     <category term="单细胞测序" scheme="http://example.com/tags/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F/"/>
-    
-    <category term="生物信息学" scheme="http://example.com/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
     
   </entry>
   
@@ -117,9 +138,9 @@
     <category term="生物信息学" scheme="http://example.com/categories/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
     
     
-    <category term="单细胞测序" scheme="http://example.com/tags/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F/"/>
-    
     <category term="生物信息学" scheme="http://example.com/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
+    
+    <category term="单细胞测序" scheme="http://example.com/tags/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F/"/>
     
   </entry>
   
@@ -138,11 +159,11 @@
     <category term="生物信息学" scheme="http://example.com/categories/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
     
     
+    <category term="生物信息学" scheme="http://example.com/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
+    
     <category term="GWAS" scheme="http://example.com/tags/GWAS/"/>
     
     <category term="单细胞测序" scheme="http://example.com/tags/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F/"/>
-    
-    <category term="生物信息学" scheme="http://example.com/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
     
   </entry>
   
