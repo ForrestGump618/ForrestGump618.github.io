@@ -46,7 +46,7 @@
     <link href="http://example.com/2024/02/05/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E8%BD%AC%E5%BD%95%E7%BB%84%E6%B5%8B%E5%BA%8F%E6%8A%80%E6%9C%AF/"/>
     <id>http://example.com/2024/02/05/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E8%BD%AC%E5%BD%95%E7%BB%84%E6%B5%8B%E5%BA%8F%E6%8A%80%E6%9C%AF/</id>
     <published>2024-02-05T15:25:37.000Z</published>
-    <updated>2024-02-05T15:30:25.775Z</updated>
+    <updated>2024-02-06T03:58:24.735Z</updated>
     
     
     <summary type="html">阐述测序原理，为转录组学数据挖掘打下基础。</summary>
@@ -121,9 +121,9 @@
     
     <category term="GWAS" scheme="http://example.com/tags/GWAS/"/>
     
-    <category term="单细胞测序" scheme="http://example.com/tags/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F/"/>
-    
     <category term="生物信息学" scheme="http://example.com/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
+    
+    <category term="单细胞测序" scheme="http://example.com/tags/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F/"/>
     
   </entry>
   
@@ -163,9 +163,9 @@
     <category term="生物信息学" scheme="http://example.com/categories/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
     
     
-    <category term="单细胞测序" scheme="http://example.com/tags/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F/"/>
-    
     <category term="生物信息学" scheme="http://example.com/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
+    
+    <category term="单细胞测序" scheme="http://example.com/tags/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F/"/>
     
   </entry>
   
@@ -186,9 +186,9 @@
     
     <category term="GWAS" scheme="http://example.com/tags/GWAS/"/>
     
-    <category term="单细胞测序" scheme="http://example.com/tags/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F/"/>
-    
     <category term="生物信息学" scheme="http://example.com/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
+    
+    <category term="单细胞测序" scheme="http://example.com/tags/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F/"/>
     
   </entry>
   
