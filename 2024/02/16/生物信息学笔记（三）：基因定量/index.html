@@ -30,7 +30,7 @@
 <meta property="og:description" content="本文解释基因定量的不同方法和使用场景。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-02-15T16:02:00.000Z">
-<meta property="article:modified_time" content="2024-02-16T03:23:27.395Z">
+<meta property="article:modified_time" content="2024-02-16T07:52:53.138Z">
 <meta property="article:author" content="庄清源">
 <meta property="article:tag" content="生物信息学">
 <meta property="article:tag" content="转录组学">
@@ -195,7 +195,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2024-02-16 00:02:00 / 修改时间：11:23:27" itemprop="dateCreated datePublished" datetime="2024-02-16T00:02:00+08:00">2024-02-16</time>
+              <time title="创建时间：2024-02-16 00:02:00 / 修改时间：15:52:53" itemprop="dateCreated datePublished" datetime="2024-02-16T00:02:00+08:00">2024-02-16</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -246,14 +246,16 @@
 <ol>
 <li>计算样本中的总读数，然后将该数字除以 1,000,000——这是“每百万”比例因子；</li>
 <li>将读取计数除以“每百万”比例因子。这针对测序深度进行了归一化，得到每百万次读数（reads per million，RPM）；</li>
-<li>将 RPM 值除以基因的长度，以千碱基为单位，得到RPKM。<br>&emsp;&emsp;在第二代测序过程中，常采用一种方法将DNA分子打碎成片段（fragment），然后进行测序。在单末端测序中，每个片段对应一个读取序列（Read），而在双末端测序中，每个片段将从两个端点分别进行测序。因此，这两个成对的读取序列对应于同一个片段（虽然偶尔会出现只有一个读取序列与某个片段相对应的情况，这是由于某些原因导致另一个读取序列被排除或丢失了）。在这一点上存在着区别，对于FPKM（每百万片段计数）这一测量指标而言，与同一片段相关联的两个读取序列只被计算为一个读取序列。换句话说，FPKM是基于片段计数，而不是基于读取序列数量计算的，其他计算方法完全相同。<br>&emsp;&emsp;两者计算公式如下：<br>$$FPKM &#x3D; \frac{Read\quad counts}{Mapped\quad reads(Millions)\quad \times \quad Transcript\quad length(KB)}$$<br>$$RPKM &#x3D; \frac{Read\quad counts(Fragments)}{Mapped\quad reads(Millions)\quad \times \quad Transcript\quad length(KB)}$$</li>
+<li>将 RPM 值除以基因的长度，以千碱基为单位，得到RPKM。</li>
 </ol>
+<p>&emsp;&emsp;在第二代测序过程中，常采用一种方法将DNA分子打碎成片段（fragment），然后进行测序。在单末端测序中，每个片段对应一个读取序列（Read），而在双末端测序中，每个片段将从两个端点分别进行测序。因此，这两个成对的读取序列对应于同一个片段（虽然偶尔会出现只有一个读取序列与某个片段相对应的情况，这是由于某些原因导致另一个读取序列被排除或丢失了）。在这一点上存在着区别，对于FPKM（每百万片段计数）这一测量指标而言，与同一片段相关联的两个读取序列只被计算为一个读取序列。换句话说，FPKM是基于片段计数，而不是基于读取序列数量计算的，其他计算方法完全相同。<br>&emsp;&emsp;两者计算公式如下：<br>$$FPKM &#x3D; \frac{Read\quad counts}{Mapped\quad reads(Millions)\quad \times \quad Transcript\quad length(KB)}$$<br>$$RPKM &#x3D; \frac{Read\quad counts(Fragments)}{Mapped\quad reads(Millions)\quad \times \quad Transcript\quad length(KB)}$$</p>
 <h2 id="TPM"><a href="#TPM" class="headerlink" title="TPM"></a>TPM</h2><p>&emsp;&emsp;TPM（Transcripts Per Million） 是一种常用的基因表达量归一化方法，它将基因的表达量调整为每百万条转录本的数量。TPM 值考虑了基因的长度和测序深度，通过将每个基因的 Counts 值除以其长度，并进行适当的归一化，将基因的表达量转换为每百万转录本数，以便进行样本间的比较和分析。TPM 值消除了样本间测序深度的差异和基因长度的影响，实质上，TPM相当于重新标准化的文库，保证每个样本中所有TPM的总和是相同的。TPM 与 RPKM 和 FPKM 非常相似。唯一的区别是操作顺序。以下是计算 TPM 的方法：</p>
 <ol>
 <li>将读取计数除以每个基因的长度（以千碱基为单位），得到每千碱基读数（reads per kilobase，RPK）；</li>
 <li>计算样本中的所有 RPK 值的和，并将此数字除以 1,000,000，得到如前的“每百万”比例因子；</li>
-<li>将 RPK 值除以“每百万”比例因子，得到TPM。<br>&emsp;&emsp;综上，在计算TPM时，和前述指标唯一的区别是你首先对基因长度进行归一化，然后对测序深度进行归一化。然而，这种差异的影响是相当深远的。<br>&emsp;&emsp;使用 TPM 时，每个示例中所有 TPM 的总和是相同的。这样可以更容易地比较每个样品中映射到基因的reads比例。相比之下，使用RPKM和FPKM，每个样本中归一化读数的总和可能不同，这使得直接比较样本变得更加困难，在某种意义上，TPM降低了样本本身的影响，从而让样本具有可比性，即TPM实际上改进了RPKM&#x2F;FPKM方法在跨样品间定量的不准确性。<br>&emsp;&emsp;其计算公式如下：<br>$$TPM &#x3D; 10^6 \times \frac{\frac {Read\quad counts}{Transcript \quad length(KB)}}{\Sigma \frac {Read\quad counts}{Transcript \quad length(KB)}}$$</li>
+<li>将 RPK 值除以“每百万”比例因子，得到TPM。</li>
 </ol>
+<p>&emsp;&emsp;综上，在计算TPM时，和前述指标唯一的区别是你首先对基因长度进行归一化，然后对测序深度进行归一化。然而，这种差异的影响是相当深远的。<br>&emsp;&emsp;使用 TPM 时，每个示例中所有 TPM 的总和是相同的。这样可以更容易地比较每个样品中映射到基因的reads比例。相比之下，使用RPKM和FPKM，每个样本中归一化读数的总和可能不同，这使得直接比较样本变得更加困难，在某种意义上，TPM降低了样本本身的影响，从而让样本具有可比性，即TPM实际上改进了RPKM&#x2F;FPKM方法在跨样品间定量的不准确性。<br>&emsp;&emsp;其计算公式如下：<br>$$TPM &#x3D; 10^6 \times \frac{\frac {Read\quad counts}{Transcript \quad length(KB)}}{\Sigma \frac {Read\quad counts}{Transcript \quad length(KB)}}$$</p>
 <h2 id="适用范围"><a href="#适用范围" class="headerlink" title="适用范围"></a>适用范围</h2><ol>
 <li>如前所述，基于测序计数选择基因定量的方案，如对于10×测序，直接使用原始Count即可；</li>
 <li>对于传统的二代测序，应当进行标准化基因定量：<ol>
