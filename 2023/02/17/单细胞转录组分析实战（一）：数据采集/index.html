@@ -22,19 +22,24 @@
     var CONFIG = {"hostname":"example.com","root":"/","scheme":"Gemini","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
-  <meta name="description" content="&amp;emsp;&amp;emsp;欢迎来到我的主页，这里将记录我学习医学、统计和流行病学的一些收获，以及一些生活碎片。欢迎来踩！&amp;emsp;&amp;emsp;希望这些笔记对您的学习有帮助，最好的东西是免费的，最好的知识是开源的。2023年8月11日">
+  <meta name="description" content="基于Seurat 5的单细胞转录组分析。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Hello World！">
-<meta property="og:url" content="http://example.com/2023/08/10/Hello%20World%EF%BC%81/index.html">
+<meta property="og:title" content="单细胞转录组分析实战（一）：数据采集">
+<meta property="og:url" content="http://example.com/2023/02/17/%E5%8D%95%E7%BB%86%E8%83%9E%E8%BD%AC%E5%BD%95%E7%BB%84%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E6%95%B0%E6%8D%AE%E9%87%87%E9%9B%86/index.html">
 <meta property="og:site_name" content="一个夏天的年少">
-<meta property="og:description" content="&amp;emsp;&amp;emsp;欢迎来到我的主页，这里将记录我学习医学、统计和流行病学的一些收获，以及一些生活碎片。欢迎来踩！&amp;emsp;&amp;emsp;希望这些笔记对您的学习有帮助，最好的东西是免费的，最好的知识是开源的。2023年8月11日">
+<meta property="og:description" content="基于Seurat 5的单细胞转录组分析。">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-08-10T00:00:00.000Z">
-<meta property="article:modified_time" content="2024-01-31T04:10:34.000Z">
+<meta property="og:image" content="http://example.com/2023/02/17/%E5%8D%95%E7%BB%86%E8%83%9E%E8%BD%AC%E5%BD%95%E7%BB%84%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E6%95%B0%E6%8D%AE%E9%87%87%E9%9B%86/1.jpg">
+<meta property="article:published_time" content="2023-02-17T06:30:00.000Z">
+<meta property="article:modified_time" content="2024-02-17T13:27:27.883Z">
 <meta property="article:author" content="庄清源">
+<meta property="article:tag" content="单细胞测序">
+<meta property="article:tag" content="免疫">
+<meta property="article:tag" content="肿瘤">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://example.com/2023/02/17/%E5%8D%95%E7%BB%86%E8%83%9E%E8%BD%AC%E5%BD%95%E7%BB%84%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E6%95%B0%E6%8D%AE%E9%87%87%E9%9B%86/1.jpg">
 
-<link rel="canonical" href="http://example.com/2023/08/10/Hello%20World%EF%BC%81/">
+<link rel="canonical" href="http://example.com/2023/02/17/%E5%8D%95%E7%BB%86%E8%83%9E%E8%BD%AC%E5%BD%95%E7%BB%84%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E6%95%B0%E6%8D%AE%E9%87%87%E9%9B%86/">
 
 
 <script id="page-configurations">
@@ -47,7 +52,7 @@
   };
 </script>
 
-  <title>Hello World！ | 一个夏天的年少</title>
+  <title>单细胞转录组分析实战（一）：数据采集 | 一个夏天的年少</title>
   
 
 
@@ -168,7 +173,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://example.com/2023/08/10/Hello%20World%EF%BC%81/">
+    <link itemprop="mainEntityOfPage" href="http://example.com/2023/02/17/%E5%8D%95%E7%BB%86%E8%83%9E%E8%BD%AC%E5%BD%95%E7%BB%84%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E6%95%B0%E6%8D%AE%E9%87%87%E9%9B%86/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -181,7 +186,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          Hello World！
+          单细胞转录组分析实战（一）：数据采集
         </h1>
 
         <div class="post-meta">
@@ -191,15 +196,24 @@
               </span>
               <span class="post-meta-item-text">发表于</span>
 
-              <time title="创建时间：2023-08-10 08:00:00" itemprop="dateCreated datePublished" datetime="2023-08-10T08:00:00+08:00">2023-08-10</time>
+              <time title="创建时间：2023-02-17 14:30:00" itemprop="dateCreated datePublished" datetime="2023-02-17T14:30:00+08:00">2023-02-17</time>
             </span>
               <span class="post-meta-item">
                 <span class="post-meta-item-icon">
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-01-31 12:10:34" itemprop="dateModified" datetime="2024-01-31T12:10:34+08:00">2024-01-31</time>
+                <time title="修改时间：2024-02-17 21:27:27" itemprop="dateModified" datetime="2024-02-17T21:27:27+08:00">2024-02-17</time>
               </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/" itemprop="url" rel="index"><span itemprop="name">生物信息学</span></a>
+                </span>
+            </span>
 
           
             <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv" style="display: none;">
@@ -217,8 +231,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2023/08/10/Hello%20World%EF%BC%81/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2023/08/10/Hello%20World%EF%BC%81/" itemprop="commentCount"></span>
+    <a title="valine" href="/2023/02/17/%E5%8D%95%E7%BB%86%E8%83%9E%E8%BD%AC%E5%BD%95%E7%BB%84%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E6%95%B0%E6%8D%AE%E9%87%87%E9%9B%86/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2023/02/17/%E5%8D%95%E7%BB%86%E8%83%9E%E8%BD%AC%E5%BD%95%E7%BB%84%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E6%95%B0%E6%8D%AE%E9%87%87%E9%9B%86/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -228,15 +242,16 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>84</span>
+              <span>1.2k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>1 分钟</span>
+              <span>4 分钟</span>
             </span>
+            <div class="post-description">基于Seurat 5的单细胞转录组分析。</div>
 
         </div>
       </header>
@@ -247,7 +262,37 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>&emsp;&emsp;欢迎来到我的主页，这里将记录我学习医学、统计和流行病学的一些收获，以及一些生活碎片。欢迎来踩！<br>&emsp;&emsp;希望这些笔记对您的学习有帮助，最好的东西是免费的，最好的知识是开源的。<br>2023年8月11日</p>
+        <h2 id="写在前面的话"><a href="#写在前面的话" class="headerlink" title="写在前面的话"></a>写在前面的话</h2><p>&emsp;&emsp;本系列将基于张泽民团队发表的TNBC免疫图谱进行挖掘（<a target="_blank" rel="noopener" href="https://www.cell.com/cancer-cell/fulltext/S1535-6108(21">Single-cell analyses reveal key immune cell subsets associated with response to PD-L1 blockade in triple-negative breast cancer: Cancer Cell</a>00499-2)），旨在探索原发灶和转移灶免疫微环境的差异及其原因。<br>&emsp;&emsp;准确严谨的采集和清洗数据是单细胞分析的开始，数据本身的质量和采集过程的规范程度决定了研究结果的可靠性。</p>
+<h2 id="样本信息"><a href="#样本信息" class="headerlink" title="样本信息"></a>样本信息</h2><h3 id="患者来源"><a href="#患者来源" class="headerlink" title="患者来源"></a>患者来源</h3><p>&emsp;&emsp;国家癌症中心开发的DTHealth TrakCare系统中记录了患者信息，纳入本研究的22名患者满足：（1）组织学确诊晚期TNBC；（2）既往没有化疗、靶向及免疫等全身治疗；（3）研究中接受紫杉醇单药治疗或紫杉醇加阿替利珠单抗治疗。</p>
+<h3 id="患者信息"><a href="#患者信息" class="headerlink" title="患者信息"></a>患者信息</h3><ol>
+<li>本研究所有患者均被诊断为晚期TNBC，大多数患者患有转移性疾病；</li>
+<li>事实上，一些患者是接受新辅助治疗的局部晚期患者；</li>
+<li>患者为女性，年龄在32-64岁之间，中位值为49岁；</li>
+</ol>
+<p><img src="/2023/02/17/%E5%8D%95%E7%BB%86%E8%83%9E%E8%BD%AC%E5%BD%95%E7%BB%84%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E6%95%B0%E6%8D%AE%E9%87%87%E9%9B%86/1.jpg" alt="临床信息"></p>
+<h3 id="样本收集、文库制备和测序"><a href="#样本收集、文库制备和测序" class="headerlink" title="样本收集、文库制备和测序"></a>样本收集、文库制备和测序</h3><p>&emsp;&emsp;研究使用16针吸穿刺取乳腺、胸壁肿瘤样本；18号针取淋巴结、肝转移灶样本。测序仪器是10x Genomics公司的HiSeq X Ten，平台为<a target="_blank" rel="noopener" href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GPL20795">GPL20795</a>。DNA片段被打碎为150bp，进行双端测序。</p>
+<h2 id="单细胞转录组数据处理"><a href="#单细胞转录组数据处理" class="headerlink" title="单细胞转录组数据处理"></a>单细胞转录组数据处理</h2><p>&emsp;&emsp;10x Genomics公司提供的Cell Ranger（V 3.0.1）用于汇总原始数据，过滤低质量读段，将reads与人类参考基因组（GRCh38）比对，分配细胞Barcode，并生成UMI矩阵。值得注意的是，对于10x Genomics公司的测序，由于UMI的存在，使用Raw Count即可反映真实的基因表达，不需要使用标准化方法进行基因定量（<a target="_blank" rel="noopener" href="https://forrestgump618.github.io/2024/02/16/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89%EF%BC%9A%E5%9F%BA%E5%9B%A0%E5%AE%9A%E9%87%8F/">生物信息学笔记（三）：基因定量</a>）。但注意，这里所谓“真实的基因表达”反映的是测序过程中的真实值，即不必考虑测序深度和转录本长度的值；而单细胞测序中，由于转录本的低捕获率，我们假设合格细胞基因表达总量应该类似，所以还要进行标准化排除不同细胞测序质量的差异。<br>&emsp;&emsp;原文使用Scanpy进行下游分析，质控步骤包括：</p>
+<ol>
+<li>过滤在少于10个细胞中表达的基因；</li>
+<li>过滤少于200个基因的细胞中检测到的基因；</li>
+<li>保留了600-120,000个UMIs、400-8,000个基因和小于10%线粒体基因计数的高质量细胞；</li>
+<li>将Scrublet应用于每个测序文库，以去除预期的双峰率为6%的潜在双峰，并滤除doubletScore大于90%分位数的细胞；</li>
+</ol>
+<p>&emsp;&emsp;接着，我们进行标准化操作：</p>
+<ol>
+<li>标准化每个细胞的总计数（库大小）：这一步是为了消除不同细胞间样本量的差异。库大小通常是指一个细胞中检测到的总UMI数。通过将每个细胞的UMI计数除以该细胞的总UMI计数，可以确保数据在不同细胞间是可比的。</li>
+<li>乘以1e6：这一步是为了放大数据，使其更易于处理。通常在生物信息学中，进行这样的转换是为了避免处理极小的数字。</li>
+<li>对数据进行对数变换：最后，对标准化后的数据进行对数变换是为了减少数据中极端值的影响，使数据的分布更接近正态分布。这通常有助于后续的统计分析和可视化。</li>
+</ol>
+<p>&emsp;&emsp;前面的步骤完成了单细胞转录组数据的质控和标准化，下面进行矩阵降维，进一步排除无关变量的影响，同时压缩分析规模：</p>
+<ol>
+<li>选择前4000个可变基因，排除大部分背景基因的影响；</li>
+<li>从标准化表达矩阵中去除总计数、线粒体基因计数和热休克蛋白（HSP）相关基因计数的变异，以避免偏差；</li>
+<li>主成分分析，把4000个可变基因降为50个主成分；</li>
+<li>由此，我们得到了50×细胞数的矩阵，即对于每个细胞有50个变量，使用前2个或者3个主成分进行可视化，通过标注不同样本，发现潜在的批次效应，并通过相应的算法（在R中可以通过Harmony）去除；</li>
+<li>由此，我们尽可能避免了因非研究变量因素导致的系统误差，得到新的标准化矩阵。</li>
+</ol>
+<p>&emsp;&emsp;最后，Leiden算法寻找细胞簇和分群，UMAP和TSNE进行作图，推荐使用COSG确定Marker。</p>
 
     </div>
 
@@ -263,7 +308,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="http://example.com/2023/08/10/Hello%20World%EF%BC%81/" title="Hello World！">http://example.com/2023/08/10/Hello World！/</a>
+    <a href="http://example.com/2023/02/17/%E5%8D%95%E7%BB%86%E8%83%9E%E8%BD%AC%E5%BD%95%E7%BB%84%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E6%95%B0%E6%8D%AE%E9%87%87%E9%9B%86/" title="单细胞转录组分析实战（一）：数据采集">http://example.com/2023/02/17/单细胞转录组分析实战（一）：数据采集/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -292,19 +337,21 @@
 
 
       <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F/" rel="tag"># 单细胞测序</a>
+              <a href="/tags/%E5%85%8D%E7%96%AB/" rel="tag"># 免疫</a>
+              <a href="/tags/%E8%82%BF%E7%98%A4/" rel="tag"># 肿瘤</a>
+          </div>
 
         
 
 
         
     <div class="post-nav">
+      <div class="post-nav-item"></div>
       <div class="post-nav-item">
-    <a href="/2023/02/17/%E5%8D%95%E7%BB%86%E8%83%9E%E8%BD%AC%E5%BD%95%E7%BB%84%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E6%95%B0%E6%8D%AE%E9%87%87%E9%9B%86/" rel="prev" title="单细胞转录组分析实战（一）：数据采集">
-      <i class="fa fa-chevron-left"></i> 单细胞转录组分析实战（一）：数据采集
-    </a></div>
-      <div class="post-nav-item">
-    <a href="/2023/08/11/scDRS%EF%BC%9A%E5%9F%BA%E4%BA%8EGWAS%E5%92%8CscRNA%E8%AF%84%E4%BC%B0%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8B%E5%92%8C%E7%94%9F%E7%89%A9%E5%AD%A6%E8%BF%87%E7%A8%8B%E7%9A%84%E7%96%BE%E7%97%85%E7%9B%B8%E5%85%B3%E6%80%A7/" rel="next" title="scDRS：基于GWAS和scRNA评估细胞类型和生物学过程的疾病相关性">
-      scDRS：基于GWAS和scRNA评估细胞类型和生物学过程的疾病相关性 <i class="fa fa-chevron-right"></i>
+    <a href="/2023/08/10/Hello%20World%EF%BC%81/" rel="next" title="Hello World！">
+      Hello World！ <i class="fa fa-chevron-right"></i>
     </a></div>
     </div>
       </footer>
@@ -365,6 +412,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%86%99%E5%9C%A8%E5%89%8D%E9%9D%A2%E7%9A%84%E8%AF%9D"><span class="nav-text">写在前面的话</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A0%B7%E6%9C%AC%E4%BF%A1%E6%81%AF"><span class="nav-text">样本信息</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%82%A3%E8%80%85%E6%9D%A5%E6%BA%90"><span class="nav-text">患者来源</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%82%A3%E8%80%85%E4%BF%A1%E6%81%AF"><span class="nav-text">患者信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A0%B7%E6%9C%AC%E6%94%B6%E9%9B%86%E3%80%81%E6%96%87%E5%BA%93%E5%88%B6%E5%A4%87%E5%92%8C%E6%B5%8B%E5%BA%8F"><span class="nav-text">样本收集、文库制备和测序</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8D%95%E7%BB%86%E8%83%9E%E8%BD%AC%E5%BD%95%E7%BB%84%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86"><span class="nav-text">单细胞转录组数据处理</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
