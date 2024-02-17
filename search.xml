@@ -149,7 +149,7 @@
   </entry>
   <entry>
     <title>单细胞转录组分析实战（一）：数据采集</title>
-    <url>/2023/02/17/%E5%8D%95%E7%BB%86%E8%83%9E%E8%BD%AC%E5%BD%95%E7%BB%84%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E6%95%B0%E6%8D%AE%E9%87%87%E9%9B%86/</url>
+    <url>/2024/02/17/%E5%8D%95%E7%BB%86%E8%83%9E%E8%BD%AC%E5%BD%95%E7%BB%84%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E6%95%B0%E6%8D%AE%E9%87%87%E9%9B%86/</url>
     <content><![CDATA[<h2 id="写在前面的话"><a href="#写在前面的话" class="headerlink" title="写在前面的话"></a>写在前面的话</h2><p>&emsp;&emsp;本系列将基于张泽民团队发表的TNBC免疫图谱进行挖掘（<a href="https://www.cell.com/cancer-cell/fulltext/S1535-6108(21">Single-cell analyses reveal key immune cell subsets associated with response to PD-L1 blockade in triple-negative breast cancer: Cancer Cell</a>00499-2)），旨在探索原发灶和转移灶免疫微环境的差异及其原因。<br>&emsp;&emsp;准确严谨的采集和清洗数据是单细胞分析的开始，数据本身的质量和采集过程的规范程度决定了研究结果的可靠性。</p>
 <h2 id="样本信息"><a href="#样本信息" class="headerlink" title="样本信息"></a>样本信息</h2><h3 id="患者来源"><a href="#患者来源" class="headerlink" title="患者来源"></a>患者来源</h3><p>&emsp;&emsp;国家癌症中心开发的DTHealth TrakCare系统中记录了患者信息，纳入本研究的22名患者满足：（1）组织学确诊晚期TNBC；（2）既往没有化疗、靶向及免疫等全身治疗；（3）研究中接受紫杉醇单药治疗或紫杉醇加阿替利珠单抗治疗。</p>
 <h3 id="患者信息"><a href="#患者信息" class="headerlink" title="患者信息"></a>患者信息</h3><ol>
@@ -157,7 +157,7 @@
 <li>事实上，一些患者是接受新辅助治疗的局部晚期患者；</li>
 <li>患者为女性，年龄在32-64岁之间，中位值为49岁；</li>
 </ol>
-<p><img src="/2023/02/17/%E5%8D%95%E7%BB%86%E8%83%9E%E8%BD%AC%E5%BD%95%E7%BB%84%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E6%95%B0%E6%8D%AE%E9%87%87%E9%9B%86/1.jpg" alt="临床信息"></p>
+<p><img src="/2024/02/17/%E5%8D%95%E7%BB%86%E8%83%9E%E8%BD%AC%E5%BD%95%E7%BB%84%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E6%95%B0%E6%8D%AE%E9%87%87%E9%9B%86/1.jpg" alt="临床信息"></p>
 <h3 id="样本收集、文库制备和测序"><a href="#样本收集、文库制备和测序" class="headerlink" title="样本收集、文库制备和测序"></a>样本收集、文库制备和测序</h3><p>&emsp;&emsp;研究使用16针吸穿刺取乳腺、胸壁肿瘤样本；18号针取淋巴结、肝转移灶样本。测序仪器是10x Genomics公司的HiSeq X Ten，平台为<a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GPL20795">GPL20795</a>。DNA片段被打碎为150bp，进行双端测序。</p>
 <h2 id="单细胞转录组数据处理"><a href="#单细胞转录组数据处理" class="headerlink" title="单细胞转录组数据处理"></a>单细胞转录组数据处理</h2><p>&emsp;&emsp;10x Genomics公司提供的Cell Ranger（V 3.0.1）用于汇总原始数据，过滤低质量读段，将reads与人类参考基因组（GRCh38）比对，分配细胞Barcode，并生成UMI矩阵。值得注意的是，对于10x Genomics公司的测序，由于UMI的存在，使用Raw Count即可反映真实的基因表达，不需要使用标准化方法进行基因定量（<a href="https://forrestgump618.github.io/2024/02/16/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89%EF%BC%9A%E5%9F%BA%E5%9B%A0%E5%AE%9A%E9%87%8F/">生物信息学笔记（三）：基因定量</a>）。但注意，这里所谓“真实的基因表达”反映的是测序过程中的真实值，即不必考虑测序深度和转录本长度的值；而单细胞测序中，由于转录本的低捕获率，我们假设合格细胞基因表达总量应该类似，所以还要进行标准化排除不同细胞测序质量的差异。<br>&emsp;&emsp;原文使用Scanpy进行下游分析，质控步骤包括：</p>
 <ol>
@@ -318,50 +318,6 @@
       </tags>
   </entry>
   <entry>
-    <title>生物信息学笔记（三）：基因定量</title>
-    <url>/2024/02/16/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89%EF%BC%9A%E5%9F%BA%E5%9B%A0%E5%AE%9A%E9%87%8F/</url>
-    <content><![CDATA[<h2 id="为什么要对进行基因定量"><a href="#为什么要对进行基因定量" class="headerlink" title="为什么要对进行基因定量"></a>为什么要对进行基因定量</h2><p>&emsp;&emsp;转录组数据分析中，一个转录本反转录后的cDNA会被打碎成片段测序并和基因组比对，就会导致长转录本在给定的cDNA长度下可能会映射更多的cDNA，也就是说基因长度会影响Reads数。<br>&emsp;&emsp;测序深度是指测序过程中每个碱基被测序的平均次数，其计算公式为：$\frac{Reads数*Read长度}{参考序列长度}$：例如，对长100bp的目标区域进行捕获测序：采用单端测序，每个read长5bp；总共得到了200个reads；把所有的reads比对到目标区域后，100bp的目标区域中有98bp的位置至少有1个read覆盖到，换言之，剩余的2bp没有1个read覆盖。则测序深度为 200 x 5 / 100 = 10 我们说这此测序的深度为10X。显而易见，若测序越深，则对于相同长度的转录本，测序所得的Reads数更多。<br>&emsp;&emsp;综上所述，测序深度、基因长度和Reads数相关，所以需要在最终基因表达计数中去除相应的影响。注意，在基因定量的过程中，可能会由于样本本身的原因，如某个基因Reads数过高，导致基因定量后其他基因的表达量低于实际情况，这也是基因定量过程中需要去考虑的。</p>
-<h2 id="Raw-count"><a href="#Raw-count" class="headerlink" title="Raw count"></a>Raw count</h2><p>&emsp;&emsp;所谓Raw count，又称为count数，和上一部分所说的Reads数是同一概念，是指和参考序列比对上的序列数目。原始的读取计数矩阵使用Raw count作为基础，但由于不同基因的长度和测序深度存在差异，因此无法直接比较。为了消除技术偏差的影响并赋予后续差异分析以统计学意义，需要对这些基因计数矩阵进行标准化处理，将其转化为相对值。<br>&emsp;&emsp;但注意，我们进行基因定量时需要充分考虑测序技术和原理，如在 10x 基因组学基因表达检测中，每个转录本都标有作为唯一分子标识符 （unique molecular identifier，UMI） 的序列。这些 UMI 能够准确定量基因表达水平，因为我们可以分辨出哪些读段是从同一个 mRNA 分子中产生的。因此，Cell Ranger 和 Space Ranger 执行 UMI 计数（不是读取计数）以测量基因表达水平，并且所有二次分析步骤都基于 UMI 计数执行。在传统的RNA-seq数据中，完整的转录本被片段化，然后进行cDNA合成、末端修复和衔接连接。在此工作流程中，从长转录本中采样片段的概率高于从短转录本中采样的概率。因此，按转录本长度（例如，TPM、RPKM、FPKM）对读取计数进行归一化是有意义的。然而，在 10x 基因表达测定中，这种基因长度偏差并不存在。因此，不建议按基因长度对UMI计数进行归一化。</p>
-<h2 id="RPKM-FPKM"><a href="#RPKM-FPKM" class="headerlink" title="RPKM/FPKM"></a>RPKM/FPKM</h2><p>&emsp;&emsp;RPKM (Reads Per Kilobase of exon model per Million mapped reads)：每千个碱基的转录每百万映射读取的reads数，是针对单端测序的基因定量方法；FPKM (Fragment Per Kilobase of transcript, per Million mapped reads)：每千碱基片段每百万映射读取的 reads 数，是针对双端测序的基因定量方法。<br>&emsp;&emsp;以RPKM为例，其操作方法为：</p>
-<ol>
-<li>计算样本中的总读数，然后将该数字除以 1,000,000——这是“每百万”比例因子；</li>
-<li>将读取计数除以“每百万”比例因子。这针对测序深度进行了归一化，得到每百万次读数（reads per million，RPM）；</li>
-<li>将 RPM 值除以基因的长度，以千碱基为单位，得到RPKM。</li>
-</ol>
-<p>&emsp;&emsp;在第二代测序过程中，常采用一种方法将DNA分子打碎成片段（fragment），然后进行测序。在单末端测序中，每个片段对应一个读取序列（Read），而在双末端测序中，每个片段将从两个端点分别进行测序。因此，这两个成对的读取序列对应于同一个片段（虽然偶尔会出现只有一个读取序列与某个片段相对应的情况，这是由于某些原因导致另一个读取序列被排除或丢失了）。在这一点上存在着区别，对于FPKM（每百万片段计数）这一测量指标而言，与同一片段相关联的两个读取序列只被计算为一个读取序列。换句话说，FPKM是基于片段计数，而不是基于读取序列数量计算的，其他计算方法完全相同。<br>&emsp;&emsp;两者计算公式如下：</p>
-<script type="math/tex; mode=display">FPKM = \frac{Read\quad counts}{Mapped\quad reads(Millions)\quad \times \quad Transcript\quad length(KB)}</script><script type="math/tex; mode=display">RPKM = \frac{Read\quad counts(Fragments)}{Mapped\quad reads(Millions)\quad \times \quad Transcript\quad length(KB)}</script><h2 id="TPM"><a href="#TPM" class="headerlink" title="TPM"></a>TPM</h2><p>&emsp;&emsp;TPM（Transcripts Per Million） 是一种常用的基因表达量归一化方法，它将基因的表达量调整为每百万条转录本的数量。TPM 值考虑了基因的长度和测序深度，通过将每个基因的 Counts 值除以其长度，并进行适当的归一化，将基因的表达量转换为每百万转录本数，以便进行样本间的比较和分析。TPM 值消除了样本间测序深度的差异和基因长度的影响，实质上，TPM相当于重新标准化的文库，保证每个样本中所有TPM的总和是相同的。TPM 与 RPKM 和 FPKM 非常相似。唯一的区别是操作顺序。以下是计算 TPM 的方法：</p>
-<ol>
-<li>将读取计数除以每个基因的长度（以千碱基为单位），得到每千碱基读数（reads per kilobase，RPK）；</li>
-<li>计算样本中的所有 RPK 值的和，并将此数字除以 1,000,000，得到如前的“每百万”比例因子；</li>
-<li>将 RPK 值除以“每百万”比例因子，得到TPM。</li>
-</ol>
-<p>&emsp;&emsp;综上，在计算TPM时，和前述指标唯一的区别是你首先对基因长度进行归一化，然后对测序深度进行归一化。然而，这种差异的影响是相当深远的。<br>&emsp;&emsp;使用 TPM 时，每个示例中所有 TPM 的总和是相同的。这样可以更容易地比较每个样品中映射到基因的reads比例。相比之下，使用RPKM和FPKM，每个样本中归一化读数的总和可能不同，这使得直接比较样本变得更加困难，在某种意义上，TPM降低了样本本身的影响，从而让样本具有可比性，即TPM实际上改进了RPKM/FPKM方法在跨样品间定量的不准确性。<br>&emsp;&emsp;其计算公式如下：</p>
-<script type="math/tex; mode=display">TPM = 10^6 \times \frac{\frac {Read\quad counts}{Transcript \quad length(KB)}}{\Sigma \frac {Read\quad counts}{Transcript \quad length(KB)}}</script><h2 id="适用范围"><a href="#适用范围" class="headerlink" title="适用范围"></a>适用范围</h2><ol>
-<li>如前所述，基于测序计数选择基因定量的方案，如对于10×测序，直接使用原始Count即可；</li>
-<li>对于传统的二代测序，应当进行标准化基因定量：<ol>
-<li>RPKM和FPKM已经不推荐使用（参考：<a href="https://pubmed.ncbi.nlm.nih.gov/22872506/">Measurement of mRNA abundance using RNA-seq data: RPKM measure is inconsistent among samples</a>；<a href="https://academic.oup.com/bib/article/14/6/671/189645">comprehensive evaluation of normalization methods for Illumina high-throughput RNA sequencing data analysis</a>）；</li>
-<li>TPM、DESeq适合组间比较，有研究更推荐DESeq进行组间比较（<a href="https://academic.oup.com/bib/article/14/6/671/189645#1808405">comprehensive evaluation of normalization methods for Illumina high-throughput RNA sequencing data analysis</a>；<a href="https://translational-medicine.biomedcentral.com/articles/10.1186/s12967-021-02936-w#Sec21">TPM, FPKM, or Normalized Counts? A Comparative Study of Quantification Measures for the Analysis of RNA-seq Data from the NCI Patient-Derived Models Repository</a>）。</li>
-</ol>
-</li>
-</ol>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
-<li><a href="https://pubmed.ncbi.nlm.nih.gov/22872506/">Measurement of mRNA abundance using RNA-seq data: RPKM measure is inconsistent among samples</a></li>
-<li><a href="https://academic.oup.com/bib/article/14/6/671/189645">comprehensive evaluation of normalization methods for Illumina high-throughput RNA sequencing data analysis</a></li>
-<li><a href="https://translational-medicine.biomedcentral.com/articles/10.1186/s12967-021-02936-w#Sec21">TPM, FPKM, or Normalized Counts? A Comparative Study of Quantification Measures for the Analysis of RNA-seq Data from the NCI Patient-Derived Models Repository</a></li>
-<li><a href="https://kb.10xgenomics.com/hc/en-us/articles/115003684783-Should-I-calculate-TPM-RPKM-or-FPKM-instead-of-counts-for-10x-Genomics-data">Should I calculate TPM, RPKM or FPKM, instead of counts for 10x Genomics data? – 10X Genomics</a></li>
-<li><a href="https://www.rna-seqblog.com/rpkm-fpkm-and-tpm-clearly-explained/">RPKM, FPKM and TPM, clearly explained | RNA-Seq Blog</a></li>
-</ol>
-]]></content>
-      <categories>
-        <category>生物信息学</category>
-      </categories>
-      <tags>
-        <tag>生物信息学</tag>
-        <tag>转录组学</tag>
-        <tag>计数</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>生物信息学笔记（二）：数据变换</title>
     <url>/2024/02/07/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9A%E6%95%B0%E6%8D%AE%E5%8F%98%E6%8D%A2/</url>
     <content><![CDATA[<h2 id="数据变换基本概念"><a href="#数据变换基本概念" class="headerlink" title="数据变换基本概念"></a>数据变换基本概念</h2><p>&emsp;&emsp;在数据科学中，数据变换是指对原始数据进行一系列操作或转换，从而使得数据更适合用于特定的分析或建模任务。其目的是提取有用的信息、减少噪声、改善模型的性能或满足模型假设。<strong>数据变换可以将一些我们理论上未解决的模型问题转化为已经解决的问题</strong>。<br>&emsp;&emsp;从变量个数的角度，数据变换分为单变量变换和多变量变换。多变量变换和特征工程的范畴有交叉，主要包括特征抽取、数据分解和维度压缩等方法。单变量变换分为线性和非线性变换。<br>&emsp;&emsp;本文讲解的数据变换都是连续变量的变换，着重关注单变量变换。</p>
@@ -439,6 +395,50 @@
         <tag>生物信息学</tag>
         <tag>统计学</tag>
         <tag>机器学习</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>生物信息学笔记（三）：基因定量</title>
+    <url>/2024/02/16/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89%EF%BC%9A%E5%9F%BA%E5%9B%A0%E5%AE%9A%E9%87%8F/</url>
+    <content><![CDATA[<h2 id="为什么要对进行基因定量"><a href="#为什么要对进行基因定量" class="headerlink" title="为什么要对进行基因定量"></a>为什么要对进行基因定量</h2><p>&emsp;&emsp;转录组数据分析中，一个转录本反转录后的cDNA会被打碎成片段测序并和基因组比对，就会导致长转录本在给定的cDNA长度下可能会映射更多的cDNA，也就是说基因长度会影响Reads数。<br>&emsp;&emsp;测序深度是指测序过程中每个碱基被测序的平均次数，其计算公式为：$\frac{Reads数*Read长度}{参考序列长度}$：例如，对长100bp的目标区域进行捕获测序：采用单端测序，每个read长5bp；总共得到了200个reads；把所有的reads比对到目标区域后，100bp的目标区域中有98bp的位置至少有1个read覆盖到，换言之，剩余的2bp没有1个read覆盖。则测序深度为 200 x 5 / 100 = 10 我们说这此测序的深度为10X。显而易见，若测序越深，则对于相同长度的转录本，测序所得的Reads数更多。<br>&emsp;&emsp;综上所述，测序深度、基因长度和Reads数相关，所以需要在最终基因表达计数中去除相应的影响。注意，在基因定量的过程中，可能会由于样本本身的原因，如某个基因Reads数过高，导致基因定量后其他基因的表达量低于实际情况，这也是基因定量过程中需要去考虑的。</p>
+<h2 id="Raw-count"><a href="#Raw-count" class="headerlink" title="Raw count"></a>Raw count</h2><p>&emsp;&emsp;所谓Raw count，又称为count数，和上一部分所说的Reads数是同一概念，是指和参考序列比对上的序列数目。原始的读取计数矩阵使用Raw count作为基础，但由于不同基因的长度和测序深度存在差异，因此无法直接比较。为了消除技术偏差的影响并赋予后续差异分析以统计学意义，需要对这些基因计数矩阵进行标准化处理，将其转化为相对值。<br>&emsp;&emsp;但注意，我们进行基因定量时需要充分考虑测序技术和原理，如在 10x 基因组学基因表达检测中，每个转录本都标有作为唯一分子标识符 （unique molecular identifier，UMI） 的序列。这些 UMI 能够准确定量基因表达水平，因为我们可以分辨出哪些读段是从同一个 mRNA 分子中产生的。因此，Cell Ranger 和 Space Ranger 执行 UMI 计数（不是读取计数）以测量基因表达水平，并且所有二次分析步骤都基于 UMI 计数执行。在传统的RNA-seq数据中，完整的转录本被片段化，然后进行cDNA合成、末端修复和衔接连接。在此工作流程中，从长转录本中采样片段的概率高于从短转录本中采样的概率。因此，按转录本长度（例如，TPM、RPKM、FPKM）对读取计数进行归一化是有意义的。然而，在 10x 基因表达测定中，这种基因长度偏差并不存在。因此，不建议按基因长度对UMI计数进行归一化。</p>
+<h2 id="RPKM-FPKM"><a href="#RPKM-FPKM" class="headerlink" title="RPKM/FPKM"></a>RPKM/FPKM</h2><p>&emsp;&emsp;RPKM (Reads Per Kilobase of exon model per Million mapped reads)：每千个碱基的转录每百万映射读取的reads数，是针对单端测序的基因定量方法；FPKM (Fragment Per Kilobase of transcript, per Million mapped reads)：每千碱基片段每百万映射读取的 reads 数，是针对双端测序的基因定量方法。<br>&emsp;&emsp;以RPKM为例，其操作方法为：</p>
+<ol>
+<li>计算样本中的总读数，然后将该数字除以 1,000,000——这是“每百万”比例因子；</li>
+<li>将读取计数除以“每百万”比例因子。这针对测序深度进行了归一化，得到每百万次读数（reads per million，RPM）；</li>
+<li>将 RPM 值除以基因的长度，以千碱基为单位，得到RPKM。</li>
+</ol>
+<p>&emsp;&emsp;在第二代测序过程中，常采用一种方法将DNA分子打碎成片段（fragment），然后进行测序。在单末端测序中，每个片段对应一个读取序列（Read），而在双末端测序中，每个片段将从两个端点分别进行测序。因此，这两个成对的读取序列对应于同一个片段（虽然偶尔会出现只有一个读取序列与某个片段相对应的情况，这是由于某些原因导致另一个读取序列被排除或丢失了）。在这一点上存在着区别，对于FPKM（每百万片段计数）这一测量指标而言，与同一片段相关联的两个读取序列只被计算为一个读取序列。换句话说，FPKM是基于片段计数，而不是基于读取序列数量计算的，其他计算方法完全相同。<br>&emsp;&emsp;两者计算公式如下：</p>
+<script type="math/tex; mode=display">FPKM = \frac{Read\quad counts}{Mapped\quad reads(Millions)\quad \times \quad Transcript\quad length(KB)}</script><script type="math/tex; mode=display">RPKM = \frac{Read\quad counts(Fragments)}{Mapped\quad reads(Millions)\quad \times \quad Transcript\quad length(KB)}</script><h2 id="TPM"><a href="#TPM" class="headerlink" title="TPM"></a>TPM</h2><p>&emsp;&emsp;TPM（Transcripts Per Million） 是一种常用的基因表达量归一化方法，它将基因的表达量调整为每百万条转录本的数量。TPM 值考虑了基因的长度和测序深度，通过将每个基因的 Counts 值除以其长度，并进行适当的归一化，将基因的表达量转换为每百万转录本数，以便进行样本间的比较和分析。TPM 值消除了样本间测序深度的差异和基因长度的影响，实质上，TPM相当于重新标准化的文库，保证每个样本中所有TPM的总和是相同的。TPM 与 RPKM 和 FPKM 非常相似。唯一的区别是操作顺序。以下是计算 TPM 的方法：</p>
+<ol>
+<li>将读取计数除以每个基因的长度（以千碱基为单位），得到每千碱基读数（reads per kilobase，RPK）；</li>
+<li>计算样本中的所有 RPK 值的和，并将此数字除以 1,000,000，得到如前的“每百万”比例因子；</li>
+<li>将 RPK 值除以“每百万”比例因子，得到TPM。</li>
+</ol>
+<p>&emsp;&emsp;综上，在计算TPM时，和前述指标唯一的区别是你首先对基因长度进行归一化，然后对测序深度进行归一化。然而，这种差异的影响是相当深远的。<br>&emsp;&emsp;使用 TPM 时，每个示例中所有 TPM 的总和是相同的。这样可以更容易地比较每个样品中映射到基因的reads比例。相比之下，使用RPKM和FPKM，每个样本中归一化读数的总和可能不同，这使得直接比较样本变得更加困难，在某种意义上，TPM降低了样本本身的影响，从而让样本具有可比性，即TPM实际上改进了RPKM/FPKM方法在跨样品间定量的不准确性。<br>&emsp;&emsp;其计算公式如下：</p>
+<script type="math/tex; mode=display">TPM = 10^6 \times \frac{\frac {Read\quad counts}{Transcript \quad length(KB)}}{\Sigma \frac {Read\quad counts}{Transcript \quad length(KB)}}</script><h2 id="适用范围"><a href="#适用范围" class="headerlink" title="适用范围"></a>适用范围</h2><ol>
+<li>如前所述，基于测序计数选择基因定量的方案，如对于10×测序，直接使用原始Count即可；</li>
+<li>对于传统的二代测序，应当进行标准化基因定量：<ol>
+<li>RPKM和FPKM已经不推荐使用（参考：<a href="https://pubmed.ncbi.nlm.nih.gov/22872506/">Measurement of mRNA abundance using RNA-seq data: RPKM measure is inconsistent among samples</a>；<a href="https://academic.oup.com/bib/article/14/6/671/189645">comprehensive evaluation of normalization methods for Illumina high-throughput RNA sequencing data analysis</a>）；</li>
+<li>TPM、DESeq适合组间比较，有研究更推荐DESeq进行组间比较（<a href="https://academic.oup.com/bib/article/14/6/671/189645#1808405">comprehensive evaluation of normalization methods for Illumina high-throughput RNA sequencing data analysis</a>；<a href="https://translational-medicine.biomedcentral.com/articles/10.1186/s12967-021-02936-w#Sec21">TPM, FPKM, or Normalized Counts? A Comparative Study of Quantification Measures for the Analysis of RNA-seq Data from the NCI Patient-Derived Models Repository</a>）。</li>
+</ol>
+</li>
+</ol>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a href="https://pubmed.ncbi.nlm.nih.gov/22872506/">Measurement of mRNA abundance using RNA-seq data: RPKM measure is inconsistent among samples</a></li>
+<li><a href="https://academic.oup.com/bib/article/14/6/671/189645">comprehensive evaluation of normalization methods for Illumina high-throughput RNA sequencing data analysis</a></li>
+<li><a href="https://translational-medicine.biomedcentral.com/articles/10.1186/s12967-021-02936-w#Sec21">TPM, FPKM, or Normalized Counts? A Comparative Study of Quantification Measures for the Analysis of RNA-seq Data from the NCI Patient-Derived Models Repository</a></li>
+<li><a href="https://kb.10xgenomics.com/hc/en-us/articles/115003684783-Should-I-calculate-TPM-RPKM-or-FPKM-instead-of-counts-for-10x-Genomics-data">Should I calculate TPM, RPKM or FPKM, instead of counts for 10x Genomics data? – 10X Genomics</a></li>
+<li><a href="https://www.rna-seqblog.com/rpkm-fpkm-and-tpm-clearly-explained/">RPKM, FPKM and TPM, clearly explained | RNA-Seq Blog</a></li>
+</ol>
+]]></content>
+      <categories>
+        <category>生物信息学</category>
+      </categories>
+      <tags>
+        <tag>生物信息学</tag>
+        <tag>转录组学</tag>
+        <tag>计数</tag>
       </tags>
   </entry>
   <entry>
