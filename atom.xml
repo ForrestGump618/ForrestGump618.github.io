@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2024-02-17T13:30:21.052Z</updated>
+  <updated>2024-02-18T15:51:42.268Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -15,6 +15,25 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>提升医学研究的严谨性：准确使用统计学</title>
+    <link href="http://example.com/2024/02/18/%E6%8F%90%E5%8D%87%E5%8C%BB%E5%AD%A6%E7%A0%94%E7%A9%B6%E7%9A%84%E4%B8%A5%E8%B0%A8%E6%80%A7%EF%BC%9A%E5%87%86%E7%A1%AE%E4%BD%BF%E7%94%A8%E7%BB%9F%E8%AE%A1%E5%AD%A6/"/>
+    <id>http://example.com/2024/02/18/%E6%8F%90%E5%8D%87%E5%8C%BB%E5%AD%A6%E7%A0%94%E7%A9%B6%E7%9A%84%E4%B8%A5%E8%B0%A8%E6%80%A7%EF%BC%9A%E5%87%86%E7%A1%AE%E4%BD%BF%E7%94%A8%E7%BB%9F%E8%AE%A1%E5%AD%A6/</id>
+    <published>2024-02-18T14:14:00.000Z</published>
+    <updated>2024-02-18T15:51:42.268Z</updated>
+    
+    
+    <summary type="html">《Lancet》发布的一篇通讯，总结了常见的统计误区，并为如何避免这些错误提供了指导。</summary>
+    
+    
+    
+    <category term="统计学" scheme="http://example.com/categories/%E7%BB%9F%E8%AE%A1%E5%AD%A6/"/>
+    
+    
+    <category term="统计学" scheme="http://example.com/tags/%E7%BB%9F%E8%AE%A1%E5%AD%A6/"/>
+    
+  </entry>
   
   <entry>
     <title>单细胞转录组分析实战（一）：数据采集</title>
@@ -190,9 +209,9 @@
     
     <category term="GWAS" scheme="http://example.com/tags/GWAS/"/>
     
-    <category term="生物信息学" scheme="http://example.com/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
-    
     <category term="单细胞测序" scheme="http://example.com/tags/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F/"/>
+    
+    <category term="生物信息学" scheme="http://example.com/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
     
   </entry>
   
@@ -232,9 +251,9 @@
     <category term="生物信息学" scheme="http://example.com/categories/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
     
     
-    <category term="生物信息学" scheme="http://example.com/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
-    
     <category term="单细胞测序" scheme="http://example.com/tags/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F/"/>
+    
+    <category term="生物信息学" scheme="http://example.com/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
     
   </entry>
   
@@ -255,9 +274,9 @@
     
     <category term="GWAS" scheme="http://example.com/tags/GWAS/"/>
     
-    <category term="生物信息学" scheme="http://example.com/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
-    
     <category term="单细胞测序" scheme="http://example.com/tags/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F/"/>
+    
+    <category term="生物信息学" scheme="http://example.com/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
     
   </entry>
   
