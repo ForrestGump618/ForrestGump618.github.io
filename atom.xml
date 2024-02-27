@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2024-02-19T01:42:37.914Z</updated>
+  <updated>2024-02-27T03:14:05.290Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>大四课程资源（持续更新）</title>
+    <link href="http://example.com/2024/02/26/%E5%A4%A7%E5%9B%9B%E8%AF%BE%E7%A8%8B%E8%B5%84%E6%BA%90%EF%BC%88%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%EF%BC%89/"/>
+    <id>http://example.com/2024/02/26/%E5%A4%A7%E5%9B%9B%E8%AF%BE%E7%A8%8B%E8%B5%84%E6%BA%90%EF%BC%88%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%EF%BC%89/</id>
+    <published>2024-02-26T14:12:00.000Z</published>
+    <updated>2024-02-27T03:14:05.290Z</updated>
+    
+    
+    <summary type="html">大四课程资源聚合站（持续更新）</summary>
+    
+    
+    
+    <category term="医学课程" scheme="http://example.com/categories/%E5%8C%BB%E5%AD%A6%E8%AF%BE%E7%A8%8B/"/>
+    
+    
+    <category term="医学" scheme="http://example.com/tags/%E5%8C%BB%E5%AD%A6/"/>
+    
+    <category term="医学生" scheme="http://example.com/tags/%E5%8C%BB%E5%AD%A6%E7%94%9F/"/>
+    
+    <category term="大四" scheme="http://example.com/tags/%E5%A4%A7%E5%9B%9B/"/>
+    
+  </entry>
   
   <entry>
     <title>单细胞转录组分析实战（二）：质控、数据变换和降维</title>
@@ -228,9 +251,9 @@
     <category term="生物信息学" scheme="http://example.com/categories/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
     
     
-    <category term="生物信息学" scheme="http://example.com/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
-    
     <category term="GWAS" scheme="http://example.com/tags/GWAS/"/>
+    
+    <category term="生物信息学" scheme="http://example.com/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
     
     <category term="单细胞测序" scheme="http://example.com/tags/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F/"/>
     
@@ -293,9 +316,9 @@
     <category term="生物信息学" scheme="http://example.com/categories/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
     
     
-    <category term="生物信息学" scheme="http://example.com/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
-    
     <category term="GWAS" scheme="http://example.com/tags/GWAS/"/>
+    
+    <category term="生物信息学" scheme="http://example.com/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
     
     <category term="单细胞测序" scheme="http://example.com/tags/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F/"/>
     

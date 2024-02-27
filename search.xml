@@ -1,6 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>celltogwas：细胞类型注释到基因组的工具包</title>
+    <url>/2023/08/19/celltogwas%EF%BC%9A%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8B%E6%B3%A8%E9%87%8A%E5%88%B0%E5%9F%BA%E5%9B%A0%E7%BB%84%E7%9A%84%E5%B7%A5%E5%85%B7%E5%8C%85/</url>
+    <content><![CDATA[<h2 id="celltogwas"><a href="#celltogwas" class="headerlink" title="celltogwas"></a>celltogwas</h2><p>This code is a toolkit for genomic analysis. It includes several functions and helper functions to extract gene information from a genomic annotation file, merge gene intervals, generate genomic ranges based on cell types and window size, and annotate GWAS (Genome-Wide Association Study) data.</p>
+<h2 id="Explanation-of-each-function"><a href="#Explanation-of-each-function" class="headerlink" title="Explanation of each function"></a>Explanation of each function</h2><p><strong>extract_gene_info(gtf_file)</strong>: Extracts gene information from a genomic annotation file. It opens a gzip-compressed file, reads it line by line, and extracts gene name, chromosome, start position, and end position from each line. The extracted data is then stored in a Pandas DataFrame and returned.</p>
+<p><strong>merge_intervals(intervals)</strong>: Merges overlapping intervals. This function takes a list of intervals as input and merges overlapping intervals into larger intervals. It first sorts the intervals based on their start positions, then iterates through the intervals. If the current interval does not overlap with the merged interval, it adds the current interval to the merged list. Otherwise, it updates the end position of the merged interval. Finally, it returns the merged interval list.</p>
+<p><strong>celltype_genome_range(cell_gene_dict, gene_info, windowsize)</strong>: Generates genomic ranges based on cell types and window size. This function takes a dictionary mapping cell types to gene lists, a DataFrame of gene information, and a window size as input. It retrieves the gene list corresponding to each cell type from the dictionary and performs an inner join with the gene information to obtain the chromosome, start position, and end position of the corresponding genes. It then adjusts the start and end positions based on the window size and converts the data into a specific format of a list. Finally, it stores the genomic ranges for each cell type in a dictionary and returns it.</p>
+<p><strong>check_value_in_intervals(intervals, value)</strong>: Checks if a value is within the intervals. This function takes a list of intervals and a value as input. It uses binary search to determine if the value falls within the intervals. It first extracts the left boundaries of the intervals, then performs a binary search to find the position of the value in the left boundary list. If the position is less than the length of the interval list, it retrieves the corresponding interval and checks if the value falls within that interval. If the value is within the interval, it returns True; otherwise, it returns False.</p>
+<p><strong>gwas_annotaion(gwas, celltype_range)</strong>: Annotates GWAS data based on genomic ranges. This function takes a DataFrame of GWAS data and a dictionary of genomic ranges as input. It first retrieves the list of chromosomes from the GWAS data. Then, it iterates through the genomic ranges for each cell type. For each chromosome, it retrieves the subset of GWAS data corresponding to that chromosome and the annotation ranges from the genomic ranges. It then iterates through each data item in the subset and uses the check_value_in_intervals function to check if the position of the data item falls within the annotation ranges. If it does, the data item is marked as annotated. Finally, it stores the annotation results for all cell types in a dictionary and returns it.</p>
+<h2 id="File-format"><a href="#File-format" class="headerlink" title="File format"></a><a href="#File-format" title="File format"></a>File format</h2><p><strong>gtf_file</strong>: Include CHR, START, END, Other info(GENE Symbol);</p>
+<p><strong>cell_gene_dict</strong>: A dictionary:(1) key:celltype’s name;(2)value:a list of genes;</p>
+<p><strong>gene_info</strong>: Output file from <strong>extract_gene_info(gtf_file)</strong>: Include: GENE, CHR, START, END;</p>
+<p><strong>gwas</strong>: First teo columns: chr, pos;</p>
+<p><strong>celltype_range</strong>: A dictionary:(1) key:celltype’s name;(2)value:a list of genome position:[chr, start, end];</p>
+<p><strong>output_file</strong>: A dictionary:(1) key:celltype’s name;(2)value:[chr, pos ,…… , annotation] (annotation: 1 for anntation and 0 for null).</p>
+]]></content>
+      <categories>
+        <category>生物信息学</category>
+      </categories>
+      <tags>
+        <tag>GWAS</tag>
+        <tag>python</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Hello World！</title>
+    <url>/2023/08/10/Hello%20World%EF%BC%81/</url>
+    <content><![CDATA[<p>&emsp;&emsp;欢迎来到我的主页，这里将记录我学习医学、统计和流行病学的一些收获，以及一些生活碎片。欢迎来踩！<br>&emsp;&emsp;希望这些笔记对您的学习有帮助，最好的东西是免费的，最好的知识是开源的。<br>2023年8月11日</p>
+]]></content>
+  </entry>
+  <entry>
     <title>scDRS：基于GWAS和scRNA评估细胞类型和生物学过程的疾病相关性</title>
     <url>/2023/08/11/scDRS%EF%BC%9A%E5%9F%BA%E4%BA%8EGWAS%E5%92%8CscRNA%E8%AF%84%E4%BC%B0%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8B%E5%92%8C%E7%94%9F%E7%89%A9%E5%AD%A6%E8%BF%87%E7%A8%8B%E7%9A%84%E7%96%BE%E7%97%85%E7%9B%B8%E5%85%B3%E6%80%A7/</url>
     <content><![CDATA[<h2 id="方法学概述"><a href="#方法学概述" class="headerlink" title="方法学概述"></a>方法学概述</h2><p>&emsp;&emsp;scDRS的核心思想是建立合适的权重从而根据基因的表达对基因程序进行评分，即加权基因表达量。其算法可概述为：首先将基因根据MAGMA得到的gene-level z-scores从大到小排列（也可以自定义基因程序）, 选择潜在的致病基因。基于致病基因的表达量和权重接着计算致病基因程序加权表达量。从而评估该细胞的基因程序和疾病的相关度。<br>&emsp;&emsp;算法对z-score采用算数加权，对技术噪声指标采用逆加权。也就是说，在GWAS中鉴定出的越相关的，且测序过程中技术原因造成误差较小的基因。根据输入数据集的基因表达，在蒙特卡洛随机模拟生成的B个对照组中，从而推断分布，进而对研究的疾病进行统计检验。利用这样的方法，我们可以计算单个细胞和疾病的相关性，以及鉴定相应的驱动基因，并基于此进行下游分析。</p>
@@ -46,39 +76,39 @@
         <category>生物信息学</category>
       </categories>
       <tags>
-        <tag>生物信息学</tag>
         <tag>GWAS</tag>
+        <tag>生物信息学</tag>
         <tag>单细胞测序</tag>
       </tags>
   </entry>
   <entry>
-    <title>Hello World！</title>
-    <url>/2023/08/10/Hello%20World%EF%BC%81/</url>
-    <content><![CDATA[<p>&emsp;&emsp;欢迎来到我的主页，这里将记录我学习医学、统计和流行病学的一些收获，以及一些生活碎片。欢迎来踩！<br>&emsp;&emsp;希望这些笔记对您的学习有帮助，最好的东西是免费的，最好的知识是开源的。<br>2023年8月11日</p>
-]]></content>
-  </entry>
-  <entry>
-    <title>celltogwas：细胞类型注释到基因组的工具包</title>
-    <url>/2023/08/19/celltogwas%EF%BC%9A%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8B%E6%B3%A8%E9%87%8A%E5%88%B0%E5%9F%BA%E5%9B%A0%E7%BB%84%E7%9A%84%E5%B7%A5%E5%85%B7%E5%8C%85/</url>
-    <content><![CDATA[<h2 id="celltogwas"><a href="#celltogwas" class="headerlink" title="celltogwas"></a>celltogwas</h2><p>This code is a toolkit for genomic analysis. It includes several functions and helper functions to extract gene information from a genomic annotation file, merge gene intervals, generate genomic ranges based on cell types and window size, and annotate GWAS (Genome-Wide Association Study) data.</p>
-<h2 id="Explanation-of-each-function"><a href="#Explanation-of-each-function" class="headerlink" title="Explanation of each function"></a>Explanation of each function</h2><p><strong>extract_gene_info(gtf_file)</strong>: Extracts gene information from a genomic annotation file. It opens a gzip-compressed file, reads it line by line, and extracts gene name, chromosome, start position, and end position from each line. The extracted data is then stored in a Pandas DataFrame and returned.</p>
-<p><strong>merge_intervals(intervals)</strong>: Merges overlapping intervals. This function takes a list of intervals as input and merges overlapping intervals into larger intervals. It first sorts the intervals based on their start positions, then iterates through the intervals. If the current interval does not overlap with the merged interval, it adds the current interval to the merged list. Otherwise, it updates the end position of the merged interval. Finally, it returns the merged interval list.</p>
-<p><strong>celltype_genome_range(cell_gene_dict, gene_info, windowsize)</strong>: Generates genomic ranges based on cell types and window size. This function takes a dictionary mapping cell types to gene lists, a DataFrame of gene information, and a window size as input. It retrieves the gene list corresponding to each cell type from the dictionary and performs an inner join with the gene information to obtain the chromosome, start position, and end position of the corresponding genes. It then adjusts the start and end positions based on the window size and converts the data into a specific format of a list. Finally, it stores the genomic ranges for each cell type in a dictionary and returns it.</p>
-<p><strong>check_value_in_intervals(intervals, value)</strong>: Checks if a value is within the intervals. This function takes a list of intervals and a value as input. It uses binary search to determine if the value falls within the intervals. It first extracts the left boundaries of the intervals, then performs a binary search to find the position of the value in the left boundary list. If the position is less than the length of the interval list, it retrieves the corresponding interval and checks if the value falls within that interval. If the value is within the interval, it returns True; otherwise, it returns False.</p>
-<p><strong>gwas_annotaion(gwas, celltype_range)</strong>: Annotates GWAS data based on genomic ranges. This function takes a DataFrame of GWAS data and a dictionary of genomic ranges as input. It first retrieves the list of chromosomes from the GWAS data. Then, it iterates through the genomic ranges for each cell type. For each chromosome, it retrieves the subset of GWAS data corresponding to that chromosome and the annotation ranges from the genomic ranges. It then iterates through each data item in the subset and uses the check_value_in_intervals function to check if the position of the data item falls within the annotation ranges. If it does, the data item is marked as annotated. Finally, it stores the annotation results for all cell types in a dictionary and returns it.</p>
-<h2 id="File-format"><a href="#File-format" class="headerlink" title="File format"></a><a href="#File-format" title="File format"></a>File format</h2><p><strong>gtf_file</strong>: Include CHR, START, END, Other info(GENE Symbol);</p>
-<p><strong>cell_gene_dict</strong>: A dictionary:(1) key:celltype’s name;(2)value:a list of genes;</p>
-<p><strong>gene_info</strong>: Output file from <strong>extract_gene_info(gtf_file)</strong>: Include: GENE, CHR, START, END;</p>
-<p><strong>gwas</strong>: First teo columns: chr, pos;</p>
-<p><strong>celltype_range</strong>: A dictionary:(1) key:celltype’s name;(2)value:a list of genome position:[chr, start, end];</p>
-<p><strong>output_file</strong>: A dictionary:(1) key:celltype’s name;(2)value:[chr, pos ,…… , annotation] (annotation: 1 for anntation and 0 for null).</p>
+    <title>一起来感受数据之美吧！</title>
+    <url>/2023/10/04/%E4%B8%80%E8%B5%B7%E6%9D%A5%E6%84%9F%E5%8F%97%E6%95%B0%E6%8D%AE%E4%B9%8B%E7%BE%8E%E5%90%A7%EF%BC%81/</url>
+    <content><![CDATA[<h2 id="资源记录"><a href="#资源记录" class="headerlink" title="资源记录"></a>资源记录</h2><ol>
+<li><a href="https://bookdown.org/wangminjie/R4DS/">前言 | 数据科学中的 R 语言 (bookdown.org)</a>（四川师范大学研究生公选课《数据科学中的R语言》的课程内容，其中也会涉及简单的数据科学原理）；</li>
+<li><a href="https://www.bioinfo-scrounger.com/">KeepNotes blog (bioinfo-scrounger.com)</a>（一些R语言和统计问题拾贝）；</li>
+<li><a href="https://cosx.org/">统计之都 (cosx.org)</a>（中文统计学论坛，会定期发表文章，介绍最新的R包，统计学模型和访谈）；</li>
+<li><a href="https://csdiy.wiki/">CS自学指南 (csdiy.wiki)</a>（计算机科学自学指南，其中包括了一个计算机专业学生的知识体系）；</li>
+<li><a href="https://www.writebug.com/">WRITE-BUG数字空间 - 新一代一站式团队协作知识库 (writebug.com)</a>（Writebug有很多高质量的，类似于微信公众号的文章）；</li>
+<li><a href="https://book.ncrnalab.org/teaching/">Bioinformatics Tutorial - Bioinformatics Tutorial (ncrnalab.org)</a> （一个以应用为导向的生物信息学学习站）；</li>
+<li><a href="https://www.cnblogs.com/leezx/">Life·Intelligence - 博客园 (cnblogs.com)</a>）（博主主要关注生物科学、单细胞测序的知识）；</li>
+<li><a href="https://ailearning.apachecn.org/">【布客】AI Learning (apachecn.org)</a>（AI学习的一站式，偏应用）；</li>
+<li><a href="https://forrestgump618.github.io/2023/08/12/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F%E6%95%99%E7%A8%8B%E8%B5%84%E6%BA%90%E8%81%9A%E5%90%88/">单细胞测序教程资源聚合 | 一个夏天的年少 (forrestgump618.github.io)</a> （单细胞测序教程资源整合）；<br> 此外，多去关注Github上有趣的教程和项目。<br> 书本推荐：</li>
+<li>《高等数学》（同济）；《线性代数》（上交）；《概率论和数理统计》（浙大）；</li>
+<li>《生物统计学基础》（Fundamentals of Biostatistics；Bernard Rosner）；《流行病学》（人民卫生出版社）；</li>
+<li>《鸢尾花书：从加减乘除到机器学习》（<a href="https://github.com/Visualize-ML">Visualize-ML (Iris Series: Visualize Math – From Arithmetic Basics to Machine Learning) · GitHub</a>）；</li>
+<li>《R语言编程—基于tidyverse》；</li>
+<li>《遗传学基础》（ <a href="https://book.douban.com/search/William%20S.Klug">William S.Klug</a> / <a href="https://book.douban.com/search/Michael%20R.Cummings">Michael R.Cummings</a> / <a href="https://book.douban.com/search/Charlotte%20A.Spencer">Charlotte A.Spencer</a> / <a href="https://book.douban.com/search/Michael%20A.Palladino">Michael A.Palladino</a>）。</li>
+</ol>
+<h2 id="一些牢骚"><a href="#一些牢骚" class="headerlink" title="一些牢骚"></a>一些牢骚</h2><p>&emsp;&emsp;大一，医用物理学的最后一章——混沌理论，采用数学的方法建模复杂动力学系统的运行规律，并提出了一点轻微的初值改变就可以让整个系统天翻地覆，即著名的蝴蝶定律。<br>&emsp;&emsp;当然，这并不意味着倘若那只蝴蝶扇动翅膀，就必然会引起飓风；但若我们逮到所有的蝴蝶，那么飓风可以预测。这强烈提示人们一种认知观点，复杂的现象背后可以拆解为简单的论断；基于底层法则，自然界得以混沌。<br>&emsp;&emsp;生命是自然界最复杂的现象，就在您读这句话的一刹那，组成我们身体的亿万细胞正发生着无法计数的生命事件，伴随着无法计数的化学物质数量和性质的变化。医学发展的某些部分，尤其是中医学，习惯用系统论的思维去认识生命活动，化繁为简，这方便了知识的理解，也让机械零碎的医学知识得到整合，但其似乎无法回答最根本的问题——生命究竟是什么？<br>&emsp;&emsp;还原论把知识构建在底层逻辑上，如薛定谔尝试用基本的物理学去解释生命发生。但还原论有时会陷入机械唯物论的窠臼。<br>&emsp;&emsp;人类的智慧在于突破概念，不必困惑在还原论和系统论的是非之中。认识世界的方向一定是刨根问底，寻根思因的；在其中，系统论帮助我们更进一步了解可能的逻辑……但这是符合人类思维的逻辑，人类是否能认知最后的核心还不得而知。<br>&emsp;&emsp;对于生命而言，其现象本身是基于自然界的物理规律。故探根问底，也会在我们能理解的知识结构内。<br>&emsp;&emsp;如何寻找生命科学的原子命题？我想，就不能完全依靠传统生命科学逐个知识的积累，而应该充分利用生物数据去解析其背后的模式。<br>&emsp;&emsp;感谢大一时的计算机课，感谢大一时候用免疫学逻辑启蒙我的刘文涛教授，给我打开一扇理解世界的门。<br>&emsp;&emsp;看似的有序中，人们会发现无序。而我们的梦想就是，发现无序背后更深刻的有序，那么我们就有可能进一步探索用现有范式所不能描述、解释或预测的现象。</p>
+<h2 id="学习体会"><a href="#学习体会" class="headerlink" title="学习体会"></a>学习体会</h2><p>&emsp;&emsp;陷于晋升、升学的要求，互联网上主要是快餐式的学习，一些便捷的工具也层出不穷。<br>&emsp;&emsp;基于应用的学习并不困难，许多优秀的公众号和博客，以及Github上有丰富的资源。但是大家未必有这个意识，从而形成所谓壁垒，构建了虚伪的不可替代性，而实际上人人都应该能获取这样的知识。<br>&emsp;&emsp;但，如果有兴趣，我们可以尝试啃一啃硬骨头，理解其基本原理，掌握基本的思维方法，从中认识到人类思维探索的规律。<br>&emsp;&emsp;我的学习路径，是从应用式的学习开始：<br>（1）统计学理论（掌握统计学的基本思维模式，所以了解知识的来历很重要）：生物统计学基础（Fundamentals of Biostatistics；Bernard Rosner）；<br>（2）流行病学理论（掌握流行病学的基本思想，我觉得流行病学最核心观点是比较，而由于主要研究样本，所以如何妥善解决样本相关问题占据了流行病学中大部分内容（可以概括为代表性和可比性）。重点是要能够设计合理的研究框架）：流行病学（人民卫生出版社；沈洪兵）；<br>（3）公众号（主要的反而不是里面的代码，而是推送的文章，文章里面会采用各种统计模型；善于用微信搜索东西，但是……看多了也会信息爆炸）：生信技能树（转录组学）；灵活胖子的科研进步之路（临床统计等）；<br>（4）编程：Python；R语言（mlr3包弥补了R语言机器学习较弱的历史）：推荐《R语言编程—基于tidyverse》；张敬信；C++（Python和R处理矩阵读写非常耗时间，C++可以有效解决这一问题）；Linux（linux学习后，对于计算机会用得更加得心应手，习惯用命令行解决问题后效率会大大提高）：系统架构的原理，基本命令的掌握。<br>（5）其他人的文章；<br>（6）基础数学（和几个高中同学一直保持联系，感受到数学系的同学的确是有一种独特的思维特性去思考问题的，而且我这个时候也遇上了数学基础不够深入理解原理的瓶颈）：《数学分析》（主要是基本的微积分，多元函数看一部分；用《高等数学》（同济）或者《数学分析》（复旦）都可以）；《线性代数》（对于处理生物数据非常重要！但医学生往往不深入学习这个。理解线性代数的基本思想，推荐上海交通大学的《线性代数》）；《概率论和数理统计》（生物统计学那本书里面只会关注基本的统计检验，对于不同的统计学学派，原理不会过多介绍。但概率论和数理统计中大量的数学推导就要求有数学分析的基础）。<br>&emsp;&emsp;其他：<br>&emsp;&emsp;对于基础数学部分，推荐《鸢尾花书：从加减乘除到机器学习》。这套书在Github有开源版本，里面丰富的可视化对于理解线性代数相关知识非常直观。<br>&emsp;&emsp;机器学习部分推荐从《统计学习方法》入门，先修分析学、线性代数和概率论。周志华的《机器学习》实际上数学理论比《统计学习方法》低一点，能够构建对机器学习是什么的认知。<br>&emsp;&emsp;上述理论部分所蕴含的思维方法对于认识世界是一种角度，同时上述的技术部分也的确在方便我们生活，发散我们思维，所以感觉是充实的。<br>&emsp;&emsp;期间，可能需要对遗传学、尤其是基因组学数据有深入了解。可以去啃一下国外的《遗传学基础》（可以当作工具书）。<br>&emsp;&emsp;有时候会有点间断，这个时候会想起已故南大计算机教授徐家福教授八十多岁跨界学习量子力学的实例，共勉~</p>
 ]]></content>
       <categories>
-        <category>生物信息学</category>
+        <category>随笔</category>
       </categories>
       <tags>
-        <tag>GWAS</tag>
-        <tag>python</tag>
+        <tag>统计学</tag>
+        <tag>交叉学科</tag>
       </tags>
   </entry>
   <entry>
@@ -112,39 +142,760 @@
         <category>生物信息学</category>
       </categories>
       <tags>
-        <tag>生物信息学</tag>
         <tag>GWAS</tag>
+        <tag>生物信息学</tag>
         <tag>单细胞测序</tag>
       </tags>
   </entry>
   <entry>
-    <title>一起来感受数据之美吧！</title>
-    <url>/2023/10/04/%E4%B8%80%E8%B5%B7%E6%9D%A5%E6%84%9F%E5%8F%97%E6%95%B0%E6%8D%AE%E4%B9%8B%E7%BE%8E%E5%90%A7%EF%BC%81/</url>
-    <content><![CDATA[<h2 id="资源记录"><a href="#资源记录" class="headerlink" title="资源记录"></a>资源记录</h2><ol>
-<li><a href="https://bookdown.org/wangminjie/R4DS/">前言 | 数据科学中的 R 语言 (bookdown.org)</a>（四川师范大学研究生公选课《数据科学中的R语言》的课程内容，其中也会涉及简单的数据科学原理）；</li>
-<li><a href="https://www.bioinfo-scrounger.com/">KeepNotes blog (bioinfo-scrounger.com)</a>（一些R语言和统计问题拾贝）；</li>
-<li><a href="https://cosx.org/">统计之都 (cosx.org)</a>（中文统计学论坛，会定期发表文章，介绍最新的R包，统计学模型和访谈）；</li>
-<li><a href="https://csdiy.wiki/">CS自学指南 (csdiy.wiki)</a>（计算机科学自学指南，其中包括了一个计算机专业学生的知识体系）；</li>
-<li><a href="https://www.writebug.com/">WRITE-BUG数字空间 - 新一代一站式团队协作知识库 (writebug.com)</a>（Writebug有很多高质量的，类似于微信公众号的文章）；</li>
-<li><a href="https://book.ncrnalab.org/teaching/">Bioinformatics Tutorial - Bioinformatics Tutorial (ncrnalab.org)</a> （一个以应用为导向的生物信息学学习站）；</li>
-<li><a href="https://www.cnblogs.com/leezx/">Life·Intelligence - 博客园 (cnblogs.com)</a>）（博主主要关注生物科学、单细胞测序的知识）；</li>
-<li><a href="https://ailearning.apachecn.org/">【布客】AI Learning (apachecn.org)</a>（AI学习的一站式，偏应用）；</li>
-<li><a href="https://forrestgump618.github.io/2023/08/12/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F%E6%95%99%E7%A8%8B%E8%B5%84%E6%BA%90%E8%81%9A%E5%90%88/">单细胞测序教程资源聚合 | 一个夏天的年少 (forrestgump618.github.io)</a> （单细胞测序教程资源整合）；<br> 此外，多去关注Github上有趣的教程和项目。<br> 书本推荐：</li>
-<li>《高等数学》（同济）；《线性代数》（上交）；《概率论和数理统计》（浙大）；</li>
-<li>《生物统计学基础》（Fundamentals of Biostatistics；Bernard Rosner）；《流行病学》（人民卫生出版社）；</li>
-<li>《鸢尾花书：从加减乘除到机器学习》（<a href="https://github.com/Visualize-ML">Visualize-ML (Iris Series: Visualize Math – From Arithmetic Basics to Machine Learning) · GitHub</a>）；</li>
-<li>《R语言编程—基于tidyverse》；</li>
-<li>《遗传学基础》（ <a href="https://book.douban.com/search/William%20S.Klug">William S.Klug</a> / <a href="https://book.douban.com/search/Michael%20R.Cummings">Michael R.Cummings</a> / <a href="https://book.douban.com/search/Charlotte%20A.Spencer">Charlotte A.Spencer</a> / <a href="https://book.douban.com/search/Michael%20A.Palladino">Michael A.Palladino</a>）。</li>
+    <title>单细胞转录组分析实战（一）：数据采集</title>
+    <url>/2024/02/17/%E5%8D%95%E7%BB%86%E8%83%9E%E8%BD%AC%E5%BD%95%E7%BB%84%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E6%95%B0%E6%8D%AE%E9%87%87%E9%9B%86/</url>
+    <content><![CDATA[<h2 id="写在前面的话"><a href="#写在前面的话" class="headerlink" title="写在前面的话"></a>写在前面的话</h2><p>&emsp;&emsp;本系列将基于张泽民团队发表的TNBC免疫图谱进行挖掘（<a href="https://www.cell.com/cancer-cell/fulltext/S1535-6108(21">Single-cell analyses reveal key immune cell subsets associated with response to PD-L1 blockade in triple-negative breast cancer: Cancer Cell</a>00499-2)），旨在探索原发灶和转移灶免疫微环境的差异及其原因。<br>&emsp;&emsp;准确严谨的采集和清洗数据是单细胞分析的开始，数据本身的质量和采集过程的规范程度决定了研究结果的可靠性。</p>
+<h2 id="样本信息"><a href="#样本信息" class="headerlink" title="样本信息"></a>样本信息</h2><h3 id="患者来源"><a href="#患者来源" class="headerlink" title="患者来源"></a>患者来源</h3><p>&emsp;&emsp;国家癌症中心开发的DTHealth TrakCare系统中记录了患者信息，纳入本研究的22名患者满足：（1）组织学确诊晚期TNBC；（2）既往没有化疗、靶向及免疫等全身治疗；（3）研究中接受紫杉醇单药治疗或紫杉醇加阿替利珠单抗治疗。</p>
+<h3 id="患者信息"><a href="#患者信息" class="headerlink" title="患者信息"></a>患者信息</h3><ol>
+<li>本研究所有患者均被诊断为晚期TNBC，大多数患者患有转移性疾病；</li>
+<li>事实上，一些患者是接受新辅助治疗的局部晚期患者；</li>
+<li>患者为女性，年龄在32-64岁之间，中位值为49岁；</li>
 </ol>
-<h2 id="一些牢骚"><a href="#一些牢骚" class="headerlink" title="一些牢骚"></a>一些牢骚</h2><p>&emsp;&emsp;大一，医用物理学的最后一章——混沌理论，采用数学的方法建模复杂动力学系统的运行规律，并提出了一点轻微的初值改变就可以让整个系统天翻地覆，即著名的蝴蝶定律。<br>&emsp;&emsp;当然，这并不意味着倘若那只蝴蝶扇动翅膀，就必然会引起飓风；但若我们逮到所有的蝴蝶，那么飓风可以预测。这强烈提示人们一种认知观点，复杂的现象背后可以拆解为简单的论断；基于底层法则，自然界得以混沌。<br>&emsp;&emsp;生命是自然界最复杂的现象，就在您读这句话的一刹那，组成我们身体的亿万细胞正发生着无法计数的生命事件，伴随着无法计数的化学物质数量和性质的变化。医学发展的某些部分，尤其是中医学，习惯用系统论的思维去认识生命活动，化繁为简，这方便了知识的理解，也让机械零碎的医学知识得到整合，但其似乎无法回答最根本的问题——生命究竟是什么？<br>&emsp;&emsp;还原论把知识构建在底层逻辑上，如薛定谔尝试用基本的物理学去解释生命发生。但还原论有时会陷入机械唯物论的窠臼。<br>&emsp;&emsp;人类的智慧在于突破概念，不必困惑在还原论和系统论的是非之中。认识世界的方向一定是刨根问底，寻根思因的；在其中，系统论帮助我们更进一步了解可能的逻辑……但这是符合人类思维的逻辑，人类是否能认知最后的核心还不得而知。<br>&emsp;&emsp;对于生命而言，其现象本身是基于自然界的物理规律。故探根问底，也会在我们能理解的知识结构内。<br>&emsp;&emsp;如何寻找生命科学的原子命题？我想，就不能完全依靠传统生命科学逐个知识的积累，而应该充分利用生物数据去解析其背后的模式。<br>&emsp;&emsp;感谢大一时的计算机课，感谢大一时候用免疫学逻辑启蒙我的刘文涛教授，给我打开一扇理解世界的门。<br>&emsp;&emsp;看似的有序中，人们会发现无序。而我们的梦想就是，发现无序背后更深刻的有序，那么我们就有可能进一步探索用现有范式所不能描述、解释或预测的现象。</p>
-<h2 id="学习体会"><a href="#学习体会" class="headerlink" title="学习体会"></a>学习体会</h2><p>&emsp;&emsp;陷于晋升、升学的要求，互联网上主要是快餐式的学习，一些便捷的工具也层出不穷。<br>&emsp;&emsp;基于应用的学习并不困难，许多优秀的公众号和博客，以及Github上有丰富的资源。但是大家未必有这个意识，从而形成所谓壁垒，构建了虚伪的不可替代性，而实际上人人都应该能获取这样的知识。<br>&emsp;&emsp;但，如果有兴趣，我们可以尝试啃一啃硬骨头，理解其基本原理，掌握基本的思维方法，从中认识到人类思维探索的规律。<br>&emsp;&emsp;我的学习路径，是从应用式的学习开始：<br>（1）统计学理论（掌握统计学的基本思维模式，所以了解知识的来历很重要）：生物统计学基础（Fundamentals of Biostatistics；Bernard Rosner）；<br>（2）流行病学理论（掌握流行病学的基本思想，我觉得流行病学最核心观点是比较，而由于主要研究样本，所以如何妥善解决样本相关问题占据了流行病学中大部分内容（可以概括为代表性和可比性）。重点是要能够设计合理的研究框架）：流行病学（人民卫生出版社；沈洪兵）；<br>（3）公众号（主要的反而不是里面的代码，而是推送的文章，文章里面会采用各种统计模型；善于用微信搜索东西，但是……看多了也会信息爆炸）：生信技能树（转录组学）；灵活胖子的科研进步之路（临床统计等）；<br>（4）编程：Python；R语言（mlr3包弥补了R语言机器学习较弱的历史）：推荐《R语言编程—基于tidyverse》；张敬信；C++（Python和R处理矩阵读写非常耗时间，C++可以有效解决这一问题）；Linux（linux学习后，对于计算机会用得更加得心应手，习惯用命令行解决问题后效率会大大提高）：系统架构的原理，基本命令的掌握。<br>（5）其他人的文章；<br>（6）基础数学（和几个高中同学一直保持联系，感受到数学系的同学的确是有一种独特的思维特性去思考问题的，而且我这个时候也遇上了数学基础不够深入理解原理的瓶颈）：《数学分析》（主要是基本的微积分，多元函数看一部分；用《高等数学》（同济）或者《数学分析》（复旦）都可以）；《线性代数》（对于处理生物数据非常重要！但医学生往往不深入学习这个。理解线性代数的基本思想，推荐上海交通大学的《线性代数》）；《概率论和数理统计》（生物统计学那本书里面只会关注基本的统计检验，对于不同的统计学学派，原理不会过多介绍。但概率论和数理统计中大量的数学推导就要求有数学分析的基础）。<br>&emsp;&emsp;其他：<br>&emsp;&emsp;对于基础数学部分，推荐《鸢尾花书：从加减乘除到机器学习》。这套书在Github有开源版本，里面丰富的可视化对于理解线性代数相关知识非常直观。<br>&emsp;&emsp;机器学习部分推荐从《统计学习方法》入门，先修分析学、线性代数和概率论。周志华的《机器学习》实际上数学理论比《统计学习方法》低一点，能够构建对机器学习是什么的认知。<br>&emsp;&emsp;上述理论部分所蕴含的思维方法对于认识世界是一种角度，同时上述的技术部分也的确在方便我们生活，发散我们思维，所以感觉是充实的。<br>&emsp;&emsp;期间，可能需要对遗传学、尤其是基因组学数据有深入了解。可以去啃一下国外的《遗传学基础》（可以当作工具书）。<br>&emsp;&emsp;有时候会有点间断，这个时候会想起已故南大计算机教授徐家福教授八十多岁跨界学习量子力学的实例，共勉~</p>
+<p><img src="/2024/02/17/%E5%8D%95%E7%BB%86%E8%83%9E%E8%BD%AC%E5%BD%95%E7%BB%84%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E6%95%B0%E6%8D%AE%E9%87%87%E9%9B%86/1.jpg" alt="临床信息"></p>
+<h3 id="样本收集、文库制备和测序"><a href="#样本收集、文库制备和测序" class="headerlink" title="样本收集、文库制备和测序"></a>样本收集、文库制备和测序</h3><p>&emsp;&emsp;研究使用16针吸穿刺取乳腺、胸壁肿瘤样本；18号针取淋巴结、肝转移灶样本。测序仪器是10x Genomics公司的HiSeq X Ten，平台为<a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GPL20795">GPL20795</a>。DNA片段被打碎为150bp，进行双端测序。</p>
+<h2 id="单细胞转录组数据处理"><a href="#单细胞转录组数据处理" class="headerlink" title="单细胞转录组数据处理"></a>单细胞转录组数据处理</h2><p>&emsp;&emsp;10x Genomics公司提供的Cell Ranger（V 3.0.1）用于汇总原始数据，过滤低质量读段，将reads与人类参考基因组（GRCh38）比对，分配细胞Barcode，并生成UMI矩阵。值得注意的是，对于10x Genomics公司的测序，由于UMI的存在，使用Raw Count即可反映真实的基因表达，不需要使用标准化方法进行基因定量（<a href="https://forrestgump618.github.io/2024/02/16/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89%EF%BC%9A%E5%9F%BA%E5%9B%A0%E5%AE%9A%E9%87%8F/">生物信息学笔记（三）：基因定量</a>）。但注意，这里所谓“真实的基因表达”反映的是测序过程中的真实值，即不必考虑测序深度和转录本长度的值；而单细胞测序中，由于转录本的低捕获率，我们假设合格细胞基因表达总量应该类似，所以还要进行标准化排除不同细胞测序质量的差异。<br>&emsp;&emsp;原文使用Scanpy进行下游分析，质控步骤包括：</p>
+<ol>
+<li>过滤在少于10个细胞中表达的基因；</li>
+<li>过滤少于200个基因的细胞中检测到的基因；</li>
+<li>保留了600-120,000个UMIs、400-8,000个基因和小于10%线粒体基因计数的高质量细胞；</li>
+<li>将Scrublet应用于每个测序文库，以去除预期的双峰率为6%的潜在双峰，并滤除doubletScore大于90%分位数的细胞；</li>
+</ol>
+<p>&emsp;&emsp;接着，我们进行标准化操作：</p>
+<ol>
+<li>标准化每个细胞的总计数（库大小）：这一步是为了消除不同细胞间样本量的差异。库大小通常是指一个细胞中检测到的总UMI数。通过将每个细胞的UMI计数除以该细胞的总UMI计数，可以确保数据在不同细胞间是可比的。</li>
+<li>乘以1e6：这一步是为了放大数据，使其更易于处理。通常在生物信息学中，进行这样的转换是为了避免处理极小的数字。</li>
+<li>对数据进行对数变换：最后，对标准化后的数据进行对数变换是为了减少数据中极端值的影响，使数据的分布更接近正态分布。这通常有助于后续的统计分析和可视化。</li>
+</ol>
+<p>&emsp;&emsp;前面的步骤完成了单细胞转录组数据的质控和标准化，下面进行矩阵降维，进一步排除无关变量的影响，同时压缩分析规模：</p>
+<ol>
+<li>选择前4000个可变基因，排除大部分背景基因的影响；</li>
+<li>从标准化表达矩阵中去除总计数、线粒体基因计数和热休克蛋白（HSP）相关基因计数的变异，以避免偏差；</li>
+<li>主成分分析，把4000个可变基因降为50个主成分；</li>
+<li>由此，我们得到了50×细胞数的矩阵，即对于每个细胞有50个变量，使用前2个或者3个主成分进行可视化，通过标注不同样本，发现潜在的批次效应，并通过相应的算法（在R中可以通过Harmony）去除；</li>
+<li>由此，我们尽可能避免了因非研究变量因素导致的系统误差，得到新的标准化矩阵。</li>
+</ol>
+<p>&emsp;&emsp;最后，Leiden算法寻找细胞簇和分群，UMAP和TSNE进行作图，推荐使用COSG确定Marker。</p>
 ]]></content>
       <categories>
-        <category>随笔</category>
+        <category>生物信息学</category>
       </categories>
       <tags>
+        <tag>单细胞测序</tag>
+        <tag>免疫</tag>
+        <tag>肿瘤</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>大四课程资源（持续更新）</title>
+    <url>/2024/02/26/%E5%A4%A7%E5%9B%9B%E8%AF%BE%E7%A8%8B%E8%B5%84%E6%BA%90%EF%BC%88%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%EF%BC%89/</url>
+    <content><![CDATA[<h2 id="内科"><a href="#内科" class="headerlink" title="内科"></a>内科</h2><h2 id="外科"><a href="#外科" class="headerlink" title="外科"></a>外科</h2><h2 id="其他课程"><a href="#其他课程" class="headerlink" title="其他课程"></a>其他课程</h2><h3 id="皮肤病与性病学"><a href="#皮肤病与性病学" class="headerlink" title="皮肤病与性病学"></a>皮肤病与性病学</h3><ol>
+<li>视频资源：<ol>
+<li><a href="https://www.bilibili.com/video/BV1fa4y117bK?p=2&amp;vd_source=abf08cae6308e09625fbd30392ec206a">2024皮肤与性病学主治医师</a></li>
+<li><a href="https://www.bilibili.com/video/BV1wE411v7fp/?spm_id_from=333.337.search-card.all.click&amp;vd_source=abf08cae6308e09625fbd30392ec206a">【叶子】医学生学习 | 影像学 皮肤性病学 眼科学 | 学习经验分享 |_哔哩哔哩_bilibili</a></li>
+<li><a href="https://www.bilibili.com/video/BV1Tk4y1u7dG/?spm_id_from=333.337.search-card.all.click&amp;vd_source=abf08cae6308e09625fbd30392ec206a">皮肤与性病学主治医师（338）【时间更短，总时间为10h】</a></li>
+</ol>
+</li>
+<li>教学日历：</li>
+</ol>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th><strong>课次</strong></th>
+<th><strong>章节</strong></th>
+<th><strong>内容</strong></th>
+<th><strong>讲课学时</strong></th>
+<th><strong>实践学时</strong></th>
+<th><strong>自学学时</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>1-3</td>
+<td>皮肤性病学导论、皮肤的结构和功能</td>
+<td>3</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>2</td>
+<td>4-7</td>
+<td>皮性肤病的临床表现、辅助检查方法、诊断、治疗</td>
+<td>3</td>
+<td></td>
+<td>0.5</td>
+</tr>
+<tr>
+<td></td>
+<td>8-9</td>
+<td>皮肤美容、皮肤性病的预防与康复（自学）</td>
+<td></td>
+<td></td>
+<td>1</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>见习：病历书写与规范</td>
+<td></td>
+<td>3</td>
+<td></td>
+</tr>
+<tr>
+<td>3</td>
+<td>10-12</td>
+<td>感染性皮肤病（病毒、细菌、真菌）</td>
+<td>3</td>
+<td></td>
+<td>2</td>
+</tr>
+<tr>
+<td></td>
+<td>13</td>
+<td>动物性皮肤病（自学）</td>
+<td></td>
+<td></td>
+<td>1</td>
+</tr>
+<tr>
+<td>4</td>
+<td>14</td>
+<td>皮炎和湿疹</td>
+<td>3</td>
+<td></td>
+<td>0.5</td>
+</tr>
+<tr>
+<td>5</td>
+<td>15-16</td>
+<td>荨麻疹、血管性水肿、药疹</td>
+<td>3</td>
+<td></td>
+<td>1</td>
+</tr>
+<tr>
+<td></td>
+<td>17-18</td>
+<td>物理性及瘙痒性皮肤病（自学）</td>
+<td></td>
+<td></td>
+<td>2</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>见习：常见皮损介绍</td>
+<td></td>
+<td>3</td>
+<td></td>
+</tr>
+<tr>
+<td>6</td>
+<td>19</td>
+<td>红斑丘疹鳞屑性皮肤病</td>
+<td>3</td>
+<td></td>
+<td>0.5</td>
+</tr>
+<tr>
+<td></td>
+<td>20</td>
+<td>结缔组织病（自学）</td>
+<td></td>
+<td></td>
+<td>2</td>
+</tr>
+<tr>
+<td>7</td>
+<td>21</td>
+<td>大疱性皮肤病</td>
+<td>3</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>22</td>
+<td>血管炎、脂膜炎（自学）</td>
+<td></td>
+<td></td>
+<td>2</td>
+</tr>
+<tr>
+<td></td>
+<td>23</td>
+<td>嗜中性皮肤病（自学）</td>
+<td></td>
+<td></td>
+<td>1</td>
+</tr>
+<tr>
+<td>8</td>
+<td>24</td>
+<td>皮肤附属器疾病（痤疮、雄秃）</td>
+<td>3</td>
+<td></td>
+<td>1</td>
+</tr>
+<tr>
+<td></td>
+<td>25</td>
+<td>色素性皮肤病（自学）</td>
+<td></td>
+<td></td>
+<td>1</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>见习：皮肤科常见病1</td>
+<td></td>
+<td>3</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>26</td>
+<td>遗传性皮肤病（自学）</td>
+<td></td>
+<td></td>
+<td>1</td>
+</tr>
+<tr>
+<td></td>
+<td>27</td>
+<td>营养与代谢障碍性皮肤病（自学）</td>
+<td></td>
+<td></td>
+<td>1</td>
+</tr>
+<tr>
+<td>9</td>
+<td>28</td>
+<td>皮肤肿瘤</td>
+<td>3</td>
+<td></td>
+<td>1</td>
+</tr>
+<tr>
+<td>10、11</td>
+<td>29</td>
+<td>性传播疾病</td>
+<td>6</td>
+<td></td>
+<td>0.5</td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+<td>见习：皮肤科常见病2</td>
+<td></td>
+<td>3</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>合计</td>
+<td></td>
+<td>33</td>
+<td>12</td>
+<td>19</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="精神病学"><a href="#精神病学" class="headerlink" title="精神病学"></a>精神病学</h3><ol>
+<li>视频资源：<ol>
+<li><a href="https://www.bilibili.com/video/BV1VR4y1k7Cd/?spm_id_from=333.337.search-card.all.click&amp;vd_source=abf08cae6308e09625fbd30392ec206a">贺银城精神病学_哔哩哔哩_bilibili</a></li>
+<li><a href="https://www.bilibili.com/video/BV1XN4y1v72U/?spm_id_from=333.337.search-card.all.click&amp;vd_source=abf08cae6308e09625fbd30392ec206a">2024精神病学【340】-基础精讲+刷题直播+考前冲刺_哔哩哔哩_bilibili</a></li>
+<li><a href="https://njmujffy.fanya.chaoxing.com/portal/schoolCourseInfo/department?departmentId=10472879">南医大学习通——精神病学基础</a></li>
+<li><a href="https://mooc1.chaoxing.com/nodedetailcontroller/visitnodedetail?courseId=217177538&amp;knowledgeId=557617504&amp;enc=&amp;mooc2=1">南医大学习通——五年制和八年制精神病学网课</a></li>
+</ol>
+</li>
+<li>镇江见习点课程进度：</li>
+</ol>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>授课内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>绪论</td>
+</tr>
+<tr>
+<td>精神障碍的检查与诊断、精神障碍的分类、诊断标准</td>
+</tr>
+<tr>
+<td>精神障碍的症状学</td>
+</tr>
+<tr>
+<td>器质性精神障碍</td>
+</tr>
+<tr>
+<td>精神活性物质所致精神障碍</td>
+</tr>
+<tr>
+<td>精神分裂症及其他精神病性障碍</td>
+</tr>
+<tr>
+<td>心境障碍</td>
+</tr>
+<tr>
+<td>神经症性障碍</td>
+</tr>
+<tr>
+<td>躯体形式障碍及分离（转换）性障碍、应激相关精神障碍</td>
+</tr>
+<tr>
+<td>心理因素相关生理障碍</td>
+</tr>
+<tr>
+<td>儿童青少年期精神障碍</td>
+</tr>
+<tr>
+<td>躯体治疗</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="耳鼻咽喉头颈外科学"><a href="#耳鼻咽喉头颈外科学" class="headerlink" title="耳鼻咽喉头颈外科学"></a>耳鼻咽喉头颈外科学</h3><ol>
+<li>视频资源：<ol>
+<li><a href="https://www.bilibili.com/video/BV1tu411w7i6/?vd_source=abf08cae6308e09625fbd30392ec206a">复旦大学耳鼻咽喉科学视频耳鼻喉科应用解剖</a></li>
+<li><a href="https://www.bilibili.com/video/BV185411k7cT/?spm_id_from=333.788.recommend_more_video.0&amp;vd_source=abf08cae6308e09625fbd30392ec206a">头颈部的神外解剖—The Rhoton Collection系列解剖视频</a></li>
+<li><a href="https://pan.baidu.com/s/13BWpWXlWS4YCoNjwrGJ-dw?pwd=46ys">百度网盘——耳鼻咽喉相关视频</a></li>
+<li><a href="https://www.bilibili.com/video/BV1fm4y1M7dE/?spm_id_from=333.337.search-card.all.click&amp;vd_source=abf08cae6308e09625fbd30392ec206a">耳鼻咽喉科主治医师</a></li>
+</ol>
+</li>
+<li>教学日历：</li>
+</ol>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>章 节</th>
+<th>内     容</th>
+<th>讲 授</th>
+<th>见 习</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>第一篇 耳科学</td>
+<td>耳的应用解剖学、生理学、症状学及检查法</td>
+<td></td>
+<td>3</td>
+</tr>
+<tr>
+<td></td>
+<td>感音神经性耳聋；听力障碍及防治</td>
+<td>2</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>耳源性眩晕</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>外耳疾病、耳创伤</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>分泌性中耳炎</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>急慢性中耳炎、耳源性颅内外并发症</td>
+<td>2</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>周围性面神经疾病</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td>第二篇 鼻科学</td>
+<td>鼻的解剖、生理、症状及检查法</td>
+<td></td>
+<td>3</td>
+</tr>
+<tr>
+<td></td>
+<td>外鼻与鼻前庭疾病；鼻腔炎性疾病</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>鼻窦炎性疾病；真菌性鼻-鼻窦炎</td>
+<td>2</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>鼻、鼻窦及颌面外伤；鼻与鼻窦囊肿</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>变应性鼻炎</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>鼻出血；鼻中隔及其他鼻腔病变</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>鼻腔与鼻窦良性肿瘤；鼻恶性肿瘤；内镜鼻眼相关外科</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td>第三篇 咽科学</td>
+<td>咽的解剖、生理、症状及检查法</td>
+<td></td>
+<td>1</td>
+</tr>
+<tr>
+<td></td>
+<td>咽部炎性疾病；腭扁桃体疾病；腺样体疾病；咽部间隙脓肿</td>
+<td>2</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>睡眠呼吸障碍</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>咽与咽旁肿瘤</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td>第四篇 喉科学</td>
+<td>喉的解剖、生理、症状及检查法</td>
+<td></td>
+<td>1</td>
+</tr>
+<tr>
+<td></td>
+<td>喉炎性疾病；喉良性增生性病变</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>喉部良性肿瘤；喉部恶性肿瘤</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>喉阻塞；喉气管狭窄；气管插管术与气管切开术</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td>第五篇气管食管科学</td>
+<td>气管食管的解剖、生理、症状及检查法</td>
+<td></td>
+<td>0.5</td>
+</tr>
+<tr>
+<td></td>
+<td>气管与支气管异物；食管异物</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td>第六篇 颈科学</td>
+<td>颈部的解剖、症状学及检查法</td>
+<td></td>
+<td>0.5</td>
+</tr>
+<tr>
+<td></td>
+<td>颈部肿瘤</td>
+<td>1</td>
+<td></td>
+</tr>
+<tr>
+<td>总计</td>
+<td></td>
+<td>24</td>
+<td>9</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="神经病学"><a href="#神经病学" class="headerlink" title="神经病学"></a>神经病学</h3><ol>
+<li>视频资源：<ol>
+<li><a href="https://www.bilibili.com/video/BV1Xs4y1372w/?spm_id_from=333.337.search-card.all.click">贺银城神经病学</a></li>
+<li><a href="https://www.bilibili.com/video/BV1rg411w7e3/?spm_id_from=333.337.search-card.all.click">【中英文字幕】神经解剖学</a></li>
+<li><a href="https://www.bilibili.com/video/BV1yM4y1g7cu/?vd_source=abf08cae6308e09625fbd30392ec206a">美国犹他大学神经解剖学系列</a></li>
+</ol>
+</li>
+<li>教学日历：</li>
+</ol>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th><strong>章节</strong></th>
+<th><strong>内容</strong></th>
+<th><strong>讲授</strong></th>
+<th><strong>见习</strong></th>
+<th><strong>自学</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>第二章</td>
+<td>神经系统的解剖、生理及病损的定位诊断</td>
+<td>4</td>
+<td></td>
+<td>2</td>
+</tr>
+<tr>
+<td>第三章</td>
+<td>神经系统疾病的常见症状</td>
+<td>2</td>
+<td></td>
+<td>1</td>
+</tr>
+<tr>
+<td>第八章及第十一章</td>
+<td>头痛+AD</td>
+<td>2</td>
+<td></td>
+<td>1</td>
+</tr>
+<tr>
+<td>第九章</td>
+<td>脑血管病</td>
+<td>4</td>
+<td></td>
+<td>3</td>
+</tr>
+<tr>
+<td></td>
+<td>神经病学见习1</td>
+<td></td>
+<td>3</td>
+<td></td>
+</tr>
+<tr>
+<td>第十二章</td>
+<td>中枢神经系统感染性疾病</td>
+<td>3</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>第十四章</td>
+<td>运动障碍性疾病（帕金森病+原发性震颤）</td>
+<td>3</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>神经病学见习2</td>
+<td></td>
+<td>3</td>
+<td></td>
+</tr>
+<tr>
+<td>第十五章</td>
+<td>癫痫</td>
+<td>3</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>第十六章</td>
+<td>脊髓疾病</td>
+<td>2</td>
+<td></td>
+<td>1</td>
+</tr>
+<tr>
+<td>第十七章</td>
+<td>周围神经病</td>
+<td>2</td>
+<td></td>
+<td>1</td>
+</tr>
+<tr>
+<td>第十九章</td>
+<td>神经-肌肉接头和肌肉疾病</td>
+<td>2</td>
+<td></td>
+<td>1</td>
+</tr>
+<tr>
+<td></td>
+<td>神经病学实习3</td>
+<td></td>
+<td>3</td>
+<td></td>
+</tr>
+<tr>
+<td>合计</td>
+<td></td>
+<td>27学时</td>
+<td>9学时</td>
+<td>10学时</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h3 id="医患沟通"><a href="#医患沟通" class="headerlink" title="医患沟通"></a>医患沟通</h3><ol>
+<li>刷课：<ol>
+<li>慕课学习网址（<a href="https://www.pmphmooc.com/#/moocDetails?courseID=35090）">https://www.pmphmooc.com/#/moocDetails?courseID=35090）</a> 及二维码，请继续按照之前的注册字母编号要求学生完成注册和学习（再次提醒：请学生务必自己记录用户名和密码或绑定手机，密码遗失无法找回，如部分学生之前已有登录账号，只需要在昵称这里备注编号+学号即可）；</li>
+<li>新增虚拟仿真考核；</li>
+<li>医患沟通学网站二维码及网址（<a href="https://yhgt.njmu.edu.cn/）供学生日常学习；">https://yhgt.njmu.edu.cn/）供学生日常学习；</a></li>
+</ol>
+</li>
+<li>教学日历：</li>
+</ol>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th><strong>章节</strong></th>
+<th><strong>内容</strong></th>
+<th><strong>学时</strong></th>
+<th><strong>教学安排</strong></th>
+<th><strong>考核内容</strong></th>
+<th><strong>教师</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>第一章</td>
+<td>医患沟通导论</td>
+<td><strong>2</strong></td>
+<td>课堂讲授</td>
+<td></td>
+<td>相关</td>
+</tr>
+<tr>
+<td>第二章<br><br>第三章</td>
+<td>医患沟通基础<br><br>医患沟通原理</td>
+<td><strong>2</strong><br><br><strong>2</strong></td>
+<td>课堂讲授<br><br>课堂讨论</td>
+<td>PPT发言稿</td>
+<td>相关</td>
+</tr>
+<tr>
+<td>第四章</td>
+<td>医患沟通技能与路径</td>
+<td><strong>3</strong><br><br><strong>2</strong></td>
+<td>沟通技能训练</td>
+<td></td>
+<td>SP<br><br>相关</td>
+</tr>
+<tr>
+<td>第五章</td>
+<td>门诊和急诊医患沟通</td>
+<td><strong>2</strong></td>
+<td>课堂讲授<br><br>（课外安排门急诊导医2次）</td>
+<td>导医工作表现</td>
+<td>相关</td>
+</tr>
+<tr>
+<td>第六章</td>
+<td>内科沟通</td>
+<td><strong>4</strong></td>
+<td>案例讨论2<br><br>病房交流2</td>
+<td>陪护工作表现<br><br>陪护体会作业</td>
+<td>内科</td>
+</tr>
+<tr>
+<td>第七章</td>
+<td>外科沟通</td>
+<td><strong>4</strong></td>
+<td>案例讨论2<br><br>病房交流2</td>
+<td>陪护工作表现<br><br>陪护体会作业</td>
+<td>外科</td>
+</tr>
+<tr>
+<td>第八章</td>
+<td>妇产科沟通</td>
+<td><strong>2</strong></td>
+<td>课堂讲授<br><br>及讨论</td>
+<td></td>
+<td>妇产科</td>
+</tr>
+<tr>
+<td>第九章</td>
+<td>儿科沟通</td>
+<td><strong>2</strong></td>
+<td>课堂讲授<br><br>及讨论</td>
+<td></td>
+<td>儿科</td>
+</tr>
+<tr>
+<td>第十三章</td>
+<td>医患纠纷中的沟通</td>
+<td><strong>2</strong></td>
+<td>案例讨论</td>
+<td></td>
+<td>相关</td>
+</tr>
+</tbody>
+</table>
+</div>
+]]></content>
+      <categories>
+        <category>医学课程</category>
+      </categories>
+      <tags>
+        <tag>医学</tag>
+        <tag>医学生</tag>
+        <tag>大四</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>孟德尔随机化标准流程代码示例</title>
+    <url>/2024/02/05/%E5%AD%9F%E5%BE%B7%E5%B0%94%E9%9A%8F%E6%9C%BA%E5%8C%96%E6%A0%87%E5%87%86%E6%B5%81%E7%A8%8B%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B/</url>
+    <content><![CDATA[<figure class="highlight r"><table><tr><td class="code"><pre><span class="line"><span class="comment">####TSMR####</span></span><br><span class="line">library<span class="punctuation">(</span>TwoSampleMR<span class="punctuation">)</span></span><br><span class="line">library<span class="punctuation">(</span>MRPRESSO<span class="punctuation">)</span></span><br><span class="line"><span class="comment">####NAFLD - COVID 19####</span></span><br><span class="line"><span class="comment">####RCT####</span></span><br><span class="line"></span><br><span class="line"><span class="comment">####NAFLD_exposure####</span></span><br><span class="line">exposure_dat<span class="operator">&lt;-</span>read_exposure_data<span class="punctuation">(</span>filename <span class="operator">=</span> <span class="string">&quot;./NAFLD.txt&quot;</span><span class="punctuation">,</span>sep<span class="operator">=</span><span class="string">&quot;\t&quot;</span><span class="punctuation">,</span></span><br><span class="line">                                 snp_col <span class="operator">=</span> <span class="string">&quot;rsids&quot;</span><span class="punctuation">,</span>effect_allele_col <span class="operator">=</span> <span class="string">&quot;alt&quot;</span><span class="punctuation">,</span>other_allele_col <span class="operator">=</span> <span class="string">&quot;ref&quot;</span><span class="punctuation">,</span></span><br><span class="line">                                 beta_col <span class="operator">=</span> <span class="string">&quot;beta&quot;</span><span class="punctuation">,</span>se_col <span class="operator">=</span> <span class="string">&quot;sebeta&quot;</span><span class="punctuation">,</span>pval_col <span class="operator">=</span> <span class="string">&quot;pval&quot;</span><span class="punctuation">,</span>eaf_col <span class="operator">=</span> <span class="string">&quot;af_alt&quot;</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">##看目录下的文件进行对应，如果读一个完整的文件，需要进行P值筛选</span></span><br><span class="line"></span><br><span class="line">exposure_dat<span class="operator">$</span>phenotype<span class="operator">&lt;-</span><span class="string">&quot;NAFLD&quot;</span></span><br><span class="line"><span class="comment">##命名性状，方便结果输出</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#### kb=10000;r2=0.001;</span></span><br><span class="line"><span class="comment">#### kb=500;r2=0.1.</span></span><br><span class="line">exposure_dat<span class="operator">&lt;-</span>clump_data<span class="punctuation">(</span>exposure_dat<span class="punctuation">)</span></span><br><span class="line"><span class="comment">##连锁不平衡去除</span></span><br><span class="line"></span><br><span class="line"><span class="comment">####COVID19_OUTCOME####</span></span><br><span class="line">outcome_dat<span class="operator">&lt;-</span>extract_outcome_data<span class="punctuation">(</span>outcomes <span class="operator">=</span> <span class="string">&quot;ebi-a-GCST011081&quot;</span><span class="punctuation">,</span>snps <span class="operator">=</span> exposure_dat<span class="operator">$</span>SNP<span class="punctuation">)</span></span><br><span class="line"><span class="comment">##在线读取</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#####Harmonization####</span></span><br><span class="line">dat<span class="operator">&lt;-</span>harmonise_data<span class="punctuation">(</span>exposure_dat <span class="operator">=</span> exposure_dat</span><br><span class="line">                    <span class="punctuation">,</span>outcome_dat <span class="operator">=</span> outcome_dat<span class="punctuation">,</span></span><br><span class="line">                    action <span class="operator">=</span> <span class="number">2</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">##dat协调，去除回文序列，错配</span></span><br><span class="line"></span><br><span class="line"><span class="comment">####F&gt;10####</span></span><br><span class="line">dat<span class="operator">$</span><span class="built_in">F</span><span class="operator">&lt;-</span><span class="punctuation">(</span>dat<span class="operator">$</span>beta.exposure<span class="operator">/</span>dat<span class="operator">$</span>se.exposure<span class="punctuation">)</span><span class="operator">**</span><span class="number">2</span></span><br><span class="line">dat<span class="operator">&lt;-</span>subset<span class="punctuation">(</span>dat<span class="punctuation">,</span><span class="built_in">F</span><span class="operator">&gt;</span><span class="number">10</span><span class="punctuation">)</span></span><br><span class="line">mr_result <span class="operator">&lt;-</span> mr<span class="punctuation">(</span>dat<span class="punctuation">)</span></span><br><span class="line"><span class="comment">##F值-遗传力计算</span></span><br><span class="line"></span><br><span class="line"><span class="comment">####Sensitivity,p&gt;0.05####</span></span><br><span class="line">het<span class="operator">&lt;-</span>mr_heterogeneity<span class="punctuation">(</span>dat<span class="punctuation">)</span></span><br><span class="line">ple<span class="operator">&lt;-</span>mr_pleiotropy_test<span class="punctuation">(</span>dat<span class="punctuation">)</span></span><br><span class="line"><span class="comment">###sNP pleiotropy: Phennoscaner; MR-PRESSO</span></span><br><span class="line">mr_presso<span class="punctuation">(</span>data <span class="operator">=</span> dat<span class="punctuation">,</span>BetaOutcome <span class="operator">=</span> <span class="string">&quot;beta.outcome&quot;</span><span class="punctuation">,</span>BetaExposure <span class="operator">=</span> <span class="string">&quot;beta.exposure&quot;</span><span class="punctuation">,</span>SdOutcome <span class="operator">=</span> <span class="string">&quot;se.outcome&quot;</span><span class="punctuation">,</span>SdExposure <span class="operator">=</span> <span class="string">&quot;se.exposure&quot;</span><span class="punctuation">)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">####Graph####</span></span><br><span class="line">mr_funnel_plot<span class="punctuation">(</span>singlesnp_results <span class="operator">=</span> mr_singlesnp<span class="punctuation">(</span>dat<span class="punctuation">)</span><span class="punctuation">)</span> <span class="comment">###het p</span></span><br><span class="line">mr_forest_plot<span class="punctuation">(</span>mr_singlesnp<span class="punctuation">(</span>dat<span class="punctuation">)</span><span class="punctuation">)</span></span><br><span class="line">mr_scatter_plot<span class="punctuation">(</span>mr_results <span class="operator">=</span> mr_result<span class="punctuation">,</span>dat <span class="operator">=</span> dat<span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>流行病学</category>
+      </categories>
+      <tags>
+        <tag>GWAS</tag>
         <tag>统计学</tag>
-        <tag>交叉学科</tag>
+        <tag>孟德尔随机化</tag>
+        <tag>流行病学</tag>
       </tags>
   </entry>
   <entry>
@@ -286,65 +1037,6 @@
       </tags>
   </entry>
   <entry>
-    <title>单细胞转录组分析实战（一）：数据采集</title>
-    <url>/2024/02/17/%E5%8D%95%E7%BB%86%E8%83%9E%E8%BD%AC%E5%BD%95%E7%BB%84%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E6%95%B0%E6%8D%AE%E9%87%87%E9%9B%86/</url>
-    <content><![CDATA[<h2 id="写在前面的话"><a href="#写在前面的话" class="headerlink" title="写在前面的话"></a>写在前面的话</h2><p>&emsp;&emsp;本系列将基于张泽民团队发表的TNBC免疫图谱进行挖掘（<a href="https://www.cell.com/cancer-cell/fulltext/S1535-6108(21">Single-cell analyses reveal key immune cell subsets associated with response to PD-L1 blockade in triple-negative breast cancer: Cancer Cell</a>00499-2)），旨在探索原发灶和转移灶免疫微环境的差异及其原因。<br>&emsp;&emsp;准确严谨的采集和清洗数据是单细胞分析的开始，数据本身的质量和采集过程的规范程度决定了研究结果的可靠性。</p>
-<h2 id="样本信息"><a href="#样本信息" class="headerlink" title="样本信息"></a>样本信息</h2><h3 id="患者来源"><a href="#患者来源" class="headerlink" title="患者来源"></a>患者来源</h3><p>&emsp;&emsp;国家癌症中心开发的DTHealth TrakCare系统中记录了患者信息，纳入本研究的22名患者满足：（1）组织学确诊晚期TNBC；（2）既往没有化疗、靶向及免疫等全身治疗；（3）研究中接受紫杉醇单药治疗或紫杉醇加阿替利珠单抗治疗。</p>
-<h3 id="患者信息"><a href="#患者信息" class="headerlink" title="患者信息"></a>患者信息</h3><ol>
-<li>本研究所有患者均被诊断为晚期TNBC，大多数患者患有转移性疾病；</li>
-<li>事实上，一些患者是接受新辅助治疗的局部晚期患者；</li>
-<li>患者为女性，年龄在32-64岁之间，中位值为49岁；</li>
-</ol>
-<p><img src="/2024/02/17/%E5%8D%95%E7%BB%86%E8%83%9E%E8%BD%AC%E5%BD%95%E7%BB%84%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E6%95%B0%E6%8D%AE%E9%87%87%E9%9B%86/1.jpg" alt="临床信息"></p>
-<h3 id="样本收集、文库制备和测序"><a href="#样本收集、文库制备和测序" class="headerlink" title="样本收集、文库制备和测序"></a>样本收集、文库制备和测序</h3><p>&emsp;&emsp;研究使用16针吸穿刺取乳腺、胸壁肿瘤样本；18号针取淋巴结、肝转移灶样本。测序仪器是10x Genomics公司的HiSeq X Ten，平台为<a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GPL20795">GPL20795</a>。DNA片段被打碎为150bp，进行双端测序。</p>
-<h2 id="单细胞转录组数据处理"><a href="#单细胞转录组数据处理" class="headerlink" title="单细胞转录组数据处理"></a>单细胞转录组数据处理</h2><p>&emsp;&emsp;10x Genomics公司提供的Cell Ranger（V 3.0.1）用于汇总原始数据，过滤低质量读段，将reads与人类参考基因组（GRCh38）比对，分配细胞Barcode，并生成UMI矩阵。值得注意的是，对于10x Genomics公司的测序，由于UMI的存在，使用Raw Count即可反映真实的基因表达，不需要使用标准化方法进行基因定量（<a href="https://forrestgump618.github.io/2024/02/16/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89%EF%BC%9A%E5%9F%BA%E5%9B%A0%E5%AE%9A%E9%87%8F/">生物信息学笔记（三）：基因定量</a>）。但注意，这里所谓“真实的基因表达”反映的是测序过程中的真实值，即不必考虑测序深度和转录本长度的值；而单细胞测序中，由于转录本的低捕获率，我们假设合格细胞基因表达总量应该类似，所以还要进行标准化排除不同细胞测序质量的差异。<br>&emsp;&emsp;原文使用Scanpy进行下游分析，质控步骤包括：</p>
-<ol>
-<li>过滤在少于10个细胞中表达的基因；</li>
-<li>过滤少于200个基因的细胞中检测到的基因；</li>
-<li>保留了600-120,000个UMIs、400-8,000个基因和小于10%线粒体基因计数的高质量细胞；</li>
-<li>将Scrublet应用于每个测序文库，以去除预期的双峰率为6%的潜在双峰，并滤除doubletScore大于90%分位数的细胞；</li>
-</ol>
-<p>&emsp;&emsp;接着，我们进行标准化操作：</p>
-<ol>
-<li>标准化每个细胞的总计数（库大小）：这一步是为了消除不同细胞间样本量的差异。库大小通常是指一个细胞中检测到的总UMI数。通过将每个细胞的UMI计数除以该细胞的总UMI计数，可以确保数据在不同细胞间是可比的。</li>
-<li>乘以1e6：这一步是为了放大数据，使其更易于处理。通常在生物信息学中，进行这样的转换是为了避免处理极小的数字。</li>
-<li>对数据进行对数变换：最后，对标准化后的数据进行对数变换是为了减少数据中极端值的影响，使数据的分布更接近正态分布。这通常有助于后续的统计分析和可视化。</li>
-</ol>
-<p>&emsp;&emsp;前面的步骤完成了单细胞转录组数据的质控和标准化，下面进行矩阵降维，进一步排除无关变量的影响，同时压缩分析规模：</p>
-<ol>
-<li>选择前4000个可变基因，排除大部分背景基因的影响；</li>
-<li>从标准化表达矩阵中去除总计数、线粒体基因计数和热休克蛋白（HSP）相关基因计数的变异，以避免偏差；</li>
-<li>主成分分析，把4000个可变基因降为50个主成分；</li>
-<li>由此，我们得到了50×细胞数的矩阵，即对于每个细胞有50个变量，使用前2个或者3个主成分进行可视化，通过标注不同样本，发现潜在的批次效应，并通过相应的算法（在R中可以通过Harmony）去除；</li>
-<li>由此，我们尽可能避免了因非研究变量因素导致的系统误差，得到新的标准化矩阵。</li>
-</ol>
-<p>&emsp;&emsp;最后，Leiden算法寻找细胞簇和分群，UMAP和TSNE进行作图，推荐使用COSG确定Marker。</p>
-]]></content>
-      <categories>
-        <category>生物信息学</category>
-      </categories>
-      <tags>
-        <tag>单细胞测序</tag>
-        <tag>免疫</tag>
-        <tag>肿瘤</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>孟德尔随机化标准流程代码示例</title>
-    <url>/2024/02/05/%E5%AD%9F%E5%BE%B7%E5%B0%94%E9%9A%8F%E6%9C%BA%E5%8C%96%E6%A0%87%E5%87%86%E6%B5%81%E7%A8%8B%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B/</url>
-    <content><![CDATA[<figure class="highlight r"><table><tr><td class="code"><pre><span class="line"><span class="comment">####TSMR####</span></span><br><span class="line">library<span class="punctuation">(</span>TwoSampleMR<span class="punctuation">)</span></span><br><span class="line">library<span class="punctuation">(</span>MRPRESSO<span class="punctuation">)</span></span><br><span class="line"><span class="comment">####NAFLD - COVID 19####</span></span><br><span class="line"><span class="comment">####RCT####</span></span><br><span class="line"></span><br><span class="line"><span class="comment">####NAFLD_exposure####</span></span><br><span class="line">exposure_dat<span class="operator">&lt;-</span>read_exposure_data<span class="punctuation">(</span>filename <span class="operator">=</span> <span class="string">&quot;./NAFLD.txt&quot;</span><span class="punctuation">,</span>sep<span class="operator">=</span><span class="string">&quot;\t&quot;</span><span class="punctuation">,</span></span><br><span class="line">                                 snp_col <span class="operator">=</span> <span class="string">&quot;rsids&quot;</span><span class="punctuation">,</span>effect_allele_col <span class="operator">=</span> <span class="string">&quot;alt&quot;</span><span class="punctuation">,</span>other_allele_col <span class="operator">=</span> <span class="string">&quot;ref&quot;</span><span class="punctuation">,</span></span><br><span class="line">                                 beta_col <span class="operator">=</span> <span class="string">&quot;beta&quot;</span><span class="punctuation">,</span>se_col <span class="operator">=</span> <span class="string">&quot;sebeta&quot;</span><span class="punctuation">,</span>pval_col <span class="operator">=</span> <span class="string">&quot;pval&quot;</span><span class="punctuation">,</span>eaf_col <span class="operator">=</span> <span class="string">&quot;af_alt&quot;</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">##看目录下的文件进行对应，如果读一个完整的文件，需要进行P值筛选</span></span><br><span class="line"></span><br><span class="line">exposure_dat<span class="operator">$</span>phenotype<span class="operator">&lt;-</span><span class="string">&quot;NAFLD&quot;</span></span><br><span class="line"><span class="comment">##命名性状，方便结果输出</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#### kb=10000;r2=0.001;</span></span><br><span class="line"><span class="comment">#### kb=500;r2=0.1.</span></span><br><span class="line">exposure_dat<span class="operator">&lt;-</span>clump_data<span class="punctuation">(</span>exposure_dat<span class="punctuation">)</span></span><br><span class="line"><span class="comment">##连锁不平衡去除</span></span><br><span class="line"></span><br><span class="line"><span class="comment">####COVID19_OUTCOME####</span></span><br><span class="line">outcome_dat<span class="operator">&lt;-</span>extract_outcome_data<span class="punctuation">(</span>outcomes <span class="operator">=</span> <span class="string">&quot;ebi-a-GCST011081&quot;</span><span class="punctuation">,</span>snps <span class="operator">=</span> exposure_dat<span class="operator">$</span>SNP<span class="punctuation">)</span></span><br><span class="line"><span class="comment">##在线读取</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#####Harmonization####</span></span><br><span class="line">dat<span class="operator">&lt;-</span>harmonise_data<span class="punctuation">(</span>exposure_dat <span class="operator">=</span> exposure_dat</span><br><span class="line">                    <span class="punctuation">,</span>outcome_dat <span class="operator">=</span> outcome_dat<span class="punctuation">,</span></span><br><span class="line">                    action <span class="operator">=</span> <span class="number">2</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">##dat协调，去除回文序列，错配</span></span><br><span class="line"></span><br><span class="line"><span class="comment">####F&gt;10####</span></span><br><span class="line">dat<span class="operator">$</span><span class="built_in">F</span><span class="operator">&lt;-</span><span class="punctuation">(</span>dat<span class="operator">$</span>beta.exposure<span class="operator">/</span>dat<span class="operator">$</span>se.exposure<span class="punctuation">)</span><span class="operator">**</span><span class="number">2</span></span><br><span class="line">dat<span class="operator">&lt;-</span>subset<span class="punctuation">(</span>dat<span class="punctuation">,</span><span class="built_in">F</span><span class="operator">&gt;</span><span class="number">10</span><span class="punctuation">)</span></span><br><span class="line">mr_result <span class="operator">&lt;-</span> mr<span class="punctuation">(</span>dat<span class="punctuation">)</span></span><br><span class="line"><span class="comment">##F值-遗传力计算</span></span><br><span class="line"></span><br><span class="line"><span class="comment">####Sensitivity,p&gt;0.05####</span></span><br><span class="line">het<span class="operator">&lt;-</span>mr_heterogeneity<span class="punctuation">(</span>dat<span class="punctuation">)</span></span><br><span class="line">ple<span class="operator">&lt;-</span>mr_pleiotropy_test<span class="punctuation">(</span>dat<span class="punctuation">)</span></span><br><span class="line"><span class="comment">###sNP pleiotropy: Phennoscaner; MR-PRESSO</span></span><br><span class="line">mr_presso<span class="punctuation">(</span>data <span class="operator">=</span> dat<span class="punctuation">,</span>BetaOutcome <span class="operator">=</span> <span class="string">&quot;beta.outcome&quot;</span><span class="punctuation">,</span>BetaExposure <span class="operator">=</span> <span class="string">&quot;beta.exposure&quot;</span><span class="punctuation">,</span>SdOutcome <span class="operator">=</span> <span class="string">&quot;se.outcome&quot;</span><span class="punctuation">,</span>SdExposure <span class="operator">=</span> <span class="string">&quot;se.exposure&quot;</span><span class="punctuation">)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">####Graph####</span></span><br><span class="line">mr_funnel_plot<span class="punctuation">(</span>singlesnp_results <span class="operator">=</span> mr_singlesnp<span class="punctuation">(</span>dat<span class="punctuation">)</span><span class="punctuation">)</span> <span class="comment">###het p</span></span><br><span class="line">mr_forest_plot<span class="punctuation">(</span>mr_singlesnp<span class="punctuation">(</span>dat<span class="punctuation">)</span><span class="punctuation">)</span></span><br><span class="line">mr_scatter_plot<span class="punctuation">(</span>mr_results <span class="operator">=</span> mr_result<span class="punctuation">,</span>dat <span class="operator">=</span> dat<span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>流行病学</category>
-      </categories>
-      <tags>
-        <tag>GWAS</tag>
-        <tag>统计学</tag>
-        <tag>孟德尔随机化</tag>
-        <tag>流行病学</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>提升医学研究的严谨性：准确使用统计学</title>
     <url>/2024/02/18/%E6%8F%90%E5%8D%87%E5%8C%BB%E5%AD%A6%E7%A0%94%E7%A9%B6%E7%9A%84%E4%B8%A5%E8%B0%A8%E6%80%A7%EF%BC%9A%E5%87%86%E7%A1%AE%E4%BD%BF%E7%94%A8%E7%BB%9F%E8%AE%A1%E5%AD%A6/</url>
     <content><![CDATA[<h2 id="原文摘要"><a href="#原文摘要" class="headerlink" title="原文摘要"></a>原文摘要</h2><p>&emsp;&emsp;在不断进步的医学研究领域中，研究结果的可靠性不仅依赖于创新的思想，还依赖于严谨的方法论和统计学。然而，根据过去三年《柳叶刀》期刊集团对超过1000份手稿的统计审查经验，通讯发现许多医学研究者常常忽视这一点。</p>
@@ -392,40 +1084,6 @@
       </tags>
   </entry>
   <entry>
-    <title>单细胞测序教程资源聚合</title>
-    <url>/2023/08/12/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E6%95%99%E7%A8%8B%E5%92%8C%E8%B5%84%E6%BA%90%E8%81%9A%E5%90%88/</url>
-    <content><![CDATA[<h2 id="教程"><a href="#教程" class="headerlink" title="教程"></a>教程</h2><h4 id="转录组学"><a href="#转录组学" class="headerlink" title="转录组学"></a>转录组学</h4><ol>
-<li>单细胞测序-最佳的分析Pipeline <a href="https://single-cell-tutorial.readthedocs.io/zh/latest/">单细胞测序-最佳的分析Pipeline</a> ：Zehua Zeng等为主要作者，包括详细的原理和处理流程（Python）；其中重点介绍了Omicverse的使用； </li>
-<li>哈佛大学单细胞中文笔记：<a href="https://zhuanlan.zhihu.com/p/209018565">哈佛大学单细胞中文笔记</a> 陈同博士撰写。主要包括原理和Seurat的使用。<a href="https://hbctraining.github.io/main">原版教程</a>；</li>
-<li>RNA-SEQ BLOG：最新的RNA测序资讯：<a href="https://www.rna-seqblog.com/">RNA-Seq Blog</a></li>
-</ol>
-<h2 id="资源"><a href="#资源" class="headerlink" title="资源"></a>资源</h2><h4 id="肿瘤生信"><a href="#肿瘤生信" class="headerlink" title="肿瘤生信"></a>肿瘤生信</h4><ol>
-<li>GEPIA2：GEPIA2是一个无代码可视化平台，其数据来源于TCGA和GTEx数据库，用户可以自由探索指定基因的在肿瘤组织中的表达情况以及和预后的关系。<a href="http://gepia2.cancer-pku.cn/">GEPIA2</a></li>
-<li>Prognoscan：Prognoscan整合了2010年以前GEO上Microarray和相应临床信息，可以探索制定基因自不同数据集中和预后的关系。<a href="http://dna00.bio.kyutech.ac.jp/PrognoScan/">PrognoScan</a></li>
-<li>TIMER：TIMER用于分析不同癌症类型的免疫浸润（数据来自于TCGA）。<a href="http://timer.cistrome.org/">TIMER2.0</a></li>
-</ol>
-<h4 id="GWAS"><a href="#GWAS" class="headerlink" title="GWAS"></a>GWAS</h4><ol>
-<li>IEU OPEN GWAS：包含42,484 个GWAS摘要数据集的214,725,223,303 个遗传关联的数据库。<a href="https://gwas.mrcieu.ac.uk/">IEU OpenGWAS</a></li>
-<li>PheWeb：包含Biobank Japan，以及UKB等欧洲样本的GWAS结果。<a href="https://pheweb.jp/downloads">PheWeb</a></li>
-<li>GWAS catalog：内容较全，网页比较慢，建议使用特殊方式访问。<a href="https://www.ebi.ac.uk/gwas/downloads/summary-statistics">GWAS catalog</a>:</li>
-<li>EGG：早期生长联盟数据，包含出生体重，出生头围等。<a href="http://egg-consortium.org/index.html">EGG</a></li>
-<li>CKDGEN：包含慢性肾病、MA、eGFR等。<a href="http://ckdgen.imbi.uni-freiburg.de/?tdsourcetag=s_pctim_aiomsg">CKDGEN</a></li>
-<li>GLGC：血脂GWAS数据库。<a href="http://csg.sph.umich.edu/willer/public/glgc-lipids2021/">GLGC</a></li>
-<li>PGC：精神病学基因组学联盟。<a href="https://www.med.unc.edu/pgc/results-and-downloads/downloads">PGC</a></li>
-<li>GEFOS：骨质疏松联盟。<a href="http://www.gefos.org/">GEFOS</a></li>
-<li>DIAGRAM：二型糖尿病数据库。<a href="http://diagram-consortium.org/downloads.html">DIAGRAM</a>: </li>
-<li>代谢组学数据库：<a href="http://www.metabolomix.com/list-of-all-published-gwas-with-metabolomics/">A Table of all published GWAS with metabolomics</a></li>
-</ol>
-]]></content>
-      <categories>
-        <category>生物信息学</category>
-      </categories>
-      <tags>
-        <tag>生物信息学</tag>
-        <tag>单细胞测序</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>生物信息学笔记（三）：基因定量</title>
     <url>/2024/02/16/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89%EF%BC%9A%E5%9F%BA%E5%9B%A0%E5%AE%9A%E9%87%8F/</url>
     <content><![CDATA[<h2 id="为什么要对进行基因定量"><a href="#为什么要对进行基因定量" class="headerlink" title="为什么要对进行基因定量"></a>为什么要对进行基因定量</h2><p>&emsp;&emsp;转录组数据分析中，一个转录本反转录后的cDNA会被打碎成片段测序并和基因组比对，就会导致长转录本在给定的cDNA长度下可能会映射更多的cDNA，也就是说基因长度会影响Reads数。<br>&emsp;&emsp;测序深度是指测序过程中每个碱基被测序的平均次数，其计算公式为：$\frac{Reads数*Read长度}{参考序列长度}$：例如，对长100bp的目标区域进行捕获测序：采用单端测序，每个read长5bp；总共得到了200个reads；把所有的reads比对到目标区域后，100bp的目标区域中有98bp的位置至少有1个read覆盖到，换言之，剩余的2bp没有1个read覆盖。则测序深度为 200 x 5 / 100 = 10 我们说这此测序的深度为10X。显而易见，若测序越深，则对于相同长度的转录本，测序所得的Reads数更多。<br>&emsp;&emsp;综上所述，测序深度、基因长度和Reads数相关，所以需要在最终基因表达计数中去除相应的影响。注意，在基因定量的过程中，可能会由于样本本身的原因，如某个基因Reads数过高，导致基因定量后其他基因的表达量低于实际情况，这也是基因定量过程中需要去考虑的。</p>
@@ -470,74 +1128,29 @@
       </tags>
   </entry>
   <entry>
-    <title>生物信息学笔记（二）：数据变换</title>
-    <url>/2024/02/07/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9A%E6%95%B0%E6%8D%AE%E5%8F%98%E6%8D%A2/</url>
-    <content><![CDATA[<h2 id="数据变换基本概念"><a href="#数据变换基本概念" class="headerlink" title="数据变换基本概念"></a>数据变换基本概念</h2><p>&emsp;&emsp;在数据科学中，数据变换是指对原始数据进行一系列操作或转换，从而使得数据更适合用于特定的分析或建模任务。其目的是提取有用的信息、减少噪声、改善模型的性能或满足模型假设。<strong>数据变换可以将一些我们理论上未解决的模型问题转化为已经解决的问题</strong>。<br>&emsp;&emsp;从变量个数的角度，数据变换分为单变量变换和多变量变换。多变量变换和特征工程的范畴有交叉，主要包括特征抽取、数据分解和维度压缩等方法。单变量变换分为线性和非线性变换。<br>&emsp;&emsp;本文讲解的数据变换都是连续变量的变换，着重关注单变量变换。</p>
-<h2 id="归一化、标准化——容易混淆和误用的概念"><a href="#归一化、标准化——容易混淆和误用的概念" class="headerlink" title="归一化、标准化——容易混淆和误用的概念"></a>归一化、标准化——容易混淆和误用的概念</h2><p>&emsp;&emsp;归一化和标准化是数据变换的具体方法，在概念上是平行的：</p>
-<ol>
-<li>归一化（Normalization）：将数据按比例缩放，使其值落在特定的范围内。归一化的目的是消除不同特征之间的量纲差异，使得它们具有可比性，并且能够更好地适应某些机器学习算法。</li>
-<li>标准化（Standardization）：将数据变换为均值为0，标准差为1的分布，但并非一定是正态的。</li>
+    <title>单细胞测序教程资源聚合</title>
+    <url>/2023/08/12/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E6%95%99%E7%A8%8B%E5%92%8C%E8%B5%84%E6%BA%90%E8%81%9A%E5%90%88/</url>
+    <content><![CDATA[<h2 id="教程"><a href="#教程" class="headerlink" title="教程"></a>教程</h2><h4 id="转录组学"><a href="#转录组学" class="headerlink" title="转录组学"></a>转录组学</h4><ol>
+<li>单细胞测序-最佳的分析Pipeline <a href="https://single-cell-tutorial.readthedocs.io/zh/latest/">单细胞测序-最佳的分析Pipeline</a> ：Zehua Zeng等为主要作者，包括详细的原理和处理流程（Python）；其中重点介绍了Omicverse的使用； </li>
+<li>哈佛大学单细胞中文笔记：<a href="https://zhuanlan.zhihu.com/p/209018565">哈佛大学单细胞中文笔记</a> 陈同博士撰写。主要包括原理和Seurat的使用。<a href="https://hbctraining.github.io/main">原版教程</a>；</li>
+<li>RNA-SEQ BLOG：最新的RNA测序资讯：<a href="https://www.rna-seqblog.com/">RNA-Seq Blog</a></li>
 </ol>
-<p>&emsp;&emsp;许多教程和书籍认为标准化是归一化的一种，实际上归一化强调数据变换到特定的区间，而标准化则如上所述，强调给定的均值和标准差；另有误认为标准化能够实现标准正态分布，事实上要求源数据满足正态分布，否则只是满足给定均值和标准差的任何一种分布。这里要肯定一点，标准化会改变分布类型，但不会改变分布的种类。举例而言，对于足够样本数量的滴度数据两两比较依然要求取对数，以满足正态分布，进而采用t检验，而不是标准化采用t检验（原则上是Z检验）；若想使用Z检验，则遵循先取对数，再标准化的路径。<br>&emsp;&emsp;总而言之，“标准化必然得到N(0, 1)“的表述是错误的。<br>&emsp;&emsp;归一化同样不改变数据的分布种类，事实上，归一化和标准化同为线性变换，均不会改变分布种类，不会改变数据点的相对排位。上面提到有把标准化归类为归一化，实际上平行归类于线性变换更为妥当。<br>&emsp;&emsp;当原始数据的不同维度特征具有不一致的尺度或量纲时，需要对数据进行标准化或归一化处理。然而，并非所有的模型都需要进行归一化处理。例如，某些模型算法并不涉及距离度量或变量间标准差的衡量。例如，决策树算法并没有与距离相关的计算，因此在构建决策树模型时通常不需要对变量进行标准化。此外，概率模型通常不需要归一化，因为它们关注的是变量的分布和变量之间的条件概率，而不是变量的具体值。<br>&emsp;&emsp;然而，如果对处理后的数据的范围有严格要求，那么归一化是必要的。另外，如果数据不稳定，存在极端的最大或最小值，那么归一化也不适用。在机器学习中，标准化是一种更通用的方法。当存在不确定性时，可以直接使用标准化方法。<br>&emsp;&emsp;在分类和聚类算法中，如果需要使用距离来度量相似性，或者使用PCA技术进行降维，标准化的效果更好。而在不涉及距离度量和协方差计算的情况下，可以使用归一化方法。因此，在选择标准化还是归一化方法时，需要考虑具体的模型和算法，并根据需要进行选择。</p>
-<h2 id="取对数——重要的偏态数据变换方法"><a href="#取对数——重要的偏态数据变换方法" class="headerlink" title="取对数——重要的偏态数据变换方法"></a>取对数——重要的偏态数据变换方法</h2><p>&emsp;&emsp;取对数通常在以下情况下使用：</p>
-<ol>
-<li>数据偏斜：当数据呈现偏斜分布时，即存在长尾或偏离正态分布的情况，可以考虑使用对数变换。对数变换可以减小数据的偏斜程度，使其更接近正态分布，从而提高模型的性能；</li>
-<li>数据幅度差异较大：当数据的幅度差异较大时，例如某些特征的取值范围远远大于其他特征，这可能导致模型对取值较大的特征更为敏感，而忽略了其他特征的影响。在这种情况下，可以考虑使用对数变换来缩小幅度差异，使数据的取值范围更加接近，从而平衡各个特征的影响；</li>
-<li>数据呈现指数增长或指数衰减：当数据随着自变量的增长或减小呈现指数级别的变化时，可以使用对数变换来线性化数据。对数变换可以将指数增长或衰减的趋势转化为线性趋势，使得建模更加便捷和准确。</li>
+<h2 id="资源"><a href="#资源" class="headerlink" title="资源"></a>资源</h2><h4 id="肿瘤生信"><a href="#肿瘤生信" class="headerlink" title="肿瘤生信"></a>肿瘤生信</h4><ol>
+<li>GEPIA2：GEPIA2是一个无代码可视化平台，其数据来源于TCGA和GTEx数据库，用户可以自由探索指定基因的在肿瘤组织中的表达情况以及和预后的关系。<a href="http://gepia2.cancer-pku.cn/">GEPIA2</a></li>
+<li>Prognoscan：Prognoscan整合了2010年以前GEO上Microarray和相应临床信息，可以探索制定基因自不同数据集中和预后的关系。<a href="http://dna00.bio.kyutech.ac.jp/PrognoScan/">PrognoScan</a></li>
+<li>TIMER：TIMER用于分析不同癌症类型的免疫浸润（数据来自于TCGA）。<a href="http://timer.cistrome.org/">TIMER2.0</a></li>
 </ol>
-<p>&emsp;&emsp;显而易见，其目的是：</p>
-<ol>
-<li>压缩数据的幅度：对数变换可以将大幅度的数据压缩到较小的范围内，使得数据更易于处理和可视化。</li>
-<li>缩小数据的差异：对数变换可以减小数据之间的差异，使得各个数据点更接近，有助于降低异常值的影响。</li>
-<li>线性化关系：对数变换可以将指数关系转化为线性关系，使得数据更符合线性建模的假设，从而简化建模过程。取对数的操作能够尽可能满足经典线性回归假设：<ol>
-<li>避免共线性；</li>
-<li>避免异方差；</li>
-<li>尽可能符合正态分布。</li>
-</ol>
-</li>
-</ol>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>&emsp;&emsp;人们通过诸如Box-cox等典型方法积极探索各种数据变换方式，这表明数据变换并非一成不变的规约，而更像是一门根据实践经验进行灵活操作的艺术。我们需要仔细考虑数据分布的特点，以确定最合适的变换方法。</p>
-<div class="table-container">
-<table>
-<thead>
-<tr>
-<th>方法</th>
-<th>特征</th>
-<th>功能</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>归一化</td>
-<td>Min-max scaler， MaxAbs scaler</td>
-<td>将数据分别映射到[0,1]和[-1,1]</td>
-</tr>
-<tr>
-<td>标准化</td>
-<td>Standard scaler</td>
-<td>转换为均值为0，方差为1的分布</td>
-</tr>
-<tr>
-<td>Sigmoid转换</td>
-<td>Sigmoid transformation</td>
-<td>映射成为[0,1]的值</td>
-</tr>
-<tr>
-<td>Log transformation</td>
-<td>Log transformation</td>
-<td>让数据符合我们所做的假设，让能够在已有理论上对其分析</td>
-</tr>
-<tr>
-<td>Box-cox变换</td>
-<td>Box-cox transformation</td>
-<td>用来把非正态的分布变成正态分布</td>
-</tr>
-</tbody>
-</table>
-</div>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
-<li><a href="https://zhuanlan.zhihu.com/p/497099039">常用数据转换方式 - 知乎 (zhihu.com)</a></li>
-<li><a href="https://blog.csdn.net/qq_43466427/article/details/86571215">第十三讲 数据变换-CSDN博客</a></li>
+<h4 id="GWAS"><a href="#GWAS" class="headerlink" title="GWAS"></a>GWAS</h4><ol>
+<li>IEU OPEN GWAS：包含42,484 个GWAS摘要数据集的214,725,223,303 个遗传关联的数据库。<a href="https://gwas.mrcieu.ac.uk/">IEU OpenGWAS</a></li>
+<li>PheWeb：包含Biobank Japan，以及UKB等欧洲样本的GWAS结果。<a href="https://pheweb.jp/downloads">PheWeb</a></li>
+<li>GWAS catalog：内容较全，网页比较慢，建议使用特殊方式访问。<a href="https://www.ebi.ac.uk/gwas/downloads/summary-statistics">GWAS catalog</a>:</li>
+<li>EGG：早期生长联盟数据，包含出生体重，出生头围等。<a href="http://egg-consortium.org/index.html">EGG</a></li>
+<li>CKDGEN：包含慢性肾病、MA、eGFR等。<a href="http://ckdgen.imbi.uni-freiburg.de/?tdsourcetag=s_pctim_aiomsg">CKDGEN</a></li>
+<li>GLGC：血脂GWAS数据库。<a href="http://csg.sph.umich.edu/willer/public/glgc-lipids2021/">GLGC</a></li>
+<li>PGC：精神病学基因组学联盟。<a href="https://www.med.unc.edu/pgc/results-and-downloads/downloads">PGC</a></li>
+<li>GEFOS：骨质疏松联盟。<a href="http://www.gefos.org/">GEFOS</a></li>
+<li>DIAGRAM：二型糖尿病数据库。<a href="http://diagram-consortium.org/downloads.html">DIAGRAM</a>: </li>
+<li>代谢组学数据库：<a href="http://www.metabolomix.com/list-of-all-published-gwas-with-metabolomics/">A Table of all published GWAS with metabolomics</a></li>
 </ol>
 ]]></content>
       <categories>
@@ -545,8 +1158,30 @@
       </categories>
       <tags>
         <tag>生物信息学</tag>
+        <tag>单细胞测序</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>记录的目的</title>
+    <url>/2023/10/11/%E8%AE%B0%E5%BD%95%E7%9A%84%E7%9B%AE%E7%9A%84/</url>
+    <content><![CDATA[<p>&emsp;&emsp;我是一个普通的医学生，没有系统的计算机训练，没有系统学习数学课程。</p>
+<p>&emsp;&emsp;为啥会对这一切感兴趣，在上一个笔记里面说过啦~ <a href="https://forrestgump618.github.io/2023/10/04/%E4%B8%80%E8%B5%B7%E6%9D%A5%E6%84%9F%E5%8F%97%E6%95%B0%E6%8D%AE%E4%B9%8B%E7%BE%8E%E5%90%A7%EF%BC%81/">一起来感受数据之美吧！ | 一个夏天的年少 (forrestgump618.github.io)</a></p>
+<p>&emsp;&emsp;从不了解生信、统计，到自己真正涉猎，我花了很长时间。获取这些知识的过程是非常不易的。</p>
+<p>&emsp;&emsp;而当自己真正去解决相关问题的时候，才发现更不方便的还在后面：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">有时会为了一个公式的使用从bing查到google，从文献查到专著，最狠的一次是查了50篇文献结果大家都对此语焉不详；</span><br><span class="line">很多事情花了大把的时间但最后并没有结果，甚至考试月也是如此；</span><br><span class="line">越向下学发现数学知识成为阻碍进步的门槛；</span><br><span class="line">化用太多的方法发现自己思考的很少，会怀疑自己的意义。</span><br><span class="line">…………</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;许多个日夜，真希望有个人能将我想知道的问题放在了网上。<br>&emsp;&emsp;很多时候，国内网站搜不到的问题都能在bing和google上搜到。<br>&emsp;&emsp;在知识上，很佩服老外们的分享能力。</p>
+<p>&emsp;&emsp;印象最深的是和一位国外大咖的请教，在极短的时间内回复了邮件，估摸着大概是凌晨的2点钟。让我十分惶恐隔了许久才回信。</p>
+<p>&emsp;&emsp;太多的时候，不是知识抽象。而是一座大厦建立起来，需要有个人告诉你，这个大厦里面哪个电梯可以到哪。<br>&emsp;&emsp;但太多时候，独自在大厦的摸索中，看到更多的是抽象名词所累积起来的水泥板。<br>&emsp;&emsp;有幸还有些走过的人给你插个指向标。</p>
+<p>&emsp;&emsp;因此我在想，我把我自己的用过的方法，想过的事情，分享出来，让一些想获取类似问题解答方法的人能够获得启发。</p>
+<p>&emsp;&emsp;而一点点私心是，找个小站安放自己。</p>
+<p>&emsp;&emsp;我的学习之路是踩着别人的石头过来的，希望自己也能够给需要的人带来一些帮助~</p>
+]]></content>
+      <categories>
+        <category>随笔</category>
+      </categories>
+      <tags>
         <tag>统计学</tag>
-        <tag>机器学习</tag>
+        <tag>交叉学科</tag>
       </tags>
   </entry>
   <entry>
@@ -627,26 +1262,83 @@
       </tags>
   </entry>
   <entry>
-    <title>记录的目的</title>
-    <url>/2023/10/11/%E8%AE%B0%E5%BD%95%E7%9A%84%E7%9B%AE%E7%9A%84/</url>
-    <content><![CDATA[<p>&emsp;&emsp;我是一个普通的医学生，没有系统的计算机训练，没有系统学习数学课程。</p>
-<p>&emsp;&emsp;为啥会对这一切感兴趣，在上一个笔记里面说过啦~ <a href="https://forrestgump618.github.io/2023/10/04/%E4%B8%80%E8%B5%B7%E6%9D%A5%E6%84%9F%E5%8F%97%E6%95%B0%E6%8D%AE%E4%B9%8B%E7%BE%8E%E5%90%A7%EF%BC%81/">一起来感受数据之美吧！ | 一个夏天的年少 (forrestgump618.github.io)</a></p>
-<p>&emsp;&emsp;从不了解生信、统计，到自己真正涉猎，我花了很长时间。获取这些知识的过程是非常不易的。</p>
-<p>&emsp;&emsp;而当自己真正去解决相关问题的时候，才发现更不方便的还在后面：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">有时会为了一个公式的使用从bing查到google，从文献查到专著，最狠的一次是查了50篇文献结果大家都对此语焉不详；</span><br><span class="line">很多事情花了大把的时间但最后并没有结果，甚至考试月也是如此；</span><br><span class="line">越向下学发现数学知识成为阻碍进步的门槛；</span><br><span class="line">化用太多的方法发现自己思考的很少，会怀疑自己的意义。</span><br><span class="line">…………</span><br></pre></td></tr></table></figure>
-<p>&emsp;&emsp;许多个日夜，真希望有个人能将我想知道的问题放在了网上。<br>&emsp;&emsp;很多时候，国内网站搜不到的问题都能在bing和google上搜到。<br>&emsp;&emsp;在知识上，很佩服老外们的分享能力。</p>
-<p>&emsp;&emsp;印象最深的是和一位国外大咖的请教，在极短的时间内回复了邮件，估摸着大概是凌晨的2点钟。让我十分惶恐隔了许久才回信。</p>
-<p>&emsp;&emsp;太多的时候，不是知识抽象。而是一座大厦建立起来，需要有个人告诉你，这个大厦里面哪个电梯可以到哪。<br>&emsp;&emsp;但太多时候，独自在大厦的摸索中，看到更多的是抽象名词所累积起来的水泥板。<br>&emsp;&emsp;有幸还有些走过的人给你插个指向标。</p>
-<p>&emsp;&emsp;因此我在想，我把我自己的用过的方法，想过的事情，分享出来，让一些想获取类似问题解答方法的人能够获得启发。</p>
-<p>&emsp;&emsp;而一点点私心是，找个小站安放自己。</p>
-<p>&emsp;&emsp;我的学习之路是踩着别人的石头过来的，希望自己也能够给需要的人带来一些帮助~</p>
+    <title>生物信息学笔记（二）：数据变换</title>
+    <url>/2024/02/07/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9A%E6%95%B0%E6%8D%AE%E5%8F%98%E6%8D%A2/</url>
+    <content><![CDATA[<h2 id="数据变换基本概念"><a href="#数据变换基本概念" class="headerlink" title="数据变换基本概念"></a>数据变换基本概念</h2><p>&emsp;&emsp;在数据科学中，数据变换是指对原始数据进行一系列操作或转换，从而使得数据更适合用于特定的分析或建模任务。其目的是提取有用的信息、减少噪声、改善模型的性能或满足模型假设。<strong>数据变换可以将一些我们理论上未解决的模型问题转化为已经解决的问题</strong>。<br>&emsp;&emsp;从变量个数的角度，数据变换分为单变量变换和多变量变换。多变量变换和特征工程的范畴有交叉，主要包括特征抽取、数据分解和维度压缩等方法。单变量变换分为线性和非线性变换。<br>&emsp;&emsp;本文讲解的数据变换都是连续变量的变换，着重关注单变量变换。</p>
+<h2 id="归一化、标准化——容易混淆和误用的概念"><a href="#归一化、标准化——容易混淆和误用的概念" class="headerlink" title="归一化、标准化——容易混淆和误用的概念"></a>归一化、标准化——容易混淆和误用的概念</h2><p>&emsp;&emsp;归一化和标准化是数据变换的具体方法，在概念上是平行的：</p>
+<ol>
+<li>归一化（Normalization）：将数据按比例缩放，使其值落在特定的范围内。归一化的目的是消除不同特征之间的量纲差异，使得它们具有可比性，并且能够更好地适应某些机器学习算法。</li>
+<li>标准化（Standardization）：将数据变换为均值为0，标准差为1的分布，但并非一定是正态的。</li>
+</ol>
+<p>&emsp;&emsp;许多教程和书籍认为标准化是归一化的一种，实际上归一化强调数据变换到特定的区间，而标准化则如上所述，强调给定的均值和标准差；另有误认为标准化能够实现标准正态分布，事实上要求源数据满足正态分布，否则只是满足给定均值和标准差的任何一种分布。这里要肯定一点，标准化会改变分布类型，但不会改变分布的种类。举例而言，对于足够样本数量的滴度数据两两比较依然要求取对数，以满足正态分布，进而采用t检验，而不是标准化采用t检验（原则上是Z检验）；若想使用Z检验，则遵循先取对数，再标准化的路径。<br>&emsp;&emsp;总而言之，“标准化必然得到N(0, 1)“的表述是错误的。<br>&emsp;&emsp;归一化同样不改变数据的分布种类，事实上，归一化和标准化同为线性变换，均不会改变分布种类，不会改变数据点的相对排位。上面提到有把标准化归类为归一化，实际上平行归类于线性变换更为妥当。<br>&emsp;&emsp;当原始数据的不同维度特征具有不一致的尺度或量纲时，需要对数据进行标准化或归一化处理。然而，并非所有的模型都需要进行归一化处理。例如，某些模型算法并不涉及距离度量或变量间标准差的衡量。例如，决策树算法并没有与距离相关的计算，因此在构建决策树模型时通常不需要对变量进行标准化。此外，概率模型通常不需要归一化，因为它们关注的是变量的分布和变量之间的条件概率，而不是变量的具体值。<br>&emsp;&emsp;然而，如果对处理后的数据的范围有严格要求，那么归一化是必要的。另外，如果数据不稳定，存在极端的最大或最小值，那么归一化也不适用。在机器学习中，标准化是一种更通用的方法。当存在不确定性时，可以直接使用标准化方法。<br>&emsp;&emsp;在分类和聚类算法中，如果需要使用距离来度量相似性，或者使用PCA技术进行降维，标准化的效果更好。而在不涉及距离度量和协方差计算的情况下，可以使用归一化方法。因此，在选择标准化还是归一化方法时，需要考虑具体的模型和算法，并根据需要进行选择。</p>
+<h2 id="取对数——重要的偏态数据变换方法"><a href="#取对数——重要的偏态数据变换方法" class="headerlink" title="取对数——重要的偏态数据变换方法"></a>取对数——重要的偏态数据变换方法</h2><p>&emsp;&emsp;取对数通常在以下情况下使用：</p>
+<ol>
+<li>数据偏斜：当数据呈现偏斜分布时，即存在长尾或偏离正态分布的情况，可以考虑使用对数变换。对数变换可以减小数据的偏斜程度，使其更接近正态分布，从而提高模型的性能；</li>
+<li>数据幅度差异较大：当数据的幅度差异较大时，例如某些特征的取值范围远远大于其他特征，这可能导致模型对取值较大的特征更为敏感，而忽略了其他特征的影响。在这种情况下，可以考虑使用对数变换来缩小幅度差异，使数据的取值范围更加接近，从而平衡各个特征的影响；</li>
+<li>数据呈现指数增长或指数衰减：当数据随着自变量的增长或减小呈现指数级别的变化时，可以使用对数变换来线性化数据。对数变换可以将指数增长或衰减的趋势转化为线性趋势，使得建模更加便捷和准确。</li>
+</ol>
+<p>&emsp;&emsp;显而易见，其目的是：</p>
+<ol>
+<li>压缩数据的幅度：对数变换可以将大幅度的数据压缩到较小的范围内，使得数据更易于处理和可视化。</li>
+<li>缩小数据的差异：对数变换可以减小数据之间的差异，使得各个数据点更接近，有助于降低异常值的影响。</li>
+<li>线性化关系：对数变换可以将指数关系转化为线性关系，使得数据更符合线性建模的假设，从而简化建模过程。取对数的操作能够尽可能满足经典线性回归假设：<ol>
+<li>避免共线性；</li>
+<li>避免异方差；</li>
+<li>尽可能符合正态分布。</li>
+</ol>
+</li>
+</ol>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>&emsp;&emsp;人们通过诸如Box-cox等典型方法积极探索各种数据变换方式，这表明数据变换并非一成不变的规约，而更像是一门根据实践经验进行灵活操作的艺术。我们需要仔细考虑数据分布的特点，以确定最合适的变换方法。</p>
+<div class="table-container">
+<table>
+<thead>
+<tr>
+<th>方法</th>
+<th>特征</th>
+<th>功能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>归一化</td>
+<td>Min-max scaler， MaxAbs scaler</td>
+<td>将数据分别映射到[0,1]和[-1,1]</td>
+</tr>
+<tr>
+<td>标准化</td>
+<td>Standard scaler</td>
+<td>转换为均值为0，方差为1的分布</td>
+</tr>
+<tr>
+<td>Sigmoid转换</td>
+<td>Sigmoid transformation</td>
+<td>映射成为[0,1]的值</td>
+</tr>
+<tr>
+<td>Log transformation</td>
+<td>Log transformation</td>
+<td>让数据符合我们所做的假设，让能够在已有理论上对其分析</td>
+</tr>
+<tr>
+<td>Box-cox变换</td>
+<td>Box-cox transformation</td>
+<td>用来把非正态的分布变成正态分布</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a href="https://zhuanlan.zhihu.com/p/497099039">常用数据转换方式 - 知乎 (zhihu.com)</a></li>
+<li><a href="https://blog.csdn.net/qq_43466427/article/details/86571215">第十三讲 数据变换-CSDN博客</a></li>
+</ol>
 ]]></content>
       <categories>
-        <category>随笔</category>
+        <category>生物信息学</category>
       </categories>
       <tags>
+        <tag>生物信息学</tag>
         <tag>统计学</tag>
-        <tag>交叉学科</tag>
+        <tag>机器学习</tag>
       </tags>
   </entry>
 </search>
