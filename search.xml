@@ -330,55 +330,6 @@
       </tags>
   </entry>
   <entry>
-    <title>孟德尔随机化标准流程代码示例</title>
-    <url>/2024/02/05/%E5%AD%9F%E5%BE%B7%E5%B0%94%E9%9A%8F%E6%9C%BA%E5%8C%96%E6%A0%87%E5%87%86%E6%B5%81%E7%A8%8B%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B/</url>
-    <content><![CDATA[<figure class="highlight r"><table><tr><td class="code"><pre><span class="line"><span class="comment">####TSMR####</span></span><br><span class="line">library<span class="punctuation">(</span>TwoSampleMR<span class="punctuation">)</span></span><br><span class="line">library<span class="punctuation">(</span>MRPRESSO<span class="punctuation">)</span></span><br><span class="line"><span class="comment">####NAFLD - COVID 19####</span></span><br><span class="line"><span class="comment">####RCT####</span></span><br><span class="line"></span><br><span class="line"><span class="comment">####NAFLD_exposure####</span></span><br><span class="line">exposure_dat<span class="operator">&lt;-</span>read_exposure_data<span class="punctuation">(</span>filename <span class="operator">=</span> <span class="string">&quot;./NAFLD.txt&quot;</span><span class="punctuation">,</span>sep<span class="operator">=</span><span class="string">&quot;\t&quot;</span><span class="punctuation">,</span></span><br><span class="line">                                 snp_col <span class="operator">=</span> <span class="string">&quot;rsids&quot;</span><span class="punctuation">,</span>effect_allele_col <span class="operator">=</span> <span class="string">&quot;alt&quot;</span><span class="punctuation">,</span>other_allele_col <span class="operator">=</span> <span class="string">&quot;ref&quot;</span><span class="punctuation">,</span></span><br><span class="line">                                 beta_col <span class="operator">=</span> <span class="string">&quot;beta&quot;</span><span class="punctuation">,</span>se_col <span class="operator">=</span> <span class="string">&quot;sebeta&quot;</span><span class="punctuation">,</span>pval_col <span class="operator">=</span> <span class="string">&quot;pval&quot;</span><span class="punctuation">,</span>eaf_col <span class="operator">=</span> <span class="string">&quot;af_alt&quot;</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">##看目录下的文件进行对应，如果读一个完整的文件，需要进行P值筛选</span></span><br><span class="line"></span><br><span class="line">exposure_dat<span class="operator">$</span>phenotype<span class="operator">&lt;-</span><span class="string">&quot;NAFLD&quot;</span></span><br><span class="line"><span class="comment">##命名性状，方便结果输出</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#### kb=10000;r2=0.001;</span></span><br><span class="line"><span class="comment">#### kb=500;r2=0.1.</span></span><br><span class="line">exposure_dat<span class="operator">&lt;-</span>clump_data<span class="punctuation">(</span>exposure_dat<span class="punctuation">)</span></span><br><span class="line"><span class="comment">##连锁不平衡去除</span></span><br><span class="line"></span><br><span class="line"><span class="comment">####COVID19_OUTCOME####</span></span><br><span class="line">outcome_dat<span class="operator">&lt;-</span>extract_outcome_data<span class="punctuation">(</span>outcomes <span class="operator">=</span> <span class="string">&quot;ebi-a-GCST011081&quot;</span><span class="punctuation">,</span>snps <span class="operator">=</span> exposure_dat<span class="operator">$</span>SNP<span class="punctuation">)</span></span><br><span class="line"><span class="comment">##在线读取</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#####Harmonization####</span></span><br><span class="line">dat<span class="operator">&lt;-</span>harmonise_data<span class="punctuation">(</span>exposure_dat <span class="operator">=</span> exposure_dat</span><br><span class="line">                    <span class="punctuation">,</span>outcome_dat <span class="operator">=</span> outcome_dat<span class="punctuation">,</span></span><br><span class="line">                    action <span class="operator">=</span> <span class="number">2</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">##dat协调，去除回文序列，错配</span></span><br><span class="line"></span><br><span class="line"><span class="comment">####F&gt;10####</span></span><br><span class="line">dat<span class="operator">$</span><span class="built_in">F</span><span class="operator">&lt;-</span><span class="punctuation">(</span>dat<span class="operator">$</span>beta.exposure<span class="operator">/</span>dat<span class="operator">$</span>se.exposure<span class="punctuation">)</span><span class="operator">**</span><span class="number">2</span></span><br><span class="line">dat<span class="operator">&lt;-</span>subset<span class="punctuation">(</span>dat<span class="punctuation">,</span><span class="built_in">F</span><span class="operator">&gt;</span><span class="number">10</span><span class="punctuation">)</span></span><br><span class="line">mr_result <span class="operator">&lt;-</span> mr<span class="punctuation">(</span>dat<span class="punctuation">)</span></span><br><span class="line"><span class="comment">##F值-遗传力计算</span></span><br><span class="line"></span><br><span class="line"><span class="comment">####Sensitivity,p&gt;0.05####</span></span><br><span class="line">het<span class="operator">&lt;-</span>mr_heterogeneity<span class="punctuation">(</span>dat<span class="punctuation">)</span></span><br><span class="line">ple<span class="operator">&lt;-</span>mr_pleiotropy_test<span class="punctuation">(</span>dat<span class="punctuation">)</span></span><br><span class="line"><span class="comment">###sNP pleiotropy: Phennoscaner; MR-PRESSO</span></span><br><span class="line">mr_presso<span class="punctuation">(</span>data <span class="operator">=</span> dat<span class="punctuation">,</span>BetaOutcome <span class="operator">=</span> <span class="string">&quot;beta.outcome&quot;</span><span class="punctuation">,</span>BetaExposure <span class="operator">=</span> <span class="string">&quot;beta.exposure&quot;</span><span class="punctuation">,</span>SdOutcome <span class="operator">=</span> <span class="string">&quot;se.outcome&quot;</span><span class="punctuation">,</span>SdExposure <span class="operator">=</span> <span class="string">&quot;se.exposure&quot;</span><span class="punctuation">)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">####Graph####</span></span><br><span class="line">mr_funnel_plot<span class="punctuation">(</span>singlesnp_results <span class="operator">=</span> mr_singlesnp<span class="punctuation">(</span>dat<span class="punctuation">)</span><span class="punctuation">)</span> <span class="comment">###het p</span></span><br><span class="line">mr_forest_plot<span class="punctuation">(</span>mr_singlesnp<span class="punctuation">(</span>dat<span class="punctuation">)</span><span class="punctuation">)</span></span><br><span class="line">mr_scatter_plot<span class="punctuation">(</span>mr_results <span class="operator">=</span> mr_result<span class="punctuation">,</span>dat <span class="operator">=</span> dat<span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
-]]></content>
-      <categories>
-        <category>流行病学</category>
-      </categories>
-      <tags>
-        <tag>GWAS</tag>
-        <tag>统计学</tag>
-        <tag>孟德尔随机化</tag>
-        <tag>流行病学</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>单细胞测序教程资源聚合</title>
-    <url>/2023/08/12/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E6%95%99%E7%A8%8B%E5%92%8C%E8%B5%84%E6%BA%90%E8%81%9A%E5%90%88/</url>
-    <content><![CDATA[<h2 id="教程"><a href="#教程" class="headerlink" title="教程"></a>教程</h2><h4 id="转录组学"><a href="#转录组学" class="headerlink" title="转录组学"></a>转录组学</h4><ol>
-<li>单细胞测序-最佳的分析Pipeline <a href="https://single-cell-tutorial.readthedocs.io/zh/latest/">单细胞测序-最佳的分析Pipeline</a> ：Zehua Zeng等为主要作者，包括详细的原理和处理流程（Python）；其中重点介绍了Omicverse的使用； </li>
-<li>哈佛大学单细胞中文笔记：<a href="https://zhuanlan.zhihu.com/p/209018565">哈佛大学单细胞中文笔记</a> 陈同博士撰写。主要包括原理和Seurat的使用。<a href="https://hbctraining.github.io/main">原版教程</a>；</li>
-<li>RNA-SEQ BLOG：最新的RNA测序资讯：<a href="https://www.rna-seqblog.com/">RNA-Seq Blog</a></li>
-</ol>
-<h2 id="资源"><a href="#资源" class="headerlink" title="资源"></a>资源</h2><h4 id="肿瘤生信"><a href="#肿瘤生信" class="headerlink" title="肿瘤生信"></a>肿瘤生信</h4><ol>
-<li>GEPIA2：GEPIA2是一个无代码可视化平台，其数据来源于TCGA和GTEx数据库，用户可以自由探索指定基因的在肿瘤组织中的表达情况以及和预后的关系。<a href="http://gepia2.cancer-pku.cn/">GEPIA2</a></li>
-<li>Prognoscan：Prognoscan整合了2010年以前GEO上Microarray和相应临床信息，可以探索制定基因自不同数据集中和预后的关系。<a href="http://dna00.bio.kyutech.ac.jp/PrognoScan/">PrognoScan</a></li>
-<li>TIMER：TIMER用于分析不同癌症类型的免疫浸润（数据来自于TCGA）。<a href="http://timer.cistrome.org/">TIMER2.0</a></li>
-</ol>
-<h4 id="GWAS"><a href="#GWAS" class="headerlink" title="GWAS"></a>GWAS</h4><ol>
-<li>IEU OPEN GWAS：包含42,484 个GWAS摘要数据集的214,725,223,303 个遗传关联的数据库。<a href="https://gwas.mrcieu.ac.uk/">IEU OpenGWAS</a></li>
-<li>PheWeb：包含Biobank Japan，以及UKB等欧洲样本的GWAS结果。<a href="https://pheweb.jp/downloads">PheWeb</a></li>
-<li>GWAS catalog：内容较全，网页比较慢，建议使用特殊方式访问。<a href="https://www.ebi.ac.uk/gwas/downloads/summary-statistics">GWAS catalog</a>:</li>
-<li>EGG：早期生长联盟数据，包含出生体重，出生头围等。<a href="http://egg-consortium.org/index.html">EGG</a></li>
-<li>CKDGEN：包含慢性肾病、MA、eGFR等。<a href="http://ckdgen.imbi.uni-freiburg.de/?tdsourcetag=s_pctim_aiomsg">CKDGEN</a></li>
-<li>GLGC：血脂GWAS数据库。<a href="http://csg.sph.umich.edu/willer/public/glgc-lipids2021/">GLGC</a></li>
-<li>PGC：精神病学基因组学联盟。<a href="https://www.med.unc.edu/pgc/results-and-downloads/downloads">PGC</a></li>
-<li>GEFOS：骨质疏松联盟。<a href="http://www.gefos.org/">GEFOS</a></li>
-<li>DIAGRAM：二型糖尿病数据库。<a href="http://diagram-consortium.org/downloads.html">DIAGRAM</a>: </li>
-<li>代谢组学数据库：<a href="http://www.metabolomix.com/list-of-all-published-gwas-with-metabolomics/">A Table of all published GWAS with metabolomics</a></li>
-</ol>
-]]></content>
-      <categories>
-        <category>生物信息学</category>
-      </categories>
-      <tags>
-        <tag>生物信息学</tag>
-        <tag>单细胞测序</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>大四课程资源（持续更新）</title>
     <url>/2024/02/26/%E5%A4%A7%E5%9B%9B%E8%AF%BE%E7%A8%8B%E8%B5%84%E6%BA%90%EF%BC%88%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%EF%BC%89/</url>
     <content><![CDATA[<h2 id="内科"><a href="#内科" class="headerlink" title="内科"></a>内科</h2><h2 id="外科"><a href="#外科" class="headerlink" title="外科"></a>外科</h2><h2 id="其他课程"><a href="#其他课程" class="headerlink" title="其他课程"></a>其他课程</h2><h3 id="皮肤病与性病学"><a href="#皮肤病与性病学" class="headerlink" title="皮肤病与性病学"></a>皮肤病与性病学</h3><ol>
@@ -1072,6 +1023,21 @@
       </tags>
   </entry>
   <entry>
+    <title>孟德尔随机化标准流程代码示例</title>
+    <url>/2024/02/05/%E5%AD%9F%E5%BE%B7%E5%B0%94%E9%9A%8F%E6%9C%BA%E5%8C%96%E6%A0%87%E5%87%86%E6%B5%81%E7%A8%8B%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B/</url>
+    <content><![CDATA[<figure class="highlight r"><table><tr><td class="code"><pre><span class="line"><span class="comment">####TSMR####</span></span><br><span class="line">library<span class="punctuation">(</span>TwoSampleMR<span class="punctuation">)</span></span><br><span class="line">library<span class="punctuation">(</span>MRPRESSO<span class="punctuation">)</span></span><br><span class="line"><span class="comment">####NAFLD - COVID 19####</span></span><br><span class="line"><span class="comment">####RCT####</span></span><br><span class="line"></span><br><span class="line"><span class="comment">####NAFLD_exposure####</span></span><br><span class="line">exposure_dat<span class="operator">&lt;-</span>read_exposure_data<span class="punctuation">(</span>filename <span class="operator">=</span> <span class="string">&quot;./NAFLD.txt&quot;</span><span class="punctuation">,</span>sep<span class="operator">=</span><span class="string">&quot;\t&quot;</span><span class="punctuation">,</span></span><br><span class="line">                                 snp_col <span class="operator">=</span> <span class="string">&quot;rsids&quot;</span><span class="punctuation">,</span>effect_allele_col <span class="operator">=</span> <span class="string">&quot;alt&quot;</span><span class="punctuation">,</span>other_allele_col <span class="operator">=</span> <span class="string">&quot;ref&quot;</span><span class="punctuation">,</span></span><br><span class="line">                                 beta_col <span class="operator">=</span> <span class="string">&quot;beta&quot;</span><span class="punctuation">,</span>se_col <span class="operator">=</span> <span class="string">&quot;sebeta&quot;</span><span class="punctuation">,</span>pval_col <span class="operator">=</span> <span class="string">&quot;pval&quot;</span><span class="punctuation">,</span>eaf_col <span class="operator">=</span> <span class="string">&quot;af_alt&quot;</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">##看目录下的文件进行对应，如果读一个完整的文件，需要进行P值筛选</span></span><br><span class="line"></span><br><span class="line">exposure_dat<span class="operator">$</span>phenotype<span class="operator">&lt;-</span><span class="string">&quot;NAFLD&quot;</span></span><br><span class="line"><span class="comment">##命名性状，方便结果输出</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#### kb=10000;r2=0.001;</span></span><br><span class="line"><span class="comment">#### kb=500;r2=0.1.</span></span><br><span class="line">exposure_dat<span class="operator">&lt;-</span>clump_data<span class="punctuation">(</span>exposure_dat<span class="punctuation">)</span></span><br><span class="line"><span class="comment">##连锁不平衡去除</span></span><br><span class="line"></span><br><span class="line"><span class="comment">####COVID19_OUTCOME####</span></span><br><span class="line">outcome_dat<span class="operator">&lt;-</span>extract_outcome_data<span class="punctuation">(</span>outcomes <span class="operator">=</span> <span class="string">&quot;ebi-a-GCST011081&quot;</span><span class="punctuation">,</span>snps <span class="operator">=</span> exposure_dat<span class="operator">$</span>SNP<span class="punctuation">)</span></span><br><span class="line"><span class="comment">##在线读取</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#####Harmonization####</span></span><br><span class="line">dat<span class="operator">&lt;-</span>harmonise_data<span class="punctuation">(</span>exposure_dat <span class="operator">=</span> exposure_dat</span><br><span class="line">                    <span class="punctuation">,</span>outcome_dat <span class="operator">=</span> outcome_dat<span class="punctuation">,</span></span><br><span class="line">                    action <span class="operator">=</span> <span class="number">2</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">##dat协调，去除回文序列，错配</span></span><br><span class="line"></span><br><span class="line"><span class="comment">####F&gt;10####</span></span><br><span class="line">dat<span class="operator">$</span><span class="built_in">F</span><span class="operator">&lt;-</span><span class="punctuation">(</span>dat<span class="operator">$</span>beta.exposure<span class="operator">/</span>dat<span class="operator">$</span>se.exposure<span class="punctuation">)</span><span class="operator">**</span><span class="number">2</span></span><br><span class="line">dat<span class="operator">&lt;-</span>subset<span class="punctuation">(</span>dat<span class="punctuation">,</span><span class="built_in">F</span><span class="operator">&gt;</span><span class="number">10</span><span class="punctuation">)</span></span><br><span class="line">mr_result <span class="operator">&lt;-</span> mr<span class="punctuation">(</span>dat<span class="punctuation">)</span></span><br><span class="line"><span class="comment">##F值-遗传力计算</span></span><br><span class="line"></span><br><span class="line"><span class="comment">####Sensitivity,p&gt;0.05####</span></span><br><span class="line">het<span class="operator">&lt;-</span>mr_heterogeneity<span class="punctuation">(</span>dat<span class="punctuation">)</span></span><br><span class="line">ple<span class="operator">&lt;-</span>mr_pleiotropy_test<span class="punctuation">(</span>dat<span class="punctuation">)</span></span><br><span class="line"><span class="comment">###sNP pleiotropy: Phennoscaner; MR-PRESSO</span></span><br><span class="line">mr_presso<span class="punctuation">(</span>data <span class="operator">=</span> dat<span class="punctuation">,</span>BetaOutcome <span class="operator">=</span> <span class="string">&quot;beta.outcome&quot;</span><span class="punctuation">,</span>BetaExposure <span class="operator">=</span> <span class="string">&quot;beta.exposure&quot;</span><span class="punctuation">,</span>SdOutcome <span class="operator">=</span> <span class="string">&quot;se.outcome&quot;</span><span class="punctuation">,</span>SdExposure <span class="operator">=</span> <span class="string">&quot;se.exposure&quot;</span><span class="punctuation">)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">####Graph####</span></span><br><span class="line">mr_funnel_plot<span class="punctuation">(</span>singlesnp_results <span class="operator">=</span> mr_singlesnp<span class="punctuation">(</span>dat<span class="punctuation">)</span><span class="punctuation">)</span> <span class="comment">###het p</span></span><br><span class="line">mr_forest_plot<span class="punctuation">(</span>mr_singlesnp<span class="punctuation">(</span>dat<span class="punctuation">)</span><span class="punctuation">)</span></span><br><span class="line">mr_scatter_plot<span class="punctuation">(</span>mr_results <span class="operator">=</span> mr_result<span class="punctuation">,</span>dat <span class="operator">=</span> dat<span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>流行病学</category>
+      </categories>
+      <tags>
+        <tag>GWAS</tag>
+        <tag>统计学</tag>
+        <tag>孟德尔随机化</tag>
+        <tag>流行病学</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>提升医学研究的严谨性：准确使用统计学</title>
     <url>/2024/02/18/%E6%8F%90%E5%8D%87%E5%8C%BB%E5%AD%A6%E7%A0%94%E7%A9%B6%E7%9A%84%E4%B8%A5%E8%B0%A8%E6%80%A7%EF%BC%9A%E5%87%86%E7%A1%AE%E4%BD%BF%E7%94%A8%E7%BB%9F%E8%AE%A1%E5%AD%A6/</url>
     <content><![CDATA[<h2 id="原文摘要"><a href="#原文摘要" class="headerlink" title="原文摘要"></a>原文摘要</h2><p>&emsp;&emsp;在不断进步的医学研究领域中，研究结果的可靠性不仅依赖于创新的思想，还依赖于严谨的方法论和统计学。然而，根据过去三年《柳叶刀》期刊集团对超过1000份手稿的统计审查经验，通讯发现许多医学研究者常常忽视这一点。</p>
@@ -1196,6 +1162,50 @@
       </tags>
   </entry>
   <entry>
+    <title>生物信息学笔记（三）：基因定量</title>
+    <url>/2024/02/16/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89%EF%BC%9A%E5%9F%BA%E5%9B%A0%E5%AE%9A%E9%87%8F/</url>
+    <content><![CDATA[<h2 id="为什么要对进行基因定量"><a href="#为什么要对进行基因定量" class="headerlink" title="为什么要对进行基因定量"></a>为什么要对进行基因定量</h2><p>&emsp;&emsp;转录组数据分析中，一个转录本反转录后的cDNA会被打碎成片段测序并和基因组比对，就会导致长转录本在给定的cDNA长度下可能会映射更多的cDNA，也就是说基因长度会影响Reads数。<br>&emsp;&emsp;测序深度是指测序过程中每个碱基被测序的平均次数，其计算公式为：$\frac{Reads数*Read长度}{参考序列长度}$：例如，对长100bp的目标区域进行捕获测序：采用单端测序，每个read长5bp；总共得到了200个reads；把所有的reads比对到目标区域后，100bp的目标区域中有98bp的位置至少有1个read覆盖到，换言之，剩余的2bp没有1个read覆盖。则测序深度为 200 x 5 / 100 = 10 我们说这此测序的深度为10X。显而易见，若测序越深，则对于相同长度的转录本，测序所得的Reads数更多。<br>&emsp;&emsp;综上所述，测序深度、基因长度和Reads数相关，所以需要在最终基因表达计数中去除相应的影响。注意，在基因定量的过程中，可能会由于样本本身的原因，如某个基因Reads数过高，导致基因定量后其他基因的表达量低于实际情况，这也是基因定量过程中需要去考虑的。</p>
+<h2 id="Raw-count"><a href="#Raw-count" class="headerlink" title="Raw count"></a>Raw count</h2><p>&emsp;&emsp;所谓Raw count，又称为count数，和上一部分所说的Reads数是同一概念，是指和参考序列比对上的序列数目。原始的读取计数矩阵使用Raw count作为基础，但由于不同基因的长度和测序深度存在差异，因此无法直接比较。为了消除技术偏差的影响并赋予后续差异分析以统计学意义，需要对这些基因计数矩阵进行标准化处理，将其转化为相对值。<br>&emsp;&emsp;但注意，我们进行基因定量时需要充分考虑测序技术和原理，如在 10x 基因组学基因表达检测中，每个转录本都标有作为唯一分子标识符 （unique molecular identifier，UMI） 的序列。这些 UMI 能够准确定量基因表达水平，因为我们可以分辨出哪些读段是从同一个 mRNA 分子中产生的。因此，Cell Ranger 和 Space Ranger 执行 UMI 计数（不是读取计数）以测量基因表达水平，并且所有二次分析步骤都基于 UMI 计数执行。在传统的RNA-seq数据中，完整的转录本被片段化，然后进行cDNA合成、末端修复和衔接连接。在此工作流程中，从长转录本中采样片段的概率高于从短转录本中采样的概率。因此，按转录本长度（例如，TPM、RPKM、FPKM）对读取计数进行归一化是有意义的。然而，在 10x 基因表达测定中，这种基因长度偏差并不存在。因此，不建议按基因长度对UMI计数进行归一化。</p>
+<h2 id="RPKM-FPKM"><a href="#RPKM-FPKM" class="headerlink" title="RPKM/FPKM"></a>RPKM/FPKM</h2><p>&emsp;&emsp;RPKM (Reads Per Kilobase of exon model per Million mapped reads)：每千个碱基的转录每百万映射读取的reads数，是针对单端测序的基因定量方法；FPKM (Fragment Per Kilobase of transcript, per Million mapped reads)：每千碱基片段每百万映射读取的 reads 数，是针对双端测序的基因定量方法。<br>&emsp;&emsp;以RPKM为例，其操作方法为：</p>
+<ol>
+<li>计算样本中的总读数，然后将该数字除以 1,000,000——这是“每百万”比例因子；</li>
+<li>将读取计数除以“每百万”比例因子。这针对测序深度进行了归一化，得到每百万次读数（reads per million，RPM）；</li>
+<li>将 RPM 值除以基因的长度，以千碱基为单位，得到RPKM。</li>
+</ol>
+<p>&emsp;&emsp;在第二代测序过程中，常采用一种方法将DNA分子打碎成片段（fragment），然后进行测序。在单末端测序中，每个片段对应一个读取序列（Read），而在双末端测序中，每个片段将从两个端点分别进行测序。因此，这两个成对的读取序列对应于同一个片段（虽然偶尔会出现只有一个读取序列与某个片段相对应的情况，这是由于某些原因导致另一个读取序列被排除或丢失了）。在这一点上存在着区别，对于FPKM（每百万片段计数）这一测量指标而言，与同一片段相关联的两个读取序列只被计算为一个读取序列。换句话说，FPKM是基于片段计数，而不是基于读取序列数量计算的，其他计算方法完全相同。<br>&emsp;&emsp;两者计算公式如下：</p>
+<script type="math/tex; mode=display">FPKM = \frac{Read\quad counts}{Mapped\quad reads(Millions)\quad \times \quad Transcript\quad length(KB)}</script><script type="math/tex; mode=display">RPKM = \frac{Read\quad counts(Fragments)}{Mapped\quad reads(Millions)\quad \times \quad Transcript\quad length(KB)}</script><h2 id="TPM"><a href="#TPM" class="headerlink" title="TPM"></a>TPM</h2><p>&emsp;&emsp;TPM（Transcripts Per Million） 是一种常用的基因表达量归一化方法，它将基因的表达量调整为每百万条转录本的数量。TPM 值考虑了基因的长度和测序深度，通过将每个基因的 Counts 值除以其长度，并进行适当的归一化，将基因的表达量转换为每百万转录本数，以便进行样本间的比较和分析。TPM 值消除了样本间测序深度的差异和基因长度的影响，实质上，TPM相当于重新标准化的文库，保证每个样本中所有TPM的总和是相同的。TPM 与 RPKM 和 FPKM 非常相似。唯一的区别是操作顺序。以下是计算 TPM 的方法：</p>
+<ol>
+<li>将读取计数除以每个基因的长度（以千碱基为单位），得到每千碱基读数（reads per kilobase，RPK）；</li>
+<li>计算样本中的所有 RPK 值的和，并将此数字除以 1,000,000，得到如前的“每百万”比例因子；</li>
+<li>将 RPK 值除以“每百万”比例因子，得到TPM。</li>
+</ol>
+<p>&emsp;&emsp;综上，在计算TPM时，和前述指标唯一的区别是你首先对基因长度进行归一化，然后对测序深度进行归一化。然而，这种差异的影响是相当深远的。<br>&emsp;&emsp;使用 TPM 时，每个示例中所有 TPM 的总和是相同的。这样可以更容易地比较每个样品中映射到基因的reads比例。相比之下，使用RPKM和FPKM，每个样本中归一化读数的总和可能不同，这使得直接比较样本变得更加困难，在某种意义上，TPM降低了样本本身的影响，从而让样本具有可比性，即TPM实际上改进了RPKM/FPKM方法在跨样品间定量的不准确性。<br>&emsp;&emsp;其计算公式如下：</p>
+<script type="math/tex; mode=display">TPM = 10^6 \times \frac{\frac {Read\quad counts}{Transcript \quad length(KB)}}{\Sigma \frac {Read\quad counts}{Transcript \quad length(KB)}}</script><h2 id="适用范围"><a href="#适用范围" class="headerlink" title="适用范围"></a>适用范围</h2><ol>
+<li>如前所述，基于测序计数选择基因定量的方案，如对于10×测序，直接使用原始Count即可；</li>
+<li>对于传统的二代测序，应当进行标准化基因定量：<ol>
+<li>RPKM和FPKM已经不推荐使用（参考：<a href="https://pubmed.ncbi.nlm.nih.gov/22872506/">Measurement of mRNA abundance using RNA-seq data: RPKM measure is inconsistent among samples</a>；<a href="https://academic.oup.com/bib/article/14/6/671/189645">comprehensive evaluation of normalization methods for Illumina high-throughput RNA sequencing data analysis</a>）；</li>
+<li>TPM、DESeq适合组间比较，有研究更推荐DESeq进行组间比较（<a href="https://academic.oup.com/bib/article/14/6/671/189645#1808405">comprehensive evaluation of normalization methods for Illumina high-throughput RNA sequencing data analysis</a>；<a href="https://translational-medicine.biomedcentral.com/articles/10.1186/s12967-021-02936-w#Sec21">TPM, FPKM, or Normalized Counts? A Comparative Study of Quantification Measures for the Analysis of RNA-seq Data from the NCI Patient-Derived Models Repository</a>）。</li>
+</ol>
+</li>
+</ol>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a href="https://pubmed.ncbi.nlm.nih.gov/22872506/">Measurement of mRNA abundance using RNA-seq data: RPKM measure is inconsistent among samples</a></li>
+<li><a href="https://academic.oup.com/bib/article/14/6/671/189645">comprehensive evaluation of normalization methods for Illumina high-throughput RNA sequencing data analysis</a></li>
+<li><a href="https://translational-medicine.biomedcentral.com/articles/10.1186/s12967-021-02936-w#Sec21">TPM, FPKM, or Normalized Counts? A Comparative Study of Quantification Measures for the Analysis of RNA-seq Data from the NCI Patient-Derived Models Repository</a></li>
+<li><a href="https://kb.10xgenomics.com/hc/en-us/articles/115003684783-Should-I-calculate-TPM-RPKM-or-FPKM-instead-of-counts-for-10x-Genomics-data">Should I calculate TPM, RPKM or FPKM, instead of counts for 10x Genomics data? – 10X Genomics</a></li>
+<li><a href="https://www.rna-seqblog.com/rpkm-fpkm-and-tpm-clearly-explained/">RPKM, FPKM and TPM, clearly explained | RNA-Seq Blog</a></li>
+</ol>
+]]></content>
+      <categories>
+        <category>生物信息学</category>
+      </categories>
+      <tags>
+        <tag>生物信息学</tag>
+        <tag>转录组学</tag>
+        <tag>计数</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>生物信息学笔记（二）：数据变换</title>
     <url>/2024/02/07/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9A%E6%95%B0%E6%8D%AE%E5%8F%98%E6%8D%A2/</url>
     <content><![CDATA[<h2 id="数据变换基本概念"><a href="#数据变换基本概念" class="headerlink" title="数据变换基本概念"></a>数据变换基本概念</h2><p>&emsp;&emsp;在数据科学中，数据变换是指对原始数据进行一系列操作或转换，从而使得数据更适合用于特定的分析或建模任务。其目的是提取有用的信息、减少噪声、改善模型的性能或满足模型假设。<strong>数据变换可以将一些我们理论上未解决的模型问题转化为已经解决的问题</strong>。<br>&emsp;&emsp;从变量个数的角度，数据变换分为单变量变换和多变量变换。多变量变换和特征工程的范畴有交叉，主要包括特征抽取、数据分解和维度压缩等方法。单变量变换分为线性和非线性变换。<br>&emsp;&emsp;本文讲解的数据变换都是连续变量的变换，着重关注单变量变换。</p>
@@ -1299,38 +1309,60 @@
       </tags>
   </entry>
   <entry>
-    <title>生物信息学笔记（三）：基因定量</title>
-    <url>/2024/02/16/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89%EF%BC%9A%E5%9F%BA%E5%9B%A0%E5%AE%9A%E9%87%8F/</url>
-    <content><![CDATA[<h2 id="为什么要对进行基因定量"><a href="#为什么要对进行基因定量" class="headerlink" title="为什么要对进行基因定量"></a>为什么要对进行基因定量</h2><p>&emsp;&emsp;转录组数据分析中，一个转录本反转录后的cDNA会被打碎成片段测序并和基因组比对，就会导致长转录本在给定的cDNA长度下可能会映射更多的cDNA，也就是说基因长度会影响Reads数。<br>&emsp;&emsp;测序深度是指测序过程中每个碱基被测序的平均次数，其计算公式为：$\frac{Reads数*Read长度}{参考序列长度}$：例如，对长100bp的目标区域进行捕获测序：采用单端测序，每个read长5bp；总共得到了200个reads；把所有的reads比对到目标区域后，100bp的目标区域中有98bp的位置至少有1个read覆盖到，换言之，剩余的2bp没有1个read覆盖。则测序深度为 200 x 5 / 100 = 10 我们说这此测序的深度为10X。显而易见，若测序越深，则对于相同长度的转录本，测序所得的Reads数更多。<br>&emsp;&emsp;综上所述，测序深度、基因长度和Reads数相关，所以需要在最终基因表达计数中去除相应的影响。注意，在基因定量的过程中，可能会由于样本本身的原因，如某个基因Reads数过高，导致基因定量后其他基因的表达量低于实际情况，这也是基因定量过程中需要去考虑的。</p>
-<h2 id="Raw-count"><a href="#Raw-count" class="headerlink" title="Raw count"></a>Raw count</h2><p>&emsp;&emsp;所谓Raw count，又称为count数，和上一部分所说的Reads数是同一概念，是指和参考序列比对上的序列数目。原始的读取计数矩阵使用Raw count作为基础，但由于不同基因的长度和测序深度存在差异，因此无法直接比较。为了消除技术偏差的影响并赋予后续差异分析以统计学意义，需要对这些基因计数矩阵进行标准化处理，将其转化为相对值。<br>&emsp;&emsp;但注意，我们进行基因定量时需要充分考虑测序技术和原理，如在 10x 基因组学基因表达检测中，每个转录本都标有作为唯一分子标识符 （unique molecular identifier，UMI） 的序列。这些 UMI 能够准确定量基因表达水平，因为我们可以分辨出哪些读段是从同一个 mRNA 分子中产生的。因此，Cell Ranger 和 Space Ranger 执行 UMI 计数（不是读取计数）以测量基因表达水平，并且所有二次分析步骤都基于 UMI 计数执行。在传统的RNA-seq数据中，完整的转录本被片段化，然后进行cDNA合成、末端修复和衔接连接。在此工作流程中，从长转录本中采样片段的概率高于从短转录本中采样的概率。因此，按转录本长度（例如，TPM、RPKM、FPKM）对读取计数进行归一化是有意义的。然而，在 10x 基因表达测定中，这种基因长度偏差并不存在。因此，不建议按基因长度对UMI计数进行归一化。</p>
-<h2 id="RPKM-FPKM"><a href="#RPKM-FPKM" class="headerlink" title="RPKM/FPKM"></a>RPKM/FPKM</h2><p>&emsp;&emsp;RPKM (Reads Per Kilobase of exon model per Million mapped reads)：每千个碱基的转录每百万映射读取的reads数，是针对单端测序的基因定量方法；FPKM (Fragment Per Kilobase of transcript, per Million mapped reads)：每千碱基片段每百万映射读取的 reads 数，是针对双端测序的基因定量方法。<br>&emsp;&emsp;以RPKM为例，其操作方法为：</p>
+    <title>能解答一切的答案</title>
+    <url>/2024/03/07/%E8%83%BD%E8%A7%A3%E7%AD%94%E4%B8%80%E5%88%87%E7%9A%84%E7%AD%94%E6%A1%88/</url>
+    <content><![CDATA[<p>医学所以成为医学，是因为什么？医学中能解答一切问题的答案又来自哪里？是技术还是人文？</p>
+<p>科技的迅速发展，带来了医学的巨大进步。从前我们将希波克拉底的“体液说”奉为圭臬，到今天有了从分子层面体系完备的生理科学；从感冒腹泻夺走人的生命，到今天疑难杂症的治愈变成可能；从前的医学不过经验，而今天的医学可以层层剖析病理。似乎只要有了技术，医学就可以解决所有的问题。 以至于今天的人们都把健康寄托于技术、生命寄托于未来。看着科学主义的日渐泛滥，我也不禁发问：医学的人文宗旨，在今天这个时代是不是已经过时了呢？</p>
+<p>本世纪初发表的《医师宣言》中明确指出：“将患者利益放在首位。这一原则是建立在为患者服务的基础上。信任是医患关系的核心，而利他主义是这种信任的基础。一切力量都不能影响这一原则。”古今中外的医学巨匠一再肯定这样的医学属性和人文精神。从药王孙思邈一篇《大医精诚》——“凡大医治病，必当安神定志，无欲无求，先发大慈恻隐之心，誓愿普救含灵之苦”，到特鲁多闻名遐迩的三句“有时去治愈，常常去帮助，总是去安慰”。这种医学传统，是医学长期发展形成的，是医学内在的，是医学的本性，不是外在强加于医学的，在任何时候也是不应当去改变的。如果用技术至上的思想远离对生命的关爱和对人的关怀，背离医学救人生命的人文宗旨，医学就不是医学，甚至走向医学的反面。</p>
+<p>所以说，医学的人文宗旨，不但没有过时，甚至是医学的灵魂所在。</p>
+<p>高三时读过一篇关乎“语言”的高考作文——《达芬奇密码》。这篇作文构建出一个依赖于人文而存在的科学殿堂，当时的我对此不以为然，甚至认为这篇作文不过是唯心主义。一年后在医学导论的课堂上，当我听到丁教授和王教授两位院长讲授医学的起源、目的和现代临床医疗的准则时，我又回想起这篇文章，才逐渐明白——失去了人文底色的科学不过是机械、冰冷的器物，作为客观世界真理的科学技术也不能无限制的扩张，不能代替人们的情感和信仰。撒尔顿说：“向科学注入人文精神，唤醒科学不要忘记人和爱，不要忘记自身存在的根本”，此言得之。回到医学这样一个具有极高道德属性的学科，医学人文宗旨的重要性不言而喻。</p>
+<p>科学意味求真；而人文意味求善。求真的目的是求善。理论物理学家杨振宁先生强调：“科学研究的最终价值不会取决与为了科学的科学，而是取决与科学是否对人类有益“。为了善念而去的医学才能真正做有益于人类的事，为了善念，一个医生才会真正地精诚于学术，博学至精。</p>
+<p>医学起源于祛除病痛的执着信仰，由此才有无数医家的探索。今天的医学依然适用这一亘古不变的准则。医学成为医学，是因为医学有温度。医学的魅力不是有多么先进的技术，而是从内心给出的真心、正义和同理，尤其对于今天这样一个时代。解决一切医学问题的答案也许有很多，但根本都在于明德至善。</p>
+<p>虽然，我依然坚信，这个美丽宇宙的唯一真理是科学，刘慈欣的《朝闻道》中写“没有科学的世界，我的心脏都懒得跳动”深得我心。但今天讨论的问题，是有时代和职业语境的。市场经济的发展，让技术的作用被神话了，拉大了医患之间的距离，恶化了医疗环境，在这个时候，犹需要在科学发展之外，多一份理想情怀。</p>
+<p>偶尔会去思考我会成为一个什么样的医生。不知道会不会像王娟院长一样会在医院关门的时候会心软给迟到的病人看病，也不知道会不会像王锦帆教授说的那样用自己一句加油的话就能把一个人从鬼门关拉回来，或者像丁义涛院长死马当活马医救回来一个现在天天一起打惯蛋的好友……嗯，我还不知道，但我希望我按照热力学第二定律回归大地之前，可以经历这些温暖而可爱的时刻，这些时刻，就是对问题最好的答案。</p>
+<p><strong>【医学导论课的感动瞬间】</strong></p>
+<p>怎么说，这是一门特殊的课，虽然有着让人一言难尽而又抓狂的考核标准，自己的笔记也日渐粗糙。但是在听大医们的开讲中，收获了很多新的想法，遇到了不少鼻头一酸的时刻，这也是一种独特的体验吧？</p>
 <ol>
-<li>计算样本中的总读数，然后将该数字除以 1,000,000——这是“每百万”比例因子；</li>
-<li>将读取计数除以“每百万”比例因子。这针对测序深度进行了归一化，得到每百万次读数（reads per million，RPM）；</li>
-<li>将 RPM 值除以基因的长度，以千碱基为单位，得到RPKM。</li>
+<li>王虹院长：“本来这个时候我应该下班了，但是你看到那个病人在那你是无法拒绝的，医者仁心啊……“（以后我会不会也有这样的想法？）</li>
+<li>王锦帆教授：“言语对于一名医生很重要，很多时候一个快死的病人，也许就是听见你的一声鼓励，潜意识中就有了活下去的勇气，这个病人就挺过来了。“（在这句话之前，科学主义一直占据着我的思想，这句话之后，我开始真正思考人文的作用。）</li>
+<li>丁义涛院长：“那个主任现在说我是他的救命恩人，天天找我约掼蛋。“（医生的幸福感和成就感大概就是这个时候吧？）</li>
+<li>王虹院长：“医生的群体都是向善的，医生的价值不是赚钱，金钱买不到我们得到行业精神，医生的价值就是救人。“（对这个职业充满了自豪感，突然想起高三班主任在班级前面贴的毛笔字”德业双馨、成名成家“，对医生而言适合不过。）</li>
+<li>王虹院长：“做医生，一辈子都要吃苦。“（愿苦中作乐）</li>
 </ol>
-<p>&emsp;&emsp;在第二代测序过程中，常采用一种方法将DNA分子打碎成片段（fragment），然后进行测序。在单末端测序中，每个片段对应一个读取序列（Read），而在双末端测序中，每个片段将从两个端点分别进行测序。因此，这两个成对的读取序列对应于同一个片段（虽然偶尔会出现只有一个读取序列与某个片段相对应的情况，这是由于某些原因导致另一个读取序列被排除或丢失了）。在这一点上存在着区别，对于FPKM（每百万片段计数）这一测量指标而言，与同一片段相关联的两个读取序列只被计算为一个读取序列。换句话说，FPKM是基于片段计数，而不是基于读取序列数量计算的，其他计算方法完全相同。<br>&emsp;&emsp;两者计算公式如下：</p>
-<script type="math/tex; mode=display">FPKM = \frac{Read\quad counts}{Mapped\quad reads(Millions)\quad \times \quad Transcript\quad length(KB)}</script><script type="math/tex; mode=display">RPKM = \frac{Read\quad counts(Fragments)}{Mapped\quad reads(Millions)\quad \times \quad Transcript\quad length(KB)}</script><h2 id="TPM"><a href="#TPM" class="headerlink" title="TPM"></a>TPM</h2><p>&emsp;&emsp;TPM（Transcripts Per Million） 是一种常用的基因表达量归一化方法，它将基因的表达量调整为每百万条转录本的数量。TPM 值考虑了基因的长度和测序深度，通过将每个基因的 Counts 值除以其长度，并进行适当的归一化，将基因的表达量转换为每百万转录本数，以便进行样本间的比较和分析。TPM 值消除了样本间测序深度的差异和基因长度的影响，实质上，TPM相当于重新标准化的文库，保证每个样本中所有TPM的总和是相同的。TPM 与 RPKM 和 FPKM 非常相似。唯一的区别是操作顺序。以下是计算 TPM 的方法：</p>
-<ol>
-<li>将读取计数除以每个基因的长度（以千碱基为单位），得到每千碱基读数（reads per kilobase，RPK）；</li>
-<li>计算样本中的所有 RPK 值的和，并将此数字除以 1,000,000，得到如前的“每百万”比例因子；</li>
-<li>将 RPK 值除以“每百万”比例因子，得到TPM。</li>
+<p>……</p>
+<p>2020年12月18日</p>
+]]></content>
+      <categories>
+        <category>随笔</category>
+      </categories>
+      <tags>
+        <tag>随笔</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>单细胞测序教程资源聚合</title>
+    <url>/2023/08/12/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E6%95%99%E7%A8%8B%E5%92%8C%E8%B5%84%E6%BA%90%E8%81%9A%E5%90%88/</url>
+    <content><![CDATA[<h2 id="教程"><a href="#教程" class="headerlink" title="教程"></a>教程</h2><h4 id="转录组学"><a href="#转录组学" class="headerlink" title="转录组学"></a>转录组学</h4><ol>
+<li>单细胞测序-最佳的分析Pipeline <a href="https://single-cell-tutorial.readthedocs.io/zh/latest/">单细胞测序-最佳的分析Pipeline</a> ：Zehua Zeng等为主要作者，包括详细的原理和处理流程（Python）；其中重点介绍了Omicverse的使用； </li>
+<li>哈佛大学单细胞中文笔记：<a href="https://zhuanlan.zhihu.com/p/209018565">哈佛大学单细胞中文笔记</a> 陈同博士撰写。主要包括原理和Seurat的使用。<a href="https://hbctraining.github.io/main">原版教程</a>；</li>
+<li>RNA-SEQ BLOG：最新的RNA测序资讯：<a href="https://www.rna-seqblog.com/">RNA-Seq Blog</a></li>
 </ol>
-<p>&emsp;&emsp;综上，在计算TPM时，和前述指标唯一的区别是你首先对基因长度进行归一化，然后对测序深度进行归一化。然而，这种差异的影响是相当深远的。<br>&emsp;&emsp;使用 TPM 时，每个示例中所有 TPM 的总和是相同的。这样可以更容易地比较每个样品中映射到基因的reads比例。相比之下，使用RPKM和FPKM，每个样本中归一化读数的总和可能不同，这使得直接比较样本变得更加困难，在某种意义上，TPM降低了样本本身的影响，从而让样本具有可比性，即TPM实际上改进了RPKM/FPKM方法在跨样品间定量的不准确性。<br>&emsp;&emsp;其计算公式如下：</p>
-<script type="math/tex; mode=display">TPM = 10^6 \times \frac{\frac {Read\quad counts}{Transcript \quad length(KB)}}{\Sigma \frac {Read\quad counts}{Transcript \quad length(KB)}}</script><h2 id="适用范围"><a href="#适用范围" class="headerlink" title="适用范围"></a>适用范围</h2><ol>
-<li>如前所述，基于测序计数选择基因定量的方案，如对于10×测序，直接使用原始Count即可；</li>
-<li>对于传统的二代测序，应当进行标准化基因定量：<ol>
-<li>RPKM和FPKM已经不推荐使用（参考：<a href="https://pubmed.ncbi.nlm.nih.gov/22872506/">Measurement of mRNA abundance using RNA-seq data: RPKM measure is inconsistent among samples</a>；<a href="https://academic.oup.com/bib/article/14/6/671/189645">comprehensive evaluation of normalization methods for Illumina high-throughput RNA sequencing data analysis</a>）；</li>
-<li>TPM、DESeq适合组间比较，有研究更推荐DESeq进行组间比较（<a href="https://academic.oup.com/bib/article/14/6/671/189645#1808405">comprehensive evaluation of normalization methods for Illumina high-throughput RNA sequencing data analysis</a>；<a href="https://translational-medicine.biomedcentral.com/articles/10.1186/s12967-021-02936-w#Sec21">TPM, FPKM, or Normalized Counts? A Comparative Study of Quantification Measures for the Analysis of RNA-seq Data from the NCI Patient-Derived Models Repository</a>）。</li>
+<h2 id="资源"><a href="#资源" class="headerlink" title="资源"></a>资源</h2><h4 id="肿瘤生信"><a href="#肿瘤生信" class="headerlink" title="肿瘤生信"></a>肿瘤生信</h4><ol>
+<li>GEPIA2：GEPIA2是一个无代码可视化平台，其数据来源于TCGA和GTEx数据库，用户可以自由探索指定基因的在肿瘤组织中的表达情况以及和预后的关系。<a href="http://gepia2.cancer-pku.cn/">GEPIA2</a></li>
+<li>Prognoscan：Prognoscan整合了2010年以前GEO上Microarray和相应临床信息，可以探索制定基因自不同数据集中和预后的关系。<a href="http://dna00.bio.kyutech.ac.jp/PrognoScan/">PrognoScan</a></li>
+<li>TIMER：TIMER用于分析不同癌症类型的免疫浸润（数据来自于TCGA）。<a href="http://timer.cistrome.org/">TIMER2.0</a></li>
 </ol>
-</li>
-</ol>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
-<li><a href="https://pubmed.ncbi.nlm.nih.gov/22872506/">Measurement of mRNA abundance using RNA-seq data: RPKM measure is inconsistent among samples</a></li>
-<li><a href="https://academic.oup.com/bib/article/14/6/671/189645">comprehensive evaluation of normalization methods for Illumina high-throughput RNA sequencing data analysis</a></li>
-<li><a href="https://translational-medicine.biomedcentral.com/articles/10.1186/s12967-021-02936-w#Sec21">TPM, FPKM, or Normalized Counts? A Comparative Study of Quantification Measures for the Analysis of RNA-seq Data from the NCI Patient-Derived Models Repository</a></li>
-<li><a href="https://kb.10xgenomics.com/hc/en-us/articles/115003684783-Should-I-calculate-TPM-RPKM-or-FPKM-instead-of-counts-for-10x-Genomics-data">Should I calculate TPM, RPKM or FPKM, instead of counts for 10x Genomics data? – 10X Genomics</a></li>
-<li><a href="https://www.rna-seqblog.com/rpkm-fpkm-and-tpm-clearly-explained/">RPKM, FPKM and TPM, clearly explained | RNA-Seq Blog</a></li>
+<h4 id="GWAS"><a href="#GWAS" class="headerlink" title="GWAS"></a>GWAS</h4><ol>
+<li>IEU OPEN GWAS：包含42,484 个GWAS摘要数据集的214,725,223,303 个遗传关联的数据库。<a href="https://gwas.mrcieu.ac.uk/">IEU OpenGWAS</a></li>
+<li>PheWeb：包含Biobank Japan，以及UKB等欧洲样本的GWAS结果。<a href="https://pheweb.jp/downloads">PheWeb</a></li>
+<li>GWAS catalog：内容较全，网页比较慢，建议使用特殊方式访问。<a href="https://www.ebi.ac.uk/gwas/downloads/summary-statistics">GWAS catalog</a>:</li>
+<li>EGG：早期生长联盟数据，包含出生体重，出生头围等。<a href="http://egg-consortium.org/index.html">EGG</a></li>
+<li>CKDGEN：包含慢性肾病、MA、eGFR等。<a href="http://ckdgen.imbi.uni-freiburg.de/?tdsourcetag=s_pctim_aiomsg">CKDGEN</a></li>
+<li>GLGC：血脂GWAS数据库。<a href="http://csg.sph.umich.edu/willer/public/glgc-lipids2021/">GLGC</a></li>
+<li>PGC：精神病学基因组学联盟。<a href="https://www.med.unc.edu/pgc/results-and-downloads/downloads">PGC</a></li>
+<li>GEFOS：骨质疏松联盟。<a href="http://www.gefos.org/">GEFOS</a></li>
+<li>DIAGRAM：二型糖尿病数据库。<a href="http://diagram-consortium.org/downloads.html">DIAGRAM</a>: </li>
+<li>代谢组学数据库：<a href="http://www.metabolomix.com/list-of-all-published-gwas-with-metabolomics/">A Table of all published GWAS with metabolomics</a></li>
 </ol>
 ]]></content>
       <categories>
@@ -1338,8 +1370,7 @@
       </categories>
       <tags>
         <tag>生物信息学</tag>
-        <tag>转录组学</tag>
-        <tag>计数</tag>
+        <tag>单细胞测序</tag>
       </tags>
   </entry>
 </search>

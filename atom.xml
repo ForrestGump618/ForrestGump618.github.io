@@ -6,7 +6,7 @@
   <link href="http://example.com/atom.xml" rel="self"/>
   
   <link href="http://example.com/"/>
-  <updated>2024-03-06T14:37:08.407Z</updated>
+  <updated>2024-03-07T13:05:59.135Z</updated>
   <id>http://example.com/</id>
   
   <author>
@@ -15,6 +15,25 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>能解答一切的答案</title>
+    <link href="http://example.com/2024/03/07/%E8%83%BD%E8%A7%A3%E7%AD%94%E4%B8%80%E5%88%87%E7%9A%84%E7%AD%94%E6%A1%88/"/>
+    <id>http://example.com/2024/03/07/%E8%83%BD%E8%A7%A3%E7%AD%94%E4%B8%80%E5%88%87%E7%9A%84%E7%AD%94%E6%A1%88/</id>
+    <published>2024-03-07T13:00:00.000Z</published>
+    <updated>2024-03-07T13:05:59.135Z</updated>
+    
+    
+    <summary type="html">医学导论，心得体会。</summary>
+    
+    
+    
+    <category term="随笔" scheme="http://example.com/categories/%E9%9A%8F%E7%AC%94/"/>
+    
+    
+    <category term="随笔" scheme="http://example.com/tags/%E9%9A%8F%E7%AC%94/"/>
+    
+  </entry>
   
   <entry>
     <title>大四课程资源（持续更新）</title>
