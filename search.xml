@@ -7,30 +7,6 @@
 ]]></content>
   </entry>
   <entry>
-    <title>celltogwas：细胞类型注释到基因组的工具包</title>
-    <url>/2023/08/19/celltogwas%EF%BC%9A%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8B%E6%B3%A8%E9%87%8A%E5%88%B0%E5%9F%BA%E5%9B%A0%E7%BB%84%E7%9A%84%E5%B7%A5%E5%85%B7%E5%8C%85/</url>
-    <content><![CDATA[<h2 id="celltogwas"><a href="#celltogwas" class="headerlink" title="celltogwas"></a>celltogwas</h2><p>This code is a toolkit for genomic analysis. It includes several functions and helper functions to extract gene information from a genomic annotation file, merge gene intervals, generate genomic ranges based on cell types and window size, and annotate GWAS (Genome-Wide Association Study) data.</p>
-<h2 id="Explanation-of-each-function"><a href="#Explanation-of-each-function" class="headerlink" title="Explanation of each function"></a>Explanation of each function</h2><p><strong>extract_gene_info(gtf_file)</strong>: Extracts gene information from a genomic annotation file. It opens a gzip-compressed file, reads it line by line, and extracts gene name, chromosome, start position, and end position from each line. The extracted data is then stored in a Pandas DataFrame and returned.</p>
-<p><strong>merge_intervals(intervals)</strong>: Merges overlapping intervals. This function takes a list of intervals as input and merges overlapping intervals into larger intervals. It first sorts the intervals based on their start positions, then iterates through the intervals. If the current interval does not overlap with the merged interval, it adds the current interval to the merged list. Otherwise, it updates the end position of the merged interval. Finally, it returns the merged interval list.</p>
-<p><strong>celltype_genome_range(cell_gene_dict, gene_info, windowsize)</strong>: Generates genomic ranges based on cell types and window size. This function takes a dictionary mapping cell types to gene lists, a DataFrame of gene information, and a window size as input. It retrieves the gene list corresponding to each cell type from the dictionary and performs an inner join with the gene information to obtain the chromosome, start position, and end position of the corresponding genes. It then adjusts the start and end positions based on the window size and converts the data into a specific format of a list. Finally, it stores the genomic ranges for each cell type in a dictionary and returns it.</p>
-<p><strong>check_value_in_intervals(intervals, value)</strong>: Checks if a value is within the intervals. This function takes a list of intervals and a value as input. It uses binary search to determine if the value falls within the intervals. It first extracts the left boundaries of the intervals, then performs a binary search to find the position of the value in the left boundary list. If the position is less than the length of the interval list, it retrieves the corresponding interval and checks if the value falls within that interval. If the value is within the interval, it returns True; otherwise, it returns False.</p>
-<p><strong>gwas_annotaion(gwas, celltype_range)</strong>: Annotates GWAS data based on genomic ranges. This function takes a DataFrame of GWAS data and a dictionary of genomic ranges as input. It first retrieves the list of chromosomes from the GWAS data. Then, it iterates through the genomic ranges for each cell type. For each chromosome, it retrieves the subset of GWAS data corresponding to that chromosome and the annotation ranges from the genomic ranges. It then iterates through each data item in the subset and uses the check_value_in_intervals function to check if the position of the data item falls within the annotation ranges. If it does, the data item is marked as annotated. Finally, it stores the annotation results for all cell types in a dictionary and returns it.</p>
-<h2 id="File-format"><a href="#File-format" class="headerlink" title="File format"></a><a href="#File-format" title="File format"></a>File format</h2><p><strong>gtf_file</strong>: Include CHR, START, END, Other info(GENE Symbol);</p>
-<p><strong>cell_gene_dict</strong>: A dictionary:(1) key:celltype’s name;(2)value:a list of genes;</p>
-<p><strong>gene_info</strong>: Output file from <strong>extract_gene_info(gtf_file)</strong>: Include: GENE, CHR, START, END;</p>
-<p><strong>gwas</strong>: First teo columns: chr, pos;</p>
-<p><strong>celltype_range</strong>: A dictionary:(1) key:celltype’s name;(2)value:a list of genome position:[chr, start, end];</p>
-<p><strong>output_file</strong>: A dictionary:(1) key:celltype’s name;(2)value:[chr, pos ,…… , annotation] (annotation: 1 for anntation and 0 for null).</p>
-]]></content>
-      <categories>
-        <category>生物信息学</category>
-      </categories>
-      <tags>
-        <tag>GWAS</tag>
-        <tag>python</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>scDRS：基于GWAS和scRNA评估细胞类型和生物学过程的疾病相关性</title>
     <url>/2023/08/11/scDRS%EF%BC%9A%E5%9F%BA%E4%BA%8EGWAS%E5%92%8CscRNA%E8%AF%84%E4%BC%B0%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8B%E5%92%8C%E7%94%9F%E7%89%A9%E5%AD%A6%E8%BF%87%E7%A8%8B%E7%9A%84%E7%96%BE%E7%97%85%E7%9B%B8%E5%85%B3%E6%80%A7/</url>
     <content><![CDATA[<h2 id="方法学概述"><a href="#方法学概述" class="headerlink" title="方法学概述"></a>方法学概述</h2><p>&emsp;&emsp;scDRS的核心思想是建立合适的权重从而根据基因的表达对基因程序进行评分，即加权基因表达量。其算法可概述为：首先将基因根据MAGMA得到的gene-level z-scores从大到小排列（也可以自定义基因程序）, 选择潜在的致病基因。基于致病基因的表达量和权重接着计算致病基因程序加权表达量。从而评估该细胞的基因程序和疾病的相关度。<br>&emsp;&emsp;算法对z-score采用算数加权，对技术噪声指标采用逆加权。也就是说，在GWAS中鉴定出的越相关的，且测序过程中技术原因造成误差较小的基因。根据输入数据集的基因表达，在蒙特卡洛随机模拟生成的B个对照组中，从而推断分布，进而对研究的疾病进行统计检验。利用这样的方法，我们可以计算单个细胞和疾病的相关性，以及鉴定相应的驱动基因，并基于此进行下游分析。</p>
@@ -76,9 +52,33 @@
         <category>生物信息学</category>
       </categories>
       <tags>
-        <tag>GWAS</tag>
         <tag>生物信息学</tag>
+        <tag>GWAS</tag>
         <tag>单细胞测序</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>celltogwas：细胞类型注释到基因组的工具包</title>
+    <url>/2023/08/19/celltogwas%EF%BC%9A%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8B%E6%B3%A8%E9%87%8A%E5%88%B0%E5%9F%BA%E5%9B%A0%E7%BB%84%E7%9A%84%E5%B7%A5%E5%85%B7%E5%8C%85/</url>
+    <content><![CDATA[<h2 id="celltogwas"><a href="#celltogwas" class="headerlink" title="celltogwas"></a>celltogwas</h2><p>This code is a toolkit for genomic analysis. It includes several functions and helper functions to extract gene information from a genomic annotation file, merge gene intervals, generate genomic ranges based on cell types and window size, and annotate GWAS (Genome-Wide Association Study) data.</p>
+<h2 id="Explanation-of-each-function"><a href="#Explanation-of-each-function" class="headerlink" title="Explanation of each function"></a>Explanation of each function</h2><p><strong>extract_gene_info(gtf_file)</strong>: Extracts gene information from a genomic annotation file. It opens a gzip-compressed file, reads it line by line, and extracts gene name, chromosome, start position, and end position from each line. The extracted data is then stored in a Pandas DataFrame and returned.</p>
+<p><strong>merge_intervals(intervals)</strong>: Merges overlapping intervals. This function takes a list of intervals as input and merges overlapping intervals into larger intervals. It first sorts the intervals based on their start positions, then iterates through the intervals. If the current interval does not overlap with the merged interval, it adds the current interval to the merged list. Otherwise, it updates the end position of the merged interval. Finally, it returns the merged interval list.</p>
+<p><strong>celltype_genome_range(cell_gene_dict, gene_info, windowsize)</strong>: Generates genomic ranges based on cell types and window size. This function takes a dictionary mapping cell types to gene lists, a DataFrame of gene information, and a window size as input. It retrieves the gene list corresponding to each cell type from the dictionary and performs an inner join with the gene information to obtain the chromosome, start position, and end position of the corresponding genes. It then adjusts the start and end positions based on the window size and converts the data into a specific format of a list. Finally, it stores the genomic ranges for each cell type in a dictionary and returns it.</p>
+<p><strong>check_value_in_intervals(intervals, value)</strong>: Checks if a value is within the intervals. This function takes a list of intervals and a value as input. It uses binary search to determine if the value falls within the intervals. It first extracts the left boundaries of the intervals, then performs a binary search to find the position of the value in the left boundary list. If the position is less than the length of the interval list, it retrieves the corresponding interval and checks if the value falls within that interval. If the value is within the interval, it returns True; otherwise, it returns False.</p>
+<p><strong>gwas_annotaion(gwas, celltype_range)</strong>: Annotates GWAS data based on genomic ranges. This function takes a DataFrame of GWAS data and a dictionary of genomic ranges as input. It first retrieves the list of chromosomes from the GWAS data. Then, it iterates through the genomic ranges for each cell type. For each chromosome, it retrieves the subset of GWAS data corresponding to that chromosome and the annotation ranges from the genomic ranges. It then iterates through each data item in the subset and uses the check_value_in_intervals function to check if the position of the data item falls within the annotation ranges. If it does, the data item is marked as annotated. Finally, it stores the annotation results for all cell types in a dictionary and returns it.</p>
+<h2 id="File-format"><a href="#File-format" class="headerlink" title="File format"></a><a href="#File-format" title="File format"></a>File format</h2><p><strong>gtf_file</strong>: Include CHR, START, END, Other info(GENE Symbol);</p>
+<p><strong>cell_gene_dict</strong>: A dictionary:(1) key:celltype’s name;(2)value:a list of genes;</p>
+<p><strong>gene_info</strong>: Output file from <strong>extract_gene_info(gtf_file)</strong>: Include: GENE, CHR, START, END;</p>
+<p><strong>gwas</strong>: First teo columns: chr, pos;</p>
+<p><strong>celltype_range</strong>: A dictionary:(1) key:celltype’s name;(2)value:a list of genome position:[chr, start, end];</p>
+<p><strong>output_file</strong>: A dictionary:(1) key:celltype’s name;(2)value:[chr, pos ,…… , annotation] (annotation: 1 for anntation and 0 for null).</p>
+]]></content>
+      <categories>
+        <category>生物信息学</category>
+      </categories>
+      <tags>
+        <tag>GWAS</tag>
+        <tag>python</tag>
       </tags>
   </entry>
   <entry>
@@ -112,8 +112,8 @@
         <category>生物信息学</category>
       </categories>
       <tags>
-        <tag>GWAS</tag>
         <tag>生物信息学</tag>
+        <tag>GWAS</tag>
         <tag>单细胞测序</tag>
       </tags>
   </entry>
@@ -337,6 +337,7 @@
 <li><a href="https://www.bilibili.com/video/BV1fa4y117bK?p=2&amp;vd_source=abf08cae6308e09625fbd30392ec206a">2024皮肤与性病学主治医师</a></li>
 <li><a href="https://www.bilibili.com/video/BV1wE411v7fp/?spm_id_from=333.337.search-card.all.click&amp;vd_source=abf08cae6308e09625fbd30392ec206a">【叶子】医学生学习 | 影像学 皮肤性病学 眼科学 | 学习经验分享 |_哔哩哔哩_bilibili</a></li>
 <li><a href="https://www.bilibili.com/video/BV1Tk4y1u7dG/?spm_id_from=333.337.search-card.all.click&amp;vd_source=abf08cae6308e09625fbd30392ec206a">皮肤与性病学主治医师（338）【时间更短，总时间为10h】</a></li>
+<li><a href="https://www.bilibili.com/video/BV1fa4y117bK?p=1&amp;vd_source=abf08cae6308e09625fbd30392ec206a">主治医师（全面，推荐）</a></li>
 </ol>
 </li>
 <li>教学日历：</li>
@@ -1038,50 +1039,37 @@
       </tags>
   </entry>
   <entry>
-    <title>提升医学研究的严谨性：准确使用统计学</title>
-    <url>/2024/02/18/%E6%8F%90%E5%8D%87%E5%8C%BB%E5%AD%A6%E7%A0%94%E7%A9%B6%E7%9A%84%E4%B8%A5%E8%B0%A8%E6%80%A7%EF%BC%9A%E5%87%86%E7%A1%AE%E4%BD%BF%E7%94%A8%E7%BB%9F%E8%AE%A1%E5%AD%A6/</url>
-    <content><![CDATA[<h2 id="原文摘要"><a href="#原文摘要" class="headerlink" title="原文摘要"></a>原文摘要</h2><p>&emsp;&emsp;在不断进步的医学研究领域中，研究结果的可靠性不仅依赖于创新的思想，还依赖于严谨的方法论和统计学。然而，根据过去三年《柳叶刀》期刊集团对超过1000份手稿的统计审查经验，通讯发现许多医学研究者常常忽视这一点。</p>
-<p>&emsp;&emsp;这篇通讯旨在提供一些基本建议，帮助研究者准确地报告统计数据，避免常见的统计缺陷。以下是一些关键要点：</p>
-<ol>
-<li><strong>数据描述的准确性</strong>：根据数据分布，报告均值和标准差或中位数和四分位数范围。并提供显示分析中使用的变量的直方图或表格的补充材料。</li>
-<li><strong>模型假设的检验</strong>：尽可能使用可视化检查所有模型假设。</li>
-<li><strong>P值的处理</strong>：不要将P值简化为“大于或等于0.0001”，而应报告确切的P值（例如，0.032的P值应报告为P=0.032，而非P&lt;0.05）。</li>
-<li><strong>结果的解读</strong>：基于临床重要性解读结果，并提供适当的关联估计和95%置信区间。</li>
-<li><strong>混杂因素的识别</strong>：基于背景信息识别混杂因素，例如在因果定向无环图中描绘，而非仅依赖显著性检验。</li>
-<li><strong>处理缺失数据</strong>：如果缺失数据的比例足够高，可能影响结果，应使用超越简单丢弃不完整记录的方法，例如反概率缺失加权或多重插补。</li>
-<li><strong>稀疏数据偏差的处理</strong>：使用为此目的开发的方法评估并处理比率估计中的稀疏数据偏差，如逻辑或Cox回归中应使用惩罚或贝叶斯方法减少稀疏数据偏差。</li>
-<li><strong>选择适当的风险指标</strong>：如果结局发生率较高，应报告危险比（risk  ratio，RR）或危险差（risk difference，RD），而不是比值比（odds ratio，OR）。</li>
-<li><strong>统计推断</strong>：避免过度依赖统计测试，P值不应在0.05或0.01等水平上二分化。特别是，大的P值不应被解释为没有关联或没有效应。</li>
-<li><strong>评估加性相互作用，即使模型是乘法的</strong>。</li>
+    <title>单细胞测序教程资源聚合</title>
+    <url>/2023/08/12/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E6%95%99%E7%A8%8B%E5%92%8C%E8%B5%84%E6%BA%90%E8%81%9A%E5%90%88/</url>
+    <content><![CDATA[<h2 id="教程"><a href="#教程" class="headerlink" title="教程"></a>教程</h2><h4 id="转录组学"><a href="#转录组学" class="headerlink" title="转录组学"></a>转录组学</h4><ol>
+<li>单细胞测序-最佳的分析Pipeline <a href="https://single-cell-tutorial.readthedocs.io/zh/latest/">单细胞测序-最佳的分析Pipeline</a> ：Zehua Zeng等为主要作者，包括详细的原理和处理流程（Python）；其中重点介绍了Omicverse的使用； </li>
+<li>哈佛大学单细胞中文笔记：<a href="https://zhuanlan.zhihu.com/p/209018565">哈佛大学单细胞中文笔记</a> 陈同博士撰写。主要包括原理和Seurat的使用。<a href="https://hbctraining.github.io/main">原版教程</a>；</li>
+<li>RNA-SEQ BLOG：最新的RNA测序资讯：<a href="https://www.rna-seqblog.com/">RNA-Seq Blog</a></li>
 </ol>
-<h2 id="原文翻译"><a href="#原文翻译" class="headerlink" title="原文翻译"></a>原文翻译</h2><p>&emsp;&emsp;医学研究有效性的一个重要要求是可靠的方法和统计数据，但这仍然经常被医学研究人员忽视。基于过去 3 年提交给《柳叶刀》集团期刊的 1000 多份手稿的统计数据审查经验，本通信为报告中常见的统计缺陷以及如何避免这些缺陷提供了指导</p>
-<p><strong>准确报告统计结果的基本建议</strong></p>
-<ul>
-<li>根据分布情况，报告均值和标准差或中位数和 IQR 以描述定量变量。提供补充材料，显示分析中使用的变量的直方图或表格。</li>
-<li>检查所有模型假设，最好在可行的情况下使用图表。</li>
-<li>不要将 p 值 ≥0·0001；相反，显示精确的 p 值（例如，p 值 0·032 应显示为 p=0·032，而不是 p&lt;0·05）。但是，不等式 p&lt;0·0001 可用于报告非常小的 p 值。</li>
-<li>不要将结果报告为无效果，除非区间估计内的所有效果在临床上都不重要。</li>
-<li>根据临床重要性解释结果，并适当估计与 95% CI 的相关性。</li>
-<li>根据背景信息识别混杂因素，如因果有向无环图中所述，而不是显著性检验。</li>
-<li>如果缺失数据的比例高到足以潜在地影响结果，请使用除简单地丢弃不完整记录之外的方法，例如，缺失的反概率加权或多重插补。</li>
-<li>使用为此目的开发的方法评估和处理比率估计中的稀疏数据偏差。</li>
-<li>如果结果频率较高，则报告风险比或风险差异，而不是比值比。</li>
-<li>评估加性相互作用，即使您的模型是乘法的。</li>
-</ul>
-<p>&emsp;&emsp;数据描述对于理解数据至关重要。平均值和标准差通常用于描述定量变量。尽管如此，对于高度偏斜的变量（例如，典型的环境暴露），应使用中位数和IQR；对于仅取正值的变量，$\frac {mean}{SD}$表示严重偏斜。完整的统计描述还需要给出连续性变量的直方图、分类变量的计数表、以及缺失数据的百分比，由于这部分内容较多，可在<strong>补充材料</strong>中给出。</p>
-<p>&emsp;&emsp;所有统计分析都建立在基础假设之上，比如选择性或治疗分配的随机性。统计模型的有效性依赖于对这些进一步假设的评估。为了达到这一目的，仅仅依赖统计检验是不够的，还需要运用图形方法。例如，大多数回归模型都假设定量预测变量是线性的（至少在某种程度上），这一假设需要通过分段多项式或回归样条等方法进行验证。尤其是对于定量变量的分类，这通常意味着一个不切实际的阶跃函数假设，可能会导致效能损失或不可控的混杂。</p>
-<p>&emsp;&emsp;在统计推断领域，我们仍主要依赖于假设检验和估计。然而，p 值可以提供有关数据与统计假设或模型兼容性的重要信息，应当准确报告，而不是简单地用是否显著的定性描述来代替。兼容性可以通过将 p 值转换为基于抛硬币实验的 s 值来衡量。我们应避免过度依赖统计检验，不应将 p 值简单地划分为 0.05 或 0.01 这样的固定水平。特别是，较大的 p 值不应解释为无关联或无影响，因为“没有证据”并不等同于“没有证据”。除非区间估计接近零值，且区间非常窄，才可以推断为研究没有发现重要的关联或影响。一般情况下，还应根据合适指标的区间估计（如均数差或危险差）来判断结果的临床重要性。</p>
-<p>&emsp;&emsp;许多研究关注的是因果关系，这就使得混杂因素的调整变得至关重要。混杂因素的选择应基于因果背景信息，例如通过有向无环图进行。基于显著性的方法，比如逐步选择算法，可能具有误导性，因为它们可能忽略了重要的混杂因素。</p>
-<p>&emsp;&emsp;数据缺失在研究中非常常见。简单处理缺失数据的方法，如完整案例分析（即逐列表删除）、缺失指标或最后观察结转，可能会导致显著偏差。如果缺失数据的比例较高（例如超过 5%），则应避免使用这些方法。更好的方法包括逆概率加权和多重插补，尽管这些方法也依赖于条件随机缺失的假设。</p>
-<p>&emsp;&emsp;在逻辑回归或 Cox 回归中，稀疏数据是一个重要的偏差来源，即在某些变量水平组合中事件数量较少。OR较大和置信区间较宽（例如，OR&gt;10，区间为2-50）提示存在数据稀疏偏倚，可以通过惩罚函数或贝叶斯方法减少偏倚。当因变量是一个常见结局的指标时，调整后的危险比（RR）在评估临床相关性方面优于OR，因前者更容易合理解释。在队列研究和随机对照试验中可使用改良的泊松回归或标准化回归系数来估计危险比（RR）和危险差（RD）。</p>
-<p>&emsp;&emsp;许多研究试图检查两种治疗对结局的相互作用，或者想要估计另一种变量（即效果-测量修改）对治疗效果的改变程度。建模者通常会在回归模型中添加乘积项，例如逻辑项或Cox项，这些项对应于赔率或比率量表上的乘法交互作用。然而，风险的加性相互作用与临床决策和公共卫生更相关，因此也应进行评估。无论哪种情况，研究通常都无法确定交互作用的方向，如果它们通过统计检验筛选交互作用，则有可能产生误导性的估计。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(24">Recommendations for accurate reporting in medical research statistics - The Lancet</a>00139-9/fulltext)</p>
+<h2 id="资源"><a href="#资源" class="headerlink" title="资源"></a>资源</h2><h4 id="肿瘤生信"><a href="#肿瘤生信" class="headerlink" title="肿瘤生信"></a>肿瘤生信</h4><ol>
+<li>GEPIA2：GEPIA2是一个无代码可视化平台，其数据来源于TCGA和GTEx数据库，用户可以自由探索指定基因的在肿瘤组织中的表达情况以及和预后的关系。<a href="http://gepia2.cancer-pku.cn/">GEPIA2</a></li>
+<li>Prognoscan：Prognoscan整合了2010年以前GEO上Microarray和相应临床信息，可以探索制定基因自不同数据集中和预后的关系。<a href="http://dna00.bio.kyutech.ac.jp/PrognoScan/">PrognoScan</a></li>
+<li>TIMER：TIMER用于分析不同癌症类型的免疫浸润（数据来自于TCGA）。<a href="http://timer.cistrome.org/">TIMER2.0</a></li>
+</ol>
+<h4 id="GWAS"><a href="#GWAS" class="headerlink" title="GWAS"></a>GWAS</h4><ol>
+<li>IEU OPEN GWAS：包含42,484 个GWAS摘要数据集的214,725,223,303 个遗传关联的数据库。<a href="https://gwas.mrcieu.ac.uk/">IEU OpenGWAS</a></li>
+<li>PheWeb：包含Biobank Japan，以及UKB等欧洲样本的GWAS结果。<a href="https://pheweb.jp/downloads">PheWeb</a></li>
+<li>GWAS catalog：内容较全，网页比较慢，建议使用特殊方式访问。<a href="https://www.ebi.ac.uk/gwas/downloads/summary-statistics">GWAS catalog</a>:</li>
+<li>EGG：早期生长联盟数据，包含出生体重，出生头围等。<a href="http://egg-consortium.org/index.html">EGG</a></li>
+<li>CKDGEN：包含慢性肾病、MA、eGFR等。<a href="http://ckdgen.imbi.uni-freiburg.de/?tdsourcetag=s_pctim_aiomsg">CKDGEN</a></li>
+<li>GLGC：血脂GWAS数据库。<a href="http://csg.sph.umich.edu/willer/public/glgc-lipids2021/">GLGC</a></li>
+<li>PGC：精神病学基因组学联盟。<a href="https://www.med.unc.edu/pgc/results-and-downloads/downloads">PGC</a></li>
+<li>GEFOS：骨质疏松联盟。<a href="http://www.gefos.org/">GEFOS</a></li>
+<li>DIAGRAM：二型糖尿病数据库。<a href="http://diagram-consortium.org/downloads.html">DIAGRAM</a>: </li>
+<li>代谢组学数据库：<a href="http://www.metabolomix.com/list-of-all-published-gwas-with-metabolomics/">A Table of all published GWAS with metabolomics</a></li>
+</ol>
 ]]></content>
       <categories>
-        <category>统计学</category>
+        <category>生物信息学</category>
       </categories>
       <tags>
-        <tag>统计学</tag>
+        <tag>生物信息学</tag>
+        <tag>单细胞测序</tag>
       </tags>
   </entry>
   <entry>
@@ -1159,6 +1147,53 @@
       <tags>
         <tag>生物信息学</tag>
         <tag>转录组学</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>提升医学研究的严谨性：准确使用统计学</title>
+    <url>/2024/02/18/%E6%8F%90%E5%8D%87%E5%8C%BB%E5%AD%A6%E7%A0%94%E7%A9%B6%E7%9A%84%E4%B8%A5%E8%B0%A8%E6%80%A7%EF%BC%9A%E5%87%86%E7%A1%AE%E4%BD%BF%E7%94%A8%E7%BB%9F%E8%AE%A1%E5%AD%A6/</url>
+    <content><![CDATA[<h2 id="原文摘要"><a href="#原文摘要" class="headerlink" title="原文摘要"></a>原文摘要</h2><p>&emsp;&emsp;在不断进步的医学研究领域中，研究结果的可靠性不仅依赖于创新的思想，还依赖于严谨的方法论和统计学。然而，根据过去三年《柳叶刀》期刊集团对超过1000份手稿的统计审查经验，通讯发现许多医学研究者常常忽视这一点。</p>
+<p>&emsp;&emsp;这篇通讯旨在提供一些基本建议，帮助研究者准确地报告统计数据，避免常见的统计缺陷。以下是一些关键要点：</p>
+<ol>
+<li><strong>数据描述的准确性</strong>：根据数据分布，报告均值和标准差或中位数和四分位数范围。并提供显示分析中使用的变量的直方图或表格的补充材料。</li>
+<li><strong>模型假设的检验</strong>：尽可能使用可视化检查所有模型假设。</li>
+<li><strong>P值的处理</strong>：不要将P值简化为“大于或等于0.0001”，而应报告确切的P值（例如，0.032的P值应报告为P=0.032，而非P&lt;0.05）。</li>
+<li><strong>结果的解读</strong>：基于临床重要性解读结果，并提供适当的关联估计和95%置信区间。</li>
+<li><strong>混杂因素的识别</strong>：基于背景信息识别混杂因素，例如在因果定向无环图中描绘，而非仅依赖显著性检验。</li>
+<li><strong>处理缺失数据</strong>：如果缺失数据的比例足够高，可能影响结果，应使用超越简单丢弃不完整记录的方法，例如反概率缺失加权或多重插补。</li>
+<li><strong>稀疏数据偏差的处理</strong>：使用为此目的开发的方法评估并处理比率估计中的稀疏数据偏差，如逻辑或Cox回归中应使用惩罚或贝叶斯方法减少稀疏数据偏差。</li>
+<li><strong>选择适当的风险指标</strong>：如果结局发生率较高，应报告危险比（risk  ratio，RR）或危险差（risk difference，RD），而不是比值比（odds ratio，OR）。</li>
+<li><strong>统计推断</strong>：避免过度依赖统计测试，P值不应在0.05或0.01等水平上二分化。特别是，大的P值不应被解释为没有关联或没有效应。</li>
+<li><strong>评估加性相互作用，即使模型是乘法的</strong>。</li>
+</ol>
+<h2 id="原文翻译"><a href="#原文翻译" class="headerlink" title="原文翻译"></a>原文翻译</h2><p>&emsp;&emsp;医学研究有效性的一个重要要求是可靠的方法和统计数据，但这仍然经常被医学研究人员忽视。基于过去 3 年提交给《柳叶刀》集团期刊的 1000 多份手稿的统计数据审查经验，本通信为报告中常见的统计缺陷以及如何避免这些缺陷提供了指导</p>
+<p><strong>准确报告统计结果的基本建议</strong></p>
+<ul>
+<li>根据分布情况，报告均值和标准差或中位数和 IQR 以描述定量变量。提供补充材料，显示分析中使用的变量的直方图或表格。</li>
+<li>检查所有模型假设，最好在可行的情况下使用图表。</li>
+<li>不要将 p 值 ≥0·0001；相反，显示精确的 p 值（例如，p 值 0·032 应显示为 p=0·032，而不是 p&lt;0·05）。但是，不等式 p&lt;0·0001 可用于报告非常小的 p 值。</li>
+<li>不要将结果报告为无效果，除非区间估计内的所有效果在临床上都不重要。</li>
+<li>根据临床重要性解释结果，并适当估计与 95% CI 的相关性。</li>
+<li>根据背景信息识别混杂因素，如因果有向无环图中所述，而不是显著性检验。</li>
+<li>如果缺失数据的比例高到足以潜在地影响结果，请使用除简单地丢弃不完整记录之外的方法，例如，缺失的反概率加权或多重插补。</li>
+<li>使用为此目的开发的方法评估和处理比率估计中的稀疏数据偏差。</li>
+<li>如果结果频率较高，则报告风险比或风险差异，而不是比值比。</li>
+<li>评估加性相互作用，即使您的模型是乘法的。</li>
+</ul>
+<p>&emsp;&emsp;数据描述对于理解数据至关重要。平均值和标准差通常用于描述定量变量。尽管如此，对于高度偏斜的变量（例如，典型的环境暴露），应使用中位数和IQR；对于仅取正值的变量，$\frac {mean}{SD}$表示严重偏斜。完整的统计描述还需要给出连续性变量的直方图、分类变量的计数表、以及缺失数据的百分比，由于这部分内容较多，可在<strong>补充材料</strong>中给出。</p>
+<p>&emsp;&emsp;所有统计分析都建立在基础假设之上，比如选择性或治疗分配的随机性。统计模型的有效性依赖于对这些进一步假设的评估。为了达到这一目的，仅仅依赖统计检验是不够的，还需要运用图形方法。例如，大多数回归模型都假设定量预测变量是线性的（至少在某种程度上），这一假设需要通过分段多项式或回归样条等方法进行验证。尤其是对于定量变量的分类，这通常意味着一个不切实际的阶跃函数假设，可能会导致效能损失或不可控的混杂。</p>
+<p>&emsp;&emsp;在统计推断领域，我们仍主要依赖于假设检验和估计。然而，p 值可以提供有关数据与统计假设或模型兼容性的重要信息，应当准确报告，而不是简单地用是否显著的定性描述来代替。兼容性可以通过将 p 值转换为基于抛硬币实验的 s 值来衡量。我们应避免过度依赖统计检验，不应将 p 值简单地划分为 0.05 或 0.01 这样的固定水平。特别是，较大的 p 值不应解释为无关联或无影响，因为“没有证据”并不等同于“没有证据”。除非区间估计接近零值，且区间非常窄，才可以推断为研究没有发现重要的关联或影响。一般情况下，还应根据合适指标的区间估计（如均数差或危险差）来判断结果的临床重要性。</p>
+<p>&emsp;&emsp;许多研究关注的是因果关系，这就使得混杂因素的调整变得至关重要。混杂因素的选择应基于因果背景信息，例如通过有向无环图进行。基于显著性的方法，比如逐步选择算法，可能具有误导性，因为它们可能忽略了重要的混杂因素。</p>
+<p>&emsp;&emsp;数据缺失在研究中非常常见。简单处理缺失数据的方法，如完整案例分析（即逐列表删除）、缺失指标或最后观察结转，可能会导致显著偏差。如果缺失数据的比例较高（例如超过 5%），则应避免使用这些方法。更好的方法包括逆概率加权和多重插补，尽管这些方法也依赖于条件随机缺失的假设。</p>
+<p>&emsp;&emsp;在逻辑回归或 Cox 回归中，稀疏数据是一个重要的偏差来源，即在某些变量水平组合中事件数量较少。OR较大和置信区间较宽（例如，OR&gt;10，区间为2-50）提示存在数据稀疏偏倚，可以通过惩罚函数或贝叶斯方法减少偏倚。当因变量是一个常见结局的指标时，调整后的危险比（RR）在评估临床相关性方面优于OR，因前者更容易合理解释。在队列研究和随机对照试验中可使用改良的泊松回归或标准化回归系数来估计危险比（RR）和危险差（RD）。</p>
+<p>&emsp;&emsp;许多研究试图检查两种治疗对结局的相互作用，或者想要估计另一种变量（即效果-测量修改）对治疗效果的改变程度。建模者通常会在回归模型中添加乘积项，例如逻辑项或Cox项，这些项对应于赔率或比率量表上的乘法交互作用。然而，风险的加性相互作用与临床决策和公共卫生更相关，因此也应进行评估。无论哪种情况，研究通常都无法确定交互作用的方向，如果它们通过统计检验筛选交互作用，则有可能产生误导性的估计。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(24">Recommendations for accurate reporting in medical research statistics - The Lancet</a>00139-9/fulltext)</p>
+]]></content>
+      <categories>
+        <category>统计学</category>
+      </categories>
+      <tags>
+        <tag>统计学</tag>
       </tags>
   </entry>
   <entry>
@@ -1337,40 +1372,6 @@
       </categories>
       <tags>
         <tag>随笔</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>单细胞测序教程资源聚合</title>
-    <url>/2023/08/12/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E6%95%99%E7%A8%8B%E5%92%8C%E8%B5%84%E6%BA%90%E8%81%9A%E5%90%88/</url>
-    <content><![CDATA[<h2 id="教程"><a href="#教程" class="headerlink" title="教程"></a>教程</h2><h4 id="转录组学"><a href="#转录组学" class="headerlink" title="转录组学"></a>转录组学</h4><ol>
-<li>单细胞测序-最佳的分析Pipeline <a href="https://single-cell-tutorial.readthedocs.io/zh/latest/">单细胞测序-最佳的分析Pipeline</a> ：Zehua Zeng等为主要作者，包括详细的原理和处理流程（Python）；其中重点介绍了Omicverse的使用； </li>
-<li>哈佛大学单细胞中文笔记：<a href="https://zhuanlan.zhihu.com/p/209018565">哈佛大学单细胞中文笔记</a> 陈同博士撰写。主要包括原理和Seurat的使用。<a href="https://hbctraining.github.io/main">原版教程</a>；</li>
-<li>RNA-SEQ BLOG：最新的RNA测序资讯：<a href="https://www.rna-seqblog.com/">RNA-Seq Blog</a></li>
-</ol>
-<h2 id="资源"><a href="#资源" class="headerlink" title="资源"></a>资源</h2><h4 id="肿瘤生信"><a href="#肿瘤生信" class="headerlink" title="肿瘤生信"></a>肿瘤生信</h4><ol>
-<li>GEPIA2：GEPIA2是一个无代码可视化平台，其数据来源于TCGA和GTEx数据库，用户可以自由探索指定基因的在肿瘤组织中的表达情况以及和预后的关系。<a href="http://gepia2.cancer-pku.cn/">GEPIA2</a></li>
-<li>Prognoscan：Prognoscan整合了2010年以前GEO上Microarray和相应临床信息，可以探索制定基因自不同数据集中和预后的关系。<a href="http://dna00.bio.kyutech.ac.jp/PrognoScan/">PrognoScan</a></li>
-<li>TIMER：TIMER用于分析不同癌症类型的免疫浸润（数据来自于TCGA）。<a href="http://timer.cistrome.org/">TIMER2.0</a></li>
-</ol>
-<h4 id="GWAS"><a href="#GWAS" class="headerlink" title="GWAS"></a>GWAS</h4><ol>
-<li>IEU OPEN GWAS：包含42,484 个GWAS摘要数据集的214,725,223,303 个遗传关联的数据库。<a href="https://gwas.mrcieu.ac.uk/">IEU OpenGWAS</a></li>
-<li>PheWeb：包含Biobank Japan，以及UKB等欧洲样本的GWAS结果。<a href="https://pheweb.jp/downloads">PheWeb</a></li>
-<li>GWAS catalog：内容较全，网页比较慢，建议使用特殊方式访问。<a href="https://www.ebi.ac.uk/gwas/downloads/summary-statistics">GWAS catalog</a>:</li>
-<li>EGG：早期生长联盟数据，包含出生体重，出生头围等。<a href="http://egg-consortium.org/index.html">EGG</a></li>
-<li>CKDGEN：包含慢性肾病、MA、eGFR等。<a href="http://ckdgen.imbi.uni-freiburg.de/?tdsourcetag=s_pctim_aiomsg">CKDGEN</a></li>
-<li>GLGC：血脂GWAS数据库。<a href="http://csg.sph.umich.edu/willer/public/glgc-lipids2021/">GLGC</a></li>
-<li>PGC：精神病学基因组学联盟。<a href="https://www.med.unc.edu/pgc/results-and-downloads/downloads">PGC</a></li>
-<li>GEFOS：骨质疏松联盟。<a href="http://www.gefos.org/">GEFOS</a></li>
-<li>DIAGRAM：二型糖尿病数据库。<a href="http://diagram-consortium.org/downloads.html">DIAGRAM</a>: </li>
-<li>代谢组学数据库：<a href="http://www.metabolomix.com/list-of-all-published-gwas-with-metabolomics/">A Table of all published GWAS with metabolomics</a></li>
-</ol>
-]]></content>
-      <categories>
-        <category>生物信息学</category>
-      </categories>
-      <tags>
-        <tag>生物信息学</tag>
-        <tag>单细胞测序</tag>
       </tags>
   </entry>
 </search>
