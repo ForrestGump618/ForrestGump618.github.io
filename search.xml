@@ -7,6 +7,30 @@
 ]]></content>
   </entry>
   <entry>
+    <title>celltogwas：细胞类型注释到基因组的工具包</title>
+    <url>/2023/08/19/celltogwas%EF%BC%9A%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8B%E6%B3%A8%E9%87%8A%E5%88%B0%E5%9F%BA%E5%9B%A0%E7%BB%84%E7%9A%84%E5%B7%A5%E5%85%B7%E5%8C%85/</url>
+    <content><![CDATA[<h2 id="celltogwas"><a href="#celltogwas" class="headerlink" title="celltogwas"></a>celltogwas</h2><p>This code is a toolkit for genomic analysis. It includes several functions and helper functions to extract gene information from a genomic annotation file, merge gene intervals, generate genomic ranges based on cell types and window size, and annotate GWAS (Genome-Wide Association Study) data.</p>
+<h2 id="Explanation-of-each-function"><a href="#Explanation-of-each-function" class="headerlink" title="Explanation of each function"></a>Explanation of each function</h2><p><strong>extract_gene_info(gtf_file)</strong>: Extracts gene information from a genomic annotation file. It opens a gzip-compressed file, reads it line by line, and extracts gene name, chromosome, start position, and end position from each line. The extracted data is then stored in a Pandas DataFrame and returned.</p>
+<p><strong>merge_intervals(intervals)</strong>: Merges overlapping intervals. This function takes a list of intervals as input and merges overlapping intervals into larger intervals. It first sorts the intervals based on their start positions, then iterates through the intervals. If the current interval does not overlap with the merged interval, it adds the current interval to the merged list. Otherwise, it updates the end position of the merged interval. Finally, it returns the merged interval list.</p>
+<p><strong>celltype_genome_range(cell_gene_dict, gene_info, windowsize)</strong>: Generates genomic ranges based on cell types and window size. This function takes a dictionary mapping cell types to gene lists, a DataFrame of gene information, and a window size as input. It retrieves the gene list corresponding to each cell type from the dictionary and performs an inner join with the gene information to obtain the chromosome, start position, and end position of the corresponding genes. It then adjusts the start and end positions based on the window size and converts the data into a specific format of a list. Finally, it stores the genomic ranges for each cell type in a dictionary and returns it.</p>
+<p><strong>check_value_in_intervals(intervals, value)</strong>: Checks if a value is within the intervals. This function takes a list of intervals and a value as input. It uses binary search to determine if the value falls within the intervals. It first extracts the left boundaries of the intervals, then performs a binary search to find the position of the value in the left boundary list. If the position is less than the length of the interval list, it retrieves the corresponding interval and checks if the value falls within that interval. If the value is within the interval, it returns True; otherwise, it returns False.</p>
+<p><strong>gwas_annotaion(gwas, celltype_range)</strong>: Annotates GWAS data based on genomic ranges. This function takes a DataFrame of GWAS data and a dictionary of genomic ranges as input. It first retrieves the list of chromosomes from the GWAS data. Then, it iterates through the genomic ranges for each cell type. For each chromosome, it retrieves the subset of GWAS data corresponding to that chromosome and the annotation ranges from the genomic ranges. It then iterates through each data item in the subset and uses the check_value_in_intervals function to check if the position of the data item falls within the annotation ranges. If it does, the data item is marked as annotated. Finally, it stores the annotation results for all cell types in a dictionary and returns it.</p>
+<h2 id="File-format"><a href="#File-format" class="headerlink" title="File format"></a><a href="#File-format" title="File format"></a>File format</h2><p><strong>gtf_file</strong>: Include CHR, START, END, Other info(GENE Symbol);</p>
+<p><strong>cell_gene_dict</strong>: A dictionary:(1) key:celltype’s name;(2)value:a list of genes;</p>
+<p><strong>gene_info</strong>: Output file from <strong>extract_gene_info(gtf_file)</strong>: Include: GENE, CHR, START, END;</p>
+<p><strong>gwas</strong>: First teo columns: chr, pos;</p>
+<p><strong>celltype_range</strong>: A dictionary:(1) key:celltype’s name;(2)value:a list of genome position:[chr, start, end];</p>
+<p><strong>output_file</strong>: A dictionary:(1) key:celltype’s name;(2)value:[chr, pos ,…… , annotation] (annotation: 1 for anntation and 0 for null).</p>
+]]></content>
+      <categories>
+        <category>生物信息学</category>
+      </categories>
+      <tags>
+        <tag>GWAS</tag>
+        <tag>python</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>scDRS：基于GWAS和scRNA评估细胞类型和生物学过程的疾病相关性</title>
     <url>/2023/08/11/scDRS%EF%BC%9A%E5%9F%BA%E4%BA%8EGWAS%E5%92%8CscRNA%E8%AF%84%E4%BC%B0%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8B%E5%92%8C%E7%94%9F%E7%89%A9%E5%AD%A6%E8%BF%87%E7%A8%8B%E7%9A%84%E7%96%BE%E7%97%85%E7%9B%B8%E5%85%B3%E6%80%A7/</url>
     <content><![CDATA[<h2 id="方法学概述"><a href="#方法学概述" class="headerlink" title="方法学概述"></a>方法学概述</h2><p>&emsp;&emsp;scDRS的核心思想是建立合适的权重从而根据基因的表达对基因程序进行评分，即加权基因表达量。其算法可概述为：首先将基因根据MAGMA得到的gene-level z-scores从大到小排列（也可以自定义基因程序）, 选择潜在的致病基因。基于致病基因的表达量和权重接着计算致病基因程序加权表达量。从而评估该细胞的基因程序和疾病的相关度。<br>&emsp;&emsp;算法对z-score采用算数加权，对技术噪声指标采用逆加权。也就是说，在GWAS中鉴定出的越相关的，且测序过程中技术原因造成误差较小的基因。根据输入数据集的基因表达，在蒙特卡洛随机模拟生成的B个对照组中，从而推断分布，进而对研究的疾病进行统计检验。利用这样的方法，我们可以计算单个细胞和疾病的相关性，以及鉴定相应的驱动基因，并基于此进行下游分析。</p>
@@ -52,8 +76,8 @@
         <category>生物信息学</category>
       </categories>
       <tags>
-        <tag>生物信息学</tag>
         <tag>GWAS</tag>
+        <tag>生物信息学</tag>
         <tag>单细胞测序</tag>
       </tags>
   </entry>
@@ -88,9 +112,39 @@
         <category>生物信息学</category>
       </categories>
       <tags>
-        <tag>生物信息学</tag>
         <tag>GWAS</tag>
+        <tag>生物信息学</tag>
         <tag>单细胞测序</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>一起来感受数据之美吧！</title>
+    <url>/2023/10/04/%E4%B8%80%E8%B5%B7%E6%9D%A5%E6%84%9F%E5%8F%97%E6%95%B0%E6%8D%AE%E4%B9%8B%E7%BE%8E%E5%90%A7%EF%BC%81/</url>
+    <content><![CDATA[<h2 id="资源记录"><a href="#资源记录" class="headerlink" title="资源记录"></a>资源记录</h2><ol>
+<li><a href="https://bookdown.org/wangminjie/R4DS/">前言 | 数据科学中的 R 语言 (bookdown.org)</a>（四川师范大学研究生公选课《数据科学中的R语言》的课程内容，其中也会涉及简单的数据科学原理）；</li>
+<li><a href="https://www.bioinfo-scrounger.com/">KeepNotes blog (bioinfo-scrounger.com)</a>（一些R语言和统计问题拾贝）；</li>
+<li><a href="https://cosx.org/">统计之都 (cosx.org)</a>（中文统计学论坛，会定期发表文章，介绍最新的R包，统计学模型和访谈）；</li>
+<li><a href="https://csdiy.wiki/">CS自学指南 (csdiy.wiki)</a>（计算机科学自学指南，其中包括了一个计算机专业学生的知识体系）；</li>
+<li><a href="https://www.writebug.com/">WRITE-BUG数字空间 - 新一代一站式团队协作知识库 (writebug.com)</a>（Writebug有很多高质量的，类似于微信公众号的文章）；</li>
+<li><a href="https://book.ncrnalab.org/teaching/">Bioinformatics Tutorial - Bioinformatics Tutorial (ncrnalab.org)</a> （一个以应用为导向的生物信息学学习站）；</li>
+<li><a href="https://www.cnblogs.com/leezx/">Life·Intelligence - 博客园 (cnblogs.com)</a>）（博主主要关注生物科学、单细胞测序的知识）；</li>
+<li><a href="https://ailearning.apachecn.org/">【布客】AI Learning (apachecn.org)</a>（AI学习的一站式，偏应用）；</li>
+<li><a href="https://forrestgump618.github.io/2023/08/12/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F%E6%95%99%E7%A8%8B%E8%B5%84%E6%BA%90%E8%81%9A%E5%90%88/">单细胞测序教程资源聚合 | 一个夏天的年少 (forrestgump618.github.io)</a> （单细胞测序教程资源整合）；<br> 此外，多去关注Github上有趣的教程和项目。<br> 书本推荐：</li>
+<li>《高等数学》（同济）；《线性代数》（上交）；《概率论和数理统计》（浙大）；</li>
+<li>《生物统计学基础》（Fundamentals of Biostatistics；Bernard Rosner）；《流行病学》（人民卫生出版社）；</li>
+<li>《鸢尾花书：从加减乘除到机器学习》（<a href="https://github.com/Visualize-ML">Visualize-ML (Iris Series: Visualize Math – From Arithmetic Basics to Machine Learning) · GitHub</a>）；</li>
+<li>《R语言编程—基于tidyverse》；</li>
+<li>《遗传学基础》（ <a href="https://book.douban.com/search/William%20S.Klug">William S.Klug</a> / <a href="https://book.douban.com/search/Michael%20R.Cummings">Michael R.Cummings</a> / <a href="https://book.douban.com/search/Charlotte%20A.Spencer">Charlotte A.Spencer</a> / <a href="https://book.douban.com/search/Michael%20A.Palladino">Michael A.Palladino</a>）。</li>
+</ol>
+<h2 id="一些牢骚"><a href="#一些牢骚" class="headerlink" title="一些牢骚"></a>一些牢骚</h2><p>&emsp;&emsp;大一，医用物理学的最后一章——混沌理论，采用数学的方法建模复杂动力学系统的运行规律，并提出了一点轻微的初值改变就可以让整个系统天翻地覆，即著名的蝴蝶定律。<br>&emsp;&emsp;当然，这并不意味着倘若那只蝴蝶扇动翅膀，就必然会引起飓风；但若我们逮到所有的蝴蝶，那么飓风可以预测。这强烈提示人们一种认知观点，复杂的现象背后可以拆解为简单的论断；基于底层法则，自然界得以混沌。<br>&emsp;&emsp;生命是自然界最复杂的现象，就在您读这句话的一刹那，组成我们身体的亿万细胞正发生着无法计数的生命事件，伴随着无法计数的化学物质数量和性质的变化。医学发展的某些部分，尤其是中医学，习惯用系统论的思维去认识生命活动，化繁为简，这方便了知识的理解，也让机械零碎的医学知识得到整合，但其似乎无法回答最根本的问题——生命究竟是什么？<br>&emsp;&emsp;还原论把知识构建在底层逻辑上，如薛定谔尝试用基本的物理学去解释生命发生。但还原论有时会陷入机械唯物论的窠臼。<br>&emsp;&emsp;人类的智慧在于突破概念，不必困惑在还原论和系统论的是非之中。认识世界的方向一定是刨根问底，寻根思因的；在其中，系统论帮助我们更进一步了解可能的逻辑……但这是符合人类思维的逻辑，人类是否能认知最后的核心还不得而知。<br>&emsp;&emsp;对于生命而言，其现象本身是基于自然界的物理规律。故探根问底，也会在我们能理解的知识结构内。<br>&emsp;&emsp;如何寻找生命科学的原子命题？我想，就不能完全依靠传统生命科学逐个知识的积累，而应该充分利用生物数据去解析其背后的模式。<br>&emsp;&emsp;感谢大一时的计算机课，感谢大一时候用免疫学逻辑启蒙我的刘文涛教授，给我打开一扇理解世界的门。<br>&emsp;&emsp;看似的有序中，人们会发现无序。而我们的梦想就是，发现无序背后更深刻的有序，那么我们就有可能进一步探索用现有范式所不能描述、解释或预测的现象。</p>
+<h2 id="学习体会"><a href="#学习体会" class="headerlink" title="学习体会"></a>学习体会</h2><p>&emsp;&emsp;陷于晋升、升学的要求，互联网上主要是快餐式的学习，一些便捷的工具也层出不穷。<br>&emsp;&emsp;基于应用的学习并不困难，许多优秀的公众号和博客，以及Github上有丰富的资源。但是大家未必有这个意识，从而形成所谓壁垒，构建了虚伪的不可替代性，而实际上人人都应该能获取这样的知识。<br>&emsp;&emsp;但，如果有兴趣，我们可以尝试啃一啃硬骨头，理解其基本原理，掌握基本的思维方法，从中认识到人类思维探索的规律。<br>&emsp;&emsp;我的学习路径，是从应用式的学习开始：<br>（1）统计学理论（掌握统计学的基本思维模式，所以了解知识的来历很重要）：生物统计学基础（Fundamentals of Biostatistics；Bernard Rosner）；<br>（2）流行病学理论（掌握流行病学的基本思想，我觉得流行病学最核心观点是比较，而由于主要研究样本，所以如何妥善解决样本相关问题占据了流行病学中大部分内容（可以概括为代表性和可比性）。重点是要能够设计合理的研究框架）：流行病学（人民卫生出版社；沈洪兵）；<br>（3）公众号（主要的反而不是里面的代码，而是推送的文章，文章里面会采用各种统计模型；善于用微信搜索东西，但是……看多了也会信息爆炸）：生信技能树（转录组学）；灵活胖子的科研进步之路（临床统计等）；<br>（4）编程：Python；R语言（mlr3包弥补了R语言机器学习较弱的历史）：推荐《R语言编程—基于tidyverse》；张敬信；C++（Python和R处理矩阵读写非常耗时间，C++可以有效解决这一问题）；Linux（linux学习后，对于计算机会用得更加得心应手，习惯用命令行解决问题后效率会大大提高）：系统架构的原理，基本命令的掌握。<br>（5）其他人的文章；<br>（6）基础数学（和几个高中同学一直保持联系，感受到数学系的同学的确是有一种独特的思维特性去思考问题的，而且我这个时候也遇上了数学基础不够深入理解原理的瓶颈）：《数学分析》（主要是基本的微积分，多元函数看一部分；用《高等数学》（同济）或者《数学分析》（复旦）都可以）；《线性代数》（对于处理生物数据非常重要！但医学生往往不深入学习这个。理解线性代数的基本思想，推荐上海交通大学的《线性代数》）；《概率论和数理统计》（生物统计学那本书里面只会关注基本的统计检验，对于不同的统计学学派，原理不会过多介绍。但概率论和数理统计中大量的数学推导就要求有数学分析的基础）。<br>&emsp;&emsp;其他：<br>&emsp;&emsp;对于基础数学部分，推荐《鸢尾花书：从加减乘除到机器学习》。这套书在Github有开源版本，里面丰富的可视化对于理解线性代数相关知识非常直观。<br>&emsp;&emsp;机器学习部分推荐从《统计学习方法》入门，先修分析学、线性代数和概率论。周志华的《机器学习》实际上数学理论比《统计学习方法》低一点，能够构建对机器学习是什么的认知。<br>&emsp;&emsp;上述理论部分所蕴含的思维方法对于认识世界是一种角度，同时上述的技术部分也的确在方便我们生活，发散我们思维，所以感觉是充实的。<br>&emsp;&emsp;期间，可能需要对遗传学、尤其是基因组学数据有深入了解。可以去啃一下国外的《遗传学基础》（可以当作工具书）。<br>&emsp;&emsp;有时候会有点间断，这个时候会想起已故南大计算机教授徐家福教授八十多岁跨界学习量子力学的实例，共勉~</p>
+]]></content>
+      <categories>
+        <category>随笔</category>
+      </categories>
+      <tags>
+        <tag>统计学</tag>
+        <tag>交叉学科</tag>
       </tags>
   </entry>
   <entry>
@@ -135,60 +189,6 @@
         <tag>单细胞测序</tag>
         <tag>免疫</tag>
         <tag>肿瘤</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>celltogwas：细胞类型注释到基因组的工具包</title>
-    <url>/2023/08/19/celltogwas%EF%BC%9A%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8B%E6%B3%A8%E9%87%8A%E5%88%B0%E5%9F%BA%E5%9B%A0%E7%BB%84%E7%9A%84%E5%B7%A5%E5%85%B7%E5%8C%85/</url>
-    <content><![CDATA[<h2 id="celltogwas"><a href="#celltogwas" class="headerlink" title="celltogwas"></a>celltogwas</h2><p>This code is a toolkit for genomic analysis. It includes several functions and helper functions to extract gene information from a genomic annotation file, merge gene intervals, generate genomic ranges based on cell types and window size, and annotate GWAS (Genome-Wide Association Study) data.</p>
-<h2 id="Explanation-of-each-function"><a href="#Explanation-of-each-function" class="headerlink" title="Explanation of each function"></a>Explanation of each function</h2><p><strong>extract_gene_info(gtf_file)</strong>: Extracts gene information from a genomic annotation file. It opens a gzip-compressed file, reads it line by line, and extracts gene name, chromosome, start position, and end position from each line. The extracted data is then stored in a Pandas DataFrame and returned.</p>
-<p><strong>merge_intervals(intervals)</strong>: Merges overlapping intervals. This function takes a list of intervals as input and merges overlapping intervals into larger intervals. It first sorts the intervals based on their start positions, then iterates through the intervals. If the current interval does not overlap with the merged interval, it adds the current interval to the merged list. Otherwise, it updates the end position of the merged interval. Finally, it returns the merged interval list.</p>
-<p><strong>celltype_genome_range(cell_gene_dict, gene_info, windowsize)</strong>: Generates genomic ranges based on cell types and window size. This function takes a dictionary mapping cell types to gene lists, a DataFrame of gene information, and a window size as input. It retrieves the gene list corresponding to each cell type from the dictionary and performs an inner join with the gene information to obtain the chromosome, start position, and end position of the corresponding genes. It then adjusts the start and end positions based on the window size and converts the data into a specific format of a list. Finally, it stores the genomic ranges for each cell type in a dictionary and returns it.</p>
-<p><strong>check_value_in_intervals(intervals, value)</strong>: Checks if a value is within the intervals. This function takes a list of intervals and a value as input. It uses binary search to determine if the value falls within the intervals. It first extracts the left boundaries of the intervals, then performs a binary search to find the position of the value in the left boundary list. If the position is less than the length of the interval list, it retrieves the corresponding interval and checks if the value falls within that interval. If the value is within the interval, it returns True; otherwise, it returns False.</p>
-<p><strong>gwas_annotaion(gwas, celltype_range)</strong>: Annotates GWAS data based on genomic ranges. This function takes a DataFrame of GWAS data and a dictionary of genomic ranges as input. It first retrieves the list of chromosomes from the GWAS data. Then, it iterates through the genomic ranges for each cell type. For each chromosome, it retrieves the subset of GWAS data corresponding to that chromosome and the annotation ranges from the genomic ranges. It then iterates through each data item in the subset and uses the check_value_in_intervals function to check if the position of the data item falls within the annotation ranges. If it does, the data item is marked as annotated. Finally, it stores the annotation results for all cell types in a dictionary and returns it.</p>
-<h2 id="File-format"><a href="#File-format" class="headerlink" title="File format"></a><a href="#File-format" title="File format"></a>File format</h2><p><strong>gtf_file</strong>: Include CHR, START, END, Other info(GENE Symbol);</p>
-<p><strong>cell_gene_dict</strong>: A dictionary:(1) key:celltype’s name;(2)value:a list of genes;</p>
-<p><strong>gene_info</strong>: Output file from <strong>extract_gene_info(gtf_file)</strong>: Include: GENE, CHR, START, END;</p>
-<p><strong>gwas</strong>: First teo columns: chr, pos;</p>
-<p><strong>celltype_range</strong>: A dictionary:(1) key:celltype’s name;(2)value:a list of genome position:[chr, start, end];</p>
-<p><strong>output_file</strong>: A dictionary:(1) key:celltype’s name;(2)value:[chr, pos ,…… , annotation] (annotation: 1 for anntation and 0 for null).</p>
-]]></content>
-      <categories>
-        <category>生物信息学</category>
-      </categories>
-      <tags>
-        <tag>GWAS</tag>
-        <tag>python</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>一起来感受数据之美吧！</title>
-    <url>/2023/10/04/%E4%B8%80%E8%B5%B7%E6%9D%A5%E6%84%9F%E5%8F%97%E6%95%B0%E6%8D%AE%E4%B9%8B%E7%BE%8E%E5%90%A7%EF%BC%81/</url>
-    <content><![CDATA[<h2 id="资源记录"><a href="#资源记录" class="headerlink" title="资源记录"></a>资源记录</h2><ol>
-<li><a href="https://bookdown.org/wangminjie/R4DS/">前言 | 数据科学中的 R 语言 (bookdown.org)</a>（四川师范大学研究生公选课《数据科学中的R语言》的课程内容，其中也会涉及简单的数据科学原理）；</li>
-<li><a href="https://www.bioinfo-scrounger.com/">KeepNotes blog (bioinfo-scrounger.com)</a>（一些R语言和统计问题拾贝）；</li>
-<li><a href="https://cosx.org/">统计之都 (cosx.org)</a>（中文统计学论坛，会定期发表文章，介绍最新的R包，统计学模型和访谈）；</li>
-<li><a href="https://csdiy.wiki/">CS自学指南 (csdiy.wiki)</a>（计算机科学自学指南，其中包括了一个计算机专业学生的知识体系）；</li>
-<li><a href="https://www.writebug.com/">WRITE-BUG数字空间 - 新一代一站式团队协作知识库 (writebug.com)</a>（Writebug有很多高质量的，类似于微信公众号的文章）；</li>
-<li><a href="https://book.ncrnalab.org/teaching/">Bioinformatics Tutorial - Bioinformatics Tutorial (ncrnalab.org)</a> （一个以应用为导向的生物信息学学习站）；</li>
-<li><a href="https://www.cnblogs.com/leezx/">Life·Intelligence - 博客园 (cnblogs.com)</a>）（博主主要关注生物科学、单细胞测序的知识）；</li>
-<li><a href="https://ailearning.apachecn.org/">【布客】AI Learning (apachecn.org)</a>（AI学习的一站式，偏应用）；</li>
-<li><a href="https://forrestgump618.github.io/2023/08/12/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F%E6%95%99%E7%A8%8B%E8%B5%84%E6%BA%90%E8%81%9A%E5%90%88/">单细胞测序教程资源聚合 | 一个夏天的年少 (forrestgump618.github.io)</a> （单细胞测序教程资源整合）；<br> 此外，多去关注Github上有趣的教程和项目。<br> 书本推荐：</li>
-<li>《高等数学》（同济）；《线性代数》（上交）；《概率论和数理统计》（浙大）；</li>
-<li>《生物统计学基础》（Fundamentals of Biostatistics；Bernard Rosner）；《流行病学》（人民卫生出版社）；</li>
-<li>《鸢尾花书：从加减乘除到机器学习》（<a href="https://github.com/Visualize-ML">Visualize-ML (Iris Series: Visualize Math – From Arithmetic Basics to Machine Learning) · GitHub</a>）；</li>
-<li>《R语言编程—基于tidyverse》；</li>
-<li>《遗传学基础》（ <a href="https://book.douban.com/search/William%20S.Klug">William S.Klug</a> / <a href="https://book.douban.com/search/Michael%20R.Cummings">Michael R.Cummings</a> / <a href="https://book.douban.com/search/Charlotte%20A.Spencer">Charlotte A.Spencer</a> / <a href="https://book.douban.com/search/Michael%20A.Palladino">Michael A.Palladino</a>）。</li>
-</ol>
-<h2 id="一些牢骚"><a href="#一些牢骚" class="headerlink" title="一些牢骚"></a>一些牢骚</h2><p>&emsp;&emsp;大一，医用物理学的最后一章——混沌理论，采用数学的方法建模复杂动力学系统的运行规律，并提出了一点轻微的初值改变就可以让整个系统天翻地覆，即著名的蝴蝶定律。<br>&emsp;&emsp;当然，这并不意味着倘若那只蝴蝶扇动翅膀，就必然会引起飓风；但若我们逮到所有的蝴蝶，那么飓风可以预测。这强烈提示人们一种认知观点，复杂的现象背后可以拆解为简单的论断；基于底层法则，自然界得以混沌。<br>&emsp;&emsp;生命是自然界最复杂的现象，就在您读这句话的一刹那，组成我们身体的亿万细胞正发生着无法计数的生命事件，伴随着无法计数的化学物质数量和性质的变化。医学发展的某些部分，尤其是中医学，习惯用系统论的思维去认识生命活动，化繁为简，这方便了知识的理解，也让机械零碎的医学知识得到整合，但其似乎无法回答最根本的问题——生命究竟是什么？<br>&emsp;&emsp;还原论把知识构建在底层逻辑上，如薛定谔尝试用基本的物理学去解释生命发生。但还原论有时会陷入机械唯物论的窠臼。<br>&emsp;&emsp;人类的智慧在于突破概念，不必困惑在还原论和系统论的是非之中。认识世界的方向一定是刨根问底，寻根思因的；在其中，系统论帮助我们更进一步了解可能的逻辑……但这是符合人类思维的逻辑，人类是否能认知最后的核心还不得而知。<br>&emsp;&emsp;对于生命而言，其现象本身是基于自然界的物理规律。故探根问底，也会在我们能理解的知识结构内。<br>&emsp;&emsp;如何寻找生命科学的原子命题？我想，就不能完全依靠传统生命科学逐个知识的积累，而应该充分利用生物数据去解析其背后的模式。<br>&emsp;&emsp;感谢大一时的计算机课，感谢大一时候用免疫学逻辑启蒙我的刘文涛教授，给我打开一扇理解世界的门。<br>&emsp;&emsp;看似的有序中，人们会发现无序。而我们的梦想就是，发现无序背后更深刻的有序，那么我们就有可能进一步探索用现有范式所不能描述、解释或预测的现象。</p>
-<h2 id="学习体会"><a href="#学习体会" class="headerlink" title="学习体会"></a>学习体会</h2><p>&emsp;&emsp;陷于晋升、升学的要求，互联网上主要是快餐式的学习，一些便捷的工具也层出不穷。<br>&emsp;&emsp;基于应用的学习并不困难，许多优秀的公众号和博客，以及Github上有丰富的资源。但是大家未必有这个意识，从而形成所谓壁垒，构建了虚伪的不可替代性，而实际上人人都应该能获取这样的知识。<br>&emsp;&emsp;但，如果有兴趣，我们可以尝试啃一啃硬骨头，理解其基本原理，掌握基本的思维方法，从中认识到人类思维探索的规律。<br>&emsp;&emsp;我的学习路径，是从应用式的学习开始：<br>（1）统计学理论（掌握统计学的基本思维模式，所以了解知识的来历很重要）：生物统计学基础（Fundamentals of Biostatistics；Bernard Rosner）；<br>（2）流行病学理论（掌握流行病学的基本思想，我觉得流行病学最核心观点是比较，而由于主要研究样本，所以如何妥善解决样本相关问题占据了流行病学中大部分内容（可以概括为代表性和可比性）。重点是要能够设计合理的研究框架）：流行病学（人民卫生出版社；沈洪兵）；<br>（3）公众号（主要的反而不是里面的代码，而是推送的文章，文章里面会采用各种统计模型；善于用微信搜索东西，但是……看多了也会信息爆炸）：生信技能树（转录组学）；灵活胖子的科研进步之路（临床统计等）；<br>（4）编程：Python；R语言（mlr3包弥补了R语言机器学习较弱的历史）：推荐《R语言编程—基于tidyverse》；张敬信；C++（Python和R处理矩阵读写非常耗时间，C++可以有效解决这一问题）；Linux（linux学习后，对于计算机会用得更加得心应手，习惯用命令行解决问题后效率会大大提高）：系统架构的原理，基本命令的掌握。<br>（5）其他人的文章；<br>（6）基础数学（和几个高中同学一直保持联系，感受到数学系的同学的确是有一种独特的思维特性去思考问题的，而且我这个时候也遇上了数学基础不够深入理解原理的瓶颈）：《数学分析》（主要是基本的微积分，多元函数看一部分；用《高等数学》（同济）或者《数学分析》（复旦）都可以）；《线性代数》（对于处理生物数据非常重要！但医学生往往不深入学习这个。理解线性代数的基本思想，推荐上海交通大学的《线性代数》）；《概率论和数理统计》（生物统计学那本书里面只会关注基本的统计检验，对于不同的统计学学派，原理不会过多介绍。但概率论和数理统计中大量的数学推导就要求有数学分析的基础）。<br>&emsp;&emsp;其他：<br>&emsp;&emsp;对于基础数学部分，推荐《鸢尾花书：从加减乘除到机器学习》。这套书在Github有开源版本，里面丰富的可视化对于理解线性代数相关知识非常直观。<br>&emsp;&emsp;机器学习部分推荐从《统计学习方法》入门，先修分析学、线性代数和概率论。周志华的《机器学习》实际上数学理论比《统计学习方法》低一点，能够构建对机器学习是什么的认知。<br>&emsp;&emsp;上述理论部分所蕴含的思维方法对于认识世界是一种角度，同时上述的技术部分也的确在方便我们生活，发散我们思维，所以感觉是充实的。<br>&emsp;&emsp;期间，可能需要对遗传学、尤其是基因组学数据有深入了解。可以去啃一下国外的《遗传学基础》（可以当作工具书）。<br>&emsp;&emsp;有时候会有点间断，这个时候会想起已故南大计算机教授徐家福教授八十多岁跨界学习量子力学的实例，共勉~</p>
-]]></content>
-      <categories>
-        <category>随笔</category>
-      </categories>
-      <tags>
-        <tag>统计学</tag>
-        <tag>交叉学科</tag>
       </tags>
   </entry>
   <entry>
@@ -1039,24 +1039,259 @@
       </tags>
   </entry>
   <entry>
-    <title>心律失常治疗方式总结</title>
-    <url>/2024/03/14/%E5%BF%83%E5%BE%8B%E5%A4%B1%E5%B8%B8%E6%B2%BB%E7%96%97%E6%96%B9%E5%BC%8F%E6%80%BB%E7%BB%93/</url>
-    <content><![CDATA[<p>&emsp;&emsp;维持血流动力学处于稳定状态是心脏疾病的救治的落脚点，所以保障心室以适宜的频率进行协调的收缩舒张运动是心律失常救治的首要任务。其次，需要改善心脏内部的血流动力学紊乱，预防血栓形成；必要时需要考虑心房功能，避免前负荷不足。归根结底，心律失常的治疗是以心室为核心的。</p>
-<p>&emsp;&emsp;缓慢型心律失常由迷走神经张力过高导致，常常采用阿托品和异丙肾上腺素治疗，后者有潜在的致心律失常风险，所以临床多以弃用。药物治疗无效、症状明显或有严重血流动力学障碍应当及时安装起搏器。</p>
-<p>&emsp;&emsp;快速型心律失常发生机制常为自律细胞的自律性升高，非自律细胞产生异常自律性以及折返。自律细胞的自律性升高多见于窦性心动过速，其治疗只需降低交感神经或增加迷走神经张力，因而采用β受体阻断剂、非二氢吡啶类钙通道阻滞剂。新研药伊伐布雷定靶向P细胞自动复极的If电流，也可以用于治疗窦性心动过速。非自律细胞产生异常自律性包括期前收缩、心动过速、扑动和颤动，其发生原因多为缺氧、交感神经张力高、电解质紊乱。若成功解除细胞的应激状态，纠正细胞钙超载，降低交感神经张力或延长总体的不应期，则可消灭异常自律性产生的源头；其次，我们可以适当阻滞房室结，进行合适的导管消融，孤立异常自律点，避免影响心脏其他部位，尤其是心室的节律。举例而言，对房性期前收缩可采用β受体阻断剂（ICa）、非二氢吡啶类钙通道阻断剂（ICa）和胺碘酮（不应期），对室性期前收缩采用β受体阻断剂（ICa）、非二氢吡啶类钙通道阻滞剂（ICa）和普罗帕酮（（ICa）。值得注意的是，在室上性的心动过速（除了AVNRT）、扑动和颤动中，靶向ICa主要是为了降低心室率，转复律则依赖广谱抗心律失常药物。对于室性快速型心律失常，强调针对原因，并且在药物中添加了靶向快心肌细胞的IB类药物。非窦性快速型心律失常若伴随血流动力学紊乱采用电复律，若根治往往采用导管消融。</p>
-<p>&emsp;&emsp;AVNRT是一类特殊的心动过速，靶向房室结降低心室率的同时也是阻断径路传导，因此治疗中强调增加迷走神经张力和阻断钙离子通道。预激综合征中存在旁路和房室结的矛盾，治疗过程始终遵守压抑旁路但不祸害房室结的默契。</p>
-<p>&emsp;&emsp;&emsp;1. 广谱抗心律失常药：IA、IC、III；</p>
-<p>&emsp;&emsp;&emsp;2. 室性心律失常专用：IB</p>
-<p>&emsp;&emsp;&emsp;3. 抑制交感神经、增加迷走神经张力、靶向钙通道：IV、III、IC、洋地黄、升压药、腺苷</p>
-<p>&emsp;&emsp;&emsp;4. 缩短有效不应期：洋地黄</p>
-<p>&emsp;&emsp;&emsp;5. 延长QT：IA、III</p>
+    <title>实操：把chatGPT接入智能音箱？</title>
+    <url>/2024/03/18/%E5%AE%9E%E6%93%8D%EF%BC%9A%E6%8A%8AchatGPT%E6%8E%A5%E5%85%A5%E6%99%BA%E8%83%BD%E9%9F%B3%E7%AE%B1%EF%BC%9F/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>&emsp;&emsp;学院以前比赛发了个小米音箱，使用场景比较局限。突发奇想能否把大语言模型和小爱音响结合起来，于是就有了这番折腾。包的原理十分直接，就是通过TTS识别，发送给chatGPT，再返回结果进行朗读。</p>
+<h2 id="储存库"><a href="#储存库" class="headerlink" title="储存库"></a>储存库</h2><p>&emsp;&emsp;<a href="https://github.com/yihong0618/xiaogpt">yihong0618/xiaogpt: Play ChatGPT and other LLM with Xiaomi AI Speaker (github.com)</a><br>&emsp;&emsp;感谢大佬！</p>
+<h2 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h2><h3 id="软件环境"><a href="#软件环境" class="headerlink" title="软件环境"></a>软件环境</h3><p>&emsp;&emsp;实操过程中，发现Windows11系统无法兼容相关依赖包，所以建议通过Mac或者Linux系统的命令行运行如下指令。大家一般使用Windows系统，可以安装带有图形界面的Ubuntu双系统，或者在Windows下安装WSL-ubuntu子系统，相关教程可以bing！这里简述一下WSL-ubuntu的安装方法：</p>
+<ol>
+<li>首先，按下Win+R键打开运行对话框，然后输入”cmd”并按下回车键，这将打开CMD界面。</li>
+<li>在CMD界面中，输入以下命令以安装WSL-ubuntu子系统： <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">wsl --install</span><br></pre></td></tr></table></figure>
+ 这个命令将自动下载并安装WSL-ubuntu子系统。</li>
+<li>安装完成后，重新启动计算机。</li>
+<li>在重新启动后的计算机上，点击Windows开始菜单，并搜索”WSL”。选择”WSL”或”WSL-ubuntu”来打开WSL-ubuntu子系统。</li>
+<li>第一次打开WSL-ubuntu子系统时，系统会提示你创建一个新的用户名和密码。按照提示进行操作，并记住你设置的用户名和密码。</li>
+<li>完成设置后，将进入WSL-ubuntu子系统的命令行界面。在这里，可以像在Linux系统中一样使用各种命令和工具。</li>
+</ol>
+<p>&emsp;&emsp;下面我们以WSL-ubuntu为例进行演示！<br>&emsp;&emsp;打开CMD界面（Win+R打开运行，输入cmd），输入指令进入linux操作界面：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">wsl</span><br><span class="line"><span class="comment">#or</span></span><br><span class="line">ubuntu</span><br></pre></td></tr></table></figure><br>&emsp;&emsp;为了避免每次进入系统都需要输入账号和密码，我们可以配置如下项目：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo visudo</span><br><span class="line">mancuoj ALL=(ALL) NOPASSWD: ALL</span><br></pre></td></tr></table></figure></p>
+<h3 id="网络环境"><a href="#网络环境" class="headerlink" title="网络环境"></a>网络环境</h3><p>&emsp;&emsp;安装python之前呢，我们可以建立特殊访问，不需要配置镜像源，但是注意，即便电脑挂载了相关软件，wsl是不能通过我们的电脑访问特殊站点的。<br>&emsp;&emsp;WSL-buntu系统是作为局域网内主机存在的，那么就有了解决方案。首先在windows的代理软件中，打开允许局域网访问，并记录电脑相关软件的端口号，一般为7890。接着进入WSL系统中，配置网络项目：<br>&emsp;&emsp;首先需要查看IP地址，然后设置环境变量。完成如下设置后即可让WSL访问特殊站点：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cat</span> /etc/resolv.conf</span><br><span class="line"><span class="built_in">export</span> ALL_PROXY=<span class="string">&quot;http://&#123;ip&#125;:&#123;端口号，查看代理软件&#125;&quot;</span></span><br></pre></td></tr></table></figure><br>&emsp;&emsp;<strong>免责声明：这里的代理设置不指代任何国家法律禁止的访问方法。以上资料是完全的技术分享。</strong><br>&emsp;&emsp;若配置国内镜像源，可按照如下方法：</p>
+<ol>
+<li>备份配置文件：<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cp</span> /etc/apt/sources.list /etc/apt/sources.list.bak</span><br></pre></td></tr></table></figure></li>
+<li>使用修改源的内容：<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo vim sources.list</span><br></pre></td></tr></table></figure></li>
+<li>全部删除后修改为阿里云的镜像：<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">deb http://mirrors.aliyun.com/ubuntu/ focal main restricted universe multiverse</span><br><span class="line">deb-src http://mirrors.aliyun.com/ubuntu/ focal main restricted universe multiverse</span><br><span class="line">deb http://mirrors.aliyun.com/ubuntu/ focal-security main restricted universe multiverse</span><br><span class="line">deb-src http://mirrors.aliyun.com/ubuntu/ focal-security main restricted universe multiverse</span><br><span class="line">deb http://mirrors.aliyun.com/ubuntu/ focal-updates main restricted universe multiverse</span><br><span class="line">deb-src http://mirrors.aliyun.com/ubuntu/ focal-updates main restricted universe multiverse</span><br><span class="line">deb http://mirrors.aliyun.com/ubuntu/ focal-proposed main restricted universe multiverse</span><br><span class="line">deb-src http://mirrors.aliyun.com/ubuntu/ focal-proposed main restricted universe multiverse</span><br><span class="line">deb http://mirrors.aliyun.com/ubuntu/ focal-backports main restricted universe multiverse</span><br><span class="line">deb-src http://mirrors.aliyun.com/ubuntu/ focal-backports main restricted universe multiverse</span><br></pre></td></tr></table></figure></li>
+<li>更新软件列表：<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt update </span><br><span class="line">sudo apt upgrade</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="安装Python"><a href="#安装Python" class="headerlink" title="安装Python"></a>安装Python</h3><p>&emsp;&emsp;接下来，我们愉快的安装python！</p>
+<h4 id="安装："><a href="#安装：" class="headerlink" title="安装："></a>安装：</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt install python3</span><br><span class="line">sudo apt install python3-pip</span><br></pre></td></tr></table></figure>
+<h4 id="配置清华镜像源"><a href="#配置清华镜像源" class="headerlink" title="# 配置清华镜像源"></a># 配置清华镜像源</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~ </span><br><span class="line"><span class="built_in">mkdir</span> .pip</span><br><span class="line">sudo vim ~/.pip/pip.conf</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;修改为：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[global]</span><br><span class="line">index-url = https://pypi.tuna.tsinghua.edu.cn/simple/ </span><br><span class="line">[install]</span><br><span class="line">trusted-host = pypi.tuna.tsinghua.edu.cn</span><br></pre></td></tr></table></figure></p>
+<h4 id="默认进入Python3"><a href="#默认进入Python3" class="headerlink" title="默认进入Python3"></a>默认进入Python3</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 删掉原来软链接，如果没有直接新建</span></span><br><span class="line">sudo <span class="built_in">rm</span> /usr/bin/python</span><br><span class="line">sudo <span class="built_in">rm</span> /usr/bin/pip</span><br><span class="line"></span><br><span class="line"><span class="comment"># 新建软链接</span></span><br><span class="line">sudo <span class="built_in">ln</span> -s /usr/bin/python3 /usr/bin/python</span><br><span class="line">sudo <span class="built_in">ln</span> -s /usr/bin/pip3 /usr/bin/pip</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;可以输入python，测试是否安装成功。</p>
+<h3 id="xiaogpt包的使用"><a href="#xiaogpt包的使用" class="headerlink" title="xiaogpt包的使用"></a>xiaogpt包的使用</h3><h4 id="安装软件和依赖包"><a href="#安装软件和依赖包" class="headerlink" title="安装软件和依赖包"></a>安装软件和依赖包</h4><ol>
+<li>首先安装米家的开发者包：<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">pip install miservice_fork</span><br></pre></td></tr></table></figure></li>
+<li>设置米家的账号和密码（注意，不需要加引号）：<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">export</span> MI_USER=xxxx</span><br><span class="line"><span class="built_in">export</span> MI_PASS=xxx</span><br></pre></td></tr></table></figure></li>
+<li>查询设备ID（DID），设置米家开发者的操纵设备：<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">micli list</span><br><span class="line"><span class="built_in">set</span> MI_DID=xxxx</span><br></pre></td></tr></table></figure></li>
+<li>这里可以试验一些米家开发者包的常用函数<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">micli 5-3 你好</span><br></pre></td></tr></table></figure></li>
+<li>安装xiaogpt包<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pip install -U --force-reinstall xiaogpt</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h4 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h4><ol>
+<li>设置chatgpt的api：<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">export</span> OPENAI_API_KEY=&#123;your_api_key&#125;</span><br></pre></td></tr></table></figure>
+&emsp;&emsp;注意，如果是官方API或者是非直接访问的第三方API，就需要如之前一般设置代理环境；否则，不需要设置。</li>
+<li>运行：这里的型号，可以从小爱的屁股上寻找，也可以用micli list的命令查看：<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">xiaogpt --hardware &#123;型号&#125; --use_chatgpt_api</span><br></pre></td></tr></table></figure></li>
+<li>对于部分机型，可能需要—use_comand指令，否则chatGPT会返回结果，但是不会通过TTS朗读；此外，mute_xiaoai命令可以剔除小爱自己的回答：<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">xiaogpt --hardware &#123;型号&#125; --use_chatgpt_api --use_command</span><br></pre></td></tr></table></figure></li>
+<li>如果chatGPT的API非官方，可以使用—api_base {api link}指定API服务提供商，有一个第三方站点实操是可以的（不是广告！）：<a href="https://one.aiskt.com/">AISKT API聚合</a>。</li>
+<li>使用阿里的通义千问，在网络环境上不需要特殊配置：<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">xiaogpt --hardware &#123;型号&#125;  --mute_xiaoai --use_qwen --qen_key &#123;qwen_key&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h4 id="参数介绍"><a href="#参数介绍" class="headerlink" title="参数介绍"></a>参数介绍</h4><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+<th>默认值</th>
+<th>可选值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>hardware</td>
+<td>设备型号</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>account</td>
+<td>小爱账户</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>password</td>
+<td>小爱账户密码</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>openai_key</td>
+<td>openai的apikey</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>serpapi_api_key</td>
+<td>serpapi的key 参考 <a href="https://serpapi.com/">SerpAPI</a></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>glm_key</td>
+<td>chatglm 的 apikey</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>gemini_key</td>
+<td>gemini 的 apikey <a href="https://makersuite.google.com/app/apikey">参考</a></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>qwen_key</td>
+<td>qwen 的 apikey <a href="https://help.aliyun.com/zh/dashscope/developer-reference/api-details">参考</a></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>bard_token</td>
+<td>bard 的 token 参考 <a href="https://github.com/dsdanielpark/Bard-API">Bard-API</a></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>cookie</td>
+<td>小爱账户cookie （如果用上面密码登录可以不填）</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>mi_did</td>
+<td>设备did</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>use_command</td>
+<td>使用 MI command 与小爱交互</td>
+<td><code>false</code></td>
+<td></td>
+</tr>
+<tr>
+<td>mute_xiaoai</td>
+<td>快速停掉小爱自己的回答</td>
+<td><code>true</code></td>
+<td></td>
+</tr>
+<tr>
+<td>verbose</td>
+<td>是否打印详细日志</td>
+<td><code>false</code></td>
+<td></td>
+</tr>
+<tr>
+<td>bot</td>
+<td>使用的 bot 类型，目前支持gpt3,chatgptapi和newbing</td>
+<td><code>chatgptapi</code></td>
+<td></td>
+</tr>
+<tr>
+<td>tts</td>
+<td>使用的 TTS 类型</td>
+<td><code>mi</code></td>
+<td><code>edge</code>、 <code>openai</code></td>
+</tr>
+<tr>
+<td>tts_voice</td>
+<td>TTS 的嗓音</td>
+<td><code>zh-CN-XiaoxiaoNeural</code>(edge), <code>alloy</code>(openai)</td>
+<td></td>
+</tr>
+<tr>
+<td>prompt</td>
+<td>自定义prompt</td>
+<td><code>请用100字以内回答</code></td>
+<td></td>
+</tr>
+<tr>
+<td>keyword</td>
+<td>自定义请求词列表</td>
+<td><code>[&quot;请&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>change_prompt_keyword</td>
+<td>更改提示词触发列表</td>
+<td><code>[&quot;更改提示词&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>start_conversation</td>
+<td>开始持续对话关键词</td>
+<td><code>开始持续对话</code></td>
+<td></td>
+</tr>
+<tr>
+<td>end_conversation</td>
+<td>结束持续对话关键词</td>
+<td><code>结束持续对话</code></td>
+<td></td>
+</tr>
+<tr>
+<td>stream</td>
+<td>使用流式响应，获得更快的响应</td>
+<td><code>false</code></td>
+<td></td>
+</tr>
+<tr>
+<td>proxy</td>
+<td>支持 HTTP 代理，传入 http proxy URL</td>
+<td>“”</td>
+<td></td>
+</tr>
+<tr>
+<td>gpt_options</td>
+<td>OpenAI API 的参数字典</td>
+<td><code>&#123;&#125;</code></td>
+<td></td>
+</tr>
+<tr>
+<td>bing_cookie_path</td>
+<td>NewBing使用的cookie路径，参考<a href="https://github.com/acheong08/EdgeGPT#getting-authentication-required">这里</a>获取</td>
+<td>也可通过环境变量 <code>COOKIE_FILE</code> 设置</td>
+<td></td>
+</tr>
+<tr>
+<td>bing_cookies</td>
+<td>NewBing使用的cookie字典，参考<a href="https://github.com/acheong08/EdgeGPT#getting-authentication-required">这里</a>获取</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>deployment_id</td>
+<td>Azure OpenAI 服务的 deployment ID</td>
+<td>参考这个<a href="https://github.com/yihong0618/xiaogpt/issues/347#issuecomment-1784410784">如何找到deployment_id</a></td>
+<td></td>
+</tr>
+<tr>
+<td>api_base</td>
+<td>如果需要替换默认的api,或者使用Azure OpenAI 服务</td>
+<td>例如：<code>https://abc-def.openai.azure.com/</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<h4 id="个性化代码"><a href="#个性化代码" class="headerlink" title="个性化代码"></a>个性化代码</h4><p>&emsp;&emsp;程序默认使用“请、帮我”两个开头进行提问，而根据源代码来看，命令行输入无法更改此参数。此外默认Prompt也必须要源代码进行修改，有如下两个方法：</p>
+<ol>
+<li>可以在Linux系统中找到源码，使用vim进行修改；</li>
+<li>打开Windows系统读写WSL文件的权限，用图形界面修改：<br>&emsp;&emsp;首先在cmd中修改权限：<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ubuntu config --default-user root</span><br></pre></td></tr></table></figure>
+&emsp;&emsp;接着打开Ubuntu的网络位置，进行寻找和修改。</li>
+<li>源代码的config.py可以修改prompt和唤醒词，xiaogpt.py还能更改小爱其他回复。</li>
+</ol>
+<h2 id="结束语"><a href="#结束语" class="headerlink" title="结束语"></a>结束语</h2><p>&emsp;&emsp;这个项目，实际上应用场景也很有限，花了很大的精力去整理技术文档和debug，最后听到小爱同学的一句“正在询问ChatGPT”，感觉很好玩！<br>&emsp;&emsp;现在，利用HomeAssistant和智能家居的开发者环境，俺们宿舍实现了灯具、空调、电脑和音箱的互联。通过语音或一些终端即可控制电器的开关；可以远程提醒睡觉的室友去签到……说效率嘛，也没提高不少，但对于一个医学生而言，很少能体会到技术进步的新奇，这也算一种满足叭！<br>&emsp;&emsp;在Github上还有很多其他的“联名”项目，比如最常见的微信接入Chatgpt。（<a href="https://github.com/cheungchazz/WeChat-AIChatbot-WinOnly">cheungchazz/WeChat-AIChatbot-WinOnly: 基于chatgpt-on-wechat框架，只能运行在Win平台的项目，通过本项目可以将微信或者企业微信个人号接入ChatGpt、文心一言、FastGpt、LinkAI，可以文字对话、语音对话、图片交互、文件交互等。 (github.com)</a>）</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a href="https://blog.csdn.net/Mancuojie/article/details/120411171#_31">手把手教你在Ubuntu中愉快地使用Python_ubuntu使用python-CSDN博客</a></li>
+<li><a href="https://github.com/yihong0618/xiaogpt">yihong0618/xiaogpt: Play ChatGPT and other LLM with Xiaomi AI Speaker (github.com)</a></li>
+</ol>
 ]]></content>
       <categories>
-        <category>医学课程</category>
+        <category>随笔</category>
       </categories>
       <tags>
-        <tag>医学</tag>
-        <tag>医学生</tag>
+        <tag>LLM</tag>
+        <tag>AI</tag>
+        <tag>智能音箱</tag>
       </tags>
   </entry>
   <entry>
@@ -1138,6 +1373,104 @@
       <tags>
         <tag>生物信息学</tag>
         <tag>单细胞测序</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>心律失常治疗方式总结</title>
+    <url>/2024/03/14/%E5%BF%83%E5%BE%8B%E5%A4%B1%E5%B8%B8%E6%B2%BB%E7%96%97%E6%96%B9%E5%BC%8F%E6%80%BB%E7%BB%93/</url>
+    <content><![CDATA[<p>&emsp;&emsp;维持血流动力学处于稳定状态是心脏疾病的救治的落脚点，所以保障心室以适宜的频率进行协调的收缩舒张运动是心律失常救治的首要任务。其次，需要改善心脏内部的血流动力学紊乱，预防血栓形成；必要时需要考虑心房功能，避免前负荷不足。归根结底，心律失常的治疗是以心室为核心的。</p>
+<p>&emsp;&emsp;缓慢型心律失常由迷走神经张力过高导致，常常采用阿托品和异丙肾上腺素治疗，后者有潜在的致心律失常风险，所以临床多以弃用。药物治疗无效、症状明显或有严重血流动力学障碍应当及时安装起搏器。</p>
+<p>&emsp;&emsp;快速型心律失常发生机制常为自律细胞的自律性升高，非自律细胞产生异常自律性以及折返。自律细胞的自律性升高多见于窦性心动过速，其治疗只需降低交感神经或增加迷走神经张力，因而采用β受体阻断剂、非二氢吡啶类钙通道阻滞剂。新研药伊伐布雷定靶向P细胞自动复极的If电流，也可以用于治疗窦性心动过速。非自律细胞产生异常自律性包括期前收缩、心动过速、扑动和颤动，其发生原因多为缺氧、交感神经张力高、电解质紊乱。若成功解除细胞的应激状态，纠正细胞钙超载，降低交感神经张力或延长总体的不应期，则可消灭异常自律性产生的源头；其次，我们可以适当阻滞房室结，进行合适的导管消融，孤立异常自律点，避免影响心脏其他部位，尤其是心室的节律。举例而言，对房性期前收缩可采用β受体阻断剂（ICa）、非二氢吡啶类钙通道阻断剂（ICa）和胺碘酮（不应期），对室性期前收缩采用β受体阻断剂（ICa）、非二氢吡啶类钙通道阻滞剂（ICa）和普罗帕酮（（ICa）。值得注意的是，在室上性的心动过速（除了AVNRT）、扑动和颤动中，靶向ICa主要是为了降低心室率，转复律则依赖广谱抗心律失常药物。对于室性快速型心律失常，强调针对原因，并且在药物中添加了靶向快心肌细胞的IB类药物。非窦性快速型心律失常若伴随血流动力学紊乱采用电复律，若根治往往采用导管消融。</p>
+<p>&emsp;&emsp;AVNRT是一类特殊的心动过速，靶向房室结降低心室率的同时也是阻断径路传导，因此治疗中强调增加迷走神经张力和阻断钙离子通道。预激综合征中存在旁路和房室结的矛盾，治疗过程始终遵守压抑旁路但不祸害房室结的默契。</p>
+<p>&emsp;&emsp;&emsp;1. 广谱抗心律失常药：IA、IC、III；</p>
+<p>&emsp;&emsp;&emsp;2. 室性心律失常专用：IB</p>
+<p>&emsp;&emsp;&emsp;3. 抑制交感神经、增加迷走神经张力、靶向钙通道：IV、III、IC、洋地黄、升压药、腺苷</p>
+<p>&emsp;&emsp;&emsp;4. 缩短有效不应期：洋地黄</p>
+<p>&emsp;&emsp;&emsp;5. 延长QT：IA、III</p>
+]]></content>
+      <categories>
+        <category>医学课程</category>
+      </categories>
+      <tags>
+        <tag>医学</tag>
+        <tag>医学生</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>生物信息学笔记（一）：转录组测序技术</title>
+    <url>/2024/02/05/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E8%BD%AC%E5%BD%95%E7%BB%84%E6%B5%8B%E5%BA%8F%E6%8A%80%E6%9C%AF/</url>
+    <content><![CDATA[<h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>&emsp;&emsp;<strong>转录组</strong>是特定组织或细胞在某一发育阶段或功能状态下转录出来的所有RNA的集合，包括编码蛋白质的mRNA和非编码RNA（non coding RNA, ncRNA）。<strong>转录组测序</strong>是指利用第二代高通量测序技术进行<strong>cDNA</strong>测序，全面快速地获取某一物种特定器官或组织在某一状态下的几乎所有转录本。</p>
+<p>&emsp;&emsp;转录组分析的主要目标是：</p>
+<ol>
+<li>对所有的转录产物进行分类；</li>
+<li>确定基因的转录结构，如其起始位点，5′和3′末端，剪接模式和其他转录后修饰；</li>
+<li>量化各转录本在发育过程中和不同条件下(如生理/病理)表达水平的变化。</li>
+</ol>
+<p>&emsp;&emsp;在更早的科学研究中，人们主要利用芯片杂交平台，预先设计基因探针从而完成测序。下一代测序（Next generation sequencing, NGS）的发展变革了测序方法，实现了单核苷酸水平的精准识别，人们不必预先设计探针，并能探索基因精细、稀有的转录结构。</p>
+<h2 id="基因芯片"><a href="#基因芯片" class="headerlink" title="基因芯片"></a>基因芯片</h2><p>&emsp;&emsp;虽然本文主要介绍RNA-seq这一技术，但实际上RNA-seq的目的和最终获得的数据格式与基因芯片有着相似之处，即都是以数据矩阵的形式呈现。因此，在介绍RNA-seq之前，我们有必要先了解一下基因芯片。</p>
+<ul>
+<li><strong>原理</strong>：基于分子杂交技术，基因芯片主要依赖于印刷有荧光标记的探针来实现。例如，基因组芯片是一种常见的基因芯片类型，它集成了高密度的探针，具有高达几个碱基对到100个碱基对的分辨率。通过将样品与这些探针进行杂交，并使用荧光染料进行显色，可以揭示转录组的信息。这一原理与血浆cfDNA的测定方法非常相似（即使用<strong>分光光度仪</strong>）。</li>
+<li><strong>流程</strong>：<ol>
+<li>标记mRNA或cDNA文库；</li>
+<li>与设计好的探针相杂交；</li>
+<li>洗脱之后，只有与探针特异性结合的cDNA得以保留；</li>
+<li>成像系统拍照捕捉信息；</li>
+</ol>
+</li>
+<li><strong>原始数据</strong>：由仪器对杂交结果照像生成的图片，保存格式为CEL格式；</li>
+<li><strong>参考数据</strong>：基因芯片探针排布的信息，保存为CDF格式；</li>
+<li><strong>优点</strong>：高度集成，易于应用，成本低；</li>
+<li><strong>缺点</strong>：  <ol>
+<li>高度地依赖已知信息；  </li>
+<li>高背景噪音，非特异杂交会带来的<strong>无法分辨弱信号</strong>和<strong>信号过饱和</strong>的问题；  </li>
+<li>在不同样品的比较当中，甚至在同一芯片内部，都存在杂交不均匀带来的各种问题，需要<strong>标准化</strong>等统计学方法来对结果校正；  </li>
+<li>无法对可变剪接进行分析。<br>&emsp;&emsp;数据清洗和标准化我们会在后续章节进行阐述。</li>
+</ol>
+</li>
+</ul>
+<h2 id="NGS"><a href="#NGS" class="headerlink" title="NGS"></a>NGS</h2><p>&emsp;&emsp;NGS是一种高通量、高效率的基因组测序技术，它在基因组学和生物学研究中具有广泛的应用。下一代测序相对于传统的Sanger测序方法，具有更快速、更经济、更高通量的特点。</p>
+<ul>
+<li><strong>原理</strong>：将待测DNA样本分离成小片段，并使用特定的方法进行扩增、捕获和测序。然后在高通量平台上进行并行测序，生成大量的序列片段。这些片段随后通过计算和分析，可以重构原始的DNA序列信息。</li>
+<li><strong>步骤</strong>：<ol>
+<li>分离样本中的RNA，反转录为DNA；</li>
+<li>样品制备：DNA样本需要被处理和准备成适合测序的库。这包括DNA提取、片段化和标记等步骤。</li>
+<li>文库构建：将片段化的DNA样本连接到适当的测序适配器上，形成文库。适配器中包含了特定的序列，用于后续的扩增和测序。</li>
+<li>扩增：将文库中的DNA片段进行扩增，通常采用PCR（聚合酶链式反应）方法。扩增后的文库可以包含成百上千万个DNA片段的复制。</li>
+<li>测序：将扩增的文库加载到下一代测序仪中，进行高通量的并行测序。不同的下一代测序技术会使用不同的原理和方法，如Illumina的测序-by-synthesis技术、Ion Torrent的测序-by-detection技术等。</li>
+<li>数据分析：通过计算和分析，将测序仪输出的原始数据转化为DNA序列信息。这包括图像处理、碱基识别、序列拼接、质量控制和变异检测等步骤。<img src="/2024/02/05/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E8%BD%AC%E5%BD%95%E7%BB%84%E6%B5%8B%E5%BA%8F%E6%8A%80%E6%9C%AF/1.png" alt></li>
+</ol>
+</li>
+<li><strong>步骤（细节）</strong> ：<ol>
+<li>目前很多PCR使用的高保真Pfu聚合酶产生的片段末端是平齐的（即没有不配对的碱基）；鸟枪法产生的片段则是随机断裂，其末端可能是平齐的也可能是不平的，那么我们首先可以使用Taq聚合酶补齐不平的末端，在DNA双链的末端（3‘ 端），我们添加突出的A碱基，以为连接接头做准备（Adaptor）；<img src="/2024/02/05/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E8%BD%AC%E5%BD%95%E7%BB%84%E6%B5%8B%E5%BA%8F%E6%8A%80%E6%9C%AF/2.png" alt></li>
+<li>接头有突出的T，上述操作的DNA双链末端有突出的A，恰能配对。通过连接酶将接头连接上到DNA上；</li>
+<li>NEBNext接头是一个U碱基在中间的环形接头，连接上DNA后将U碱基删除，从而形成“Y形“末端；</li>
+<li>接头添加的目的是作为引物实现这些序列的扩增：文库index（Barcode）、PCR引物Rd1 SP/Rd2 SP，以及和测序平台互补的寡核苷酸链扩增（P7、P5）【其中与P5端连接的Index称为Index 2，又称之为i5；与P7端连接的称为Index1，也称为i7】；</li>
+<li>Y形接头的设计，确保了DNA链两端是不配对的碱基序列引物，从而能够结合不同寡核苷酸序列，实现PCR中DNA链两端不会结合同一段序列（index、PCR引物以及和测序平台互补的寡核苷酸链），为后面的桥式扩增做准备；</li>
+<li>Illumina平台的测序技术为基于<strong>基因芯片的边合成边测序</strong>：在Illumina测序平台的流通池（Flow cell）表面（如下图），通过基因芯片技术交错固定了无数条分别文库接头中P5和P7互补的寡核苷酸链（即短核苷酸链），单链化的文库DNA片段进入流通池后，可以与表面的寡核苷酸结合，从而进入测序过程。<img src="/2024/02/05/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E8%BD%AC%E5%BD%95%E7%BB%84%E6%B5%8B%E5%BA%8F%E6%8A%80%E6%9C%AF/3.png" alt></li>
+<li>由于单链DNA的另一端具有不同的接头序列，因此它可以与相邻的另一种寡核苷酸互补配对，从而进行”桥”式扩增。假设第一次配对的接头是P7，一旦复制完成并洗脱模板后，DNA顶端可以与相邻的P5接头互补配对，形成一个”桥”结构。然后，以P5为引物进行复制。复制完成后，再次解链，并与相邻的不同种类接头结合，以进行下一轮复制。这个过程不断重复。25-28个循环完成后，原来散布在表面的核苷酸序列变成散布的DNA簇【何为散布的核苷酸序列？即一开始结合在P5或者P7上的序列】；<img src="/2024/02/05/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E8%BD%AC%E5%BD%95%E7%BB%84%E6%B5%8B%E5%BA%8F%E6%8A%80%E6%9C%AF/4.png" alt></li>
+<li>接着，再次解链线性化，切割并洗去连接在P5上的DNA链，只留下P7上的DNA单链【仅保留正向链，即一开始进入flowcell的模板链】；</li>
+<li>边合成边测序技术：合成过程发出碱基特异荧光信号被捕捉，合成循环数决定读取长度，对于某一特定的DNA簇，相同的DNA链会被同时读取【为什么要用簇？是为了增强信号】。</li>
+<li>接着测序index序列，从而提示样本来源；</li>
+<li>我们接着进行模板链的另一端开始的测序，这一次也能同时完成index2的测序，双端测序有利于纠正首尾错配：步骤是再次桥式扩增（但一次循环就够了），然后如前测序；</li>
+<li>测序完成，按照相同index进行分类，样本内具有相似base call的序列被聚类，正向和反向read被配为连续序列；</li>
+<li>连续序列和参考基因组进行比对，确定基因和突变。</li>
+</ol>
+</li>
+</ul>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>&emsp;&emsp;对实验原理的透彻理解，是数据分析的基础。后续的归一化、标准化等数据清洗要求都是建立在实验原理上。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a href="https://zhuanlan.zhihu.com/p/282790878">第二章：NGS原理解析01：二代测序流程 - 知乎 (zhihu.com)</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/371040548#:~:text=Index%20%E5%8F%88%E7%A7%B0%20Barcode,%EF%BC%8C%E6%98%AF%E6%88%91%E4%BB%AC%E8%BF%9B%E8%A1%8C%20%E6%96%87%E5%BA%93%E6%B7%B7%E5%90%88%E6%B5%8B%E5%BA%8F%E6%97%B6%E7%94%A8%E4%BA%8E%E6%95%B0%E6%8D%AE%E6%8B%86%E5%88%86%E7%9A%84%E4%B8%80%E4%B8%AA%E6%A0%87%E7%AD%BE%20%EF%BC%8C%E5%85%B6%E4%B8%AD%E4%B8%8EP5%E7%AB%AF%E8%BF%9E%E6%8E%A5%E7%9A%84Index%E7%A7%B0%E4%B8%BAIndex%202%EF%BC%8C%E5%8F%88%E7%A7%B0%E4%B9%8B%E4%B8%BAi5%EF%BC%9B%E4%B8%8EP7%E7%AB%AF%E8%BF%9E%E6%8E%A5%E7%9A%84%E7%A7%B0%E4%B8%BAIndex1%EF%BC%8C%E4%B9%9F%E7%A7%B0%E4%B8%BAi7%E3%80%82">干货 | Index这件小事，你get了吗？ - 知乎 (zhihu.com)</a></li>
+<li><a href="https://microbeonline.com/next-generation-sequencing/">Next Generation Sequencing: Principle, Steps Involved, and Applications • Microbe Online</a></li>
+<li><a href="https://www.thermofisher.com/us/en/home/life-science/cloning/cloning-learning-center/invitrogen-school-of-molecular-biology/next-generation-sequencing/illumina-workflow.html">Next-Generation Sequencing Illumina Workflow–4 Key Steps | Thermo Fisher Scientific - US</a></li>
+</ol>
+]]></content>
+      <categories>
+        <category>生物信息学</category>
+      </categories>
+      <tags>
+        <tag>生物信息学</tag>
+        <tag>转录组学</tag>
       </tags>
   </entry>
   <entry>
@@ -1262,83 +1595,6 @@
         <tag>生物信息学</tag>
         <tag>统计学</tag>
         <tag>机器学习</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>生物信息学笔记（一）：转录组测序技术</title>
-    <url>/2024/02/05/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E8%BD%AC%E5%BD%95%E7%BB%84%E6%B5%8B%E5%BA%8F%E6%8A%80%E6%9C%AF/</url>
-    <content><![CDATA[<h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>&emsp;&emsp;<strong>转录组</strong>是特定组织或细胞在某一发育阶段或功能状态下转录出来的所有RNA的集合，包括编码蛋白质的mRNA和非编码RNA（non coding RNA, ncRNA）。<strong>转录组测序</strong>是指利用第二代高通量测序技术进行<strong>cDNA</strong>测序，全面快速地获取某一物种特定器官或组织在某一状态下的几乎所有转录本。</p>
-<p>&emsp;&emsp;转录组分析的主要目标是：</p>
-<ol>
-<li>对所有的转录产物进行分类；</li>
-<li>确定基因的转录结构，如其起始位点，5′和3′末端，剪接模式和其他转录后修饰；</li>
-<li>量化各转录本在发育过程中和不同条件下(如生理/病理)表达水平的变化。</li>
-</ol>
-<p>&emsp;&emsp;在更早的科学研究中，人们主要利用芯片杂交平台，预先设计基因探针从而完成测序。下一代测序（Next generation sequencing, NGS）的发展变革了测序方法，实现了单核苷酸水平的精准识别，人们不必预先设计探针，并能探索基因精细、稀有的转录结构。</p>
-<h2 id="基因芯片"><a href="#基因芯片" class="headerlink" title="基因芯片"></a>基因芯片</h2><p>&emsp;&emsp;虽然本文主要介绍RNA-seq这一技术，但实际上RNA-seq的目的和最终获得的数据格式与基因芯片有着相似之处，即都是以数据矩阵的形式呈现。因此，在介绍RNA-seq之前，我们有必要先了解一下基因芯片。</p>
-<ul>
-<li><strong>原理</strong>：基于分子杂交技术，基因芯片主要依赖于印刷有荧光标记的探针来实现。例如，基因组芯片是一种常见的基因芯片类型，它集成了高密度的探针，具有高达几个碱基对到100个碱基对的分辨率。通过将样品与这些探针进行杂交，并使用荧光染料进行显色，可以揭示转录组的信息。这一原理与血浆cfDNA的测定方法非常相似（即使用<strong>分光光度仪</strong>）。</li>
-<li><strong>流程</strong>：<ol>
-<li>标记mRNA或cDNA文库；</li>
-<li>与设计好的探针相杂交；</li>
-<li>洗脱之后，只有与探针特异性结合的cDNA得以保留；</li>
-<li>成像系统拍照捕捉信息；</li>
-</ol>
-</li>
-<li><strong>原始数据</strong>：由仪器对杂交结果照像生成的图片，保存格式为CEL格式；</li>
-<li><strong>参考数据</strong>：基因芯片探针排布的信息，保存为CDF格式；</li>
-<li><strong>优点</strong>：高度集成，易于应用，成本低；</li>
-<li><strong>缺点</strong>：  <ol>
-<li>高度地依赖已知信息；  </li>
-<li>高背景噪音，非特异杂交会带来的<strong>无法分辨弱信号</strong>和<strong>信号过饱和</strong>的问题；  </li>
-<li>在不同样品的比较当中，甚至在同一芯片内部，都存在杂交不均匀带来的各种问题，需要<strong>标准化</strong>等统计学方法来对结果校正；  </li>
-<li>无法对可变剪接进行分析。<br>&emsp;&emsp;数据清洗和标准化我们会在后续章节进行阐述。</li>
-</ol>
-</li>
-</ul>
-<h2 id="NGS"><a href="#NGS" class="headerlink" title="NGS"></a>NGS</h2><p>&emsp;&emsp;NGS是一种高通量、高效率的基因组测序技术，它在基因组学和生物学研究中具有广泛的应用。下一代测序相对于传统的Sanger测序方法，具有更快速、更经济、更高通量的特点。</p>
-<ul>
-<li><strong>原理</strong>：将待测DNA样本分离成小片段，并使用特定的方法进行扩增、捕获和测序。然后在高通量平台上进行并行测序，生成大量的序列片段。这些片段随后通过计算和分析，可以重构原始的DNA序列信息。</li>
-<li><strong>步骤</strong>：<ol>
-<li>分离样本中的RNA，反转录为DNA；</li>
-<li>样品制备：DNA样本需要被处理和准备成适合测序的库。这包括DNA提取、片段化和标记等步骤。</li>
-<li>文库构建：将片段化的DNA样本连接到适当的测序适配器上，形成文库。适配器中包含了特定的序列，用于后续的扩增和测序。</li>
-<li>扩增：将文库中的DNA片段进行扩增，通常采用PCR（聚合酶链式反应）方法。扩增后的文库可以包含成百上千万个DNA片段的复制。</li>
-<li>测序：将扩增的文库加载到下一代测序仪中，进行高通量的并行测序。不同的下一代测序技术会使用不同的原理和方法，如Illumina的测序-by-synthesis技术、Ion Torrent的测序-by-detection技术等。</li>
-<li>数据分析：通过计算和分析，将测序仪输出的原始数据转化为DNA序列信息。这包括图像处理、碱基识别、序列拼接、质量控制和变异检测等步骤。<img src="/2024/02/05/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E8%BD%AC%E5%BD%95%E7%BB%84%E6%B5%8B%E5%BA%8F%E6%8A%80%E6%9C%AF/1.png" alt></li>
-</ol>
-</li>
-<li><strong>步骤（细节）</strong> ：<ol>
-<li>目前很多PCR使用的高保真Pfu聚合酶产生的片段末端是平齐的（即没有不配对的碱基）；鸟枪法产生的片段则是随机断裂，其末端可能是平齐的也可能是不平的，那么我们首先可以使用Taq聚合酶补齐不平的末端，在DNA双链的末端（3‘ 端），我们添加突出的A碱基，以为连接接头做准备（Adaptor）；<img src="/2024/02/05/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E8%BD%AC%E5%BD%95%E7%BB%84%E6%B5%8B%E5%BA%8F%E6%8A%80%E6%9C%AF/2.png" alt></li>
-<li>接头有突出的T，上述操作的DNA双链末端有突出的A，恰能配对。通过连接酶将接头连接上到DNA上；</li>
-<li>NEBNext接头是一个U碱基在中间的环形接头，连接上DNA后将U碱基删除，从而形成“Y形“末端；</li>
-<li>接头添加的目的是作为引物实现这些序列的扩增：文库index（Barcode）、PCR引物Rd1 SP/Rd2 SP，以及和测序平台互补的寡核苷酸链扩增（P7、P5）【其中与P5端连接的Index称为Index 2，又称之为i5；与P7端连接的称为Index1，也称为i7】；</li>
-<li>Y形接头的设计，确保了DNA链两端是不配对的碱基序列引物，从而能够结合不同寡核苷酸序列，实现PCR中DNA链两端不会结合同一段序列（index、PCR引物以及和测序平台互补的寡核苷酸链），为后面的桥式扩增做准备；</li>
-<li>Illumina平台的测序技术为基于<strong>基因芯片的边合成边测序</strong>：在Illumina测序平台的流通池（Flow cell）表面（如下图），通过基因芯片技术交错固定了无数条分别文库接头中P5和P7互补的寡核苷酸链（即短核苷酸链），单链化的文库DNA片段进入流通池后，可以与表面的寡核苷酸结合，从而进入测序过程。<img src="/2024/02/05/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E8%BD%AC%E5%BD%95%E7%BB%84%E6%B5%8B%E5%BA%8F%E6%8A%80%E6%9C%AF/3.png" alt></li>
-<li>由于单链DNA的另一端具有不同的接头序列，因此它可以与相邻的另一种寡核苷酸互补配对，从而进行”桥”式扩增。假设第一次配对的接头是P7，一旦复制完成并洗脱模板后，DNA顶端可以与相邻的P5接头互补配对，形成一个”桥”结构。然后，以P5为引物进行复制。复制完成后，再次解链，并与相邻的不同种类接头结合，以进行下一轮复制。这个过程不断重复。25-28个循环完成后，原来散布在表面的核苷酸序列变成散布的DNA簇【何为散布的核苷酸序列？即一开始结合在P5或者P7上的序列】；<img src="/2024/02/05/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E8%BD%AC%E5%BD%95%E7%BB%84%E6%B5%8B%E5%BA%8F%E6%8A%80%E6%9C%AF/4.png" alt></li>
-<li>接着，再次解链线性化，切割并洗去连接在P5上的DNA链，只留下P7上的DNA单链【仅保留正向链，即一开始进入flowcell的模板链】；</li>
-<li>边合成边测序技术：合成过程发出碱基特异荧光信号被捕捉，合成循环数决定读取长度，对于某一特定的DNA簇，相同的DNA链会被同时读取【为什么要用簇？是为了增强信号】。</li>
-<li>接着测序index序列，从而提示样本来源；</li>
-<li>我们接着进行模板链的另一端开始的测序，这一次也能同时完成index2的测序，双端测序有利于纠正首尾错配：步骤是再次桥式扩增（但一次循环就够了），然后如前测序；</li>
-<li>测序完成，按照相同index进行分类，样本内具有相似base call的序列被聚类，正向和反向read被配为连续序列；</li>
-<li>连续序列和参考基因组进行比对，确定基因和突变。</li>
-</ol>
-</li>
-</ul>
-<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>&emsp;&emsp;对实验原理的透彻理解，是数据分析的基础。后续的归一化、标准化等数据清洗要求都是建立在实验原理上。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
-<li><a href="https://zhuanlan.zhihu.com/p/282790878">第二章：NGS原理解析01：二代测序流程 - 知乎 (zhihu.com)</a></li>
-<li><a href="https://zhuanlan.zhihu.com/p/371040548#:~:text=Index%20%E5%8F%88%E7%A7%B0%20Barcode,%EF%BC%8C%E6%98%AF%E6%88%91%E4%BB%AC%E8%BF%9B%E8%A1%8C%20%E6%96%87%E5%BA%93%E6%B7%B7%E5%90%88%E6%B5%8B%E5%BA%8F%E6%97%B6%E7%94%A8%E4%BA%8E%E6%95%B0%E6%8D%AE%E6%8B%86%E5%88%86%E7%9A%84%E4%B8%80%E4%B8%AA%E6%A0%87%E7%AD%BE%20%EF%BC%8C%E5%85%B6%E4%B8%AD%E4%B8%8EP5%E7%AB%AF%E8%BF%9E%E6%8E%A5%E7%9A%84Index%E7%A7%B0%E4%B8%BAIndex%202%EF%BC%8C%E5%8F%88%E7%A7%B0%E4%B9%8B%E4%B8%BAi5%EF%BC%9B%E4%B8%8EP7%E7%AB%AF%E8%BF%9E%E6%8E%A5%E7%9A%84%E7%A7%B0%E4%B8%BAIndex1%EF%BC%8C%E4%B9%9F%E7%A7%B0%E4%B8%BAi7%E3%80%82">干货 | Index这件小事，你get了吗？ - 知乎 (zhihu.com)</a></li>
-<li><a href="https://microbeonline.com/next-generation-sequencing/">Next Generation Sequencing: Principle, Steps Involved, and Applications • Microbe Online</a></li>
-<li><a href="https://www.thermofisher.com/us/en/home/life-science/cloning/cloning-learning-center/invitrogen-school-of-molecular-biology/next-generation-sequencing/illumina-workflow.html">Next-Generation Sequencing Illumina Workflow–4 Key Steps | Thermo Fisher Scientific - US</a></li>
-</ol>
-]]></content>
-      <categories>
-        <category>生物信息学</category>
-      </categories>
-      <tags>
-        <tag>生物信息学</tag>
-        <tag>转录组学</tag>
       </tags>
   </entry>
   <entry>
