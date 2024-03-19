@@ -31,7 +31,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/2024/03/19/%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB%E8%87%AA%E5%8A%A8%E8%8E%B7%E5%8F%96%E6%95%99%E5%8A%A1%E5%A4%84%E6%9C%80%E6%96%B0%E9%80%9A%E7%9F%A5/1.png">
 <meta property="article:published_time" content="2024-03-19T05:29:00.000Z">
-<meta property="article:modified_time" content="2024-03-19T05:33:35.976Z">
+<meta property="article:modified_time" content="2024-03-19T07:20:03.214Z">
 <meta property="article:author" content="庄清源">
 <meta property="article:tag" content="python">
 <meta property="article:tag" content="随笔">
@@ -197,7 +197,7 @@
               <span class="post-meta-item-text">发表于</span>
               
 
-              <time title="创建时间：2024-03-19 13:29:00 / 修改时间：13:33:35" itemprop="dateCreated datePublished" datetime="2024-03-19T13:29:00+08:00">2024-03-19</time>
+              <time title="创建时间：2024-03-19 13:29:00 / 修改时间：15:20:03" itemprop="dateCreated datePublished" datetime="2024-03-19T13:29:00+08:00">2024-03-19</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -236,7 +236,7 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>813</span>
+              <span>887</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -256,7 +256,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>&emsp;&emsp;在日常学习和工作中，及时获取学校教务处的最新通知非常重要。本文介绍了如何使用Python编写一个自动化脚本，该脚本能够爬取教务处网站的最新通知公告，并通过邮件发送给指定的收件人。这样，我们就可以在第一时间内获取到重要信息，不错过任何关键的通知或更新。</p>
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>&emsp;&emsp;在日常学习和工作中，及时获取学校教务处的最新通知非常重要。本文介绍了如何使用Python编写一个自动化脚本，该脚本能够爬取教务处网站的最新通知公告，并通过邮件发送给指定的收件人。这样，我们就可以在第一时间内获取到重要信息，不错过任何关键的通知或更新。<br>&emsp;&emsp;欢迎来给俺个星星✨！<a target="_blank" rel="noopener" href="https://github.com/ForrestGump618/Notification_NMU">ForrestGump618/Notification_NMU</a>。</p>
 <h2 id="技术栈"><a href="#技术栈" class="headerlink" title="技术栈"></a>技术栈</h2><ul>
 <li><strong>Python</strong>：编程语言</li>
 <li><strong>requests</strong>：HTTP库，用于发送网络请求</li>
@@ -272,6 +272,7 @@
 <h3 id="4-主程序流程"><a href="#4-主程序流程" class="headerlink" title="4. 主程序流程"></a>4. 主程序流程</h3><p>&emsp;&emsp;在<code>if __name__ == &quot;__main__&quot;:</code>块中，脚本首先调用<code>scrape_website</code>函数获取最新的通知列表，然后为每条通知生成HTML格式的邮件内容。如果当日有更新，则通过<code>send_email</code>函数将这些通知以邮件的形式发送给预设的收件人列表。</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    email_list = [<span class="string">&quot;xxx&quot;</span>]</span><br><span class="line">    url = <span class="string">&#x27;https://jwc.njmu.edu.cn/842/list.htm&#x27;</span></span><br><span class="line">    news_list = scrape_website(url)</span><br><span class="line">    <span class="comment"># 构建邮件内容省略，详见原始代码</span></span><br><span class="line">    <span class="keyword">for</span> email <span class="keyword">in</span> email_list:</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">str</span>(datetime.date.today()) <span class="keyword">in</span> content_mail:</span><br><span class="line">            send_email(<span class="string">&quot;今日有更新|教务处通知公告&quot;</span>, content_mail, email)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            send_email(<span class="string">&quot;教务处通知公告&quot;</span>, content_mail, email)</span><br></pre></td></tr></table></figure>
 <p>&emsp;&emsp;效果呈现如下：<br><img src="/2024/03/19/%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB%E8%87%AA%E5%8A%A8%E8%8E%B7%E5%8F%96%E6%95%99%E5%8A%A1%E5%A4%84%E6%9C%80%E6%96%B0%E9%80%9A%E7%9F%A5/1.png" alt="效果呈现"></p>
+<h3 id="5-自动部署"><a href="#5-自动部署" class="headerlink" title="5. 自动部署"></a>5. 自动部署</h3><p>&emsp;&emsp;利用批处理文件部署：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">@<span class="built_in">echo</span> off</span><br><span class="line">C:  </span><br><span class="line"><span class="built_in">cd</span> C:\Users\Zhuang Qingyuan\Desktop\Notification</span><br><span class="line">start python spyder.py</span><br></pre></td></tr></table></figure><br>&emsp;&emsp;保存为BAT文件后，放到电脑的开始-菜单/启动文件夹下，即可开机启动。</p>
 <h2 id="使用指南"><a href="#使用指南" class="headerlink" title="使用指南"></a>使用指南</h2><p>&emsp;&emsp;要使用这个脚本，你需要：</p>
 <ol>
 <li>安装Python及相关库（requests, BeautifulSoup4）。</li>
@@ -398,7 +399,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8A%80%E6%9C%AF%E6%A0%88"><span class="nav-text">技术栈</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BB%E8%A6%81%E5%8A%9F%E8%83%BD%E5%8F%8A%E5%AE%9E%E7%8E%B0%E6%AD%A5%E9%AA%A4"><span class="nav-text">主要功能及实现步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E7%BD%91%E9%A1%B5%E5%86%85%E5%AE%B9%E7%88%AC%E5%8F%96%EF%BC%88scrape-website-%E5%87%BD%E6%95%B0%EF%BC%89"><span class="nav-text">1. 网页内容爬取（scrape_website 函数）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E8%8E%B7%E5%8F%96%E9%80%9A%E7%9F%A5%E8%AF%A6%E7%BB%86%E5%86%85%E5%AE%B9%EF%BC%88scrape-news-details-%E5%87%BD%E6%95%B0%EF%BC%89"><span class="nav-text">2. 获取通知详细内容（scrape_news_details 函数）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E9%82%AE%E4%BB%B6%E5%8F%91%E9%80%81%EF%BC%88send-email-%E5%87%BD%E6%95%B0%EF%BC%89"><span class="nav-text">3. 邮件发送（send_email 函数）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E4%B8%BB%E7%A8%8B%E5%BA%8F%E6%B5%81%E7%A8%8B"><span class="nav-text">4. 主程序流程</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97"><span class="nav-text">使用指南</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8A%80%E6%9C%AF%E6%A0%88"><span class="nav-text">技术栈</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%BB%E8%A6%81%E5%8A%9F%E8%83%BD%E5%8F%8A%E5%AE%9E%E7%8E%B0%E6%AD%A5%E9%AA%A4"><span class="nav-text">主要功能及实现步骤</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E7%BD%91%E9%A1%B5%E5%86%85%E5%AE%B9%E7%88%AC%E5%8F%96%EF%BC%88scrape-website-%E5%87%BD%E6%95%B0%EF%BC%89"><span class="nav-text">1. 网页内容爬取（scrape_website 函数）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E8%8E%B7%E5%8F%96%E9%80%9A%E7%9F%A5%E8%AF%A6%E7%BB%86%E5%86%85%E5%AE%B9%EF%BC%88scrape-news-details-%E5%87%BD%E6%95%B0%EF%BC%89"><span class="nav-text">2. 获取通知详细内容（scrape_news_details 函数）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E9%82%AE%E4%BB%B6%E5%8F%91%E9%80%81%EF%BC%88send-email-%E5%87%BD%E6%95%B0%EF%BC%89"><span class="nav-text">3. 邮件发送（send_email 函数）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E4%B8%BB%E7%A8%8B%E5%BA%8F%E6%B5%81%E7%A8%8B"><span class="nav-text">4. 主程序流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#5-%E8%87%AA%E5%8A%A8%E9%83%A8%E7%BD%B2"><span class="nav-text">5. 自动部署</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97"><span class="nav-text">使用指南</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -484,7 +485,7 @@
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共27.5k字</span>
+  <span class="post-count">博客全站共27k字</span>
   <span class="post-meta-divider">|</span>
 
     <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
