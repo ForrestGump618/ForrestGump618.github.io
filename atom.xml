@@ -44,7 +44,7 @@
     <link href="http://example.com/2024/03/19/%E4%BB%8E%E5%8C%BB%E8%A1%8C%E5%85%AC%E4%BC%97%E5%8F%B7%E5%86%85%E5%AE%B9%E6%95%B4%E7%90%86/"/>
     <id>http://example.com/2024/03/19/%E4%BB%8E%E5%8C%BB%E8%A1%8C%E5%85%AC%E4%BC%97%E5%8F%B7%E5%86%85%E5%AE%B9%E6%95%B4%E7%90%86/</id>
     <published>2024-03-19T00:00:00.000Z</published>
-    <updated>2024-03-19T10:40:24.026Z</updated>
+    <updated>2024-03-19T10:43:30.574Z</updated>
     
     
     <summary type="html">爬取了从医行微信公众号的数据，并结构化。</summary>
@@ -163,9 +163,9 @@
     <category term="生物信息学" scheme="http://example.com/categories/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
     
     
-    <category term="单细胞测序" scheme="http://example.com/tags/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F/"/>
-    
     <category term="生物信息学" scheme="http://example.com/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
+    
+    <category term="单细胞测序" scheme="http://example.com/tags/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F/"/>
     
   </entry>
   
@@ -362,9 +362,9 @@
     
     <category term="GWAS" scheme="http://example.com/tags/GWAS/"/>
     
-    <category term="单细胞测序" scheme="http://example.com/tags/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F/"/>
-    
     <category term="生物信息学" scheme="http://example.com/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
+    
+    <category term="单细胞测序" scheme="http://example.com/tags/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F/"/>
     
   </entry>
   
@@ -404,9 +404,9 @@
     <category term="生物信息学" scheme="http://example.com/categories/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
     
     
-    <category term="单细胞测序" scheme="http://example.com/tags/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F/"/>
-    
     <category term="生物信息学" scheme="http://example.com/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
+    
+    <category term="单细胞测序" scheme="http://example.com/tags/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F/"/>
     
   </entry>
   
@@ -427,9 +427,9 @@
     
     <category term="GWAS" scheme="http://example.com/tags/GWAS/"/>
     
-    <category term="单细胞测序" scheme="http://example.com/tags/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F/"/>
-    
     <category term="生物信息学" scheme="http://example.com/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
+    
+    <category term="单细胞测序" scheme="http://example.com/tags/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F/"/>
     
   </entry>
   
