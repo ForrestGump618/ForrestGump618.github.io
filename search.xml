@@ -31,57 +31,6 @@
       </tags>
   </entry>
   <entry>
-    <title>scDRS：基于GWAS和scRNA评估细胞类型和生物学过程的疾病相关性</title>
-    <url>/2023/08/11/scDRS%EF%BC%9A%E5%9F%BA%E4%BA%8EGWAS%E5%92%8CscRNA%E8%AF%84%E4%BC%B0%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8B%E5%92%8C%E7%94%9F%E7%89%A9%E5%AD%A6%E8%BF%87%E7%A8%8B%E7%9A%84%E7%96%BE%E7%97%85%E7%9B%B8%E5%85%B3%E6%80%A7/</url>
-    <content><![CDATA[<h2 id="方法学概述"><a href="#方法学概述" class="headerlink" title="方法学概述"></a>方法学概述</h2><p>&emsp;&emsp;scDRS的核心思想是建立合适的权重从而根据基因的表达对基因程序进行评分，即加权基因表达量。其算法可概述为：首先将基因根据MAGMA得到的gene-level z-scores从大到小排列（也可以自定义基因程序）, 选择潜在的致病基因。基于致病基因的表达量和权重接着计算致病基因程序加权表达量。从而评估该细胞的基因程序和疾病的相关度。<br>&emsp;&emsp;算法对z-score采用算数加权，对技术噪声指标采用逆加权。也就是说，在GWAS中鉴定出的越相关的，且测序过程中技术原因造成误差较小的基因。根据输入数据集的基因表达，在蒙特卡洛随机模拟生成的B个对照组中，从而推断分布，进而对研究的疾病进行统计检验。利用这样的方法，我们可以计算单个细胞和疾病的相关性，以及鉴定相应的驱动基因，并基于此进行下游分析。</p>
-<h2 id="使用scdrs包在Python中进行分析"><a href="#使用scdrs包在Python中进行分析" class="headerlink" title="使用scdrs包在Python中进行分析"></a>使用scdrs包在Python中进行分析</h2><h3 id="载入程序包"><a href="#载入程序包" class="headerlink" title="载入程序包"></a>载入程序包</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> scanpy <span class="keyword">as</span> sc</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> scdrs</span><br></pre></td></tr></table></figure>
-<h3 id="基础参数设置"><a href="#基础参数设置" class="headerlink" title="基础参数设置"></a>基础参数设置</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">sc.settings.verbosity = <span class="number">3</span> <span class="comment"># 设置日志等级:errors(0),warnings(1),info(2),hints(3)  </span></span><br><span class="line">sc.logging.print_header() <span class="comment"># 输出版本号</span></span><br><span class="line">sc.settings.set_figure_params(dpi=<span class="number">300</span>, facecolor=<span class="string">&#x27;white&#x27;</span>) <span class="comment"># 设置图片的分辨率300dpi</span></span><br></pre></td></tr></table></figure>
-<h3 id="读取计数矩阵和预处理"><a href="#读取计数矩阵和预处理" class="headerlink" title="读取计数矩阵和预处理"></a>读取计数矩阵和预处理</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">adata = sc.read_csv(<span class="string">&quot;heart.csv&quot;</span>) <span class="comment"># 注意，这里的heart.csv列为细胞，行为基因，这一点和seurat框架是不同的。</span></span><br><span class="line"><span class="comment"># 其他的读取方法可参考scanpy的文档。</span></span><br><span class="line">adata.var_names_make_unique()</span><br><span class="line">adata.obs_names_make_unique()</span><br><span class="line">adata.var.head() <span class="comment"># 基因特征的摘要</span></span><br><span class="line">adata.obs.head() <span class="comment"># 细胞特征的摘要</span></span><br><span class="line">adata <span class="comment"># 返回矩阵大小，基因相关的变量以及细胞相关的变量数据  </span></span><br><span class="line">sc.pl.highest_expr_genes(adata, n_top=<span class="number">20</span>) <span class="comment"># 显示在全部单个细胞中基因读数占总读数的百分比排名前20的基因</span></span><br></pre></td></tr></table></figure>
-<h3 id="质量控制"><a href="#质量控制" class="headerlink" title="质量控制"></a>质量控制</h3><p>&emsp;&emsp;质量控制，大部分都是针对细胞（obs）的质量控制。<br>&emsp;&emsp;细胞质控通常对以下三个质控协变量进行：  </p>
-<ol>
-<li>每个条形码的计数数量（计数深度）  </li>
-<li>每个条形码的基因数量  </li>
-<li>每个条形码的线粒体基因计数比例<br>&emsp;&emsp;如果一个细胞正在死亡，其mRNA被释放到内环境，导致线粒体基因的比例较高，所以我们可以通过线粒体基因的比例来过滤掉低质量的单细胞测序数据。但是如果仅考虑一个变量可能会造成生物学误差，共同考虑三个 QC 协变量至关重要。例如，线粒体计数相对较高的细胞可能参与呼吸过程，不应被过滤掉。然而，计数低或高的细胞可能对应于静止细胞群或尺寸较大的细胞。故我们在过滤低质量细胞的时候，要同时考虑不同的QC协变量之间的关系。</li>
-</ol>
-<h3 id="质控指标的计算"><a href="#质控指标的计算" class="headerlink" title="质控指标的计算"></a>质控指标的计算</h3><p>&emsp;&emsp;首先采用正则表达式识别线粒体；接着，我们将根据识别的结果进行比例的计算。<br><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">adata.var[<span class="string">&quot;mt&quot;</span>] = adata.var_names.<span class="built_in">str</span>.startswith(<span class="string">&quot;MT-&quot;</span>)  </span><br><span class="line">sc.pp.calculate_qc_metrics(adata, qc_vars=[<span class="string">&quot;mt&quot;</span>], inplace=<span class="literal">True</span>, percent_top=[<span class="number">20</span>], log1p=<span class="literal">True</span>) <span class="comment"># 此处可以计算其他给定基因；该步骤之后，才可以得到n_counts等数据。</span></span><br></pre></td></tr></table></figure><br>&emsp;&emsp;通过上面的计算和adata.obs固有的数据，我们可以得到三个质控协变量：  </p>
-<ol>
-<li>n_genes_by_counts/detected_genes: 一个细胞中发现的有效基因数量（即表达量不为0）  </li>
-<li>total_counts/nUMIs: 一个细胞中发现的分子数量（UMI），通常也可以被认为是这个细胞的文库大小  </li>
-<li>pct_counts_mt/mito_perc: 一个细胞中线粒体基因的表达计数占比<br>&emsp;&emsp;可以绘制三个协变量的分布图。</li>
-</ol>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line">mito_filter = <span class="number">25</span> <span class="comment"># 根据数据集合设定，注意，心室肌等组织富含线粒体，需要根据情况进行更改。</span></span><br><span class="line">n_counts_filter = <span class="number">4300</span> <span class="comment"># 根据上述的MAD方法进行设定，官方教程认为counts数过多可能是双细胞，但是下面采用scrublet方法进行双细胞识别。</span></span><br><span class="line">fig, axs = plt.subplots(ncols = <span class="number">2</span>, figsize = (<span class="number">8</span>,<span class="number">4</span>))</span><br><span class="line">sc.pl.scatter(adata, x=<span class="string">&#x27;total_counts&#x27;</span>, y=<span class="string">&#x27;pct_counts_mt&#x27;</span>,ax = axs[<span class="number">0</span>], show=<span class="literal">False</span>)  </span><br><span class="line">sc.pl.scatter(adata, x=<span class="string">&#x27;total_counts&#x27;</span>, y=<span class="string">&#x27;n_genes_by_counts&#x27;</span>,ax = axs[<span class="number">1</span>], show = <span class="literal">False</span>) </span><br><span class="line"><span class="comment"># draw horizontal red lines indicating thresholds.</span></span><br><span class="line">axs[<span class="number">0</span>].hlines(y = mito_filter, xmin = <span class="number">0</span>, xmax = <span class="built_in">max</span>(adata.obs[<span class="string">&#x27;total_counts&#x27;</span>]), color = <span class="string">&#x27;red&#x27;</span>, ls = <span class="string">&#x27;dashed&#x27;</span>) </span><br><span class="line">axs[<span class="number">1</span>].hlines(y = n_counts_filter, xmin = <span class="number">0</span>, xmax = <span class="built_in">max</span>(adata.obs[<span class="string">&#x27;total_counts&#x27;</span>]), color = <span class="string">&#x27;red&#x27;</span>, ls = <span class="string">&#x27;dashed&#x27;</span>)</span><br><span class="line">fig.tight_layout()  </span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
-<p>&emsp;&emsp;也可以采用小提琴图。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">sc.pl.violin(adata, [<span class="string">&#x27;n_genes_by_counts&#x27;</span>, <span class="string">&#x27;total_counts&#x27;</span>, <span class="string">&#x27;pct_counts_mt&#x27;</span>],jitter=<span class="number">0.4</span>, multi_panel=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
-<p>&emsp;&emsp;还可以采用直方图。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> seaborn <span class="keyword">as</span> sns  </span><br><span class="line">sns.histplot(adata.obs[<span class="string">&quot;n_genes_by_counts&quot;</span>], bins=<span class="number">100</span>, kde=<span class="literal">False</span>)  </span><br><span class="line">sns.histplot(adata.obs[<span class="string">&quot;total_counts&quot;</span>], bins=<span class="number">100</span>, kde=<span class="literal">False</span>) </span><br></pre></td></tr></table></figure>
-<h3 id="双细胞过滤"><a href="#双细胞过滤" class="headerlink" title="双细胞过滤"></a>双细胞过滤</h3><p>&emsp;&emsp;双细胞被定义为在相同的细胞条形码（barcode）下进行测序的两个细胞，例如，如果它们被捕获在同一个液滴（droplet）中。双细胞由同型（homotypic）与异型（heterotypic）所构成 ：</p>
-<ol>
-<li>同型：同型通常被认为是不影响下游分析的，因为其是由一类相同的细胞中的两个所构成，所以这部分细胞不是我们所需要过滤的对象；  </li>
-<li>异型：异型通常是由来自两类不同的细胞所构成的，异型的存在会使得我们后续的细胞分类出现错误，因为其独特的数据分布特征。<br>&emsp;&emsp;我们可以通过人工构建双细胞进行模拟识别，以排除异型的存在。我们将使用scrublet来完成双细胞的识别。<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">sc.external.pp.scrublet(adata, random_state=<span class="number">112</span>) </span><br><span class="line">adata = adata[adata.obs[<span class="string">&#x27;predicted_doublet&#x27;</span>]==<span class="literal">False</span>, :]</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<h3 id="低质量细胞过滤"><a href="#低质量细胞过滤" class="headerlink" title="低质量细胞过滤"></a>低质量细胞过滤</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">adata = adata[adata.obs.pct_counts_mt &lt; <span class="number">25</span>, :]  </span><br><span class="line">adata = adata[adata.obs.n_genes_by_counts &gt; <span class="number">200</span>, :]  </span><br><span class="line">adata = adata[adata.obs.total_counts &gt; <span class="number">300</span>, :]  </span><br><span class="line">sc.pp.filter_cells(adata, min_genes=<span class="number">200</span>)  </span><br><span class="line">sc.pp.filter_genes(adata, min_cells=<span class="number">3</span>)  </span><br><span class="line">  </span><br><span class="line"><span class="comment"># 小提琴图可视化  </span></span><br><span class="line">sc.pl.violin(adata, [<span class="string">&#x27;n_genes_by_counts&#x27;</span>, <span class="string">&#x27;total_counts&#x27;</span>, <span class="string">&#x27;pct_counts_mt&#x27;</span>],jitter=<span class="number">0.4</span>, multi_panel=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
-<h3 id="保存结果用于scDRS的分析"><a href="#保存结果用于scDRS的分析" class="headerlink" title="保存结果用于scDRS的分析"></a>保存结果用于scDRS的分析</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">adata_raw = adata.copy()  </span><br><span class="line">adata_raw.write_h5ad(<span class="string">f&quot;./output/<span class="subst">&#123;sample&#125;</span>/expr.h5ad&quot;</span>)  </span><br><span class="line">  </span><br><span class="line">df_cov = pd.DataFrame(index=adata_raw.obs.index)  </span><br><span class="line">df_cov[<span class="string">&quot;const&quot;</span>] = <span class="number">1</span>  </span><br><span class="line">df_cov[<span class="string">&quot;n_genes&quot;</span>] = adata_raw.obs[<span class="string">&quot;n_genes&quot;</span>]  </span><br><span class="line">df_cov.to_csv(<span class="string">f&quot;./output/<span class="subst">&#123;sample&#125;</span>/cov.tsv&quot;</span>, sep=<span class="string">&quot;\t&quot;</span>)  </span><br><span class="line">  </span><br><span class="line">summary = pd.DataFrame(adata_raw.obs)  </span><br><span class="line">summary.to_csv(<span class="string">f&quot;./output/<span class="subst">&#123;sample&#125;</span>/summary.tsv&quot;</span>, sep=<span class="string">&quot;\t&quot;</span>)</span><br></pre></td></tr></table></figure>
-<h3 id="scDRS分析"><a href="#scDRS分析" class="headerlink" title="scDRS分析"></a>scDRS分析</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">adata = scdrs.util.load_h5ad(h5ad_file=<span class="string">f&quot;./output/<span class="subst">&#123;sample&#125;</span>/expr.h5ad&quot;</span>, flag_filter_data=<span class="literal">False</span>, flag_raw_count=<span class="literal">True</span>)  </span><br><span class="line">dict_gs = scdrs.util.load_gs(<span class="string">&quot;./output/CHD.gs&quot;</span>, src_species=<span class="string">&quot;human&quot;</span>, dst_species=<span class="string">&quot;human&quot;</span>,to_intersect=adata.var_names)  </span><br><span class="line">df_cov = pd.read_csv(<span class="string">f&quot;./output/<span class="subst">&#123;sample&#125;</span>/cov.tsv&quot;</span>, sep=<span class="string">&quot;\t&quot;</span>, index_col=<span class="number">0</span>)  </span><br><span class="line">adata_analysis = scdrs.preprocess(adata, cov=df_cov, n_mean_bin=<span class="number">20</span>, n_var_bin=<span class="number">20</span>, copy=<span class="literal">True</span>)  </span><br><span class="line">dict_df_score = <span class="built_in">dict</span>()  </span><br><span class="line"><span class="keyword">for</span> trait <span class="keyword">in</span> dict_gs:  </span><br><span class="line">	gene_list, gene_weights = dict_gs[trait]  </span><br><span class="line">	dict_df_score[trait] = scdrs.score_cell(  </span><br><span class="line">		data=adata_analysis,  </span><br><span class="line">		gene_list=gene_list,  </span><br><span class="line">		gene_weight=gene_weights,  </span><br><span class="line">		ctrl_match_key=<span class="string">&quot;mean_var&quot;</span>,  </span><br><span class="line">		n_ctrl=<span class="number">1000</span>,  </span><br><span class="line">		weight_opt=<span class="string">&quot;vs&quot;</span>,  </span><br><span class="line">		return_ctrl_raw_score=<span class="literal">False</span>,  </span><br><span class="line">		return_ctrl_norm_score=<span class="literal">True</span>,  </span><br><span class="line">		verbose=<span class="literal">False</span>,  </span><br><span class="line">	)  </span><br><span class="line">chd = dict_df_score[<span class="string">&quot;CHD&quot;</span>]  </span><br><span class="line">chd.to_csv(<span class="string">f&quot;./output/<span class="subst">&#123;sample&#125;</span>/CHD.csv&quot;</span>)</span><br></pre></td></tr></table></figure>
-<h3 id="可视化"><a href="#可视化" class="headerlink" title="可视化"></a>可视化</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">sc.pp.highly_variable_genes(adata, n_top_genes=<span class="number">2000</span>)  </span><br><span class="line">adata = adata[:, adata.var.highly_variable]  </span><br><span class="line">sc.pp.regress_out(adata, [<span class="string">&#x27;total_counts&#x27;</span>, <span class="string">&#x27;pct_counts_mt&#x27;</span>])  </span><br><span class="line"><span class="comment">#归一化 (事实上，只有PCA才采用归一化数据，使得不同PC的数据规模接近。)  </span></span><br><span class="line">sc.pp.scale(adata, max_value=<span class="number">10</span>)  </span><br><span class="line"><span class="comment">#主成分分析  </span></span><br><span class="line">sc.tl.pca(adata, svd_solver=<span class="string">&quot;arpack&quot;</span>)  </span><br><span class="line">  </span><br><span class="line">sc.pp.neighbors(adata, n_neighbors=<span class="number">10</span>, n_pcs=<span class="number">40</span>) <span class="comment">#KNN算法，此处参数：n_neighbours更大，则聚类可能会变少；n_pcs一般为40，可参考碎石图。  </span></span><br><span class="line">sc.tl.umap(adata)  </span><br><span class="line">sc.tl.leiden(adata)  </span><br><span class="line">sc.pl.umap(adata, color=[<span class="string">&#x27;leiden&#x27;</span>],save=<span class="string">f&quot;<span class="subst">&#123;sample&#125;</span>_original.png&quot;</span>)  </span><br><span class="line"><span class="comment">#非参数检验方法  </span></span><br><span class="line">sc.tl.rank_genes_groups(adata, <span class="string">&#x27;leiden&#x27;</span>, method=<span class="string">&#x27;wilcoxon&#x27;</span>)  </span><br><span class="line">sc.pl.rank_genes_groups(adata, n_genes=<span class="number">25</span>, sharey=<span class="literal">False</span>)  </span><br><span class="line">  </span><br><span class="line"><span class="comment"># 结果写入，方便后续可视化  </span></span><br><span class="line">pd.DataFrame(adata.uns[<span class="string">&#x27;rank_genes_groups&#x27;</span>][<span class="string">&#x27;names&#x27;</span>]).head(<span class="number">5</span>)  </span><br><span class="line">result = adata.uns[<span class="string">&#x27;rank_genes_groups&#x27;</span>]  </span><br><span class="line">groups = result[<span class="string">&#x27;names&#x27;</span>].dtype.names  </span><br><span class="line">pd.DataFrame(adata.uns[<span class="string">&#x27;rank_genes_groups&#x27;</span>][<span class="string">&#x27;names&#x27;</span>]).to_csv(<span class="string">f&quot;./output/<span class="subst">&#123;sample&#125;</span>/marker.csv&quot;</span>)  </span><br><span class="line"><span class="keyword">for</span> trait <span class="keyword">in</span> dict_df_score:  </span><br><span class="line">	adata.obs[trait] = dict_df_score[trait][<span class="string">&quot;raw_score&quot;</span>]  </span><br><span class="line"><span class="keyword">for</span> trait <span class="keyword">in</span> dict_df_score:  </span><br><span class="line">	adata.obs[<span class="string">f&quot;<span class="subst">&#123;trait&#125;</span>_norm&quot;</span>] = dict_df_score[trait][<span class="string">&quot;norm_score&quot;</span>]  </span><br><span class="line">sc.pl.umap(adata,color=dict_df_score.keys(),ncols=<span class="number">1</span>,color_map=<span class="string">&quot;RdBu_r&quot;</span>,save=<span class="string">f&quot;<span class="subst">&#123;sample&#125;</span>_disease.png&quot;</span>)  </span><br><span class="line">df_group = adata.obs  </span><br><span class="line">l = [<span class="string">&quot;a&quot;</span>,<span class="string">&quot;b&quot;</span>,<span class="string">&quot;c&quot;</span>,<span class="string">&quot;d&quot;</span>,<span class="string">&quot;e&quot;</span>,<span class="string">&quot;f&quot;</span>,<span class="string">&quot;g&quot;</span>,<span class="string">&quot;h&quot;</span>,<span class="string">&quot;i&quot;</span>,<span class="string">&quot;j&quot;</span>,<span class="string">&quot;k&quot;</span>,<span class="string">&quot;l&quot;</span>,<span class="string">&quot;m&quot;</span>,<span class="string">&quot;n&quot;</span>,<span class="string">&quot;o&quot;</span>,<span class="string">&quot;p&quot;</span>,<span class="string">&quot;q&quot;</span>,<span class="string">&quot;r&quot;</span>,<span class="string">&quot;s&quot;</span>,<span class="string">&quot;t&quot;</span>,<span class="string">&quot;u&quot;</span>,<span class="string">&quot;v&quot;</span>,<span class="string">&quot;w&quot;</span>,<span class="string">&quot;x&quot;</span>,<span class="string">&quot;y&quot;</span>,<span class="string">&quot;z&quot;</span>]  </span><br><span class="line">map_list = &#123;&#125;  </span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(l)):  </span><br><span class="line">	map_list[<span class="built_in">str</span>(i)] = l[i]  </span><br><span class="line">df_group[<span class="string">&quot;group&quot;</span>] = df_group[<span class="string">&quot;leiden&quot;</span>].<span class="built_in">map</span>(map_list)  </span><br><span class="line">df_group.to_csv(<span class="string">f&quot;./output/<span class="subst">&#123;sample&#125;</span>/leiden score.csv&quot;</span>)  </span><br><span class="line">df_gene = scdrs.method.downstream_gene_analysis(adata=adata, df_full_score=dict_df_score[<span class="string">&quot;CHD&quot;</span>])  </span><br><span class="line">df_gene.to_csv(<span class="string">f&quot;./output/<span class="subst">&#123;sample&#125;</span>/key gene.csv&quot;</span>)  </span><br><span class="line">df_group_analysis = scdrs.method.downstream_group_analysis(adata=adata, df_full_score=dict_df_score[<span class="string">&quot;CHD&quot;</span>], group_cols=[<span class="string">&quot;group&quot;</span>])</span><br></pre></td></tr></table></figure>
-<h2 id="在命令行中使用scdrs"><a href="#在命令行中使用scdrs" class="headerlink" title="在命令行中使用scdrs"></a>在命令行中使用scdrs</h2><h3 id="计算每个细胞的疾病富集分数"><a href="#计算每个细胞的疾病富集分数" class="headerlink" title="计算每个细胞的疾病富集分数"></a>计算每个细胞的疾病富集分数</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Shell</span></span><br><span class="line">scdrs compute-score \  </span><br><span class="line">    --h5ad-file data/expr.h5ad \  </span><br><span class="line">    --h5ad-species human \  </span><br><span class="line">    --gs-file data/processed_geneset.gs \  </span><br><span class="line">    --gs-species human \  </span><br><span class="line">    --cov-file data/cov.tsv \  </span><br><span class="line">    --flag-filter-data True \  </span><br><span class="line">    --flag-raw-count True \  </span><br><span class="line">    --flag-return-ctrl-raw-score False \  </span><br><span class="line">    --flag-return-ctrl-norm-score True \  </span><br><span class="line">    --out-folder data/  </span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line"><span class="comment"># 可视化 python  </span></span><br><span class="line">df_gs.index = [<span class="string">&#x27;CHD&#x27;</span>,<span class="string">&#x27;Height&#x27;</span>]  </span><br><span class="line">dict_score = &#123;  </span><br><span class="line">    trait: pd.read_csv(f<span class="string">&quot;data/&#123;trait&#125;.full_score.gz&quot;</span>, sep=<span class="string">&quot;\t&quot;</span>, index_col=0)  </span><br><span class="line">    <span class="keyword">for</span> trait <span class="keyword">in</span> df_gs.index  </span><br><span class="line">&#125;  </span><br><span class="line">  </span><br><span class="line"><span class="keyword">for</span> trait <span class="keyword">in</span> dict_score:  </span><br><span class="line">    adata.obs[trait] = dict_score[trait][<span class="string">&quot;norm_score&quot;</span>]  </span><br><span class="line">  </span><br><span class="line">sc.set_figure_params(figsize=[2.5, 2.5], dpi=150)  </span><br><span class="line">sc.pl.umap(  </span><br><span class="line">    adata,  </span><br><span class="line">    color=dict_score.keys(),  </span><br><span class="line">    ncols=1,  </span><br><span class="line">    color_map=<span class="string">&quot;RdBu_r&quot;</span>,  </span><br><span class="line">    vmin=-5,  </span><br><span class="line">    vmax=5,  </span><br><span class="line">)  </span><br><span class="line">  </span><br><span class="line">sc.pl.umap(  </span><br><span class="line">    adata,  </span><br><span class="line">    color=dict_score.keys(),  </span><br><span class="line">    color_map=<span class="string">&quot;RdBu_r&quot;</span>,  </span><br><span class="line">    vmin=-5,  </span><br><span class="line">    vmax=5,  </span><br><span class="line">    s=20,  </span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-<p>&emsp;&emsp;基于单个细胞的疾病富集分数，我们可以充分探索下游分析的方式。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
-<li>Zhang, M.J., Hou, K., Dey, K.K. et al. Polygenic enrichment distinguishes disease associations of individual cells in single-cell RNA-seq data. Nat Genet 54, 1572–1580 (2022).<a href="https://doi.org/10.1038/s41588-022-01167-z">DOI</a>.</li>
-<li>scDRS的Github项目：<a href="https://github.com/martinjzhang/scDRS">martinjzhang/scDRS</a>。</li>
-<li>scDRS的官方文档：<a href="https://martinjzhang.github.io/scDRS/">scDRS</a>。</li>
-</ol>
-]]></content>
-      <categories>
-        <category>生物信息学</category>
-      </categories>
-      <tags>
-        <tag>GWAS</tag>
-        <tag>生物信息学</tag>
-        <tag>单细胞测序</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>scPagwas——整合scRNA和GWAS识别疾病的驱动基因和关键细胞类型</title>
     <url>/2023/08/25/scPagwas%E2%80%94%E2%80%94%E6%95%B4%E5%90%88scRNA%E5%92%8CGWAS%E8%AF%86%E5%88%AB%E7%96%BE%E7%97%85%E7%9A%84%E9%A9%B1%E5%8A%A8%E5%9F%BA%E5%9B%A0%E5%92%8C%E5%85%B3%E9%94%AE%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8B/</url>
     <content><![CDATA[<p>&emsp;&emsp;<strong>scPagwas</strong>的基本思想和CMU张金野教授开发的<strong>scDRS</strong>工具一脉相承。总的来说，该框架可以概述为：  </p>
@@ -113,8 +62,8 @@
       </categories>
       <tags>
         <tag>GWAS</tag>
-        <tag>生物信息学</tag>
         <tag>单细胞测序</tag>
+        <tag>生物信息学</tag>
       </tags>
   </entry>
   <entry>
@@ -175,50 +124,6 @@
         <tag>计算机</tag>
         <tag>爬虫</tag>
         <tag>研究生</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>单细胞转录组分析实战（一）：数据采集</title>
-    <url>/2024/02/17/%E5%8D%95%E7%BB%86%E8%83%9E%E8%BD%AC%E5%BD%95%E7%BB%84%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E6%95%B0%E6%8D%AE%E9%87%87%E9%9B%86/</url>
-    <content><![CDATA[<h2 id="写在前面的话"><a href="#写在前面的话" class="headerlink" title="写在前面的话"></a>写在前面的话</h2><p>&emsp;&emsp;本系列将基于张泽民团队发表的TNBC免疫图谱进行挖掘（<a href="https://www.cell.com/cancer-cell/fulltext/S1535-6108(21">Single-cell analyses reveal key immune cell subsets associated with response to PD-L1 blockade in triple-negative breast cancer: Cancer Cell</a>00499-2)），旨在探索原发灶和转移灶免疫微环境的差异及其原因。<br>&emsp;&emsp;准确严谨的采集和清洗数据是单细胞分析的开始，数据本身的质量和采集过程的规范程度决定了研究结果的可靠性。</p>
-<h2 id="样本信息"><a href="#样本信息" class="headerlink" title="样本信息"></a>样本信息</h2><h3 id="患者来源"><a href="#患者来源" class="headerlink" title="患者来源"></a>患者来源</h3><p>&emsp;&emsp;国家癌症中心开发的DTHealth TrakCare系统中记录了患者信息，纳入本研究的22名患者满足：（1）组织学确诊晚期TNBC；（2）既往没有化疗、靶向及免疫等全身治疗；（3）研究中接受紫杉醇单药治疗或紫杉醇加阿替利珠单抗治疗。</p>
-<h3 id="患者信息"><a href="#患者信息" class="headerlink" title="患者信息"></a>患者信息</h3><ol>
-<li>本研究所有患者均被诊断为晚期TNBC，大多数患者患有转移性疾病；</li>
-<li>事实上，一些患者是接受新辅助治疗的局部晚期患者；</li>
-<li>患者为女性，年龄在32-64岁之间，中位值为49岁；</li>
-</ol>
-<p><img src="/2024/02/17/%E5%8D%95%E7%BB%86%E8%83%9E%E8%BD%AC%E5%BD%95%E7%BB%84%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E6%95%B0%E6%8D%AE%E9%87%87%E9%9B%86/1.jpg" alt="临床信息"></p>
-<h3 id="样本收集、文库制备和测序"><a href="#样本收集、文库制备和测序" class="headerlink" title="样本收集、文库制备和测序"></a>样本收集、文库制备和测序</h3><p>&emsp;&emsp;研究使用16针吸穿刺取乳腺、胸壁肿瘤样本；18号针取淋巴结、肝转移灶样本。测序仪器是10x Genomics公司的HiSeq X Ten，平台为<a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GPL20795">GPL20795</a>。DNA片段被打碎为150bp，进行双端测序。</p>
-<h2 id="单细胞转录组数据处理"><a href="#单细胞转录组数据处理" class="headerlink" title="单细胞转录组数据处理"></a>单细胞转录组数据处理</h2><p>&emsp;&emsp;10x Genomics公司提供的Cell Ranger（V 3.0.1）用于汇总原始数据，过滤低质量读段，将reads与人类参考基因组（GRCh38）比对，分配细胞Barcode，并生成UMI矩阵。值得注意的是，对于10x Genomics公司的测序，由于UMI的存在，使用Raw Count即可反映真实的基因表达，不需要使用标准化方法进行基因定量（<a href="https://forrestgump618.github.io/2024/02/16/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89%EF%BC%9A%E5%9F%BA%E5%9B%A0%E5%AE%9A%E9%87%8F/">生物信息学笔记（三）：基因定量</a>）。但注意，这里所谓“真实的基因表达”反映的是测序过程中的真实值，即不必考虑测序深度和转录本长度的值；而单细胞测序中，由于转录本的低捕获率，我们假设合格细胞基因表达总量应该类似，所以还要进行标准化排除不同细胞测序质量的差异。<br>&emsp;&emsp;原文使用Scanpy进行下游分析，质控步骤包括：</p>
-<ol>
-<li>过滤在少于10个细胞中表达的基因；</li>
-<li>过滤少于200个基因的细胞中检测到的基因；</li>
-<li>保留了600-120,000个UMIs、400-8,000个基因和小于10%线粒体基因计数的高质量细胞；</li>
-<li>将Scrublet应用于每个测序文库，以去除预期的双峰率为6%的潜在双峰，并滤除doubletScore大于90%分位数的细胞；</li>
-</ol>
-<p>&emsp;&emsp;接着，我们进行标准化操作：</p>
-<ol>
-<li>标准化每个细胞的总计数（库大小）：这一步是为了消除不同细胞间样本量的差异。库大小通常是指一个细胞中检测到的总UMI数。通过将每个细胞的UMI计数除以该细胞的总UMI计数，可以确保数据在不同细胞间是可比的。</li>
-<li>乘以1e6：这一步是为了放大数据，使其更易于处理。通常在生物信息学中，进行这样的转换是为了避免处理极小的数字。</li>
-<li>对数据进行对数变换：最后，对标准化后的数据进行对数变换是为了减少数据中极端值的影响，使数据的分布更接近正态分布。这通常有助于后续的统计分析和可视化。</li>
-</ol>
-<p>&emsp;&emsp;前面的步骤完成了单细胞转录组数据的质控和标准化，下面进行矩阵降维，进一步排除无关变量的影响，同时压缩分析规模：</p>
-<ol>
-<li>选择前4000个可变基因，排除大部分背景基因的影响；</li>
-<li>从标准化表达矩阵中去除总计数、线粒体基因计数和热休克蛋白（HSP）相关基因计数的变异，以避免偏差；</li>
-<li>主成分分析，把4000个可变基因降为50个主成分；</li>
-<li>由此，我们得到了50×细胞数的矩阵，即对于每个细胞有50个变量，使用前2个或者3个主成分进行可视化，通过标注不同样本，发现潜在的批次效应，并通过相应的算法（在R中可以通过Harmony）去除；</li>
-<li>由此，我们尽可能避免了因非研究变量因素导致的系统误差，得到新的标准化矩阵。</li>
-</ol>
-<p>&emsp;&emsp;最后，Leiden算法寻找细胞簇和分群，UMAP和TSNE进行作图，推荐使用COSG确定Marker。</p>
-]]></content>
-      <categories>
-        <category>生物信息学</category>
-      </categories>
-      <tags>
-        <tag>单细胞测序</tag>
-        <tag>免疫</tag>
-        <tag>肿瘤</tag>
       </tags>
   </entry>
   <entry>
@@ -355,8 +260,8 @@
         <category>生物信息学</category>
       </categories>
       <tags>
-        <tag>生物信息学</tag>
         <tag>单细胞测序</tag>
+        <tag>生物信息学</tag>
       </tags>
   </entry>
   <entry>
@@ -1056,7 +961,29 @@
   <entry>
     <title>孟德尔随机化标准流程代码示例</title>
     <url>/2024/02/05/%E5%AD%9F%E5%BE%B7%E5%B0%94%E9%9A%8F%E6%9C%BA%E5%8C%96%E6%A0%87%E5%87%86%E6%B5%81%E7%A8%8B%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B/</url>
-    <content><![CDATA[<figure class="highlight r"><table><tr><td class="code"><pre><span class="line"><span class="comment">####TSMR####</span></span><br><span class="line">library<span class="punctuation">(</span>TwoSampleMR<span class="punctuation">)</span></span><br><span class="line">library<span class="punctuation">(</span>MRPRESSO<span class="punctuation">)</span></span><br><span class="line"><span class="comment">####NAFLD - COVID 19####</span></span><br><span class="line"><span class="comment">####RCT####</span></span><br><span class="line"></span><br><span class="line"><span class="comment">####NAFLD_exposure####</span></span><br><span class="line">exposure_dat<span class="operator">&lt;-</span>read_exposure_data<span class="punctuation">(</span>filename <span class="operator">=</span> <span class="string">&quot;./NAFLD.txt&quot;</span><span class="punctuation">,</span>sep<span class="operator">=</span><span class="string">&quot;\t&quot;</span><span class="punctuation">,</span></span><br><span class="line">                                 snp_col <span class="operator">=</span> <span class="string">&quot;rsids&quot;</span><span class="punctuation">,</span>effect_allele_col <span class="operator">=</span> <span class="string">&quot;alt&quot;</span><span class="punctuation">,</span>other_allele_col <span class="operator">=</span> <span class="string">&quot;ref&quot;</span><span class="punctuation">,</span></span><br><span class="line">                                 beta_col <span class="operator">=</span> <span class="string">&quot;beta&quot;</span><span class="punctuation">,</span>se_col <span class="operator">=</span> <span class="string">&quot;sebeta&quot;</span><span class="punctuation">,</span>pval_col <span class="operator">=</span> <span class="string">&quot;pval&quot;</span><span class="punctuation">,</span>eaf_col <span class="operator">=</span> <span class="string">&quot;af_alt&quot;</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">##看目录下的文件进行对应，如果读一个完整的文件，需要进行P值筛选</span></span><br><span class="line"></span><br><span class="line">exposure_dat<span class="operator">$</span>phenotype<span class="operator">&lt;-</span><span class="string">&quot;NAFLD&quot;</span></span><br><span class="line"><span class="comment">##命名性状，方便结果输出</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment">#### kb=10000;r2=0.001;</span></span><br><span class="line"><span class="comment">#### kb=500;r2=0.1.</span></span><br><span class="line">exposure_dat<span class="operator">&lt;-</span>clump_data<span class="punctuation">(</span>exposure_dat<span class="punctuation">)</span></span><br><span class="line"><span class="comment">##连锁不平衡去除</span></span><br><span class="line"></span><br><span class="line"><span class="comment">####COVID19_OUTCOME####</span></span><br><span class="line">outcome_dat<span class="operator">&lt;-</span>extract_outcome_data<span class="punctuation">(</span>outcomes <span class="operator">=</span> <span class="string">&quot;ebi-a-GCST011081&quot;</span><span class="punctuation">,</span>snps <span class="operator">=</span> exposure_dat<span class="operator">$</span>SNP<span class="punctuation">)</span></span><br><span class="line"><span class="comment">##在线读取</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#####Harmonization####</span></span><br><span class="line">dat<span class="operator">&lt;-</span>harmonise_data<span class="punctuation">(</span>exposure_dat <span class="operator">=</span> exposure_dat</span><br><span class="line">                    <span class="punctuation">,</span>outcome_dat <span class="operator">=</span> outcome_dat<span class="punctuation">,</span></span><br><span class="line">                    action <span class="operator">=</span> <span class="number">2</span><span class="punctuation">)</span></span><br><span class="line"><span class="comment">##dat协调，去除回文序列，错配</span></span><br><span class="line"></span><br><span class="line"><span class="comment">####F&gt;10####</span></span><br><span class="line">dat<span class="operator">$</span><span class="built_in">F</span><span class="operator">&lt;-</span><span class="punctuation">(</span>dat<span class="operator">$</span>beta.exposure<span class="operator">/</span>dat<span class="operator">$</span>se.exposure<span class="punctuation">)</span><span class="operator">**</span><span class="number">2</span></span><br><span class="line">dat<span class="operator">&lt;-</span>subset<span class="punctuation">(</span>dat<span class="punctuation">,</span><span class="built_in">F</span><span class="operator">&gt;</span><span class="number">10</span><span class="punctuation">)</span></span><br><span class="line">mr_result <span class="operator">&lt;-</span> mr<span class="punctuation">(</span>dat<span class="punctuation">)</span></span><br><span class="line"><span class="comment">##F值-遗传力计算</span></span><br><span class="line"></span><br><span class="line"><span class="comment">####Sensitivity,p&gt;0.05####</span></span><br><span class="line">het<span class="operator">&lt;-</span>mr_heterogeneity<span class="punctuation">(</span>dat<span class="punctuation">)</span></span><br><span class="line">ple<span class="operator">&lt;-</span>mr_pleiotropy_test<span class="punctuation">(</span>dat<span class="punctuation">)</span></span><br><span class="line"><span class="comment">###sNP pleiotropy: Phennoscaner; MR-PRESSO</span></span><br><span class="line">mr_presso<span class="punctuation">(</span>data <span class="operator">=</span> dat<span class="punctuation">,</span>BetaOutcome <span class="operator">=</span> <span class="string">&quot;beta.outcome&quot;</span><span class="punctuation">,</span>BetaExposure <span class="operator">=</span> <span class="string">&quot;beta.exposure&quot;</span><span class="punctuation">,</span>SdOutcome <span class="operator">=</span> <span class="string">&quot;se.outcome&quot;</span><span class="punctuation">,</span>SdExposure <span class="operator">=</span> <span class="string">&quot;se.exposure&quot;</span><span class="punctuation">)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">####Graph####</span></span><br><span class="line">mr_funnel_plot<span class="punctuation">(</span>singlesnp_results <span class="operator">=</span> mr_singlesnp<span class="punctuation">(</span>dat<span class="punctuation">)</span><span class="punctuation">)</span> <span class="comment">###het p</span></span><br><span class="line">mr_forest_plot<span class="punctuation">(</span>mr_singlesnp<span class="punctuation">(</span>dat<span class="punctuation">)</span><span class="punctuation">)</span></span><br><span class="line">mr_scatter_plot<span class="punctuation">(</span>mr_results <span class="operator">=</span> mr_result<span class="punctuation">,</span>dat <span class="operator">=</span> dat<span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+    <content><![CDATA[<p>在这篇博客中，我们将通过R代码来探索非酒精性脂肪肝（NAFLD）对COVID-19严重程度的可能影响。我们将利用两个R包：<code>TwoSampleMR</code>和<code>MRPRESSO</code>，来执行Mendelian Randomization (MR)分析，这是一种利用基因变异作为工具变量来估计暴露和结果之间因果关系的统计方法。</p>
+<h3 id="开始之前"><a href="#开始之前" class="headerlink" title="开始之前"></a>开始之前</h3><p>首先，我们需要安装并加载必要的R包：</p>
+<p>rCopy code</p>
+<p><code># 安装（如果尚未安装） install.packages(&quot;TwoSampleMR&quot;) install.packages(&quot;MRPRESSO&quot;)  # 加载包 library(TwoSampleMR) library(MRPRESSO)</code></p>
+<h3 id="数据准备"><a href="#数据准备" class="headerlink" title="数据准备"></a>数据准备</h3><p>我们的目标是研究NAFLD对COVID-19严重程度的影响。为此，我们首先需要准备关于NAFLD的暴露数据：</p>
+<p>rCopy code</p>
+<p><code># 读取暴露数据 exposure_dat &lt;- read_exposure_data(filename = &quot;./NAFLD.txt&quot;, sep=&quot;\t&quot;,                                    snp_col = &quot;rsids&quot;, effect_allele_col = &quot;alt&quot;, other_allele_col = &quot;ref&quot;,                                    beta_col = &quot;beta&quot;, se_col = &quot;sebeta&quot;, pval_col = &quot;pval&quot;, eaf_col = &quot;af_alt&quot;) # 对数据进行命名，便于后续处理 exposure_dat$phenotype &lt;- &quot;NAFLD&quot;</code></p>
+<h3 id="数据处理"><a href="#数据处理" class="headerlink" title="数据处理"></a>数据处理</h3><p>为了确保我们分析的基因变异之间没有连锁不平衡，我们将对数据进行clump处理：</p>
+<p>rCopy code</p>
+<p><code># 连锁不平衡去除 exposure_dat &lt;- clump_data(exposure_dat)</code></p>
+<h3 id="结果数据获取"><a href="#结果数据获取" class="headerlink" title="结果数据获取"></a>结果数据获取</h3><p>接下来，我们需要获取COVID-19作为结果的数据：</p>
+<p>rCopy code</p>
+<p><code># 在线读取COVID-19结果数据 outcome_dat &lt;- extract_outcome_data(outcomes = &quot;ebi-a-GCST011081&quot;, snps = exposure_dat$SNP)</code></p>
+<h3 id="数据协调"><a href="#数据协调" class="headerlink" title="数据协调"></a>数据协调</h3><p>为了进行MR分析，暴露和结果数据需要进行协调，确保基因变异的方向一致：</p>
+<p>rCopy code</p>
+<p><code># 数据协调 dat &lt;- harmonise_data(exposure_dat = exposure_dat, outcome_dat = outcome_dat, action = 2)</code></p>
+<h3 id="分析与敏感性测试"><a href="#分析与敏感性测试" class="headerlink" title="分析与敏感性测试"></a>分析与敏感性测试</h3><p>进行MR分析前，我们先计算F值，以评估使用的工具变量的有效性，并进行敏感性测试：</p>
+<p>rCopy code</p>
+<p><code># F值计算与筛选 dat$F &lt;- (dat$beta.exposure/dat$se.exposure)**2 dat &lt;- subset(dat, F&gt;10)  # MR分析 mr_result &lt;- mr(dat)  # 敏感性测试 het &lt;- mr_heterogeneity(dat) ple &lt;- mr_pleiotropy_test(dat) mr_presso(data = dat, BetaOutcome = &quot;beta.outcome&quot;, BetaExposure = &quot;beta.exposure&quot;, SdOutcome = &quot;se.outcome&quot;, SdExposure = &quot;se.exposure&quot;)</code></p>
+<h3 id="结果呈现"><a href="#结果呈现" class="headerlink" title="结果呈现"></a>结果呈现</h3><p>最后，我们通过几种图表直观展示MR分析结果：</p>
+<p>rCopy code</p>
+<p><code># 结果图表展示 mr_funnel_plot(singlesnp_results = mr_singlesnp(dat)) # 漏斗图 mr_forest_plot(mr_singlesnp(dat)) # 森林图 mr_scatter_plot(mr_results = mr_result, dat = dat) # 散点图</code></p>
+<p>通过这些步骤，我们可以评估非酒精性脂肪肝（NAFLD）对COVID-19严重程度的潜在影响，提供更深入的理解和新的研究方向。这种基于Mendelian Randomization的方法为我们提供了一种强有力的工具，来探讨各种生物标志物与疾病之间的因果关系。</p>
 ]]></content>
       <categories>
         <category>流行病学</category>
@@ -1066,6 +993,101 @@
         <tag>统计学</tag>
         <tag>孟德尔随机化</tag>
         <tag>流行病学</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>scDRS：基于GWAS和scRNA评估细胞类型和生物学过程的疾病相关性</title>
+    <url>/2023/08/11/scDRS%EF%BC%9A%E5%9F%BA%E4%BA%8EGWAS%E5%92%8CscRNA%E8%AF%84%E4%BC%B0%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8B%E5%92%8C%E7%94%9F%E7%89%A9%E5%AD%A6%E8%BF%87%E7%A8%8B%E7%9A%84%E7%96%BE%E7%97%85%E7%9B%B8%E5%85%B3%E6%80%A7/</url>
+    <content><![CDATA[<h2 id="方法学概述"><a href="#方法学概述" class="headerlink" title="方法学概述"></a>方法学概述</h2><p>&emsp;&emsp;scDRS的核心思想是建立合适的权重从而根据基因的表达对基因程序进行评分，即加权基因表达量。其算法可概述为：首先将基因根据MAGMA得到的gene-level z-scores从大到小排列（也可以自定义基因程序）, 选择潜在的致病基因。基于致病基因的表达量和权重接着计算致病基因程序加权表达量。从而评估该细胞的基因程序和疾病的相关度。<br>&emsp;&emsp;算法对z-score采用算数加权，对技术噪声指标采用逆加权。也就是说，在GWAS中鉴定出的越相关的，且测序过程中技术原因造成误差较小的基因。根据输入数据集的基因表达，在蒙特卡洛随机模拟生成的B个对照组中，从而推断分布，进而对研究的疾病进行统计检验。利用这样的方法，我们可以计算单个细胞和疾病的相关性，以及鉴定相应的驱动基因，并基于此进行下游分析。</p>
+<h2 id="使用scdrs包在Python中进行分析"><a href="#使用scdrs包在Python中进行分析" class="headerlink" title="使用scdrs包在Python中进行分析"></a>使用scdrs包在Python中进行分析</h2><h3 id="载入程序包"><a href="#载入程序包" class="headerlink" title="载入程序包"></a>载入程序包</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> scanpy <span class="keyword">as</span> sc</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> scdrs</span><br></pre></td></tr></table></figure>
+<h3 id="基础参数设置"><a href="#基础参数设置" class="headerlink" title="基础参数设置"></a>基础参数设置</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">sc.settings.verbosity = <span class="number">3</span> <span class="comment"># 设置日志等级:errors(0),warnings(1),info(2),hints(3)  </span></span><br><span class="line">sc.logging.print_header() <span class="comment"># 输出版本号</span></span><br><span class="line">sc.settings.set_figure_params(dpi=<span class="number">300</span>, facecolor=<span class="string">&#x27;white&#x27;</span>) <span class="comment"># 设置图片的分辨率300dpi</span></span><br></pre></td></tr></table></figure>
+<h3 id="读取计数矩阵和预处理"><a href="#读取计数矩阵和预处理" class="headerlink" title="读取计数矩阵和预处理"></a>读取计数矩阵和预处理</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">adata = sc.read_csv(<span class="string">&quot;heart.csv&quot;</span>) <span class="comment"># 注意，这里的heart.csv列为细胞，行为基因，这一点和seurat框架是不同的。</span></span><br><span class="line"><span class="comment"># 其他的读取方法可参考scanpy的文档。</span></span><br><span class="line">adata.var_names_make_unique()</span><br><span class="line">adata.obs_names_make_unique()</span><br><span class="line">adata.var.head() <span class="comment"># 基因特征的摘要</span></span><br><span class="line">adata.obs.head() <span class="comment"># 细胞特征的摘要</span></span><br><span class="line">adata <span class="comment"># 返回矩阵大小，基因相关的变量以及细胞相关的变量数据  </span></span><br><span class="line">sc.pl.highest_expr_genes(adata, n_top=<span class="number">20</span>) <span class="comment"># 显示在全部单个细胞中基因读数占总读数的百分比排名前20的基因</span></span><br></pre></td></tr></table></figure>
+<h3 id="质量控制"><a href="#质量控制" class="headerlink" title="质量控制"></a>质量控制</h3><p>&emsp;&emsp;质量控制，大部分都是针对细胞（obs）的质量控制。<br>&emsp;&emsp;细胞质控通常对以下三个质控协变量进行：  </p>
+<ol>
+<li>每个条形码的计数数量（计数深度）  </li>
+<li>每个条形码的基因数量  </li>
+<li>每个条形码的线粒体基因计数比例<br>&emsp;&emsp;如果一个细胞正在死亡，其mRNA被释放到内环境，导致线粒体基因的比例较高，所以我们可以通过线粒体基因的比例来过滤掉低质量的单细胞测序数据。但是如果仅考虑一个变量可能会造成生物学误差，共同考虑三个 QC 协变量至关重要。例如，线粒体计数相对较高的细胞可能参与呼吸过程，不应被过滤掉。然而，计数低或高的细胞可能对应于静止细胞群或尺寸较大的细胞。故我们在过滤低质量细胞的时候，要同时考虑不同的QC协变量之间的关系。</li>
+</ol>
+<h3 id="质控指标的计算"><a href="#质控指标的计算" class="headerlink" title="质控指标的计算"></a>质控指标的计算</h3><p>&emsp;&emsp;首先采用正则表达式识别线粒体；接着，我们将根据识别的结果进行比例的计算。<br><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">adata.var[<span class="string">&quot;mt&quot;</span>] = adata.var_names.<span class="built_in">str</span>.startswith(<span class="string">&quot;MT-&quot;</span>)  </span><br><span class="line">sc.pp.calculate_qc_metrics(adata, qc_vars=[<span class="string">&quot;mt&quot;</span>], inplace=<span class="literal">True</span>, percent_top=[<span class="number">20</span>], log1p=<span class="literal">True</span>) <span class="comment"># 此处可以计算其他给定基因；该步骤之后，才可以得到n_counts等数据。</span></span><br></pre></td></tr></table></figure><br>&emsp;&emsp;通过上面的计算和adata.obs固有的数据，我们可以得到三个质控协变量：  </p>
+<ol>
+<li>n_genes_by_counts/detected_genes: 一个细胞中发现的有效基因数量（即表达量不为0）  </li>
+<li>total_counts/nUMIs: 一个细胞中发现的分子数量（UMI），通常也可以被认为是这个细胞的文库大小  </li>
+<li>pct_counts_mt/mito_perc: 一个细胞中线粒体基因的表达计数占比<br>&emsp;&emsp;可以绘制三个协变量的分布图。</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line">mito_filter = <span class="number">25</span> <span class="comment"># 根据数据集合设定，注意，心室肌等组织富含线粒体，需要根据情况进行更改。</span></span><br><span class="line">n_counts_filter = <span class="number">4300</span> <span class="comment"># 根据上述的MAD方法进行设定，官方教程认为counts数过多可能是双细胞，但是下面采用scrublet方法进行双细胞识别。</span></span><br><span class="line">fig, axs = plt.subplots(ncols = <span class="number">2</span>, figsize = (<span class="number">8</span>,<span class="number">4</span>))</span><br><span class="line">sc.pl.scatter(adata, x=<span class="string">&#x27;total_counts&#x27;</span>, y=<span class="string">&#x27;pct_counts_mt&#x27;</span>,ax = axs[<span class="number">0</span>], show=<span class="literal">False</span>)  </span><br><span class="line">sc.pl.scatter(adata, x=<span class="string">&#x27;total_counts&#x27;</span>, y=<span class="string">&#x27;n_genes_by_counts&#x27;</span>,ax = axs[<span class="number">1</span>], show = <span class="literal">False</span>) </span><br><span class="line"><span class="comment"># draw horizontal red lines indicating thresholds.</span></span><br><span class="line">axs[<span class="number">0</span>].hlines(y = mito_filter, xmin = <span class="number">0</span>, xmax = <span class="built_in">max</span>(adata.obs[<span class="string">&#x27;total_counts&#x27;</span>]), color = <span class="string">&#x27;red&#x27;</span>, ls = <span class="string">&#x27;dashed&#x27;</span>) </span><br><span class="line">axs[<span class="number">1</span>].hlines(y = n_counts_filter, xmin = <span class="number">0</span>, xmax = <span class="built_in">max</span>(adata.obs[<span class="string">&#x27;total_counts&#x27;</span>]), color = <span class="string">&#x27;red&#x27;</span>, ls = <span class="string">&#x27;dashed&#x27;</span>)</span><br><span class="line">fig.tight_layout()  </span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;也可以采用小提琴图。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">sc.pl.violin(adata, [<span class="string">&#x27;n_genes_by_counts&#x27;</span>, <span class="string">&#x27;total_counts&#x27;</span>, <span class="string">&#x27;pct_counts_mt&#x27;</span>],jitter=<span class="number">0.4</span>, multi_panel=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;还可以采用直方图。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> seaborn <span class="keyword">as</span> sns  </span><br><span class="line">sns.histplot(adata.obs[<span class="string">&quot;n_genes_by_counts&quot;</span>], bins=<span class="number">100</span>, kde=<span class="literal">False</span>)  </span><br><span class="line">sns.histplot(adata.obs[<span class="string">&quot;total_counts&quot;</span>], bins=<span class="number">100</span>, kde=<span class="literal">False</span>) </span><br></pre></td></tr></table></figure>
+<h3 id="双细胞过滤"><a href="#双细胞过滤" class="headerlink" title="双细胞过滤"></a>双细胞过滤</h3><p>&emsp;&emsp;双细胞被定义为在相同的细胞条形码（barcode）下进行测序的两个细胞，例如，如果它们被捕获在同一个液滴（droplet）中。双细胞由同型（homotypic）与异型（heterotypic）所构成 ：</p>
+<ol>
+<li>同型：同型通常被认为是不影响下游分析的，因为其是由一类相同的细胞中的两个所构成，所以这部分细胞不是我们所需要过滤的对象；  </li>
+<li>异型：异型通常是由来自两类不同的细胞所构成的，异型的存在会使得我们后续的细胞分类出现错误，因为其独特的数据分布特征。<br>&emsp;&emsp;我们可以通过人工构建双细胞进行模拟识别，以排除异型的存在。我们将使用scrublet来完成双细胞的识别。<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">sc.external.pp.scrublet(adata, random_state=<span class="number">112</span>) </span><br><span class="line">adata = adata[adata.obs[<span class="string">&#x27;predicted_doublet&#x27;</span>]==<span class="literal">False</span>, :]</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="低质量细胞过滤"><a href="#低质量细胞过滤" class="headerlink" title="低质量细胞过滤"></a>低质量细胞过滤</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">adata = adata[adata.obs.pct_counts_mt &lt; <span class="number">25</span>, :]  </span><br><span class="line">adata = adata[adata.obs.n_genes_by_counts &gt; <span class="number">200</span>, :]  </span><br><span class="line">adata = adata[adata.obs.total_counts &gt; <span class="number">300</span>, :]  </span><br><span class="line">sc.pp.filter_cells(adata, min_genes=<span class="number">200</span>)  </span><br><span class="line">sc.pp.filter_genes(adata, min_cells=<span class="number">3</span>)  </span><br><span class="line">  </span><br><span class="line"><span class="comment"># 小提琴图可视化  </span></span><br><span class="line">sc.pl.violin(adata, [<span class="string">&#x27;n_genes_by_counts&#x27;</span>, <span class="string">&#x27;total_counts&#x27;</span>, <span class="string">&#x27;pct_counts_mt&#x27;</span>],jitter=<span class="number">0.4</span>, multi_panel=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="保存结果用于scDRS的分析"><a href="#保存结果用于scDRS的分析" class="headerlink" title="保存结果用于scDRS的分析"></a>保存结果用于scDRS的分析</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">adata_raw = adata.copy()  </span><br><span class="line">adata_raw.write_h5ad(<span class="string">f&quot;./output/<span class="subst">&#123;sample&#125;</span>/expr.h5ad&quot;</span>)  </span><br><span class="line">  </span><br><span class="line">df_cov = pd.DataFrame(index=adata_raw.obs.index)  </span><br><span class="line">df_cov[<span class="string">&quot;const&quot;</span>] = <span class="number">1</span>  </span><br><span class="line">df_cov[<span class="string">&quot;n_genes&quot;</span>] = adata_raw.obs[<span class="string">&quot;n_genes&quot;</span>]  </span><br><span class="line">df_cov.to_csv(<span class="string">f&quot;./output/<span class="subst">&#123;sample&#125;</span>/cov.tsv&quot;</span>, sep=<span class="string">&quot;\t&quot;</span>)  </span><br><span class="line">  </span><br><span class="line">summary = pd.DataFrame(adata_raw.obs)  </span><br><span class="line">summary.to_csv(<span class="string">f&quot;./output/<span class="subst">&#123;sample&#125;</span>/summary.tsv&quot;</span>, sep=<span class="string">&quot;\t&quot;</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="scDRS分析"><a href="#scDRS分析" class="headerlink" title="scDRS分析"></a>scDRS分析</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">adata = scdrs.util.load_h5ad(h5ad_file=<span class="string">f&quot;./output/<span class="subst">&#123;sample&#125;</span>/expr.h5ad&quot;</span>, flag_filter_data=<span class="literal">False</span>, flag_raw_count=<span class="literal">True</span>)  </span><br><span class="line">dict_gs = scdrs.util.load_gs(<span class="string">&quot;./output/CHD.gs&quot;</span>, src_species=<span class="string">&quot;human&quot;</span>, dst_species=<span class="string">&quot;human&quot;</span>,to_intersect=adata.var_names)  </span><br><span class="line">df_cov = pd.read_csv(<span class="string">f&quot;./output/<span class="subst">&#123;sample&#125;</span>/cov.tsv&quot;</span>, sep=<span class="string">&quot;\t&quot;</span>, index_col=<span class="number">0</span>)  </span><br><span class="line">adata_analysis = scdrs.preprocess(adata, cov=df_cov, n_mean_bin=<span class="number">20</span>, n_var_bin=<span class="number">20</span>, copy=<span class="literal">True</span>)  </span><br><span class="line">dict_df_score = <span class="built_in">dict</span>()  </span><br><span class="line"><span class="keyword">for</span> trait <span class="keyword">in</span> dict_gs:  </span><br><span class="line">	gene_list, gene_weights = dict_gs[trait]  </span><br><span class="line">	dict_df_score[trait] = scdrs.score_cell(  </span><br><span class="line">		data=adata_analysis,  </span><br><span class="line">		gene_list=gene_list,  </span><br><span class="line">		gene_weight=gene_weights,  </span><br><span class="line">		ctrl_match_key=<span class="string">&quot;mean_var&quot;</span>,  </span><br><span class="line">		n_ctrl=<span class="number">1000</span>,  </span><br><span class="line">		weight_opt=<span class="string">&quot;vs&quot;</span>,  </span><br><span class="line">		return_ctrl_raw_score=<span class="literal">False</span>,  </span><br><span class="line">		return_ctrl_norm_score=<span class="literal">True</span>,  </span><br><span class="line">		verbose=<span class="literal">False</span>,  </span><br><span class="line">	)  </span><br><span class="line">chd = dict_df_score[<span class="string">&quot;CHD&quot;</span>]  </span><br><span class="line">chd.to_csv(<span class="string">f&quot;./output/<span class="subst">&#123;sample&#125;</span>/CHD.csv&quot;</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="可视化"><a href="#可视化" class="headerlink" title="可视化"></a>可视化</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">sc.pp.highly_variable_genes(adata, n_top_genes=<span class="number">2000</span>)  </span><br><span class="line">adata = adata[:, adata.var.highly_variable]  </span><br><span class="line">sc.pp.regress_out(adata, [<span class="string">&#x27;total_counts&#x27;</span>, <span class="string">&#x27;pct_counts_mt&#x27;</span>])  </span><br><span class="line"><span class="comment">#归一化 (事实上，只有PCA才采用归一化数据，使得不同PC的数据规模接近。)  </span></span><br><span class="line">sc.pp.scale(adata, max_value=<span class="number">10</span>)  </span><br><span class="line"><span class="comment">#主成分分析  </span></span><br><span class="line">sc.tl.pca(adata, svd_solver=<span class="string">&quot;arpack&quot;</span>)  </span><br><span class="line">  </span><br><span class="line">sc.pp.neighbors(adata, n_neighbors=<span class="number">10</span>, n_pcs=<span class="number">40</span>) <span class="comment">#KNN算法，此处参数：n_neighbours更大，则聚类可能会变少；n_pcs一般为40，可参考碎石图。  </span></span><br><span class="line">sc.tl.umap(adata)  </span><br><span class="line">sc.tl.leiden(adata)  </span><br><span class="line">sc.pl.umap(adata, color=[<span class="string">&#x27;leiden&#x27;</span>],save=<span class="string">f&quot;<span class="subst">&#123;sample&#125;</span>_original.png&quot;</span>)  </span><br><span class="line"><span class="comment">#非参数检验方法  </span></span><br><span class="line">sc.tl.rank_genes_groups(adata, <span class="string">&#x27;leiden&#x27;</span>, method=<span class="string">&#x27;wilcoxon&#x27;</span>)  </span><br><span class="line">sc.pl.rank_genes_groups(adata, n_genes=<span class="number">25</span>, sharey=<span class="literal">False</span>)  </span><br><span class="line">  </span><br><span class="line"><span class="comment"># 结果写入，方便后续可视化  </span></span><br><span class="line">pd.DataFrame(adata.uns[<span class="string">&#x27;rank_genes_groups&#x27;</span>][<span class="string">&#x27;names&#x27;</span>]).head(<span class="number">5</span>)  </span><br><span class="line">result = adata.uns[<span class="string">&#x27;rank_genes_groups&#x27;</span>]  </span><br><span class="line">groups = result[<span class="string">&#x27;names&#x27;</span>].dtype.names  </span><br><span class="line">pd.DataFrame(adata.uns[<span class="string">&#x27;rank_genes_groups&#x27;</span>][<span class="string">&#x27;names&#x27;</span>]).to_csv(<span class="string">f&quot;./output/<span class="subst">&#123;sample&#125;</span>/marker.csv&quot;</span>)  </span><br><span class="line"><span class="keyword">for</span> trait <span class="keyword">in</span> dict_df_score:  </span><br><span class="line">	adata.obs[trait] = dict_df_score[trait][<span class="string">&quot;raw_score&quot;</span>]  </span><br><span class="line"><span class="keyword">for</span> trait <span class="keyword">in</span> dict_df_score:  </span><br><span class="line">	adata.obs[<span class="string">f&quot;<span class="subst">&#123;trait&#125;</span>_norm&quot;</span>] = dict_df_score[trait][<span class="string">&quot;norm_score&quot;</span>]  </span><br><span class="line">sc.pl.umap(adata,color=dict_df_score.keys(),ncols=<span class="number">1</span>,color_map=<span class="string">&quot;RdBu_r&quot;</span>,save=<span class="string">f&quot;<span class="subst">&#123;sample&#125;</span>_disease.png&quot;</span>)  </span><br><span class="line">df_group = adata.obs  </span><br><span class="line">l = [<span class="string">&quot;a&quot;</span>,<span class="string">&quot;b&quot;</span>,<span class="string">&quot;c&quot;</span>,<span class="string">&quot;d&quot;</span>,<span class="string">&quot;e&quot;</span>,<span class="string">&quot;f&quot;</span>,<span class="string">&quot;g&quot;</span>,<span class="string">&quot;h&quot;</span>,<span class="string">&quot;i&quot;</span>,<span class="string">&quot;j&quot;</span>,<span class="string">&quot;k&quot;</span>,<span class="string">&quot;l&quot;</span>,<span class="string">&quot;m&quot;</span>,<span class="string">&quot;n&quot;</span>,<span class="string">&quot;o&quot;</span>,<span class="string">&quot;p&quot;</span>,<span class="string">&quot;q&quot;</span>,<span class="string">&quot;r&quot;</span>,<span class="string">&quot;s&quot;</span>,<span class="string">&quot;t&quot;</span>,<span class="string">&quot;u&quot;</span>,<span class="string">&quot;v&quot;</span>,<span class="string">&quot;w&quot;</span>,<span class="string">&quot;x&quot;</span>,<span class="string">&quot;y&quot;</span>,<span class="string">&quot;z&quot;</span>]  </span><br><span class="line">map_list = &#123;&#125;  </span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(l)):  </span><br><span class="line">	map_list[<span class="built_in">str</span>(i)] = l[i]  </span><br><span class="line">df_group[<span class="string">&quot;group&quot;</span>] = df_group[<span class="string">&quot;leiden&quot;</span>].<span class="built_in">map</span>(map_list)  </span><br><span class="line">df_group.to_csv(<span class="string">f&quot;./output/<span class="subst">&#123;sample&#125;</span>/leiden score.csv&quot;</span>)  </span><br><span class="line">df_gene = scdrs.method.downstream_gene_analysis(adata=adata, df_full_score=dict_df_score[<span class="string">&quot;CHD&quot;</span>])  </span><br><span class="line">df_gene.to_csv(<span class="string">f&quot;./output/<span class="subst">&#123;sample&#125;</span>/key gene.csv&quot;</span>)  </span><br><span class="line">df_group_analysis = scdrs.method.downstream_group_analysis(adata=adata, df_full_score=dict_df_score[<span class="string">&quot;CHD&quot;</span>], group_cols=[<span class="string">&quot;group&quot;</span>])</span><br></pre></td></tr></table></figure>
+<h2 id="在命令行中使用scdrs"><a href="#在命令行中使用scdrs" class="headerlink" title="在命令行中使用scdrs"></a>在命令行中使用scdrs</h2><h3 id="计算每个细胞的疾病富集分数"><a href="#计算每个细胞的疾病富集分数" class="headerlink" title="计算每个细胞的疾病富集分数"></a>计算每个细胞的疾病富集分数</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Shell</span></span><br><span class="line">scdrs compute-score \  </span><br><span class="line">    --h5ad-file data/expr.h5ad \  </span><br><span class="line">    --h5ad-species human \  </span><br><span class="line">    --gs-file data/processed_geneset.gs \  </span><br><span class="line">    --gs-species human \  </span><br><span class="line">    --cov-file data/cov.tsv \  </span><br><span class="line">    --flag-filter-data True \  </span><br><span class="line">    --flag-raw-count True \  </span><br><span class="line">    --flag-return-ctrl-raw-score False \  </span><br><span class="line">    --flag-return-ctrl-norm-score True \  </span><br><span class="line">    --out-folder data/  </span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line"><span class="comment"># 可视化 python  </span></span><br><span class="line">df_gs.index = [<span class="string">&#x27;CHD&#x27;</span>,<span class="string">&#x27;Height&#x27;</span>]  </span><br><span class="line">dict_score = &#123;  </span><br><span class="line">    trait: pd.read_csv(f<span class="string">&quot;data/&#123;trait&#125;.full_score.gz&quot;</span>, sep=<span class="string">&quot;\t&quot;</span>, index_col=0)  </span><br><span class="line">    <span class="keyword">for</span> trait <span class="keyword">in</span> df_gs.index  </span><br><span class="line">&#125;  </span><br><span class="line">  </span><br><span class="line"><span class="keyword">for</span> trait <span class="keyword">in</span> dict_score:  </span><br><span class="line">    adata.obs[trait] = dict_score[trait][<span class="string">&quot;norm_score&quot;</span>]  </span><br><span class="line">  </span><br><span class="line">sc.set_figure_params(figsize=[2.5, 2.5], dpi=150)  </span><br><span class="line">sc.pl.umap(  </span><br><span class="line">    adata,  </span><br><span class="line">    color=dict_score.keys(),  </span><br><span class="line">    ncols=1,  </span><br><span class="line">    color_map=<span class="string">&quot;RdBu_r&quot;</span>,  </span><br><span class="line">    vmin=-5,  </span><br><span class="line">    vmax=5,  </span><br><span class="line">)  </span><br><span class="line">  </span><br><span class="line">sc.pl.umap(  </span><br><span class="line">    adata,  </span><br><span class="line">    color=dict_score.keys(),  </span><br><span class="line">    color_map=<span class="string">&quot;RdBu_r&quot;</span>,  </span><br><span class="line">    vmin=-5,  </span><br><span class="line">    vmax=5,  </span><br><span class="line">    s=20,  </span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;基于单个细胞的疾病富集分数，我们可以充分探索下游分析的方式。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li>Zhang, M.J., Hou, K., Dey, K.K. et al. Polygenic enrichment distinguishes disease associations of individual cells in single-cell RNA-seq data. Nat Genet 54, 1572–1580 (2022).<a href="https://doi.org/10.1038/s41588-022-01167-z">DOI</a>.</li>
+<li>scDRS的Github项目：<a href="https://github.com/martinjzhang/scDRS">martinjzhang/scDRS</a>。</li>
+<li>scDRS的官方文档：<a href="https://martinjzhang.github.io/scDRS/">scDRS</a>。</li>
+</ol>
+]]></content>
+      <categories>
+        <category>生物信息学</category>
+      </categories>
+      <tags>
+        <tag>GWAS</tag>
+        <tag>单细胞测序</tag>
+        <tag>生物信息学</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>单细胞转录组分析实战（一）：数据采集</title>
+    <url>/2024/02/17/%E5%8D%95%E7%BB%86%E8%83%9E%E8%BD%AC%E5%BD%95%E7%BB%84%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E6%95%B0%E6%8D%AE%E9%87%87%E9%9B%86/</url>
+    <content><![CDATA[<h2 id="写在前面的话"><a href="#写在前面的话" class="headerlink" title="写在前面的话"></a>写在前面的话</h2><p>&emsp;&emsp;本系列将基于张泽民团队发表的TNBC免疫图谱进行挖掘（<a href="https://www.cell.com/cancer-cell/fulltext/S1535-6108(21">Single-cell analyses reveal key immune cell subsets associated with response to PD-L1 blockade in triple-negative breast cancer: Cancer Cell</a>00499-2)），旨在探索原发灶和转移灶免疫微环境的差异及其原因。<br>&emsp;&emsp;准确严谨的采集和清洗数据是单细胞分析的开始，数据本身的质量和采集过程的规范程度决定了研究结果的可靠性。</p>
+<h2 id="样本信息"><a href="#样本信息" class="headerlink" title="样本信息"></a>样本信息</h2><h3 id="患者来源"><a href="#患者来源" class="headerlink" title="患者来源"></a>患者来源</h3><p>&emsp;&emsp;国家癌症中心开发的DTHealth TrakCare系统中记录了患者信息，纳入本研究的22名患者满足：（1）组织学确诊晚期TNBC；（2）既往没有化疗、靶向及免疫等全身治疗；（3）研究中接受紫杉醇单药治疗或紫杉醇加阿替利珠单抗治疗。</p>
+<h3 id="患者信息"><a href="#患者信息" class="headerlink" title="患者信息"></a>患者信息</h3><ol>
+<li>本研究所有患者均被诊断为晚期TNBC，大多数患者患有转移性疾病；</li>
+<li>事实上，一些患者是接受新辅助治疗的局部晚期患者；</li>
+<li>患者为女性，年龄在32-64岁之间，中位值为49岁；</li>
+</ol>
+<p><img src="/2024/02/17/%E5%8D%95%E7%BB%86%E8%83%9E%E8%BD%AC%E5%BD%95%E7%BB%84%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E6%95%B0%E6%8D%AE%E9%87%87%E9%9B%86/1.jpg" alt="临床信息"></p>
+<h3 id="样本收集、文库制备和测序"><a href="#样本收集、文库制备和测序" class="headerlink" title="样本收集、文库制备和测序"></a>样本收集、文库制备和测序</h3><p>&emsp;&emsp;研究使用16针吸穿刺取乳腺、胸壁肿瘤样本；18号针取淋巴结、肝转移灶样本。测序仪器是10x Genomics公司的HiSeq X Ten，平台为<a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GPL20795">GPL20795</a>。DNA片段被打碎为150bp，进行双端测序。</p>
+<h2 id="单细胞转录组数据处理"><a href="#单细胞转录组数据处理" class="headerlink" title="单细胞转录组数据处理"></a>单细胞转录组数据处理</h2><p>&emsp;&emsp;10x Genomics公司提供的Cell Ranger（V 3.0.1）用于汇总原始数据，过滤低质量读段，将reads与人类参考基因组（GRCh38）比对，分配细胞Barcode，并生成UMI矩阵。值得注意的是，对于10x Genomics公司的测序，由于UMI的存在，使用Raw Count即可反映真实的基因表达，不需要使用标准化方法进行基因定量（<a href="https://forrestgump618.github.io/2024/02/16/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89%EF%BC%9A%E5%9F%BA%E5%9B%A0%E5%AE%9A%E9%87%8F/">生物信息学笔记（三）：基因定量</a>）。但注意，这里所谓“真实的基因表达”反映的是测序过程中的真实值，即不必考虑测序深度和转录本长度的值；而单细胞测序中，由于转录本的低捕获率，我们假设合格细胞基因表达总量应该类似，所以还要进行标准化排除不同细胞测序质量的差异。<br>&emsp;&emsp;原文使用Scanpy进行下游分析，质控步骤包括：</p>
+<ol>
+<li>过滤在少于10个细胞中表达的基因；</li>
+<li>过滤少于200个基因的细胞中检测到的基因；</li>
+<li>保留了600-120,000个UMIs、400-8,000个基因和小于10%线粒体基因计数的高质量细胞；</li>
+<li>将Scrublet应用于每个测序文库，以去除预期的双峰率为6%的潜在双峰，并滤除doubletScore大于90%分位数的细胞；</li>
+</ol>
+<p>&emsp;&emsp;接着，我们进行标准化操作：</p>
+<ol>
+<li>标准化每个细胞的总计数（库大小）：这一步是为了消除不同细胞间样本量的差异。库大小通常是指一个细胞中检测到的总UMI数。通过将每个细胞的UMI计数除以该细胞的总UMI计数，可以确保数据在不同细胞间是可比的。</li>
+<li>乘以1e6：这一步是为了放大数据，使其更易于处理。通常在生物信息学中，进行这样的转换是为了避免处理极小的数字。</li>
+<li>对数据进行对数变换：最后，对标准化后的数据进行对数变换是为了减少数据中极端值的影响，使数据的分布更接近正态分布。这通常有助于后续的统计分析和可视化。</li>
+</ol>
+<p>&emsp;&emsp;前面的步骤完成了单细胞转录组数据的质控和标准化，下面进行矩阵降维，进一步排除无关变量的影响，同时压缩分析规模：</p>
+<ol>
+<li>选择前4000个可变基因，排除大部分背景基因的影响；</li>
+<li>从标准化表达矩阵中去除总计数、线粒体基因计数和热休克蛋白（HSP）相关基因计数的变异，以避免偏差；</li>
+<li>主成分分析，把4000个可变基因降为50个主成分；</li>
+<li>由此，我们得到了50×细胞数的矩阵，即对于每个细胞有50个变量，使用前2个或者3个主成分进行可视化，通过标注不同样本，发现潜在的批次效应，并通过相应的算法（在R中可以通过Harmony）去除；</li>
+<li>由此，我们尽可能避免了因非研究变量因素导致的系统误差，得到新的标准化矩阵。</li>
+</ol>
+<p>&emsp;&emsp;最后，Leiden算法寻找细胞簇和分群，UMAP和TSNE进行作图，推荐使用COSG确定Marker。</p>
+]]></content>
+      <categories>
+        <category>生物信息学</category>
+      </categories>
+      <tags>
+        <tag>单细胞测序</tag>
+        <tag>免疫</tag>
+        <tag>肿瘤</tag>
       </tags>
   </entry>
   <entry>
@@ -1325,24 +1347,37 @@
       </tags>
   </entry>
   <entry>
-    <title>心律失常治疗方式总结</title>
-    <url>/2024/03/14/%E5%BF%83%E5%BE%8B%E5%A4%B1%E5%B8%B8%E6%B2%BB%E7%96%97%E6%96%B9%E5%BC%8F%E6%80%BB%E7%BB%93/</url>
-    <content><![CDATA[<p>&emsp;&emsp;维持血流动力学处于稳定状态是心脏疾病的救治的落脚点，所以保障心室以适宜的频率进行协调的收缩舒张运动是心律失常救治的首要任务。其次，需要改善心脏内部的血流动力学紊乱，预防血栓形成；必要时需要考虑心房功能，避免前负荷不足。归根结底，心律失常的治疗是以心室为核心的。</p>
-<p>&emsp;&emsp;缓慢型心律失常由迷走神经张力过高导致，常常采用阿托品和异丙肾上腺素治疗，后者有潜在的致心律失常风险，所以临床多以弃用。药物治疗无效、症状明显或有严重血流动力学障碍应当及时安装起搏器。</p>
-<p>&emsp;&emsp;快速型心律失常发生机制常为自律细胞的自律性升高，非自律细胞产生异常自律性以及折返。自律细胞的自律性升高多见于窦性心动过速，其治疗只需降低交感神经或增加迷走神经张力，因而采用β受体阻断剂、非二氢吡啶类钙通道阻滞剂。新研药伊伐布雷定靶向P细胞自动复极的If电流，也可以用于治疗窦性心动过速。非自律细胞产生异常自律性包括期前收缩、心动过速、扑动和颤动，其发生原因多为缺氧、交感神经张力高、电解质紊乱。若成功解除细胞的应激状态，纠正细胞钙超载，降低交感神经张力或延长总体的不应期，则可消灭异常自律性产生的源头；其次，我们可以适当阻滞房室结，进行合适的导管消融，孤立异常自律点，避免影响心脏其他部位，尤其是心室的节律。举例而言，对房性期前收缩可采用β受体阻断剂（ICa）、非二氢吡啶类钙通道阻断剂（ICa）和胺碘酮（不应期），对室性期前收缩采用β受体阻断剂（ICa）、非二氢吡啶类钙通道阻滞剂（ICa）和普罗帕酮（（ICa）。值得注意的是，在室上性的心动过速（除了AVNRT）、扑动和颤动中，靶向ICa主要是为了降低心室率，转复律则依赖广谱抗心律失常药物。对于室性快速型心律失常，强调针对原因，并且在药物中添加了靶向快心肌细胞的IB类药物。非窦性快速型心律失常若伴随血流动力学紊乱采用电复律，若根治往往采用导管消融。</p>
-<p>&emsp;&emsp;AVNRT是一类特殊的心动过速，靶向房室结降低心室率的同时也是阻断径路传导，因此治疗中强调增加迷走神经张力和阻断钙离子通道。预激综合征中存在旁路和房室结的矛盾，治疗过程始终遵守压抑旁路但不祸害房室结的默契。</p>
-<p>&emsp;&emsp;&emsp;1. 广谱抗心律失常药：IA、IC、III；</p>
-<p>&emsp;&emsp;&emsp;2. 室性心律失常专用：IB</p>
-<p>&emsp;&emsp;&emsp;3. 抑制交感神经、增加迷走神经张力、靶向钙通道：IV、III、IC、洋地黄、升压药、腺苷</p>
-<p>&emsp;&emsp;&emsp;4. 缩短有效不应期：洋地黄</p>
-<p>&emsp;&emsp;&emsp;5. 延长QT：IA、III</p>
+    <title>单细胞测序教程资源聚合</title>
+    <url>/2023/08/12/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E6%95%99%E7%A8%8B%E5%92%8C%E8%B5%84%E6%BA%90%E8%81%9A%E5%90%88/</url>
+    <content><![CDATA[<h2 id="教程"><a href="#教程" class="headerlink" title="教程"></a>教程</h2><h4 id="转录组学"><a href="#转录组学" class="headerlink" title="转录组学"></a>转录组学</h4><ol>
+<li>单细胞测序-最佳的分析Pipeline <a href="https://single-cell-tutorial.readthedocs.io/zh/latest/">单细胞测序-最佳的分析Pipeline</a> ：Zehua Zeng等为主要作者，包括详细的原理和处理流程（Python）；其中重点介绍了Omicverse的使用； </li>
+<li>哈佛大学单细胞中文笔记：<a href="https://zhuanlan.zhihu.com/p/209018565">哈佛大学单细胞中文笔记</a> 陈同博士撰写。主要包括原理和Seurat的使用。<a href="https://hbctraining.github.io/main">原版教程</a>；</li>
+<li>RNA-SEQ BLOG：最新的RNA测序资讯：<a href="https://www.rna-seqblog.com/">RNA-Seq Blog</a></li>
+</ol>
+<h2 id="资源"><a href="#资源" class="headerlink" title="资源"></a>资源</h2><h4 id="肿瘤生信"><a href="#肿瘤生信" class="headerlink" title="肿瘤生信"></a>肿瘤生信</h4><ol>
+<li>GEPIA2：GEPIA2是一个无代码可视化平台，其数据来源于TCGA和GTEx数据库，用户可以自由探索指定基因的在肿瘤组织中的表达情况以及和预后的关系。<a href="http://gepia2.cancer-pku.cn/">GEPIA2</a></li>
+<li>Prognoscan：Prognoscan整合了2010年以前GEO上Microarray和相应临床信息，可以探索制定基因自不同数据集中和预后的关系。<a href="http://dna00.bio.kyutech.ac.jp/PrognoScan/">PrognoScan</a></li>
+<li>TIMER：TIMER用于分析不同癌症类型的免疫浸润（数据来自于TCGA）。<a href="http://timer.cistrome.org/">TIMER2.0</a></li>
+</ol>
+<h4 id="GWAS"><a href="#GWAS" class="headerlink" title="GWAS"></a>GWAS</h4><ol>
+<li>IEU OPEN GWAS：包含42,484 个GWAS摘要数据集的214,725,223,303 个遗传关联的数据库。<a href="https://gwas.mrcieu.ac.uk/">IEU OpenGWAS</a></li>
+<li>PheWeb：包含Biobank Japan，以及UKB等欧洲样本的GWAS结果。<a href="https://pheweb.jp/downloads">PheWeb</a></li>
+<li>GWAS catalog：内容较全，网页比较慢，建议使用特殊方式访问。<a href="https://www.ebi.ac.uk/gwas/downloads/summary-statistics">GWAS catalog</a>:</li>
+<li>EGG：早期生长联盟数据，包含出生体重，出生头围等。<a href="http://egg-consortium.org/index.html">EGG</a></li>
+<li>CKDGEN：包含慢性肾病、MA、eGFR等。<a href="http://ckdgen.imbi.uni-freiburg.de/?tdsourcetag=s_pctim_aiomsg">CKDGEN</a></li>
+<li>GLGC：血脂GWAS数据库。<a href="http://csg.sph.umich.edu/willer/public/glgc-lipids2021/">GLGC</a></li>
+<li>PGC：精神病学基因组学联盟。<a href="https://www.med.unc.edu/pgc/results-and-downloads/downloads">PGC</a></li>
+<li>GEFOS：骨质疏松联盟。<a href="http://www.gefos.org/">GEFOS</a></li>
+<li>DIAGRAM：二型糖尿病数据库。<a href="http://diagram-consortium.org/downloads.html">DIAGRAM</a>: </li>
+<li>代谢组学数据库：<a href="http://www.metabolomix.com/list-of-all-published-gwas-with-metabolomics/">A Table of all published GWAS with metabolomics</a></li>
+</ol>
 ]]></content>
       <categories>
-        <category>医学课程</category>
+        <category>生物信息学</category>
       </categories>
       <tags>
-        <tag>医学</tag>
-        <tag>医学生</tag>
+        <tag>单细胞测序</tag>
+        <tag>生物信息学</tag>
       </tags>
   </entry>
   <entry>
@@ -1390,40 +1425,6 @@
       </categories>
       <tags>
         <tag>统计学</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>单细胞测序教程资源聚合</title>
-    <url>/2023/08/12/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E6%95%99%E7%A8%8B%E5%92%8C%E8%B5%84%E6%BA%90%E8%81%9A%E5%90%88/</url>
-    <content><![CDATA[<h2 id="教程"><a href="#教程" class="headerlink" title="教程"></a>教程</h2><h4 id="转录组学"><a href="#转录组学" class="headerlink" title="转录组学"></a>转录组学</h4><ol>
-<li>单细胞测序-最佳的分析Pipeline <a href="https://single-cell-tutorial.readthedocs.io/zh/latest/">单细胞测序-最佳的分析Pipeline</a> ：Zehua Zeng等为主要作者，包括详细的原理和处理流程（Python）；其中重点介绍了Omicverse的使用； </li>
-<li>哈佛大学单细胞中文笔记：<a href="https://zhuanlan.zhihu.com/p/209018565">哈佛大学单细胞中文笔记</a> 陈同博士撰写。主要包括原理和Seurat的使用。<a href="https://hbctraining.github.io/main">原版教程</a>；</li>
-<li>RNA-SEQ BLOG：最新的RNA测序资讯：<a href="https://www.rna-seqblog.com/">RNA-Seq Blog</a></li>
-</ol>
-<h2 id="资源"><a href="#资源" class="headerlink" title="资源"></a>资源</h2><h4 id="肿瘤生信"><a href="#肿瘤生信" class="headerlink" title="肿瘤生信"></a>肿瘤生信</h4><ol>
-<li>GEPIA2：GEPIA2是一个无代码可视化平台，其数据来源于TCGA和GTEx数据库，用户可以自由探索指定基因的在肿瘤组织中的表达情况以及和预后的关系。<a href="http://gepia2.cancer-pku.cn/">GEPIA2</a></li>
-<li>Prognoscan：Prognoscan整合了2010年以前GEO上Microarray和相应临床信息，可以探索制定基因自不同数据集中和预后的关系。<a href="http://dna00.bio.kyutech.ac.jp/PrognoScan/">PrognoScan</a></li>
-<li>TIMER：TIMER用于分析不同癌症类型的免疫浸润（数据来自于TCGA）。<a href="http://timer.cistrome.org/">TIMER2.0</a></li>
-</ol>
-<h4 id="GWAS"><a href="#GWAS" class="headerlink" title="GWAS"></a>GWAS</h4><ol>
-<li>IEU OPEN GWAS：包含42,484 个GWAS摘要数据集的214,725,223,303 个遗传关联的数据库。<a href="https://gwas.mrcieu.ac.uk/">IEU OpenGWAS</a></li>
-<li>PheWeb：包含Biobank Japan，以及UKB等欧洲样本的GWAS结果。<a href="https://pheweb.jp/downloads">PheWeb</a></li>
-<li>GWAS catalog：内容较全，网页比较慢，建议使用特殊方式访问。<a href="https://www.ebi.ac.uk/gwas/downloads/summary-statistics">GWAS catalog</a>:</li>
-<li>EGG：早期生长联盟数据，包含出生体重，出生头围等。<a href="http://egg-consortium.org/index.html">EGG</a></li>
-<li>CKDGEN：包含慢性肾病、MA、eGFR等。<a href="http://ckdgen.imbi.uni-freiburg.de/?tdsourcetag=s_pctim_aiomsg">CKDGEN</a></li>
-<li>GLGC：血脂GWAS数据库。<a href="http://csg.sph.umich.edu/willer/public/glgc-lipids2021/">GLGC</a></li>
-<li>PGC：精神病学基因组学联盟。<a href="https://www.med.unc.edu/pgc/results-and-downloads/downloads">PGC</a></li>
-<li>GEFOS：骨质疏松联盟。<a href="http://www.gefos.org/">GEFOS</a></li>
-<li>DIAGRAM：二型糖尿病数据库。<a href="http://diagram-consortium.org/downloads.html">DIAGRAM</a>: </li>
-<li>代谢组学数据库：<a href="http://www.metabolomix.com/list-of-all-published-gwas-with-metabolomics/">A Table of all published GWAS with metabolomics</a></li>
-</ol>
-]]></content>
-      <categories>
-        <category>生物信息学</category>
-      </categories>
-      <tags>
-        <tag>生物信息学</tag>
-        <tag>单细胞测序</tag>
       </tags>
   </entry>
   <entry>
@@ -1548,33 +1549,39 @@
       </tags>
   </entry>
   <entry>
-    <title>能解答一切的答案</title>
-    <url>/2024/03/07/%E8%83%BD%E8%A7%A3%E7%AD%94%E4%B8%80%E5%88%87%E7%9A%84%E7%AD%94%E6%A1%88/</url>
-    <content><![CDATA[<p>&emsp;&emsp;医学所以成为医学，是因为什么？医学中能解答一切问题的答案又来自哪里？是技术还是人文？</p>
-<p>&emsp;&emsp;科技的迅速发展，带来了医学的巨大进步。从前我们将希波克拉底的“体液说”奉为圭臬，到今天有了从分子层面体系完备的生理科学；从感冒腹泻夺走人的生命，到今天疑难杂症的治愈变成可能；从前的医学不过经验，而今天的医学可以层层剖析病理。似乎只要有了技术，医学就可以解决所有的问题。 以至于今天的人们都把健康寄托于技术、生命寄托于未来。看着科学主义的日渐泛滥，我也不禁发问：医学的人文宗旨，在今天这个时代是不是已经过时了呢？</p>
-<p>&emsp;&emsp;本世纪初发表的《医师宣言》中明确指出：“将患者利益放在首位。这一原则是建立在为患者服务的基础上。信任是医患关系的核心，而利他主义是这种信任的基础。一切力量都不能影响这一原则。”古今中外的医学巨匠一再肯定这样的医学属性和人文精神。从药王孙思邈一篇《大医精诚》——“凡大医治病，必当安神定志，无欲无求，先发大慈恻隐之心，誓愿普救含灵之苦”，到特鲁多闻名遐迩的三句“有时去治愈，常常去帮助，总是去安慰”。这种医学传统，是医学长期发展形成的，是医学内在的，是医学的本性，不是外在强加于医学的，在任何时候也是不应当去改变的。如果用技术至上的思想远离对生命的关爱和对人的关怀，背离医学救人生命的人文宗旨，医学就不是医学，甚至走向医学的反面。</p>
-<p>&emsp;&emsp;所以说，医学的人文宗旨，不但没有过时，甚至是医学的灵魂所在。</p>
-<p>&emsp;&emsp;高三时读过一篇关乎“语言”的高考作文——《达芬奇密码》。这篇作文构建出一个依赖于人文而存在的科学殿堂，当时的我对此不以为然，甚至认为这篇作文不过是唯心主义。一年后在医学导论的课堂上，当我听到丁教授和王教授两位院长讲授医学的起源、目的和现代临床医疗的准则时，我又回想起这篇文章，才逐渐明白——失去了人文底色的科学不过是机械、冰冷的器物，作为客观世界真理的科学技术也不能无限制的扩张，不能代替人们的情感和信仰。撒尔顿说：“向科学注入人文精神，唤醒科学不要忘记人和爱，不要忘记自身存在的根本”，此言得之。回到医学这样一个具有极高道德属性的学科，医学人文宗旨的重要性不言而喻。</p>
-<p>&emsp;&emsp;科学意味求真；而人文意味求善。求真的目的是求善。理论物理学家杨振宁先生强调：“科学研究的最终价值不会取决与为了科学的科学，而是取决与科学是否对人类有益“。为了善念而去的医学才能真正做有益于人类的事，为了善念，一个医生才会真正地精诚于学术，博学至精。</p>
-<p>&emsp;&emsp;医学起源于祛除病痛的执着信仰，由此才有无数医家的探索。今天的医学依然适用这一亘古不变的准则。医学成为医学，是因为医学有温度。医学的魅力不是有多么先进的技术，而是从内心给出的真心、正义和同理，尤其对于今天这样一个时代。解决一切医学问题的答案也许有很多，但根本都在于明德至善。</p>
-<p>&emsp;&emsp;虽然，我依然坚信，这个美丽宇宙的唯一真理是科学，刘慈欣的《朝闻道》中写“没有科学的世界，我的心脏都懒得跳动”深得我心。但今天讨论的问题，是有时代和职业语境的。市场经济的发展，让技术的作用被神话了，拉大了医患之间的距离，恶化了医疗环境，在这个时候，犹需要在科学发展之外，多一份理想情怀。</p>
-<p>&emsp;&emsp;偶尔会去思考我会成为一个什么样的医生。不知道会不会像王娟院长一样会在医院关门的时候会心软给迟到的病人看病，也不知道会不会像王锦帆教授说的那样用自己一句加油的话就能把一个人从鬼门关拉回来，或者像丁义涛院长死马当活马医救回来一个现在天天一起打惯蛋的好友……嗯，我还不知道，但我希望我按照热力学第二定律回归大地之前，可以经历这些温暖而可爱的时刻，这些时刻，就是对问题最好的答案。</p>
-<p><strong>【医学导论课的感动瞬间】</strong></p>
-<p>怎么说，这是一门特殊的课，虽然有着让人一言难尽而又抓狂的考核标准，自己的笔记也日渐粗糙。但是在听大医们的开讲中，收获了很多新的想法，遇到了不少鼻头一酸的时刻，这也是一种独特的体验吧？</p>
+    <title>网络爬虫自动获取教务处最新通知</title>
+    <url>/2024/03/19/%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB%E8%87%AA%E5%8A%A8%E8%8E%B7%E5%8F%96%E6%95%99%E5%8A%A1%E5%A4%84%E6%9C%80%E6%96%B0%E9%80%9A%E7%9F%A5/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>&emsp;&emsp;在日常学习和工作中，及时获取学校教务处的最新通知非常重要。本文介绍了如何使用Python编写一个自动化脚本，该脚本能够爬取教务处网站的最新通知公告，并通过邮件发送给指定的收件人。这样，我们就可以在第一时间内获取到重要信息，不错过任何关键的通知或更新。<br>&emsp;&emsp;欢迎来给俺个星星✨！<a href="https://github.com/ForrestGump618/Notification_NMU">ForrestGump618/Notification_NMU</a>。</p>
+<h2 id="技术栈"><a href="#技术栈" class="headerlink" title="技术栈"></a>技术栈</h2><ul>
+<li><strong>Python</strong>：编程语言</li>
+<li><strong>requests</strong>：HTTP库，用于发送网络请求</li>
+<li><strong>BeautifulSoup</strong>：HTML解析库，用于解析网页内容</li>
+<li><strong>smtplib</strong>、<strong>email.mime.text</strong>、<strong>email.mime.multipart</strong>：邮件发送库，用于构建和发送邮件</li>
+</ul>
+<h2 id="主要功能及实现步骤"><a href="#主要功能及实现步骤" class="headerlink" title="主要功能及实现步骤"></a>主要功能及实现步骤</h2><h3 id="1-网页内容爬取（scrape-website-函数）"><a href="#1-网页内容爬取（scrape-website-函数）" class="headerlink" title="1. 网页内容爬取（scrape_website 函数）"></a>1. 网页内容爬取（<code>scrape_website</code> 函数）</h3><p>&emsp;&emsp;首先，定义<code>scrape_website(url)</code>函数，用于爬取教务处网站的通知公告列表。通过requests库发送GET请求获取网页内容，然后使用BeautifulSoup解析HTML，提取出通知公告的标题、链接和发布日期，最后将这些信息存储在列表中返回。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">scrape_website</span>(<span class="params">url</span>):</span><br><span class="line">    base_url = <span class="string">&quot;https://jwc.njmu.edu.cn&quot;</span></span><br><span class="line">    page = requests.get(url)</span><br><span class="line">    soup = BeautifulSoup(page.content, <span class="string">&#x27;html.parser&#x27;</span>)</span><br><span class="line">    items = soup.select(<span class="string">&#x27;.news_list li&#x27;</span>)</span><br><span class="line">    news_list = []</span><br><span class="line">    <span class="keyword">for</span> item <span class="keyword">in</span> items:</span><br><span class="line">        news = &#123;&#125;</span><br><span class="line">        news_anchor = item.select_one(<span class="string">&#x27;.news_title a&#x27;</span>)</span><br><span class="line">        news[<span class="string">&#x27;title&#x27;</span>] = news_anchor.get(<span class="string">&#x27;title&#x27;</span>).strip()</span><br><span class="line">        news[<span class="string">&#x27;link&#x27;</span>] = base_url + news_anchor.get(<span class="string">&#x27;href&#x27;</span>)</span><br><span class="line">        news[<span class="string">&#x27;date&#x27;</span>] = item.select_one(<span class="string">&#x27;.news_meta&#x27;</span>).text.strip()</span><br><span class="line">        news_list.append(news)</span><br><span class="line">    <span class="keyword">return</span> news_list</span><br></pre></td></tr></table></figure>
+<h3 id="2-获取通知详细内容（scrape-news-details-函数）"><a href="#2-获取通知详细内容（scrape-news-details-函数）" class="headerlink" title="2. 获取通知详细内容（scrape_news_details 函数）"></a>2. 获取通知详细内容（<code>scrape_news_details</code> 函数）</h3><p>&emsp;&emsp;定义<code>scrape_news_details(news_link)</code>函数，用于爬取每条通知的详细内容。同样使用requests和BeautifulSoup获取并解析页面，提取通知的正文内容，并生成一个简短的摘要返回。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">scrape_news_details</span>(<span class="params">news_link</span>):</span><br><span class="line">    page = requests.get(news_link)</span><br><span class="line">    soup = BeautifulSoup(page.content, <span class="string">&#x27;html.parser&#x27;</span>)</span><br><span class="line">    content_element = soup.select_one(<span class="string">&#x27;.wp_articlecontent&#x27;</span>)</span><br><span class="line">    <span class="keyword">if</span> content_element:</span><br><span class="line">        content_text = content_element.get_text(separator=<span class="string">&quot; &quot;</span>, strip=<span class="literal">True</span>)</span><br><span class="line">        length = <span class="built_in">len</span>(content_text)</span><br><span class="line">        <span class="keyword">if</span> length &gt; <span class="number">200</span>:</span><br><span class="line">            summary = content_text[:<span class="number">200</span>] + <span class="string">&quot; ......&quot;</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            summary = content_text</span><br><span class="line">        <span class="keyword">return</span> summary</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;No content found.&quot;</span></span><br></pre></td></tr></table></figure>
+<h3 id="3-邮件发送（send-email-函数）"><a href="#3-邮件发送（send-email-函数）" class="headerlink" title="3. 邮件发送（send_email 函数）"></a>3. 邮件发送（<code>send_email</code> 函数）</h3><p>&emsp;&emsp;定义<code>send_email(subject, content, to_email)</code>函数，使用smtplib和email.mime相关模块构建并发送邮件。这里需要预先设置发件人邮箱、密码以及SMTP服务器信息。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">send_email</span>(<span class="params">subject, content, to_email</span>):</span><br><span class="line">    sender_email = <span class="string">&quot;xxx&quot;</span></span><br><span class="line">    password = <span class="string">&quot;xxx&quot;</span></span><br><span class="line">    msg = MIMEMultipart()</span><br><span class="line">    msg[<span class="string">&#x27;Subject&#x27;</span>] = subject</span><br><span class="line">    msg[<span class="string">&#x27;From&#x27;</span>] = sender_email</span><br><span class="line">    msg[<span class="string">&#x27;To&#x27;</span>] = to_email</span><br><span class="line">    msg.attach(MIMEText(content, <span class="string">&#x27;html&#x27;</span>))</span><br><span class="line">    server = smtplib.SMTP_SSL(<span class="string">&#x27;smtp.qq.com&#x27;</span>, <span class="number">465</span>)</span><br><span class="line">    server.login(sender_email, password)</span><br><span class="line">    server.send_message(msg)</span><br><span class="line">    server.quit()</span><br></pre></td></tr></table></figure>
+<h3 id="4-主程序流程"><a href="#4-主程序流程" class="headerlink" title="4. 主程序流程"></a>4. 主程序流程</h3><p>&emsp;&emsp;在<code>if __name__ == &quot;__main__&quot;:</code>块中，脚本首先调用<code>scrape_website</code>函数获取最新的通知列表，然后为每条通知生成HTML格式的邮件内容。如果当日有更新，则通过<code>send_email</code>函数将这些通知以邮件的形式发送给预设的收件人列表。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    email_list = [<span class="string">&quot;xxx&quot;</span>]</span><br><span class="line">    url = <span class="string">&#x27;https://jwc.njmu.edu.cn/842/list.htm&#x27;</span></span><br><span class="line">    news_list = scrape_website(url)</span><br><span class="line">    <span class="comment"># 构建邮件内容省略，详见原始代码</span></span><br><span class="line">    <span class="keyword">for</span> email <span class="keyword">in</span> email_list:</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">str</span>(datetime.date.today()) <span class="keyword">in</span> content_mail:</span><br><span class="line">            send_email(<span class="string">&quot;今日有更新|教务处通知公告&quot;</span>, content_mail, email)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            send_email(<span class="string">&quot;教务处通知公告&quot;</span>, content_mail, email)</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;效果呈现如下：<br><img src="/2024/03/19/%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB%E8%87%AA%E5%8A%A8%E8%8E%B7%E5%8F%96%E6%95%99%E5%8A%A1%E5%A4%84%E6%9C%80%E6%96%B0%E9%80%9A%E7%9F%A5/1.png" alt="效果呈现"></p>
+<h3 id="5-自动部署"><a href="#5-自动部署" class="headerlink" title="5. 自动部署"></a>5. 自动部署</h3><p>&emsp;&emsp;利用批处理文件部署：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">@<span class="built_in">echo</span> off</span><br><span class="line">C:  </span><br><span class="line"><span class="built_in">cd</span> C:\Users\Zhuang Qingyuan\Desktop\Notification</span><br><span class="line">start python spyder.py</span><br></pre></td></tr></table></figure><br>&emsp;&emsp;保存为BAT文件后，放到电脑的开始-菜单/启动文件夹下，即可开机启动。</p>
+<h2 id="使用指南"><a href="#使用指南" class="headerlink" title="使用指南"></a>使用指南</h2><p>&emsp;&emsp;要使用这个脚本，你需要：</p>
 <ol>
-<li>王虹院长：“本来这个时候我应该下班了，但是你看到那个病人在那你是无法拒绝的，医者仁心啊……“（以后我会不会也有这样的想法？）</li>
-<li>王锦帆教授：“言语对于一名医生很重要，很多时候一个快死的病人，也许就是听见你的一声鼓励，潜意识中就有了活下去的勇气，这个病人就挺过来了。“（在这句话之前，科学主义一直占据着我的思想，这句话之后，我开始真正思考人文的作用。）</li>
-<li>丁义涛院长：“那个主任现在说我是他的救命恩人，天天找我约掼蛋。“（医生的幸福感和成就感大概就是这个时候吧？）</li>
-<li>王虹院长：“医生的群体都是向善的，医生的价值不是赚钱，金钱买不到我们得到行业精神，医生的价值就是救人。“（对这个职业充满了自豪感，突然想起高三班主任在班级前面贴的毛笔字”德业双馨、成名成家“，对医生而言适合不过。）</li>
-<li>王虹院长：“做医生，一辈子都要吃苦。“（愿苦中作乐）</li>
+<li>安装Python及相关库（requests, BeautifulSoup4）。</li>
+<li>替换<code>sender_email</code>、<code>password</code>和<code>email_list</code>中的占位符为实际的邮箱地址和密码。</li>
+<li>运行脚本。脚本会自动检查教务处网站的更新，并将最新的通知发送到指定的邮箱中。</li>
 </ol>
-<p>……</p>
-<p>2020年12月18日</p>
+<p>&emsp;&emsp;通过以上步骤，我们可以构建一个自动化的信息获取和提醒系统，帮助用户及时获取重要的教务通知，有效提升信息获取的效率和时效性。</p>
 ]]></content>
       <categories>
         <category>随笔</category>
       </categories>
       <tags>
+        <tag>python</tag>
+        <tag>计算机</tag>
         <tag>随笔</tag>
       </tags>
   </entry>
@@ -1659,43 +1666,6 @@
       </tags>
   </entry>
   <entry>
-    <title>网络爬虫自动获取教务处最新通知</title>
-    <url>/2024/03/19/%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB%E8%87%AA%E5%8A%A8%E8%8E%B7%E5%8F%96%E6%95%99%E5%8A%A1%E5%A4%84%E6%9C%80%E6%96%B0%E9%80%9A%E7%9F%A5/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>&emsp;&emsp;在日常学习和工作中，及时获取学校教务处的最新通知非常重要。本文介绍了如何使用Python编写一个自动化脚本，该脚本能够爬取教务处网站的最新通知公告，并通过邮件发送给指定的收件人。这样，我们就可以在第一时间内获取到重要信息，不错过任何关键的通知或更新。<br>&emsp;&emsp;欢迎来给俺个星星✨！<a href="https://github.com/ForrestGump618/Notification_NMU">ForrestGump618/Notification_NMU</a>。</p>
-<h2 id="技术栈"><a href="#技术栈" class="headerlink" title="技术栈"></a>技术栈</h2><ul>
-<li><strong>Python</strong>：编程语言</li>
-<li><strong>requests</strong>：HTTP库，用于发送网络请求</li>
-<li><strong>BeautifulSoup</strong>：HTML解析库，用于解析网页内容</li>
-<li><strong>smtplib</strong>、<strong>email.mime.text</strong>、<strong>email.mime.multipart</strong>：邮件发送库，用于构建和发送邮件</li>
-</ul>
-<h2 id="主要功能及实现步骤"><a href="#主要功能及实现步骤" class="headerlink" title="主要功能及实现步骤"></a>主要功能及实现步骤</h2><h3 id="1-网页内容爬取（scrape-website-函数）"><a href="#1-网页内容爬取（scrape-website-函数）" class="headerlink" title="1. 网页内容爬取（scrape_website 函数）"></a>1. 网页内容爬取（<code>scrape_website</code> 函数）</h3><p>&emsp;&emsp;首先，定义<code>scrape_website(url)</code>函数，用于爬取教务处网站的通知公告列表。通过requests库发送GET请求获取网页内容，然后使用BeautifulSoup解析HTML，提取出通知公告的标题、链接和发布日期，最后将这些信息存储在列表中返回。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">scrape_website</span>(<span class="params">url</span>):</span><br><span class="line">    base_url = <span class="string">&quot;https://jwc.njmu.edu.cn&quot;</span></span><br><span class="line">    page = requests.get(url)</span><br><span class="line">    soup = BeautifulSoup(page.content, <span class="string">&#x27;html.parser&#x27;</span>)</span><br><span class="line">    items = soup.select(<span class="string">&#x27;.news_list li&#x27;</span>)</span><br><span class="line">    news_list = []</span><br><span class="line">    <span class="keyword">for</span> item <span class="keyword">in</span> items:</span><br><span class="line">        news = &#123;&#125;</span><br><span class="line">        news_anchor = item.select_one(<span class="string">&#x27;.news_title a&#x27;</span>)</span><br><span class="line">        news[<span class="string">&#x27;title&#x27;</span>] = news_anchor.get(<span class="string">&#x27;title&#x27;</span>).strip()</span><br><span class="line">        news[<span class="string">&#x27;link&#x27;</span>] = base_url + news_anchor.get(<span class="string">&#x27;href&#x27;</span>)</span><br><span class="line">        news[<span class="string">&#x27;date&#x27;</span>] = item.select_one(<span class="string">&#x27;.news_meta&#x27;</span>).text.strip()</span><br><span class="line">        news_list.append(news)</span><br><span class="line">    <span class="keyword">return</span> news_list</span><br></pre></td></tr></table></figure>
-<h3 id="2-获取通知详细内容（scrape-news-details-函数）"><a href="#2-获取通知详细内容（scrape-news-details-函数）" class="headerlink" title="2. 获取通知详细内容（scrape_news_details 函数）"></a>2. 获取通知详细内容（<code>scrape_news_details</code> 函数）</h3><p>&emsp;&emsp;定义<code>scrape_news_details(news_link)</code>函数，用于爬取每条通知的详细内容。同样使用requests和BeautifulSoup获取并解析页面，提取通知的正文内容，并生成一个简短的摘要返回。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">scrape_news_details</span>(<span class="params">news_link</span>):</span><br><span class="line">    page = requests.get(news_link)</span><br><span class="line">    soup = BeautifulSoup(page.content, <span class="string">&#x27;html.parser&#x27;</span>)</span><br><span class="line">    content_element = soup.select_one(<span class="string">&#x27;.wp_articlecontent&#x27;</span>)</span><br><span class="line">    <span class="keyword">if</span> content_element:</span><br><span class="line">        content_text = content_element.get_text(separator=<span class="string">&quot; &quot;</span>, strip=<span class="literal">True</span>)</span><br><span class="line">        length = <span class="built_in">len</span>(content_text)</span><br><span class="line">        <span class="keyword">if</span> length &gt; <span class="number">200</span>:</span><br><span class="line">            summary = content_text[:<span class="number">200</span>] + <span class="string">&quot; ......&quot;</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            summary = content_text</span><br><span class="line">        <span class="keyword">return</span> summary</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;No content found.&quot;</span></span><br></pre></td></tr></table></figure>
-<h3 id="3-邮件发送（send-email-函数）"><a href="#3-邮件发送（send-email-函数）" class="headerlink" title="3. 邮件发送（send_email 函数）"></a>3. 邮件发送（<code>send_email</code> 函数）</h3><p>&emsp;&emsp;定义<code>send_email(subject, content, to_email)</code>函数，使用smtplib和email.mime相关模块构建并发送邮件。这里需要预先设置发件人邮箱、密码以及SMTP服务器信息。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">send_email</span>(<span class="params">subject, content, to_email</span>):</span><br><span class="line">    sender_email = <span class="string">&quot;xxx&quot;</span></span><br><span class="line">    password = <span class="string">&quot;xxx&quot;</span></span><br><span class="line">    msg = MIMEMultipart()</span><br><span class="line">    msg[<span class="string">&#x27;Subject&#x27;</span>] = subject</span><br><span class="line">    msg[<span class="string">&#x27;From&#x27;</span>] = sender_email</span><br><span class="line">    msg[<span class="string">&#x27;To&#x27;</span>] = to_email</span><br><span class="line">    msg.attach(MIMEText(content, <span class="string">&#x27;html&#x27;</span>))</span><br><span class="line">    server = smtplib.SMTP_SSL(<span class="string">&#x27;smtp.qq.com&#x27;</span>, <span class="number">465</span>)</span><br><span class="line">    server.login(sender_email, password)</span><br><span class="line">    server.send_message(msg)</span><br><span class="line">    server.quit()</span><br></pre></td></tr></table></figure>
-<h3 id="4-主程序流程"><a href="#4-主程序流程" class="headerlink" title="4. 主程序流程"></a>4. 主程序流程</h3><p>&emsp;&emsp;在<code>if __name__ == &quot;__main__&quot;:</code>块中，脚本首先调用<code>scrape_website</code>函数获取最新的通知列表，然后为每条通知生成HTML格式的邮件内容。如果当日有更新，则通过<code>send_email</code>函数将这些通知以邮件的形式发送给预设的收件人列表。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    email_list = [<span class="string">&quot;xxx&quot;</span>]</span><br><span class="line">    url = <span class="string">&#x27;https://jwc.njmu.edu.cn/842/list.htm&#x27;</span></span><br><span class="line">    news_list = scrape_website(url)</span><br><span class="line">    <span class="comment"># 构建邮件内容省略，详见原始代码</span></span><br><span class="line">    <span class="keyword">for</span> email <span class="keyword">in</span> email_list:</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">str</span>(datetime.date.today()) <span class="keyword">in</span> content_mail:</span><br><span class="line">            send_email(<span class="string">&quot;今日有更新|教务处通知公告&quot;</span>, content_mail, email)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            send_email(<span class="string">&quot;教务处通知公告&quot;</span>, content_mail, email)</span><br></pre></td></tr></table></figure>
-<p>&emsp;&emsp;效果呈现如下：<br><img src="/2024/03/19/%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB%E8%87%AA%E5%8A%A8%E8%8E%B7%E5%8F%96%E6%95%99%E5%8A%A1%E5%A4%84%E6%9C%80%E6%96%B0%E9%80%9A%E7%9F%A5/1.png" alt="效果呈现"></p>
-<h3 id="5-自动部署"><a href="#5-自动部署" class="headerlink" title="5. 自动部署"></a>5. 自动部署</h3><p>&emsp;&emsp;利用批处理文件部署：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">@<span class="built_in">echo</span> off</span><br><span class="line">C:  </span><br><span class="line"><span class="built_in">cd</span> C:\Users\Zhuang Qingyuan\Desktop\Notification</span><br><span class="line">start python spyder.py</span><br></pre></td></tr></table></figure><br>&emsp;&emsp;保存为BAT文件后，放到电脑的开始-菜单/启动文件夹下，即可开机启动。</p>
-<h2 id="使用指南"><a href="#使用指南" class="headerlink" title="使用指南"></a>使用指南</h2><p>&emsp;&emsp;要使用这个脚本，你需要：</p>
-<ol>
-<li>安装Python及相关库（requests, BeautifulSoup4）。</li>
-<li>替换<code>sender_email</code>、<code>password</code>和<code>email_list</code>中的占位符为实际的邮箱地址和密码。</li>
-<li>运行脚本。脚本会自动检查教务处网站的更新，并将最新的通知发送到指定的邮箱中。</li>
-</ol>
-<p>&emsp;&emsp;通过以上步骤，我们可以构建一个自动化的信息获取和提醒系统，帮助用户及时获取重要的教务通知，有效提升信息获取的效率和时效性。</p>
-]]></content>
-      <categories>
-        <category>随笔</category>
-      </categories>
-      <tags>
-        <tag>python</tag>
-        <tag>计算机</tag>
-        <tag>随笔</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>记录的目的</title>
     <url>/2023/10/11/%E8%AE%B0%E5%BD%95%E7%9A%84%E7%9B%AE%E7%9A%84/</url>
     <content><![CDATA[<p>&emsp;&emsp;我是一个普通的医学生，没有系统的计算机训练，没有系统学习数学课程。</p>
@@ -1716,6 +1686,58 @@
       <tags>
         <tag>统计学</tag>
         <tag>交叉学科</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>心律失常治疗方式总结</title>
+    <url>/2024/03/14/%E5%BF%83%E5%BE%8B%E5%A4%B1%E5%B8%B8%E6%B2%BB%E7%96%97%E6%96%B9%E5%BC%8F%E6%80%BB%E7%BB%93/</url>
+    <content><![CDATA[<p>&emsp;&emsp;维持血流动力学处于稳定状态是心脏疾病的救治的落脚点，所以保障心室以适宜的频率进行协调的收缩舒张运动是心律失常救治的首要任务。其次，需要改善心脏内部的血流动力学紊乱，预防血栓形成；必要时需要考虑心房功能，避免前负荷不足。归根结底，心律失常的治疗是以心室为核心的。</p>
+<p>&emsp;&emsp;缓慢型心律失常由迷走神经张力过高导致，常常采用阿托品和异丙肾上腺素治疗，后者有潜在的致心律失常风险，所以临床多以弃用。药物治疗无效、症状明显或有严重血流动力学障碍应当及时安装起搏器。</p>
+<p>&emsp;&emsp;快速型心律失常发生机制常为自律细胞的自律性升高，非自律细胞产生异常自律性以及折返。自律细胞的自律性升高多见于窦性心动过速，其治疗只需降低交感神经或增加迷走神经张力，因而采用β受体阻断剂、非二氢吡啶类钙通道阻滞剂。新研药伊伐布雷定靶向P细胞自动复极的If电流，也可以用于治疗窦性心动过速。非自律细胞产生异常自律性包括期前收缩、心动过速、扑动和颤动，其发生原因多为缺氧、交感神经张力高、电解质紊乱。若成功解除细胞的应激状态，纠正细胞钙超载，降低交感神经张力或延长总体的不应期，则可消灭异常自律性产生的源头；其次，我们可以适当阻滞房室结，进行合适的导管消融，孤立异常自律点，避免影响心脏其他部位，尤其是心室的节律。举例而言，对房性期前收缩可采用β受体阻断剂（ICa）、非二氢吡啶类钙通道阻断剂（ICa）和胺碘酮（不应期），对室性期前收缩采用β受体阻断剂（ICa）、非二氢吡啶类钙通道阻滞剂（ICa）和普罗帕酮（（ICa）。值得注意的是，在室上性的心动过速（除了AVNRT）、扑动和颤动中，靶向ICa主要是为了降低心室率，转复律则依赖广谱抗心律失常药物。对于室性快速型心律失常，强调针对原因，并且在药物中添加了靶向快心肌细胞的IB类药物。非窦性快速型心律失常若伴随血流动力学紊乱采用电复律，若根治往往采用导管消融。</p>
+<p>&emsp;&emsp;AVNRT是一类特殊的心动过速，靶向房室结降低心室率的同时也是阻断径路传导，因此治疗中强调增加迷走神经张力和阻断钙离子通道。预激综合征中存在旁路和房室结的矛盾，治疗过程始终遵守压抑旁路但不祸害房室结的默契。</p>
+<p>&emsp;&emsp;&emsp;1. 广谱抗心律失常药：IA、IC、III；</p>
+<p>&emsp;&emsp;&emsp;2. 室性心律失常专用：IB</p>
+<p>&emsp;&emsp;&emsp;3. 抑制交感神经、增加迷走神经张力、靶向钙通道：IV、III、IC、洋地黄、升压药、腺苷</p>
+<p>&emsp;&emsp;&emsp;4. 缩短有效不应期：洋地黄</p>
+<p>&emsp;&emsp;&emsp;5. 延长QT：IA、III</p>
+]]></content>
+      <categories>
+        <category>医学课程</category>
+      </categories>
+      <tags>
+        <tag>医学</tag>
+        <tag>医学生</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>能解答一切的答案</title>
+    <url>/2024/03/07/%E8%83%BD%E8%A7%A3%E7%AD%94%E4%B8%80%E5%88%87%E7%9A%84%E7%AD%94%E6%A1%88/</url>
+    <content><![CDATA[<p>&emsp;&emsp;医学所以成为医学，是因为什么？医学中能解答一切问题的答案又来自哪里？是技术还是人文？</p>
+<p>&emsp;&emsp;科技的迅速发展，带来了医学的巨大进步。从前我们将希波克拉底的“体液说”奉为圭臬，到今天有了从分子层面体系完备的生理科学；从感冒腹泻夺走人的生命，到今天疑难杂症的治愈变成可能；从前的医学不过经验，而今天的医学可以层层剖析病理。似乎只要有了技术，医学就可以解决所有的问题。 以至于今天的人们都把健康寄托于技术、生命寄托于未来。看着科学主义的日渐泛滥，我也不禁发问：医学的人文宗旨，在今天这个时代是不是已经过时了呢？</p>
+<p>&emsp;&emsp;本世纪初发表的《医师宣言》中明确指出：“将患者利益放在首位。这一原则是建立在为患者服务的基础上。信任是医患关系的核心，而利他主义是这种信任的基础。一切力量都不能影响这一原则。”古今中外的医学巨匠一再肯定这样的医学属性和人文精神。从药王孙思邈一篇《大医精诚》——“凡大医治病，必当安神定志，无欲无求，先发大慈恻隐之心，誓愿普救含灵之苦”，到特鲁多闻名遐迩的三句“有时去治愈，常常去帮助，总是去安慰”。这种医学传统，是医学长期发展形成的，是医学内在的，是医学的本性，不是外在强加于医学的，在任何时候也是不应当去改变的。如果用技术至上的思想远离对生命的关爱和对人的关怀，背离医学救人生命的人文宗旨，医学就不是医学，甚至走向医学的反面。</p>
+<p>&emsp;&emsp;所以说，医学的人文宗旨，不但没有过时，甚至是医学的灵魂所在。</p>
+<p>&emsp;&emsp;高三时读过一篇关乎“语言”的高考作文——《达芬奇密码》。这篇作文构建出一个依赖于人文而存在的科学殿堂，当时的我对此不以为然，甚至认为这篇作文不过是唯心主义。一年后在医学导论的课堂上，当我听到丁教授和王教授两位院长讲授医学的起源、目的和现代临床医疗的准则时，我又回想起这篇文章，才逐渐明白——失去了人文底色的科学不过是机械、冰冷的器物，作为客观世界真理的科学技术也不能无限制的扩张，不能代替人们的情感和信仰。撒尔顿说：“向科学注入人文精神，唤醒科学不要忘记人和爱，不要忘记自身存在的根本”，此言得之。回到医学这样一个具有极高道德属性的学科，医学人文宗旨的重要性不言而喻。</p>
+<p>&emsp;&emsp;科学意味求真；而人文意味求善。求真的目的是求善。理论物理学家杨振宁先生强调：“科学研究的最终价值不会取决与为了科学的科学，而是取决与科学是否对人类有益“。为了善念而去的医学才能真正做有益于人类的事，为了善念，一个医生才会真正地精诚于学术，博学至精。</p>
+<p>&emsp;&emsp;医学起源于祛除病痛的执着信仰，由此才有无数医家的探索。今天的医学依然适用这一亘古不变的准则。医学成为医学，是因为医学有温度。医学的魅力不是有多么先进的技术，而是从内心给出的真心、正义和同理，尤其对于今天这样一个时代。解决一切医学问题的答案也许有很多，但根本都在于明德至善。</p>
+<p>&emsp;&emsp;虽然，我依然坚信，这个美丽宇宙的唯一真理是科学，刘慈欣的《朝闻道》中写“没有科学的世界，我的心脏都懒得跳动”深得我心。但今天讨论的问题，是有时代和职业语境的。市场经济的发展，让技术的作用被神话了，拉大了医患之间的距离，恶化了医疗环境，在这个时候，犹需要在科学发展之外，多一份理想情怀。</p>
+<p>&emsp;&emsp;偶尔会去思考我会成为一个什么样的医生。不知道会不会像王娟院长一样会在医院关门的时候会心软给迟到的病人看病，也不知道会不会像王锦帆教授说的那样用自己一句加油的话就能把一个人从鬼门关拉回来，或者像丁义涛院长死马当活马医救回来一个现在天天一起打惯蛋的好友……嗯，我还不知道，但我希望我按照热力学第二定律回归大地之前，可以经历这些温暖而可爱的时刻，这些时刻，就是对问题最好的答案。</p>
+<p><strong>【医学导论课的感动瞬间】</strong></p>
+<p>怎么说，这是一门特殊的课，虽然有着让人一言难尽而又抓狂的考核标准，自己的笔记也日渐粗糙。但是在听大医们的开讲中，收获了很多新的想法，遇到了不少鼻头一酸的时刻，这也是一种独特的体验吧？</p>
+<ol>
+<li>王虹院长：“本来这个时候我应该下班了，但是你看到那个病人在那你是无法拒绝的，医者仁心啊……“（以后我会不会也有这样的想法？）</li>
+<li>王锦帆教授：“言语对于一名医生很重要，很多时候一个快死的病人，也许就是听见你的一声鼓励，潜意识中就有了活下去的勇气，这个病人就挺过来了。“（在这句话之前，科学主义一直占据着我的思想，这句话之后，我开始真正思考人文的作用。）</li>
+<li>丁义涛院长：“那个主任现在说我是他的救命恩人，天天找我约掼蛋。“（医生的幸福感和成就感大概就是这个时候吧？）</li>
+<li>王虹院长：“医生的群体都是向善的，医生的价值不是赚钱，金钱买不到我们得到行业精神，医生的价值就是救人。“（对这个职业充满了自豪感，突然想起高三班主任在班级前面贴的毛笔字”德业双馨、成名成家“，对医生而言适合不过。）</li>
+<li>王虹院长：“做医生，一辈子都要吃苦。“（愿苦中作乐）</li>
+</ol>
+<p>……</p>
+<p>2020年12月18日</p>
+]]></content>
+      <categories>
+        <category>随笔</category>
+      </categories>
+      <tags>
+        <tag>随笔</tag>
       </tags>
   </entry>
 </search>
