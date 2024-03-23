@@ -180,6 +180,7 @@ body {
   font-family: 'Lato', "PingFang SC", "Microsoft YaHei", sans-serif;
   font-size: 1em;
   line-height: 2;
+  cursor: url("https://cdn.jsdelivr.net/gh/kaix2301/pictures/img202201071208706.cur"), auto;
 }
 @media (max-width: 991px) {
   body {
@@ -227,7 +228,7 @@ span.exturl {
   text-decoration: none;
   overflow-wrap: break-word;
   word-wrap: break-word;
-  cursor: pointer;
+  cursor: url("https://cdn.jsdelivr.net/gh/kaix2301/pictures/img202201071205091.cur"), auto !important;
 }
 a:hover,
 span.exturl:hover {
@@ -1310,7 +1311,7 @@ pre .javascript .function {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #ffda9f;
+  background: #bfff06;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
