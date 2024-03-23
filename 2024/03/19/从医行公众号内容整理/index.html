@@ -20,7 +20,7 @@
 
 <script id="hexo-configurations">
     var NexT = window.NexT || {};
-    var CONFIG = {"hostname":"forrestgump618.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"mac"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+    var CONFIG = {"hostname":"forrestgump618.github.io","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"mac"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null,"activeClass":"valine"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
   </script>
 
   <meta name="description" content="爬取了从医行微信公众号的数据，并结构化。">
@@ -31,7 +31,7 @@
 <meta property="og:description" content="爬取了从医行微信公众号的数据，并结构化。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-03-19T00:00:00.000Z">
-<meta property="article:modified_time" content="2024-03-22T16:08:50.271Z">
+<meta property="article:modified_time" content="2024-03-23T14:02:04.772Z">
 <meta property="article:author" content="Qingyuan Zhuang&#39; Blog">
 <meta property="article:tag" content="计算机">
 <meta property="article:tag" content="爬虫">
@@ -234,7 +234,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2024-03-23 00:08:50" itemprop="dateModified" datetime="2024-03-23T00:08:50+08:00">2024-03-23</time>
+                <time title="修改时间：2024-03-23 22:02:04" itemprop="dateModified" datetime="2024-03-23T22:02:04+08:00">2024-03-23</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -293,23 +293,23 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>公众号上有非常丰富的通知资源，这里做一个归纳。表格内容通过爬虫技术自动收集并手动整理，包含了各类对考研、保研有帮助的资讯和资源。</p>
-<p><a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1tzK6lw5xahyo5S4rTMu_kw?pwd=8bkq">百度网盘资源链接</a> (提取码: 8bkq) - 复制这段内容后打开百度网盘手机App，操作更方便哦。</p>
-<h2 id="数据表格内容概览"><a href="#数据表格内容概览" class="headerlink" title="数据表格内容概览"></a>数据表格内容概览</h2><p>表格包含以下主要字段：</p>
+        <h1 id="✨前言✨"><a href="#✨前言✨" class="headerlink" title="✨前言✨"></a>✨前言✨</h1><p>📢 公众号上有非常丰富的<strong>通知资源</strong>，这里做一个归纳。表格内容通过🕷️<strong>爬虫技术</strong>自动收集并👐手动整理，包含了各类对考研、保研有帮助的资讯和资源。</p>
+<p>🔗 <a target="_blank" rel="noopener" href="https://pan.baidu.com/s/1tzK6lw5xahyo5S4rTMu_kw?pwd=8bkq"><strong>百度网盘资源链接</strong></a> <code>提取码: 8bkq</code> - 复制这段内容后打开百度网盘手机App，操作更方便哦。</p>
+<h2 id="📊数据表格内容概览📊"><a href="#📊数据表格内容概览📊" class="headerlink" title="📊数据表格内容概览📊"></a>📊数据表格内容概览📊</h2><p>表格包含以下主要字段：</p>
 <ul>
-<li><strong>标题</strong>: 文章的标题。</li>
-<li><strong>作者</strong>: 撰写文章的作者名称。(部分条目可能为空，表示未提供作者信息)</li>
-<li><strong>发文时间</strong>: 文章在公众号上发布的时间。</li>
-<li><strong>摘要</strong>: 文章内容的简短概述，帮助读者快速了解文章主旨。</li>
-<li><strong>链接</strong>: 指向原文章的网页链接，方便读者直接访问原文。</li>
-<li><strong>主标题</strong>和<strong>副标题</strong>: 是对标题的拆分，从医行习惯用“|”进行分割。</li>
-<li><strong>分类</strong>: 文章的分类标签，便于读者根据兴趣或需求筛选文章（包括夏令营等字段）。</li>
-<li><strong>学校</strong>、<strong>医院</strong>、<strong>科室</strong>: 特定文章可能涉及的学校、医院或科室信息。(许多条目可能为空，取决于文章内容)</li>
-<li><strong>专硕/学硕</strong>: 指文章内容更偏向于专业硕士或学术硕士的相关信息。(部分条目可能为空)</li>
-<li><strong>分类_新</strong>: 和分类同，把不重要的内容归为“其他”。</li>
+<li><strong>🔖标题</strong>: 文章的标题。</li>
+<li><strong>👤作者</strong>: 撰写文章的作者名称。(部分条目可能为空，表示未提供作者信息)</li>
+<li><strong>📅发文时间</strong>: 文章在公众号上发布的时间。</li>
+<li><strong>📝摘要</strong>: 文章内容的简短概述，帮助读者快速了解文章主旨。</li>
+<li><strong>🔗链接</strong>: 指向原文章的网页链接，方便读者直接访问原文。</li>
+<li><strong>🔝主标题</strong>和<strong>副标题</strong>: 是对标题的拆分，从医行习惯用“|”进行分割。</li>
+<li><strong>🏷️分类</strong>: 文章的分类标签，便于读者根据兴趣或需求筛选文章（包括夏令营等字段）。</li>
+<li><strong>🏫学校</strong>、<strong>🏥医院</strong>、<strong>🔬科室</strong>: 特定文章可能涉及的学校、医院或科室信息。(许多条目可能为空，取决于文章内容)</li>
+<li><strong>🎓专硕/学硕</strong>: 指文章内容更偏向于专业硕士或学术硕士的相关信息。(部分条目可能为空)</li>
+<li><strong>🆕分类_新</strong>: 和分类同，把不重要的内容归为“其他”。</li>
 </ul>
-<h2 id="结尾"><a href="#结尾" class="headerlink" title="结尾"></a>结尾</h2><p>数据来自从医行公众号的整理，致谢。</p>
-<p>祝大家一切顺利！</p>
+<h2 id="🏁结尾🏁"><a href="#🏁结尾🏁" class="headerlink" title="🏁结尾🏁"></a>🏁结尾🏁</h2><p>数据来自从医行公众号的整理，致谢。</p>
+<p>祝大家一切顺利！💫</p>
 
     </div>
 
@@ -440,7 +440,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-text">前言</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E8%A1%A8%E6%A0%BC%E5%86%85%E5%AE%B9%E6%A6%82%E8%A7%88"><span class="nav-text">数据表格内容概览</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E5%B0%BE"><span class="nav-text">结尾</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E2%9C%A8%E5%89%8D%E8%A8%80%E2%9C%A8"><span class="nav-text">✨前言✨</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%F0%9F%93%8A%E6%95%B0%E6%8D%AE%E8%A1%A8%E6%A0%BC%E5%86%85%E5%AE%B9%E6%A6%82%E8%A7%88%F0%9F%93%8A"><span class="nav-text">📊数据表格内容概览📊</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%F0%9F%8F%81%E7%BB%93%E5%B0%BE%F0%9F%8F%81"><span class="nav-text">🏁结尾🏁</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -540,12 +540,12 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">1:41</span>
+    <span title="站点阅读时长">1:42</span>
 </div>
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共28.3k字</span>
+  <span class="post-count">博客全站共28.4k字</span>
   <span class="post-meta-divider">|</span>
 
     <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
