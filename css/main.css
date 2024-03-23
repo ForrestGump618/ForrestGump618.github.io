@@ -399,13 +399,33 @@ td {
   transition-delay: 0s;
   transition-duration: 0.2s;
   transition-timing-function: ease-in-out;
-  background-color: #eee;
-  background-image: linear-gradient(#fcfcfc, #eee);
-  border: 1px solid #d5d5d5;
-  border-radius: 3px;
-  font-size: 0.8125em;
-  right: 4px;
-  top: 8px;
+  color: #fff;
+  font-size: 14px;
+  right: 0;
+  top: 2px;
+}
+.highlight-container {
+  background: #21252b;
+  border-radius: 5px;
+  box-shadow: 0 10px 30px 0 rgba(0,0,0,0.4);
+  padding-top: 30px;
+}
+.highlight-container::before {
+  background: #fc625d;
+  border-radius: 50%;
+  box-shadow: 20px 0 #fdbc40, 40px 0 #35cd4b;
+  content: ' ';
+  height: 12px;
+  left: 12px;
+  margin-top: -20px;
+  position: absolute;
+  width: 12px;
+}
+.highlight-container .highlight {
+  border-radius: 0 0 5px 5px;
+}
+.highlight-container .highlight .table-container {
+  border-radius: 0 0 5px 5px;
 }
 .highlight,
 pre {
@@ -1129,6 +1149,31 @@ pre .javascript .function {
 .use-motion .menu-item {
   opacity: 0;
 }
+.book-mark-link {
+  border-bottom: none;
+  display: inline-block;
+  position: fixed;
+  right: 30px;
+  top: -10px;
+  transition: 0.3s;
+}
+@media (max-width: 991px) {
+  .book-mark-link {
+    display: none;
+  }
+}
+.book-mark-link::before {
+  color: #222;
+  content: '\f02e';
+  font-size: 32px;
+  line-height: 1;
+  font-family: 'Font Awesome 5 Free';
+  font-weight: 900;
+}
+.book-mark-link:hover,
+.book-mark-link-fixed {
+  top: -2px;
+}
 .github-corner :hover .octo-arm {
   animation: octocat-wave 560ms ease-in-out;
 }
@@ -1265,7 +1310,7 @@ pre .javascript .function {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #14bbaa;
+  background: #ffda9f;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
