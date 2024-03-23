@@ -1,17 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>Hello World！</title>
-    <url>/2023/08/10/Hello%20World%EF%BC%81/</url>
-    <content><![CDATA[<h1 id="欢迎来到我的主页-🏡"><a href="#欢迎来到我的主页-🏡" class="headerlink" title="欢迎来到我的主页 🏡"></a>欢迎来到我的主页 🏡</h1><div style="color: #2c3e50; font-size: 18px;">
-    这里将记录我学习医学、统计和流行病学的一些收获，以及一些生活碎片。欢迎来踩！<br><br>
-    希望这些笔记对您的学习有帮助，最好的东西是免费的，最好的知识是开源的。
-</div>
-
-<p><time style="font-style: italic; color: #7f8c8d;">2023年8月11日</time></p>
-]]></content>
-  </entry>
-  <entry>
     <title>celltogwas：细胞类型注释到基因组的工具包</title>
     <url>/2023/08/19/celltogwas%EF%BC%9A%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8B%E6%B3%A8%E9%87%8A%E5%88%B0%E5%9F%BA%E5%9B%A0%E7%BB%84%E7%9A%84%E5%B7%A5%E5%85%B7%E5%8C%85/</url>
     <content><![CDATA[<h2 id="celltogwas"><a href="#celltogwas" class="headerlink" title="celltogwas"></a>celltogwas</h2><p>This code is a toolkit for genomic analysis. It includes several functions and helper functions to extract gene information from a genomic annotation file, merge gene intervals, generate genomic ranges based on cell types and window size, and annotate GWAS (Genome-Wide Association Study) data.</p>
@@ -34,6 +23,17 @@
         <tag>GWAS</tag>
         <tag>python</tag>
       </tags>
+  </entry>
+  <entry>
+    <title>Hello World！</title>
+    <url>/2023/08/10/Hello%20World%EF%BC%81/</url>
+    <content><![CDATA[<h1 id="欢迎来到我的主页-🏡"><a href="#欢迎来到我的主页-🏡" class="headerlink" title="欢迎来到我的主页 🏡"></a>欢迎来到我的主页 🏡</h1><div style="color: #2c3e50; font-size: 18px;">
+    这里将记录我学习医学、统计和流行病学的一些收获，以及一些生活碎片。欢迎来踩！<br><br>
+    希望这些笔记对您的学习有帮助，最好的东西是免费的，最好的知识是开源的。
+</div>
+
+<p><time style="font-style: italic; color: #7f8c8d;">2023年8月11日</time></p>
+]]></content>
   </entry>
   <entry>
     <title>scDRS：基于GWAS和scRNA评估细胞类型和生物学过程的疾病相关性</title>
@@ -156,28 +156,6 @@
       </tags>
   </entry>
   <entry>
-    <title>域名更换</title>
-    <url>/2024/03/23/%E5%9F%9F%E5%90%8D%E6%9B%B4%E6%8D%A2/</url>
-    <content><![CDATA[<h1 id="🎉-新的域名"><a href="#🎉-新的域名" class="headerlink" title="🎉 新的域名"></a>🎉 <strong>新的域名</strong></h1><p>欢迎来到新域名：<a href="http://www.zhuangqingyuan.site" style="color: #3498db;">www.zhuangqingyuan.site</a><br>今天开始，这个小破站有自己的顶级域名啦！</p>
-<div style="background-color: #f0f2f5; padding: 10px; margin: 10px 0; border-left: 5px solid #3498db;">
-    <h3>📊 站点数据清零</h3>
-    <p>随着域名的更换，之前的浏览数据将不再保留，这里作个记录：</p>
-    <ul>
-        <li><strong>访客量：</strong><span style="color: #e74c3c;">789</span></li>
-        <li><strong>浏览次数：</strong><span style="color: #e74c3c;">1562</span></li>
-    </ul>
-</div>
-
-<p>感谢大家支持，小破站继续努力！</p>
-]]></content>
-      <categories>
-        <category>随笔</category>
-      </categories>
-      <tags>
-        <tag>随笔</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>从医行公众号内容整理</title>
     <url>/2024/03/19/%E4%BB%8E%E5%8C%BB%E8%A1%8C%E5%85%AC%E4%BC%97%E5%8F%B7%E5%86%85%E5%AE%B9%E6%95%B4%E7%90%86/</url>
     <content><![CDATA[<h1 id="✨前言✨"><a href="#✨前言✨" class="headerlink" title="✨前言✨"></a>✨前言✨</h1><p>📢 公众号上有非常丰富的<strong>通知资源</strong>，这里做一个归纳。表格内容通过🕷️<strong>爬虫技术</strong>自动收集并👐手动整理，包含了各类对考研、保研有帮助的资讯和资源。</p>
@@ -249,6 +227,166 @@
         <tag>单细胞测序</tag>
         <tag>免疫</tag>
         <tag>肿瘤</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>域名更换</title>
+    <url>/2024/03/23/%E5%9F%9F%E5%90%8D%E6%9B%B4%E6%8D%A2/</url>
+    <content><![CDATA[<h1 id="🎉-新的域名"><a href="#🎉-新的域名" class="headerlink" title="🎉 新的域名"></a>🎉 <strong>新的域名</strong></h1><p>欢迎来到新域名：<a href="http://www.zhuangqingyuan.site" style="color: #3498db;">www.zhuangqingyuan.site</a><br>今天开始，这个小破站有自己的顶级域名啦！</p>
+<div style="background-color: #f0f2f5; padding: 10px; margin: 10px 0; border-left: 5px solid #3498db;">
+    <h3>📊 站点数据清零</h3>
+    <p>随着域名的更换，之前的浏览数据将不再保留，这里作个记录：</p>
+    <ul>
+        <li><strong>访客量：</strong><span style="color: #e74c3c;">789</span></li>
+        <li><strong>浏览次数：</strong><span style="color: #e74c3c;">1562</span></li>
+    </ul>
+</div>
+
+<p>感谢大家支持，小破站继续努力！</p>
+]]></content>
+      <categories>
+        <category>随笔</category>
+      </categories>
+      <tags>
+        <tag>随笔</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>单细胞转录组分析实战（二）：质控、数据变换和降维</title>
+    <url>/2024/02/19/%E5%8D%95%E7%BB%86%E8%83%9E%E8%BD%AC%E5%BD%95%E7%BB%84%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9A%E8%B4%A8%E6%8E%A7%E3%80%81%E6%95%B0%E6%8D%AE%E5%8F%98%E6%8D%A2%E5%92%8C%E9%99%8D%E7%BB%B4/</url>
+    <content><![CDATA[<h2 id="载入软件包和设置路径"><a href="#载入软件包和设置路径" class="headerlink" title="载入软件包和设置路径"></a>载入软件包和设置路径</h2><figure class="highlight r"><table><tr><td class="code"><pre><span class="line">library<span class="punctuation">(</span>dplyr<span class="punctuation">)</span></span><br><span class="line">library<span class="punctuation">(</span>Seurat<span class="punctuation">)</span></span><br><span class="line">library<span class="punctuation">(</span>openxlsx<span class="punctuation">)</span></span><br><span class="line">library<span class="punctuation">(</span>ggplot2<span class="punctuation">)</span></span><br><span class="line">library<span class="punctuation">(</span>ggforce<span class="punctuation">)</span></span><br><span class="line">library<span class="punctuation">(</span>reshape2<span class="punctuation">)</span></span><br><span class="line">library<span class="punctuation">(</span>RColorBrewer<span class="punctuation">)</span></span><br><span class="line"></span><br><span class="line">setwd<span class="punctuation">(</span><span class="string">&quot;D:/0217workshop&quot;</span><span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<h2 id="读取10X数据和Meta-data"><a href="#读取10X数据和Meta-data" class="headerlink" title="读取10X数据和Meta data"></a>读取10X数据和Meta data</h2><figure class="highlight r"><table><tr><td class="code"><pre><span class="line">original_data <span class="operator">=</span>  Read10X<span class="punctuation">(</span>data.dir <span class="operator">=</span> <span class="string">&quot;./data/GSE169246/&quot;</span><span class="punctuation">)</span></span><br><span class="line">meta_info <span class="operator">=</span> read.xlsx<span class="punctuation">(</span><span class="string">&quot;./data/meta_info.xlsx&quot;</span><span class="punctuation">)</span></span><br><span class="line">rownames<span class="punctuation">(</span>meta_info<span class="punctuation">)</span> <span class="operator">=</span> meta_info<span class="operator">$</span>Cell.barcode</span><br><span class="line">meta_info <span class="operator">=</span> meta_info<span class="punctuation">[</span><span class="punctuation">,</span><span class="operator">-</span><span class="number">1</span><span class="punctuation">]</span></span><br><span class="line">meta_info <span class="operator">=</span> filter<span class="punctuation">(</span>meta_info<span class="punctuation">,</span> Tissue <span class="operator">%in%</span> <span class="built_in">c</span><span class="punctuation">(</span><span class="string">&quot;breast&quot;</span><span class="punctuation">,</span> <span class="string">&quot;liver&quot;</span><span class="punctuation">)</span> <span class="operator">&amp;</span> Group <span class="operator">==</span> <span class="string">&quot;Pre-treatment&quot;</span><span class="punctuation">)</span></span><br><span class="line">filter_data <span class="operator">=</span> original_data<span class="punctuation">[</span><span class="punctuation">,</span>rownames<span class="punctuation">(</span>meta_info<span class="punctuation">)</span><span class="punctuation">]</span></span><br><span class="line">remove<span class="punctuation">(</span>original_data<span class="punctuation">)</span></span><br><span class="line"><span class="comment">#################### save filter data</span></span><br></pre></td></tr></table></figure>
+<ol>
+<li><p><code>original_data = Read10X(data.dir = &quot;./data/GSE169246/&quot;)</code>：这行代码从”./data/GSE169246/“目录中读取基因表达数据，使用的函数是Read10X。这是来自10x Genomics的数据。文件目录下有barcodes.tsv.gz；features.tsv.gz和matrix.mtx.gz。这是CellRanger软件生成的，可直接供Seurat读取。</p>
+</li>
+<li><p><code>meta_info = read.xlsx(&quot;./data/meta_info.xlsx&quot;)</code>：这行代码从”./data/meta_info.xlsx”文件中读取元信息，使用的函数是read.xlsx。这个文件可能包含了与每个细胞相关的信息，比如细胞类型、样本来源等。<img src="/2024/02/19/%E5%8D%95%E7%BB%86%E8%83%9E%E8%BD%AC%E5%BD%95%E7%BB%84%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9A%E8%B4%A8%E6%8E%A7%E3%80%81%E6%95%B0%E6%8D%AE%E5%8F%98%E6%8D%A2%E5%92%8C%E9%99%8D%E7%BB%B4/1.png" alt="Meta data"></p>
+</li>
+<li><p><code>rownames(meta_info) = meta_info$Cell.barcode</code>：这行代码将meta_info数据框的行名设置为其中一个列（可能是”Cell.barcode”列）的值。这是为了后续方便使用细胞条形码作为索引。</p>
+</li>
+<li><p><code>meta_info = meta_info[,-1]</code>：这行代码删除了meta_info数据框中的第一列。因为第一列是细胞条形码，已经作为行名了，不需要再作为数据列。</p>
+</li>
+<li><p><code>meta_info = filter(meta_info, Tissue %in% c(&quot;breast&quot;, &quot;liver&quot;) &amp; Group == &quot;Pre-treatment&quot;)</code>：这行代码对meta_info数据框进行过滤，只保留肝脏和乳腺在治疗前的数据。</p>
+</li>
+<li><p><code>filter_data = original_data[,rownames(meta_info)]</code>：这行代码根据之前过滤后的meta_info数据框，从原始数据中提取出符合条件的数据，存储在filter_data中。</p>
+</li>
+<li><p><code>remove(original_data)</code>：这行代码移除了之前加载的original_data对象，可能是为了释放内存空间或者清理不再需要的数据对象。</p>
+</li>
+</ol>
+<h2 id="创建Seurat对象、质控和数据变换"><a href="#创建Seurat对象、质控和数据变换" class="headerlink" title="创建Seurat对象、质控和数据变换"></a>创建Seurat对象、质控和数据变换</h2><figure class="highlight r"><table><tr><td class="code"><pre><span class="line">mtGenes <span class="operator">=</span> grep<span class="punctuation">(</span><span class="string">&#x27;^MT-&#x27;</span><span class="punctuation">,</span>rownames<span class="punctuation">(</span>filter_data<span class="punctuation">)</span><span class="punctuation">,</span>value<span class="operator">=</span><span class="literal">TRUE</span><span class="punctuation">)</span></span><br><span class="line">hspGenes <span class="operator">=</span> <span class="built_in">c</span><span class="punctuation">(</span>grep<span class="punctuation">(</span><span class="string">&#x27;^HSP&#x27;</span><span class="punctuation">,</span>rownames<span class="punctuation">(</span>filter_data<span class="punctuation">)</span><span class="punctuation">,</span>value<span class="operator">=</span><span class="literal">TRUE</span><span class="punctuation">)</span><span class="punctuation">,</span></span><br><span class="line">             grep<span class="punctuation">(</span><span class="string">&#x27;^HSF&#x27;</span><span class="punctuation">,</span>rownames<span class="punctuation">(</span>filter_data<span class="punctuation">)</span><span class="punctuation">,</span>value<span class="operator">=</span><span class="literal">TRUE</span><span class="punctuation">)</span><span class="punctuation">)</span></span><br><span class="line">gene_list <span class="operator">=</span> rownames<span class="punctuation">(</span>filter_data<span class="punctuation">)</span><span class="punctuation">[</span><span class="operator">!</span>rownames<span class="punctuation">(</span>filter_data<span class="punctuation">)</span> <span class="operator">%in%</span> <span class="built_in">c</span><span class="punctuation">(</span>mtGenes<span class="punctuation">,</span>hspGenes<span class="punctuation">)</span><span class="punctuation">]</span></span><br><span class="line">filter_data <span class="operator">=</span> filter_data<span class="punctuation">[</span>gene_list<span class="punctuation">,</span>rownames<span class="punctuation">(</span>meta_info<span class="punctuation">)</span><span class="punctuation">]</span></span><br><span class="line">data <span class="operator">=</span> CreateSeuratObject<span class="punctuation">(</span>counts <span class="operator">=</span> filter_data<span class="punctuation">,</span>min.cells <span class="operator">=</span> <span class="number">10</span><span class="punctuation">,</span>meta.data <span class="operator">=</span> meta_info<span class="punctuation">)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#################save backup for data</span></span><br><span class="line">data_back_up <span class="operator">=</span> data</span><br><span class="line">remove<span class="punctuation">(</span>filter_data<span class="punctuation">)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">################# QC</span></span><br><span class="line"><span class="comment"># QC步骤通过meta_info取细胞事实上已经完成，所以不需要重新进行。</span></span><br><span class="line"></span><br><span class="line">data <span class="operator">=</span> NormalizeData<span class="punctuation">(</span>data<span class="punctuation">,</span> normalization.method <span class="operator">=</span> <span class="string">&quot;LogNormalize&quot;</span><span class="punctuation">,</span> scale.factor <span class="operator">=</span> <span class="number">1e6</span><span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<p>这段代码执行了以下操作：</p>
+<ol>
+<li><p><strong>找到线粒体基因：</strong></p>
+<ul>
+<li>使用 <code>grep()</code> 函数和正则表达式 <code>&#39;^MT-&#39;</code> 来匹配 <code>filter_data</code> 的行名（基因名），返回以 “MT-“ 开头的基因列表。</li>
+<li>将结果存储在 <code>mtGenes</code> 中。</li>
+</ul>
+</li>
+<li><p><strong>找到热休克蛋白基因：</strong></p>
+<ul>
+<li>使用 <code>grep()</code> 函数和正则表达式 <code>&#39;^HSP&#39;</code> 和 <code>&#39;^HSF&#39;</code> 来匹配 <code>filter_data</code> 的行名（基因名），分别返回以 “HSP” 和 “HSF” 开头的基因列表。</li>
+<li>将结果存储在 <code>hspGenes</code> 中。</li>
+</ul>
+</li>
+<li><p><strong>创建不包含特定基因的基因列表：</strong></p>
+<ul>
+<li>使用 <code>%in%</code> 运算符将 <code>mtGenes</code> 和 <code>hspGenes</code> 合并为一个基因列表。</li>
+<li>使用 <code>!</code> 运算符取反，以排除这些基因，得到不包含以 “MT-“ 开头以及以 “HSP” 或 “HSF” 开头的基因列表。</li>
+<li>将结果存储在 <code>gene_list</code> 中。</li>
+</ul>
+</li>
+<li><p><strong>根据基因列表过滤数据：</strong></p>
+<ul>
+<li>使用 <code>filter_data</code> 和 <code>rownames()</code> 函数来根据 <code>gene_list</code> 过滤行（基因）。</li>
+<li>在此过滤后，只保留了不包含以 “MT-“ 开头以及以 “HSP” 或 “HSF” 开头的基因。</li>
+</ul>
+</li>
+<li><p><strong>使用过滤后的数据创建 Seurat 对象：</strong></p>
+<ul>
+<li>使用 <code>CreateSeuratObject()</code> 函数创建 Seurat 对象。</li>
+<li>提供了过滤后的数据 (<code>filter_data</code>) 作为 <code>counts</code> 参数，最小细胞数为 10。</li>
+<li>提供了元数据 (<code>meta_info</code>) 作为 <code>meta.data</code> 参数。</li>
+<li>使用 <code>rownames(meta_info)</code> 选择与 <code>meta_info</code> 中行名相对应的行来构建 Seurat 对象。</li>
+</ul>
+</li>
+<li><p><strong>选择归一化方法：</strong></p>
+<ul>
+<li>使用 <code>NormalizeData()</code> 函数选择了 “LogNormalize” 方法进行归一化。</li>
+<li>“LogNormalize” 方法将数据中的每个表达值取对数，通常以自然对数为底（ln），并且可以选择一个缩放因子来控制数据的归一化程度。在这里，设置了 <code>scale.factor</code> 参数为 <code>1e6</code>，这意味着将每个细胞的总表达值缩放到 1,000,000。这是一种常见的做法，它可以确保每个细胞的总表达值在一个可比较的范围内。</li>
+</ul>
+</li>
+</ol>
+<p>这段代码的目的是根据给定的条件对基因和数据进行过滤，并基于过滤后的数据创建 Seurat 对象，以便后续的单细胞分析。</p>
+<h2 id="降维"><a href="#降维" class="headerlink" title="降维"></a>降维</h2><figure class="highlight r"><table><tr><td class="code"><pre><span class="line">data <span class="operator">=</span> ScaleData<span class="punctuation">(</span>data<span class="punctuation">,</span>features <span class="operator">=</span> VariableFeatures<span class="punctuation">(</span>data<span class="punctuation">)</span><span class="punctuation">)</span></span><br><span class="line">data <span class="operator">=</span> RunPCA<span class="punctuation">(</span>data<span class="punctuation">,</span>features <span class="operator">=</span> VariableFeatures<span class="punctuation">(</span>data<span class="punctuation">)</span><span class="punctuation">)</span></span><br><span class="line">DimPlot<span class="punctuation">(</span>data<span class="punctuation">,</span> reduction <span class="operator">=</span> <span class="string">&quot;pca&quot;</span><span class="punctuation">,</span>group.by <span class="operator">=</span> <span class="string">&quot;Tissue&quot;</span><span class="punctuation">)</span></span><br><span class="line">DimPlot<span class="punctuation">(</span>data<span class="punctuation">,</span> reduction <span class="operator">=</span> <span class="string">&quot;pca&quot;</span><span class="punctuation">,</span>group.by <span class="operator">=</span> <span class="string">&quot;Sample&quot;</span><span class="punctuation">)</span></span><br><span class="line">ElbowPlot<span class="punctuation">(</span>data<span class="punctuation">)</span></span><br><span class="line">data <span class="operator">=</span> RunUMAP<span class="punctuation">(</span>data<span class="punctuation">,</span>dims <span class="operator">=</span> <span class="number">1</span><span class="operator">:</span><span class="number">15</span><span class="punctuation">)</span></span><br><span class="line">data <span class="operator">=</span> RunTSNE<span class="punctuation">(</span>data<span class="punctuation">,</span>dims <span class="operator">=</span> <span class="number">1</span><span class="operator">:</span><span class="number">15</span><span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<ol>
+<li><p><code>data = ScaleData(data, features = VariableFeatures(data))</code>： 这一行代码调用了一个名为 <code>ScaleData</code> 的函数，用于对数据进行缩放或标准化处理，其中 <code>data</code> 是输入的数据，而 <code>VariableFeatures(data)</code> 则可能是用于确定要进行缩放的特征的函数或方法。</p>
+</li>
+<li><p><code>data = RunPCA(data, features = VariableFeatures(data))</code>： 这一行代码调用了一个名为 <code>RunPCA</code> 的函数，用于执行主成分分析（PCA）降维操作，以减少数据的维度。同样，<code>data</code> 是输入的数据，<code>VariableFeatures(data)</code> 用于确定应用 PCA 的特征。</p>
+</li>
+<li><p><code>DimPlot(data, reduction = &quot;pca&quot;, group.by = &quot;Tissue&quot;)</code>： 这一行代码调用了一个名为 <code>DimPlot</code> 的函数，用于绘制降维后的数据的可视化图。<code>reduction = &quot;pca&quot;</code> 表示使用 PCA 降维后的数据进行可视化，而 <code>group.by = &quot;Tissue&quot;</code> 表示根据组织类型来对数据进行分组，并在图上用不同颜色或符号表示不同组织类型的数据点。</p>
+</li>
+<li><p><code>DimPlot(data, reduction = &quot;pca&quot;, group.by = &quot;Sample&quot;)</code>： 类似于上一行，这一行也是调用 <code>DimPlot</code> 函数，但是这次是根据样本（Sample）来对数据进行分组，并对数据进行可视化。</p>
+</li>
+<li><p><code>ElbowPlot(data)</code>： 这一行代码调用了一个名为 <code>ElbowPlot</code> 的函数，用于绘制 PCA 或者其他降维方法中的“肘部图”，帮助确定降维后保留的主要成分数量。</p>
+</li>
+<li><p><code>data = RunUMAP(data, dims = 1:15)</code>： 这一行代码调用了一个名为 <code>RunUMAP</code> 的函数，用于执行 UMAP（Uniform Manifold Approximation and Projection）算法，将数据降维到更低的维度。<code>dims = 1:15</code> 表示在执行 UMAP 时考虑的维度范围。</p>
+</li>
+<li><p><code>data = RunTSNE(data, dims = 1:15)</code>： 最后一行代码调用了一个名为 <code>RunTSNE</code> 的函数，用于执行 t-SNE（t-distributed Stochastic Neighbor Embedding）算法，也是一种常用的数据降维算法。<code>dims = 1:15</code> 表示在执行 t-SNE 时考虑的维度范围。</p>
+</li>
+</ol>
+<p>注意，这里我们先降维，后面再拆分数据，可以保留数据点信息。</p>
+<h2 id="拆分数据"><a href="#拆分数据" class="headerlink" title="拆分数据"></a>拆分数据</h2><figure class="highlight r"><table><tr><td class="code"><pre><span class="line">ser_split <span class="operator">=</span> SplitObject<span class="punctuation">(</span>data<span class="punctuation">,</span>split<span class="operator">=</span><span class="string">&quot;Tissue&quot;</span><span class="punctuation">)</span></span><br><span class="line">liver_data <span class="operator">=</span> ser_split<span class="punctuation">[[</span><span class="string">&quot;liver&quot;</span><span class="punctuation">]</span><span class="punctuation">]</span></span><br><span class="line">breast_data <span class="operator">=</span> ser_split<span class="punctuation">[[</span><span class="string">&quot;breast&quot;</span><span class="punctuation">]</span><span class="punctuation">]</span></span><br></pre></td></tr></table></figure>
+<h2 id="聚类、分群（以肝脏为例）"><a href="#聚类、分群（以肝脏为例）" class="headerlink" title="聚类、分群（以肝脏为例）"></a>聚类、分群（以肝脏为例）</h2><figure class="highlight r"><table><tr><td class="code"><pre><span class="line">liver_data <span class="operator">=</span> FindNeighbors<span class="punctuation">(</span>liver_data<span class="punctuation">,</span> dims <span class="operator">=</span> <span class="number">1</span><span class="operator">:</span><span class="number">15</span><span class="punctuation">)</span></span><br><span class="line">liver_data <span class="operator">=</span> FindClusters<span class="punctuation">(</span>liver_data<span class="punctuation">,</span> resolution <span class="operator">=</span> <span class="number">0.1</span><span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<ol>
+<li><p><code>liver_data = FindNeighbors(liver_data, dims = 1:15)</code>： 这一行代码调用了一个名为 <code>FindNeighbors</code> 的函数，用于找到数据中每个数据点的邻居。在这里，<code>liver_data</code> 是输入的数据，<code>dims = 1:15</code> 表示在寻找邻居时考虑的维度范围，通常是降维后的结果。这个过程通常是用于计算数据点之间的相似度或距离，为后续的聚类操作做准备。</p>
+</li>
+<li><p><code>liver_data = FindClusters(liver_data, resolution = 0.1)</code>： 这一行代码调用了一个名为 <code>FindClusters</code> 的函数，用于在数据中找到聚类。<code>liver_data</code> 是输入的数据，<code>resolution = 0.1</code> 表示在执行聚类时使用的分辨率参数，它可以影响聚类结果的数量和密度。较低的分辨率可能导致更多的细分聚类，而较高的分辨率可能导致更少但更大的聚类。</p>
+</li>
+</ol>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">my_colors <span class="operator">=</span> <span class="built_in">c</span><span class="punctuation">(</span><span class="string">&quot;#D2EBC8&quot;</span><span class="punctuation">,</span><span class="string">&quot;#3C77AF&quot;</span><span class="punctuation">,</span><span class="string">&quot;#7DBFA7&quot;</span><span class="punctuation">,</span><span class="string">&quot;#AECDE1&quot;</span><span class="punctuation">,</span></span><br><span class="line">              <span class="string">&quot;#EE934E&quot;</span><span class="punctuation">,</span><span class="string">&quot;#D1352B&quot;</span><span class="punctuation">,</span><span class="string">&quot;#9B5B33&quot;</span><span class="punctuation">,</span><span class="string">&quot;#F6CFE4&quot;</span><span class="punctuation">,</span></span><br><span class="line">              <span class="string">&quot;#B383B9&quot;</span><span class="punctuation">,</span><span class="string">&quot;#8FA4AE&quot;</span><span class="punctuation">,</span><span class="string">&quot;#FCED82&quot;</span><span class="punctuation">,</span><span class="string">&quot;#F5D2A8&quot;</span><span class="punctuation">,</span><span class="string">&quot;#BBDD78&quot;</span><span class="punctuation">)</span></span><br><span class="line">tsne_data <span class="operator">=</span> FetchData<span class="punctuation">(</span>liver_data <span class="punctuation">,</span> vars <span class="operator">=</span> <span class="built_in">c</span><span class="punctuation">(</span><span class="string">&quot;tSNE_1&quot;</span><span class="punctuation">,</span> <span class="string">&quot;tSNE_2&quot;</span><span class="punctuation">,</span> <span class="string">&quot;Major.celltype&quot;</span><span class="punctuation">,</span><span class="string">&quot;seurat_clusters&quot;</span><span class="punctuation">)</span><span class="punctuation">)</span></span><br><span class="line">ggplot<span class="punctuation">(</span>tsne_data<span class="punctuation">,</span> aes<span class="punctuation">(</span>x <span class="operator">=</span> tSNE_1<span class="punctuation">,</span> y <span class="operator">=</span> tSNE_2<span class="punctuation">,</span> color <span class="operator">=</span> as.factor<span class="punctuation">(</span>seurat_clusters<span class="punctuation">)</span><span class="punctuation">)</span><span class="punctuation">)</span> <span class="operator">+</span></span><br><span class="line">  geom_point<span class="punctuation">(</span>size <span class="operator">=</span> <span class="number">1</span><span class="punctuation">)</span> <span class="operator">+</span> </span><br><span class="line">  scale_color_manual<span class="punctuation">(</span>values <span class="operator">=</span> my_colors<span class="punctuation">)</span> <span class="operator">+</span></span><br><span class="line">  theme_minimal<span class="punctuation">(</span><span class="punctuation">)</span> <span class="operator">+</span> </span><br><span class="line">  labs<span class="punctuation">(</span></span><br><span class="line">    title <span class="operator">=</span> <span class="string">&quot;tSNE Plot of Major Cell Types&quot;</span><span class="punctuation">,</span>  <span class="comment"># 添加标题</span></span><br><span class="line">    x <span class="operator">=</span> <span class="string">&quot;tSNE Dimension 1&quot;</span><span class="punctuation">,</span>  <span class="comment"># 自定义X轴标签</span></span><br><span class="line">    y <span class="operator">=</span> <span class="string">&quot;tSNE Dimension 2&quot;</span><span class="punctuation">,</span>  <span class="comment"># 自定义Y轴标签</span></span><br><span class="line">    color <span class="operator">=</span> <span class="string">&quot;Cluster&quot;</span>  <span class="comment"># 自定义图例标题</span></span><br><span class="line">  <span class="punctuation">)</span> <span class="operator">+</span></span><br><span class="line">  theme<span class="punctuation">(</span></span><br><span class="line">    legend.position <span class="operator">=</span> <span class="string">&quot;right&quot;</span><span class="punctuation">,</span></span><br><span class="line">    legend.text <span class="operator">=</span> element_text<span class="punctuation">(</span>size <span class="operator">=</span> <span class="number">12</span><span class="punctuation">)</span><span class="punctuation">,</span>  <span class="comment"># 增加图例文本的大小</span></span><br><span class="line">    plot.title <span class="operator">=</span> element_text<span class="punctuation">(</span>hjust <span class="operator">=</span> <span class="number">0.5</span><span class="punctuation">)</span><span class="punctuation">,</span>  <span class="comment"># 居中对齐标题</span></span><br><span class="line">    axis.text <span class="operator">=</span> element_text<span class="punctuation">(</span>size <span class="operator">=</span> <span class="number">12</span><span class="punctuation">)</span><span class="punctuation">,</span>  <span class="comment"># 增加轴标签的字体大小</span></span><br><span class="line">    axis.title <span class="operator">=</span> element_text<span class="punctuation">(</span>size <span class="operator">=</span> <span class="number">14</span><span class="punctuation">)</span><span class="punctuation">,</span>  <span class="comment"># 增加轴标题的字体大小</span></span><br><span class="line">    panel.grid.major <span class="operator">=</span> element_blank<span class="punctuation">(</span><span class="punctuation">)</span><span class="punctuation">,</span>  <span class="comment"># 去除主要网格线</span></span><br><span class="line">    panel.grid.minor <span class="operator">=</span> element_blank<span class="punctuation">(</span><span class="punctuation">)</span><span class="punctuation">,</span>  <span class="comment"># 去除次要网格线</span></span><br><span class="line">    panel.border <span class="operator">=</span> element_rect<span class="punctuation">(</span>colour <span class="operator">=</span> <span class="string">&quot;black&quot;</span><span class="punctuation">,</span> fill<span class="operator">=</span><span class="literal">NA</span><span class="punctuation">,</span> size<span class="operator">=</span><span class="number">1</span><span class="punctuation">)</span>  <span class="comment"># 增加边框</span></span><br><span class="line">  <span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<p>这段代码是用来绘制 t-SNE（t-distributed Stochastic Neighbor Embedding）降维后的数据的散点图，并根据聚类结果着色：</p>
+<ol>
+<li><p><code>my_colors = c(&quot;#D2EBC8&quot;,&quot;#3C77AF&quot;, ...)</code>： 定义了一个包含颜色代码的向量，用于后续的图形着色。</p>
+</li>
+<li><p><code>tsne_data = FetchData(liver_data , vars = c(&quot;tSNE_1&quot;, &quot;tSNE_2&quot;, &quot;Major.celltype&quot;,&quot;seurat_clusters&quot;))</code>： 提取了 liver_data 数据集中 t-SNE 的前两个维度（即 tSNE_1 和 tSNE_2），以及每个数据点的主要细胞类型和 Seurat 聚类结果。</p>
+</li>
+<li><p><code>ggplot(tsne_data, aes(x = tSNE_1, y = tSNE_2, color = as.factor(seurat_clusters))) +</code>： 创建了一个基础的 ggplot2 图形对象，设置 x 轴为 tSNE_1、y 轴为 tSNE_2，并根据 seurat_clusters 列进行着色。</p>
+</li>
+<li><p><code>geom_point(size = 1) +</code>： 添加了一个散点图层，指定点的大小为 1。</p>
+</li>
+<li><p><code>scale_color_manual(values = my_colors) +</code>： 手动指定颜色映射，使用了前面定义的 my_colors 向量。</p>
+</li>
+<li><p><code>theme_minimal() +</code>： 使用了一个基本的最小化主题。</p>
+</li>
+<li><p><code>labs(...)</code>： 添加了图表的标题和轴标签，并自定义了图例标题。</p>
+</li>
+<li><p><code>theme(...)</code>： 进一步调整了图表的主题，包括图例位置、文本大小、标题对齐方式、轴标签大小、网格线和面板边框。</p>
+</li>
+</ol>
+<p>COSGR包是一款专门用于单细胞测序数据中准确和超快速标记基因识别的工具。它可以应用于不同类型的数据，包括单细胞RNA测序、单细胞ATAC测序和空间转录组学。COSGR包的核心是其COSG函数，该函数利用余弦相似性来识别具有更高准确性和可扩展性的标记基因。这种方法对大规模数据集特别有效，能够在不到两分钟的时间内识别出一百万个细胞的标记基因。</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">library<span class="punctuation">(</span>COSG<span class="punctuation">)</span></span><br><span class="line">marker_cosg <span class="operator">=</span> cosg<span class="punctuation">(</span></span><br><span class="line">  liver_data<span class="punctuation">,</span></span><br><span class="line">  groups<span class="operator">=</span><span class="string">&#x27;all&#x27;</span><span class="punctuation">,</span></span><br><span class="line">  assay<span class="operator">=</span><span class="string">&#x27;RNA&#x27;</span><span class="punctuation">,</span></span><br><span class="line">  slot<span class="operator">=</span><span class="string">&#x27;data&#x27;</span><span class="punctuation">,</span></span><br><span class="line">  mu<span class="operator">=</span><span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">  n_genes_user<span class="operator">=</span><span class="number">200</span><span class="punctuation">)</span></span><br><span class="line">write.xlsx<span class="punctuation">(</span>marker_cosg<span class="operator">$</span><span class="built_in">names</span><span class="punctuation">,</span><span class="string">&quot;./liver_marker.xlsx&quot;</span><span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<p>代码解释</p>
+<ol>
+<li><p><code>library(COSG)</code>: 在R会话中加载COSGR包。</p>
+</li>
+<li><p><code>marker_cosg = cosg(...)</code>: 这行代码调用了<code>cosg</code>函数，应用于一个数据集（<code>liver_data</code>）。指定的参数包括：</p>
+<ul>
+<li><code>groups=&#39;all&#39;</code>: 分析数据集中的所有细胞群组。</li>
+<li><code>assay=&#39;RNA&#39;</code>: 指定要使用的检测数据类型。</li>
+<li><code>slot=&#39;data&#39;</code>: 表明使用检测数据的哪个部分。</li>
+<li><code>mu=1</code>: 设置<code>mu</code>参数，这影响识别标记基因的特异性。</li>
+<li><code>n_genes_user=200</code>: 在分析中考虑的基因数量。</li>
+</ul>
+</li>
+<li><code>write.xlsx(marker_cosg$names,&quot;./liver_marker.xlsx&quot;)</code>: 这行代码将<code>marker_cosg</code>对象中识别的标记基因名称保存到名为”liver_marker.xlsx”的Excel文件中。</li>
+</ol>
+<p>在<code>cosg</code>函数中，可以调整<code>mu</code>参数来识别更具体的标记基因。将<code>mu</code>设置为更高的值，如10或100，可以提高特异性。此外，可以将<code>remove_lowly_expressed</code>设置为<code>TRUE</code>，以排除目标细胞群组中表达非常低的基因，并调整<code>expressed_pct</code>参数来设置表达百分比的阈值。</p>
+]]></content>
+      <categories>
+        <category>生物信息学</category>
+      </categories>
+      <tags>
+        <tag>生物信息学</tag>
+        <tag>单细胞测序</tag>
       </tags>
   </entry>
   <entry>
@@ -946,144 +1084,6 @@
       </tags>
   </entry>
   <entry>
-    <title>单细胞转录组分析实战（二）：质控、数据变换和降维</title>
-    <url>/2024/02/19/%E5%8D%95%E7%BB%86%E8%83%9E%E8%BD%AC%E5%BD%95%E7%BB%84%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9A%E8%B4%A8%E6%8E%A7%E3%80%81%E6%95%B0%E6%8D%AE%E5%8F%98%E6%8D%A2%E5%92%8C%E9%99%8D%E7%BB%B4/</url>
-    <content><![CDATA[<h2 id="载入软件包和设置路径"><a href="#载入软件包和设置路径" class="headerlink" title="载入软件包和设置路径"></a>载入软件包和设置路径</h2><figure class="highlight r"><table><tr><td class="code"><pre><span class="line">library<span class="punctuation">(</span>dplyr<span class="punctuation">)</span></span><br><span class="line">library<span class="punctuation">(</span>Seurat<span class="punctuation">)</span></span><br><span class="line">library<span class="punctuation">(</span>openxlsx<span class="punctuation">)</span></span><br><span class="line">library<span class="punctuation">(</span>ggplot2<span class="punctuation">)</span></span><br><span class="line">library<span class="punctuation">(</span>ggforce<span class="punctuation">)</span></span><br><span class="line">library<span class="punctuation">(</span>reshape2<span class="punctuation">)</span></span><br><span class="line">library<span class="punctuation">(</span>RColorBrewer<span class="punctuation">)</span></span><br><span class="line"></span><br><span class="line">setwd<span class="punctuation">(</span><span class="string">&quot;D:/0217workshop&quot;</span><span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
-<h2 id="读取10X数据和Meta-data"><a href="#读取10X数据和Meta-data" class="headerlink" title="读取10X数据和Meta data"></a>读取10X数据和Meta data</h2><figure class="highlight r"><table><tr><td class="code"><pre><span class="line">original_data <span class="operator">=</span>  Read10X<span class="punctuation">(</span>data.dir <span class="operator">=</span> <span class="string">&quot;./data/GSE169246/&quot;</span><span class="punctuation">)</span></span><br><span class="line">meta_info <span class="operator">=</span> read.xlsx<span class="punctuation">(</span><span class="string">&quot;./data/meta_info.xlsx&quot;</span><span class="punctuation">)</span></span><br><span class="line">rownames<span class="punctuation">(</span>meta_info<span class="punctuation">)</span> <span class="operator">=</span> meta_info<span class="operator">$</span>Cell.barcode</span><br><span class="line">meta_info <span class="operator">=</span> meta_info<span class="punctuation">[</span><span class="punctuation">,</span><span class="operator">-</span><span class="number">1</span><span class="punctuation">]</span></span><br><span class="line">meta_info <span class="operator">=</span> filter<span class="punctuation">(</span>meta_info<span class="punctuation">,</span> Tissue <span class="operator">%in%</span> <span class="built_in">c</span><span class="punctuation">(</span><span class="string">&quot;breast&quot;</span><span class="punctuation">,</span> <span class="string">&quot;liver&quot;</span><span class="punctuation">)</span> <span class="operator">&amp;</span> Group <span class="operator">==</span> <span class="string">&quot;Pre-treatment&quot;</span><span class="punctuation">)</span></span><br><span class="line">filter_data <span class="operator">=</span> original_data<span class="punctuation">[</span><span class="punctuation">,</span>rownames<span class="punctuation">(</span>meta_info<span class="punctuation">)</span><span class="punctuation">]</span></span><br><span class="line">remove<span class="punctuation">(</span>original_data<span class="punctuation">)</span></span><br><span class="line"><span class="comment">#################### save filter data</span></span><br></pre></td></tr></table></figure>
-<ol>
-<li><p><code>original_data = Read10X(data.dir = &quot;./data/GSE169246/&quot;)</code>：这行代码从”./data/GSE169246/“目录中读取基因表达数据，使用的函数是Read10X。这是来自10x Genomics的数据。文件目录下有barcodes.tsv.gz；features.tsv.gz和matrix.mtx.gz。这是CellRanger软件生成的，可直接供Seurat读取。</p>
-</li>
-<li><p><code>meta_info = read.xlsx(&quot;./data/meta_info.xlsx&quot;)</code>：这行代码从”./data/meta_info.xlsx”文件中读取元信息，使用的函数是read.xlsx。这个文件可能包含了与每个细胞相关的信息，比如细胞类型、样本来源等。<img src="/2024/02/19/%E5%8D%95%E7%BB%86%E8%83%9E%E8%BD%AC%E5%BD%95%E7%BB%84%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9A%E8%B4%A8%E6%8E%A7%E3%80%81%E6%95%B0%E6%8D%AE%E5%8F%98%E6%8D%A2%E5%92%8C%E9%99%8D%E7%BB%B4/1.png" alt="Meta data"></p>
-</li>
-<li><p><code>rownames(meta_info) = meta_info$Cell.barcode</code>：这行代码将meta_info数据框的行名设置为其中一个列（可能是”Cell.barcode”列）的值。这是为了后续方便使用细胞条形码作为索引。</p>
-</li>
-<li><p><code>meta_info = meta_info[,-1]</code>：这行代码删除了meta_info数据框中的第一列。因为第一列是细胞条形码，已经作为行名了，不需要再作为数据列。</p>
-</li>
-<li><p><code>meta_info = filter(meta_info, Tissue %in% c(&quot;breast&quot;, &quot;liver&quot;) &amp; Group == &quot;Pre-treatment&quot;)</code>：这行代码对meta_info数据框进行过滤，只保留肝脏和乳腺在治疗前的数据。</p>
-</li>
-<li><p><code>filter_data = original_data[,rownames(meta_info)]</code>：这行代码根据之前过滤后的meta_info数据框，从原始数据中提取出符合条件的数据，存储在filter_data中。</p>
-</li>
-<li><p><code>remove(original_data)</code>：这行代码移除了之前加载的original_data对象，可能是为了释放内存空间或者清理不再需要的数据对象。</p>
-</li>
-</ol>
-<h2 id="创建Seurat对象、质控和数据变换"><a href="#创建Seurat对象、质控和数据变换" class="headerlink" title="创建Seurat对象、质控和数据变换"></a>创建Seurat对象、质控和数据变换</h2><figure class="highlight r"><table><tr><td class="code"><pre><span class="line">mtGenes <span class="operator">=</span> grep<span class="punctuation">(</span><span class="string">&#x27;^MT-&#x27;</span><span class="punctuation">,</span>rownames<span class="punctuation">(</span>filter_data<span class="punctuation">)</span><span class="punctuation">,</span>value<span class="operator">=</span><span class="literal">TRUE</span><span class="punctuation">)</span></span><br><span class="line">hspGenes <span class="operator">=</span> <span class="built_in">c</span><span class="punctuation">(</span>grep<span class="punctuation">(</span><span class="string">&#x27;^HSP&#x27;</span><span class="punctuation">,</span>rownames<span class="punctuation">(</span>filter_data<span class="punctuation">)</span><span class="punctuation">,</span>value<span class="operator">=</span><span class="literal">TRUE</span><span class="punctuation">)</span><span class="punctuation">,</span></span><br><span class="line">             grep<span class="punctuation">(</span><span class="string">&#x27;^HSF&#x27;</span><span class="punctuation">,</span>rownames<span class="punctuation">(</span>filter_data<span class="punctuation">)</span><span class="punctuation">,</span>value<span class="operator">=</span><span class="literal">TRUE</span><span class="punctuation">)</span><span class="punctuation">)</span></span><br><span class="line">gene_list <span class="operator">=</span> rownames<span class="punctuation">(</span>filter_data<span class="punctuation">)</span><span class="punctuation">[</span><span class="operator">!</span>rownames<span class="punctuation">(</span>filter_data<span class="punctuation">)</span> <span class="operator">%in%</span> <span class="built_in">c</span><span class="punctuation">(</span>mtGenes<span class="punctuation">,</span>hspGenes<span class="punctuation">)</span><span class="punctuation">]</span></span><br><span class="line">filter_data <span class="operator">=</span> filter_data<span class="punctuation">[</span>gene_list<span class="punctuation">,</span>rownames<span class="punctuation">(</span>meta_info<span class="punctuation">)</span><span class="punctuation">]</span></span><br><span class="line">data <span class="operator">=</span> CreateSeuratObject<span class="punctuation">(</span>counts <span class="operator">=</span> filter_data<span class="punctuation">,</span>min.cells <span class="operator">=</span> <span class="number">10</span><span class="punctuation">,</span>meta.data <span class="operator">=</span> meta_info<span class="punctuation">)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">#################save backup for data</span></span><br><span class="line">data_back_up <span class="operator">=</span> data</span><br><span class="line">remove<span class="punctuation">(</span>filter_data<span class="punctuation">)</span></span><br><span class="line"></span><br><span class="line"><span class="comment">################# QC</span></span><br><span class="line"><span class="comment"># QC步骤通过meta_info取细胞事实上已经完成，所以不需要重新进行。</span></span><br><span class="line"></span><br><span class="line">data <span class="operator">=</span> NormalizeData<span class="punctuation">(</span>data<span class="punctuation">,</span> normalization.method <span class="operator">=</span> <span class="string">&quot;LogNormalize&quot;</span><span class="punctuation">,</span> scale.factor <span class="operator">=</span> <span class="number">1e6</span><span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
-<p>这段代码执行了以下操作：</p>
-<ol>
-<li><p><strong>找到线粒体基因：</strong></p>
-<ul>
-<li>使用 <code>grep()</code> 函数和正则表达式 <code>&#39;^MT-&#39;</code> 来匹配 <code>filter_data</code> 的行名（基因名），返回以 “MT-“ 开头的基因列表。</li>
-<li>将结果存储在 <code>mtGenes</code> 中。</li>
-</ul>
-</li>
-<li><p><strong>找到热休克蛋白基因：</strong></p>
-<ul>
-<li>使用 <code>grep()</code> 函数和正则表达式 <code>&#39;^HSP&#39;</code> 和 <code>&#39;^HSF&#39;</code> 来匹配 <code>filter_data</code> 的行名（基因名），分别返回以 “HSP” 和 “HSF” 开头的基因列表。</li>
-<li>将结果存储在 <code>hspGenes</code> 中。</li>
-</ul>
-</li>
-<li><p><strong>创建不包含特定基因的基因列表：</strong></p>
-<ul>
-<li>使用 <code>%in%</code> 运算符将 <code>mtGenes</code> 和 <code>hspGenes</code> 合并为一个基因列表。</li>
-<li>使用 <code>!</code> 运算符取反，以排除这些基因，得到不包含以 “MT-“ 开头以及以 “HSP” 或 “HSF” 开头的基因列表。</li>
-<li>将结果存储在 <code>gene_list</code> 中。</li>
-</ul>
-</li>
-<li><p><strong>根据基因列表过滤数据：</strong></p>
-<ul>
-<li>使用 <code>filter_data</code> 和 <code>rownames()</code> 函数来根据 <code>gene_list</code> 过滤行（基因）。</li>
-<li>在此过滤后，只保留了不包含以 “MT-“ 开头以及以 “HSP” 或 “HSF” 开头的基因。</li>
-</ul>
-</li>
-<li><p><strong>使用过滤后的数据创建 Seurat 对象：</strong></p>
-<ul>
-<li>使用 <code>CreateSeuratObject()</code> 函数创建 Seurat 对象。</li>
-<li>提供了过滤后的数据 (<code>filter_data</code>) 作为 <code>counts</code> 参数，最小细胞数为 10。</li>
-<li>提供了元数据 (<code>meta_info</code>) 作为 <code>meta.data</code> 参数。</li>
-<li>使用 <code>rownames(meta_info)</code> 选择与 <code>meta_info</code> 中行名相对应的行来构建 Seurat 对象。</li>
-</ul>
-</li>
-<li><p><strong>选择归一化方法：</strong></p>
-<ul>
-<li>使用 <code>NormalizeData()</code> 函数选择了 “LogNormalize” 方法进行归一化。</li>
-<li>“LogNormalize” 方法将数据中的每个表达值取对数，通常以自然对数为底（ln），并且可以选择一个缩放因子来控制数据的归一化程度。在这里，设置了 <code>scale.factor</code> 参数为 <code>1e6</code>，这意味着将每个细胞的总表达值缩放到 1,000,000。这是一种常见的做法，它可以确保每个细胞的总表达值在一个可比较的范围内。</li>
-</ul>
-</li>
-</ol>
-<p>这段代码的目的是根据给定的条件对基因和数据进行过滤，并基于过滤后的数据创建 Seurat 对象，以便后续的单细胞分析。</p>
-<h2 id="降维"><a href="#降维" class="headerlink" title="降维"></a>降维</h2><figure class="highlight r"><table><tr><td class="code"><pre><span class="line">data <span class="operator">=</span> ScaleData<span class="punctuation">(</span>data<span class="punctuation">,</span>features <span class="operator">=</span> VariableFeatures<span class="punctuation">(</span>data<span class="punctuation">)</span><span class="punctuation">)</span></span><br><span class="line">data <span class="operator">=</span> RunPCA<span class="punctuation">(</span>data<span class="punctuation">,</span>features <span class="operator">=</span> VariableFeatures<span class="punctuation">(</span>data<span class="punctuation">)</span><span class="punctuation">)</span></span><br><span class="line">DimPlot<span class="punctuation">(</span>data<span class="punctuation">,</span> reduction <span class="operator">=</span> <span class="string">&quot;pca&quot;</span><span class="punctuation">,</span>group.by <span class="operator">=</span> <span class="string">&quot;Tissue&quot;</span><span class="punctuation">)</span></span><br><span class="line">DimPlot<span class="punctuation">(</span>data<span class="punctuation">,</span> reduction <span class="operator">=</span> <span class="string">&quot;pca&quot;</span><span class="punctuation">,</span>group.by <span class="operator">=</span> <span class="string">&quot;Sample&quot;</span><span class="punctuation">)</span></span><br><span class="line">ElbowPlot<span class="punctuation">(</span>data<span class="punctuation">)</span></span><br><span class="line">data <span class="operator">=</span> RunUMAP<span class="punctuation">(</span>data<span class="punctuation">,</span>dims <span class="operator">=</span> <span class="number">1</span><span class="operator">:</span><span class="number">15</span><span class="punctuation">)</span></span><br><span class="line">data <span class="operator">=</span> RunTSNE<span class="punctuation">(</span>data<span class="punctuation">,</span>dims <span class="operator">=</span> <span class="number">1</span><span class="operator">:</span><span class="number">15</span><span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
-<ol>
-<li><p><code>data = ScaleData(data, features = VariableFeatures(data))</code>： 这一行代码调用了一个名为 <code>ScaleData</code> 的函数，用于对数据进行缩放或标准化处理，其中 <code>data</code> 是输入的数据，而 <code>VariableFeatures(data)</code> 则可能是用于确定要进行缩放的特征的函数或方法。</p>
-</li>
-<li><p><code>data = RunPCA(data, features = VariableFeatures(data))</code>： 这一行代码调用了一个名为 <code>RunPCA</code> 的函数，用于执行主成分分析（PCA）降维操作，以减少数据的维度。同样，<code>data</code> 是输入的数据，<code>VariableFeatures(data)</code> 用于确定应用 PCA 的特征。</p>
-</li>
-<li><p><code>DimPlot(data, reduction = &quot;pca&quot;, group.by = &quot;Tissue&quot;)</code>： 这一行代码调用了一个名为 <code>DimPlot</code> 的函数，用于绘制降维后的数据的可视化图。<code>reduction = &quot;pca&quot;</code> 表示使用 PCA 降维后的数据进行可视化，而 <code>group.by = &quot;Tissue&quot;</code> 表示根据组织类型来对数据进行分组，并在图上用不同颜色或符号表示不同组织类型的数据点。</p>
-</li>
-<li><p><code>DimPlot(data, reduction = &quot;pca&quot;, group.by = &quot;Sample&quot;)</code>： 类似于上一行，这一行也是调用 <code>DimPlot</code> 函数，但是这次是根据样本（Sample）来对数据进行分组，并对数据进行可视化。</p>
-</li>
-<li><p><code>ElbowPlot(data)</code>： 这一行代码调用了一个名为 <code>ElbowPlot</code> 的函数，用于绘制 PCA 或者其他降维方法中的“肘部图”，帮助确定降维后保留的主要成分数量。</p>
-</li>
-<li><p><code>data = RunUMAP(data, dims = 1:15)</code>： 这一行代码调用了一个名为 <code>RunUMAP</code> 的函数，用于执行 UMAP（Uniform Manifold Approximation and Projection）算法，将数据降维到更低的维度。<code>dims = 1:15</code> 表示在执行 UMAP 时考虑的维度范围。</p>
-</li>
-<li><p><code>data = RunTSNE(data, dims = 1:15)</code>： 最后一行代码调用了一个名为 <code>RunTSNE</code> 的函数，用于执行 t-SNE（t-distributed Stochastic Neighbor Embedding）算法，也是一种常用的数据降维算法。<code>dims = 1:15</code> 表示在执行 t-SNE 时考虑的维度范围。</p>
-</li>
-</ol>
-<p>注意，这里我们先降维，后面再拆分数据，可以保留数据点信息。</p>
-<h2 id="拆分数据"><a href="#拆分数据" class="headerlink" title="拆分数据"></a>拆分数据</h2><figure class="highlight r"><table><tr><td class="code"><pre><span class="line">ser_split <span class="operator">=</span> SplitObject<span class="punctuation">(</span>data<span class="punctuation">,</span>split<span class="operator">=</span><span class="string">&quot;Tissue&quot;</span><span class="punctuation">)</span></span><br><span class="line">liver_data <span class="operator">=</span> ser_split<span class="punctuation">[[</span><span class="string">&quot;liver&quot;</span><span class="punctuation">]</span><span class="punctuation">]</span></span><br><span class="line">breast_data <span class="operator">=</span> ser_split<span class="punctuation">[[</span><span class="string">&quot;breast&quot;</span><span class="punctuation">]</span><span class="punctuation">]</span></span><br></pre></td></tr></table></figure>
-<h2 id="聚类、分群（以肝脏为例）"><a href="#聚类、分群（以肝脏为例）" class="headerlink" title="聚类、分群（以肝脏为例）"></a>聚类、分群（以肝脏为例）</h2><figure class="highlight r"><table><tr><td class="code"><pre><span class="line">liver_data <span class="operator">=</span> FindNeighbors<span class="punctuation">(</span>liver_data<span class="punctuation">,</span> dims <span class="operator">=</span> <span class="number">1</span><span class="operator">:</span><span class="number">15</span><span class="punctuation">)</span></span><br><span class="line">liver_data <span class="operator">=</span> FindClusters<span class="punctuation">(</span>liver_data<span class="punctuation">,</span> resolution <span class="operator">=</span> <span class="number">0.1</span><span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
-<ol>
-<li><p><code>liver_data = FindNeighbors(liver_data, dims = 1:15)</code>： 这一行代码调用了一个名为 <code>FindNeighbors</code> 的函数，用于找到数据中每个数据点的邻居。在这里，<code>liver_data</code> 是输入的数据，<code>dims = 1:15</code> 表示在寻找邻居时考虑的维度范围，通常是降维后的结果。这个过程通常是用于计算数据点之间的相似度或距离，为后续的聚类操作做准备。</p>
-</li>
-<li><p><code>liver_data = FindClusters(liver_data, resolution = 0.1)</code>： 这一行代码调用了一个名为 <code>FindClusters</code> 的函数，用于在数据中找到聚类。<code>liver_data</code> 是输入的数据，<code>resolution = 0.1</code> 表示在执行聚类时使用的分辨率参数，它可以影响聚类结果的数量和密度。较低的分辨率可能导致更多的细分聚类，而较高的分辨率可能导致更少但更大的聚类。</p>
-</li>
-</ol>
-<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">my_colors <span class="operator">=</span> <span class="built_in">c</span><span class="punctuation">(</span><span class="string">&quot;#D2EBC8&quot;</span><span class="punctuation">,</span><span class="string">&quot;#3C77AF&quot;</span><span class="punctuation">,</span><span class="string">&quot;#7DBFA7&quot;</span><span class="punctuation">,</span><span class="string">&quot;#AECDE1&quot;</span><span class="punctuation">,</span></span><br><span class="line">              <span class="string">&quot;#EE934E&quot;</span><span class="punctuation">,</span><span class="string">&quot;#D1352B&quot;</span><span class="punctuation">,</span><span class="string">&quot;#9B5B33&quot;</span><span class="punctuation">,</span><span class="string">&quot;#F6CFE4&quot;</span><span class="punctuation">,</span></span><br><span class="line">              <span class="string">&quot;#B383B9&quot;</span><span class="punctuation">,</span><span class="string">&quot;#8FA4AE&quot;</span><span class="punctuation">,</span><span class="string">&quot;#FCED82&quot;</span><span class="punctuation">,</span><span class="string">&quot;#F5D2A8&quot;</span><span class="punctuation">,</span><span class="string">&quot;#BBDD78&quot;</span><span class="punctuation">)</span></span><br><span class="line">tsne_data <span class="operator">=</span> FetchData<span class="punctuation">(</span>liver_data <span class="punctuation">,</span> vars <span class="operator">=</span> <span class="built_in">c</span><span class="punctuation">(</span><span class="string">&quot;tSNE_1&quot;</span><span class="punctuation">,</span> <span class="string">&quot;tSNE_2&quot;</span><span class="punctuation">,</span> <span class="string">&quot;Major.celltype&quot;</span><span class="punctuation">,</span><span class="string">&quot;seurat_clusters&quot;</span><span class="punctuation">)</span><span class="punctuation">)</span></span><br><span class="line">ggplot<span class="punctuation">(</span>tsne_data<span class="punctuation">,</span> aes<span class="punctuation">(</span>x <span class="operator">=</span> tSNE_1<span class="punctuation">,</span> y <span class="operator">=</span> tSNE_2<span class="punctuation">,</span> color <span class="operator">=</span> as.factor<span class="punctuation">(</span>seurat_clusters<span class="punctuation">)</span><span class="punctuation">)</span><span class="punctuation">)</span> <span class="operator">+</span></span><br><span class="line">  geom_point<span class="punctuation">(</span>size <span class="operator">=</span> <span class="number">1</span><span class="punctuation">)</span> <span class="operator">+</span> </span><br><span class="line">  scale_color_manual<span class="punctuation">(</span>values <span class="operator">=</span> my_colors<span class="punctuation">)</span> <span class="operator">+</span></span><br><span class="line">  theme_minimal<span class="punctuation">(</span><span class="punctuation">)</span> <span class="operator">+</span> </span><br><span class="line">  labs<span class="punctuation">(</span></span><br><span class="line">    title <span class="operator">=</span> <span class="string">&quot;tSNE Plot of Major Cell Types&quot;</span><span class="punctuation">,</span>  <span class="comment"># 添加标题</span></span><br><span class="line">    x <span class="operator">=</span> <span class="string">&quot;tSNE Dimension 1&quot;</span><span class="punctuation">,</span>  <span class="comment"># 自定义X轴标签</span></span><br><span class="line">    y <span class="operator">=</span> <span class="string">&quot;tSNE Dimension 2&quot;</span><span class="punctuation">,</span>  <span class="comment"># 自定义Y轴标签</span></span><br><span class="line">    color <span class="operator">=</span> <span class="string">&quot;Cluster&quot;</span>  <span class="comment"># 自定义图例标题</span></span><br><span class="line">  <span class="punctuation">)</span> <span class="operator">+</span></span><br><span class="line">  theme<span class="punctuation">(</span></span><br><span class="line">    legend.position <span class="operator">=</span> <span class="string">&quot;right&quot;</span><span class="punctuation">,</span></span><br><span class="line">    legend.text <span class="operator">=</span> element_text<span class="punctuation">(</span>size <span class="operator">=</span> <span class="number">12</span><span class="punctuation">)</span><span class="punctuation">,</span>  <span class="comment"># 增加图例文本的大小</span></span><br><span class="line">    plot.title <span class="operator">=</span> element_text<span class="punctuation">(</span>hjust <span class="operator">=</span> <span class="number">0.5</span><span class="punctuation">)</span><span class="punctuation">,</span>  <span class="comment"># 居中对齐标题</span></span><br><span class="line">    axis.text <span class="operator">=</span> element_text<span class="punctuation">(</span>size <span class="operator">=</span> <span class="number">12</span><span class="punctuation">)</span><span class="punctuation">,</span>  <span class="comment"># 增加轴标签的字体大小</span></span><br><span class="line">    axis.title <span class="operator">=</span> element_text<span class="punctuation">(</span>size <span class="operator">=</span> <span class="number">14</span><span class="punctuation">)</span><span class="punctuation">,</span>  <span class="comment"># 增加轴标题的字体大小</span></span><br><span class="line">    panel.grid.major <span class="operator">=</span> element_blank<span class="punctuation">(</span><span class="punctuation">)</span><span class="punctuation">,</span>  <span class="comment"># 去除主要网格线</span></span><br><span class="line">    panel.grid.minor <span class="operator">=</span> element_blank<span class="punctuation">(</span><span class="punctuation">)</span><span class="punctuation">,</span>  <span class="comment"># 去除次要网格线</span></span><br><span class="line">    panel.border <span class="operator">=</span> element_rect<span class="punctuation">(</span>colour <span class="operator">=</span> <span class="string">&quot;black&quot;</span><span class="punctuation">,</span> fill<span class="operator">=</span><span class="literal">NA</span><span class="punctuation">,</span> size<span class="operator">=</span><span class="number">1</span><span class="punctuation">)</span>  <span class="comment"># 增加边框</span></span><br><span class="line">  <span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
-<p>这段代码是用来绘制 t-SNE（t-distributed Stochastic Neighbor Embedding）降维后的数据的散点图，并根据聚类结果着色：</p>
-<ol>
-<li><p><code>my_colors = c(&quot;#D2EBC8&quot;,&quot;#3C77AF&quot;, ...)</code>： 定义了一个包含颜色代码的向量，用于后续的图形着色。</p>
-</li>
-<li><p><code>tsne_data = FetchData(liver_data , vars = c(&quot;tSNE_1&quot;, &quot;tSNE_2&quot;, &quot;Major.celltype&quot;,&quot;seurat_clusters&quot;))</code>： 提取了 liver_data 数据集中 t-SNE 的前两个维度（即 tSNE_1 和 tSNE_2），以及每个数据点的主要细胞类型和 Seurat 聚类结果。</p>
-</li>
-<li><p><code>ggplot(tsne_data, aes(x = tSNE_1, y = tSNE_2, color = as.factor(seurat_clusters))) +</code>： 创建了一个基础的 ggplot2 图形对象，设置 x 轴为 tSNE_1、y 轴为 tSNE_2，并根据 seurat_clusters 列进行着色。</p>
-</li>
-<li><p><code>geom_point(size = 1) +</code>： 添加了一个散点图层，指定点的大小为 1。</p>
-</li>
-<li><p><code>scale_color_manual(values = my_colors) +</code>： 手动指定颜色映射，使用了前面定义的 my_colors 向量。</p>
-</li>
-<li><p><code>theme_minimal() +</code>： 使用了一个基本的最小化主题。</p>
-</li>
-<li><p><code>labs(...)</code>： 添加了图表的标题和轴标签，并自定义了图例标题。</p>
-</li>
-<li><p><code>theme(...)</code>： 进一步调整了图表的主题，包括图例位置、文本大小、标题对齐方式、轴标签大小、网格线和面板边框。</p>
-</li>
-</ol>
-<p>COSGR包是一款专门用于单细胞测序数据中准确和超快速标记基因识别的工具。它可以应用于不同类型的数据，包括单细胞RNA测序、单细胞ATAC测序和空间转录组学。COSGR包的核心是其COSG函数，该函数利用余弦相似性来识别具有更高准确性和可扩展性的标记基因。这种方法对大规模数据集特别有效，能够在不到两分钟的时间内识别出一百万个细胞的标记基因。</p>
-<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">library<span class="punctuation">(</span>COSG<span class="punctuation">)</span></span><br><span class="line">marker_cosg <span class="operator">=</span> cosg<span class="punctuation">(</span></span><br><span class="line">  liver_data<span class="punctuation">,</span></span><br><span class="line">  groups<span class="operator">=</span><span class="string">&#x27;all&#x27;</span><span class="punctuation">,</span></span><br><span class="line">  assay<span class="operator">=</span><span class="string">&#x27;RNA&#x27;</span><span class="punctuation">,</span></span><br><span class="line">  slot<span class="operator">=</span><span class="string">&#x27;data&#x27;</span><span class="punctuation">,</span></span><br><span class="line">  mu<span class="operator">=</span><span class="number">1</span><span class="punctuation">,</span></span><br><span class="line">  n_genes_user<span class="operator">=</span><span class="number">200</span><span class="punctuation">)</span></span><br><span class="line">write.xlsx<span class="punctuation">(</span>marker_cosg<span class="operator">$</span><span class="built_in">names</span><span class="punctuation">,</span><span class="string">&quot;./liver_marker.xlsx&quot;</span><span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
-<p>代码解释</p>
-<ol>
-<li><p><code>library(COSG)</code>: 在R会话中加载COSGR包。</p>
-</li>
-<li><p><code>marker_cosg = cosg(...)</code>: 这行代码调用了<code>cosg</code>函数，应用于一个数据集（<code>liver_data</code>）。指定的参数包括：</p>
-<ul>
-<li><code>groups=&#39;all&#39;</code>: 分析数据集中的所有细胞群组。</li>
-<li><code>assay=&#39;RNA&#39;</code>: 指定要使用的检测数据类型。</li>
-<li><code>slot=&#39;data&#39;</code>: 表明使用检测数据的哪个部分。</li>
-<li><code>mu=1</code>: 设置<code>mu</code>参数，这影响识别标记基因的特异性。</li>
-<li><code>n_genes_user=200</code>: 在分析中考虑的基因数量。</li>
-</ul>
-</li>
-<li><code>write.xlsx(marker_cosg$names,&quot;./liver_marker.xlsx&quot;)</code>: 这行代码将<code>marker_cosg</code>对象中识别的标记基因名称保存到名为”liver_marker.xlsx”的Excel文件中。</li>
-</ol>
-<p>在<code>cosg</code>函数中，可以调整<code>mu</code>参数来识别更具体的标记基因。将<code>mu</code>设置为更高的值，如10或100，可以提高特异性。此外，可以将<code>remove_lowly_expressed</code>设置为<code>TRUE</code>，以排除目标细胞群组中表达非常低的基因，并调整<code>expressed_pct</code>参数来设置表达百分比的阈值。</p>
-]]></content>
-      <categories>
-        <category>生物信息学</category>
-      </categories>
-      <tags>
-        <tag>生物信息学</tag>
-        <tag>单细胞测序</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>孟德尔随机化标准流程代码示例</title>
     <url>/2024/02/05/%E5%AD%9F%E5%BE%B7%E5%B0%94%E9%9A%8F%E6%9C%BA%E5%8C%96%E6%A0%87%E5%87%86%E6%B5%81%E7%A8%8B%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B/</url>
     <content><![CDATA[<p>在这篇博客中，我们将通过R代码来探索非酒精性脂肪肝（NAFLD）对COVID-19严重程度的可能影响。我们将利用两个R包：<code>TwoSampleMR</code>和<code>MRPRESSO</code>，来执行Mendelian Randomization (MR)分析，这是一种利用基因变异作为工具变量来估计暴露和结果之间因果关系的统计方法。</p>
@@ -1118,29 +1118,6 @@
         <tag>统计学</tag>
         <tag>孟德尔随机化</tag>
         <tag>流行病学</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>心律失常治疗方式总结</title>
-    <url>/2024/03/14/%E5%BF%83%E5%BE%8B%E5%A4%B1%E5%B8%B8%E6%B2%BB%E7%96%97%E6%96%B9%E5%BC%8F%E6%80%BB%E7%BB%93/</url>
-    <content><![CDATA[<p>&emsp;&emsp;维持血流动力学处于稳定状态是心脏疾病的救治的落脚点，所以保障心室以适宜的频率进行协调的收缩舒张运动是心律失常救治的首要任务。其次，需要改善心脏内部的血流动力学紊乱，预防血栓形成；必要时需要考虑心房功能，避免前负荷不足。归根结底，心律失常的治疗是以心室为核心的。</p>
-<p>&emsp;&emsp;缓慢型心律失常由迷走神经张力过高导致，常常采用阿托品和异丙肾上腺素治疗，后者有潜在的致心律失常风险，所以临床多以弃用。药物治疗无效、症状明显或有严重血流动力学障碍应当及时安装起搏器。</p>
-<p>&emsp;&emsp;快速型心律失常发生机制常为自律细胞的自律性升高，非自律细胞产生异常自律性以及折返。自律细胞的自律性升高多见于窦性心动过速，其治疗只需降低交感神经或增加迷走神经张力，因而采用β受体阻断剂、非二氢吡啶类钙通道阻滞剂。新研药伊伐布雷定靶向P细胞自动复极的If电流，也可以用于治疗窦性心动过速。非自律细胞产生异常自律性包括期前收缩、心动过速、扑动和颤动，其发生原因多为缺氧、交感神经张力高、电解质紊乱。若成功解除细胞的应激状态，纠正细胞钙超载，降低交感神经张力或延长总体的不应期，则可消灭异常自律性产生的源头；其次，我们可以适当阻滞房室结，进行合适的导管消融，孤立异常自律点，避免影响心脏其他部位，尤其是心室的节律。举例而言，对房性期前收缩可采用β受体阻断剂（ICa）、非二氢吡啶类钙通道阻断剂（ICa）和胺碘酮（不应期），对室性期前收缩采用β受体阻断剂（ICa）、非二氢吡啶类钙通道阻滞剂（ICa）和普罗帕酮（（ICa）。值得注意的是，在室上性的心动过速（除了AVNRT）、扑动和颤动中，靶向ICa主要是为了降低心室率，转复律则依赖广谱抗心律失常药物。对于室性快速型心律失常，强调针对原因，并且在药物中添加了靶向快心肌细胞的IB类药物。非窦性快速型心律失常若伴随血流动力学紊乱采用电复律，若根治往往采用导管消融。</p>
-<p>&emsp;&emsp;AVNRT是一类特殊的心动过速，靶向房室结降低心室率的同时也是阻断径路传导，因此治疗中强调增加迷走神经张力和阻断钙离子通道。预激综合征中存在旁路和房室结的矛盾，治疗过程始终遵守压抑旁路但不祸害房室结的默契。</p>
-<ul>
-<li><strong>广谱抗心律失常药</strong>：IA、IC、III；</li>
-<li><strong>室性心律失常专用</strong>：IB</li>
-<li><strong>抑制交感神经、增加迷走神经张力、靶向钙通道</strong>：IV、III、IC、洋地黄、升压药、腺苷</li>
-<li><strong>缩短有效不应期</strong>：洋地黄</li>
-<li><strong>延长QT</strong>：IA、III</li>
-</ul>
-]]></content>
-      <categories>
-        <category>医学课程</category>
-      </categories>
-      <tags>
-        <tag>医学</tag>
-        <tag>医学生</tag>
       </tags>
   </entry>
   <entry>
@@ -1400,6 +1377,63 @@
       </tags>
   </entry>
   <entry>
+    <title>心律失常治疗方式总结</title>
+    <url>/2024/03/14/%E5%BF%83%E5%BE%8B%E5%A4%B1%E5%B8%B8%E6%B2%BB%E7%96%97%E6%96%B9%E5%BC%8F%E6%80%BB%E7%BB%93/</url>
+    <content><![CDATA[<p>&emsp;&emsp;维持血流动力学处于稳定状态是心脏疾病的救治的落脚点，所以保障心室以适宜的频率进行协调的收缩舒张运动是心律失常救治的首要任务。其次，需要改善心脏内部的血流动力学紊乱，预防血栓形成；必要时需要考虑心房功能，避免前负荷不足。归根结底，心律失常的治疗是以心室为核心的。</p>
+<p>&emsp;&emsp;缓慢型心律失常由迷走神经张力过高导致，常常采用阿托品和异丙肾上腺素治疗，后者有潜在的致心律失常风险，所以临床多以弃用。药物治疗无效、症状明显或有严重血流动力学障碍应当及时安装起搏器。</p>
+<p>&emsp;&emsp;快速型心律失常发生机制常为自律细胞的自律性升高，非自律细胞产生异常自律性以及折返。自律细胞的自律性升高多见于窦性心动过速，其治疗只需降低交感神经或增加迷走神经张力，因而采用β受体阻断剂、非二氢吡啶类钙通道阻滞剂。新研药伊伐布雷定靶向P细胞自动复极的If电流，也可以用于治疗窦性心动过速。非自律细胞产生异常自律性包括期前收缩、心动过速、扑动和颤动，其发生原因多为缺氧、交感神经张力高、电解质紊乱。若成功解除细胞的应激状态，纠正细胞钙超载，降低交感神经张力或延长总体的不应期，则可消灭异常自律性产生的源头；其次，我们可以适当阻滞房室结，进行合适的导管消融，孤立异常自律点，避免影响心脏其他部位，尤其是心室的节律。举例而言，对房性期前收缩可采用β受体阻断剂（ICa）、非二氢吡啶类钙通道阻断剂（ICa）和胺碘酮（不应期），对室性期前收缩采用β受体阻断剂（ICa）、非二氢吡啶类钙通道阻滞剂（ICa）和普罗帕酮（（ICa）。值得注意的是，在室上性的心动过速（除了AVNRT）、扑动和颤动中，靶向ICa主要是为了降低心室率，转复律则依赖广谱抗心律失常药物。对于室性快速型心律失常，强调针对原因，并且在药物中添加了靶向快心肌细胞的IB类药物。非窦性快速型心律失常若伴随血流动力学紊乱采用电复律，若根治往往采用导管消融。</p>
+<p>&emsp;&emsp;AVNRT是一类特殊的心动过速，靶向房室结降低心室率的同时也是阻断径路传导，因此治疗中强调增加迷走神经张力和阻断钙离子通道。预激综合征中存在旁路和房室结的矛盾，治疗过程始终遵守压抑旁路但不祸害房室结的默契。</p>
+<ul>
+<li><strong>广谱抗心律失常药</strong>：IA、IC、III；</li>
+<li><strong>室性心律失常专用</strong>：IB</li>
+<li><strong>抑制交感神经、增加迷走神经张力、靶向钙通道</strong>：IV、III、IC、洋地黄、升压药、腺苷</li>
+<li><strong>缩短有效不应期</strong>：洋地黄</li>
+<li><strong>延长QT</strong>：IA、III</li>
+</ul>
+]]></content>
+      <categories>
+        <category>医学课程</category>
+      </categories>
+      <tags>
+        <tag>医学</tag>
+        <tag>医学生</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>单细胞测序教程资源聚合</title>
+    <url>/2023/08/12/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E6%95%99%E7%A8%8B%E5%92%8C%E8%B5%84%E6%BA%90%E8%81%9A%E5%90%88/</url>
+    <content><![CDATA[<h2 id="教程"><a href="#教程" class="headerlink" title="教程"></a>教程</h2><h4 id="转录组学"><a href="#转录组学" class="headerlink" title="转录组学"></a>转录组学</h4><ol>
+<li>单细胞测序-最佳的分析Pipeline <a href="https://single-cell-tutorial.readthedocs.io/zh/latest/">单细胞测序-最佳的分析Pipeline</a> ：Zehua Zeng等为主要作者，包括详细的原理和处理流程（Python）；其中重点介绍了Omicverse的使用； </li>
+<li>哈佛大学单细胞中文笔记：<a href="https://zhuanlan.zhihu.com/p/209018565">哈佛大学单细胞中文笔记</a> 陈同博士撰写。主要包括原理和Seurat的使用。<a href="https://hbctraining.github.io/main">原版教程</a>；</li>
+<li>RNA-SEQ BLOG：最新的RNA测序资讯：<a href="https://www.rna-seqblog.com/">RNA-Seq Blog</a></li>
+</ol>
+<h2 id="资源"><a href="#资源" class="headerlink" title="资源"></a>资源</h2><h4 id="肿瘤生信"><a href="#肿瘤生信" class="headerlink" title="肿瘤生信"></a>肿瘤生信</h4><ol>
+<li>GEPIA2：GEPIA2是一个无代码可视化平台，其数据来源于TCGA和GTEx数据库，用户可以自由探索指定基因的在肿瘤组织中的表达情况以及和预后的关系。<a href="http://gepia2.cancer-pku.cn/">GEPIA2</a></li>
+<li>Prognoscan：Prognoscan整合了2010年以前GEO上Microarray和相应临床信息，可以探索制定基因自不同数据集中和预后的关系。<a href="http://dna00.bio.kyutech.ac.jp/PrognoScan/">PrognoScan</a></li>
+<li>TIMER：TIMER用于分析不同癌症类型的免疫浸润（数据来自于TCGA）。<a href="http://timer.cistrome.org/">TIMER2.0</a></li>
+</ol>
+<h4 id="GWAS"><a href="#GWAS" class="headerlink" title="GWAS"></a>GWAS</h4><ol>
+<li>IEU OPEN GWAS：包含42,484 个GWAS摘要数据集的214,725,223,303 个遗传关联的数据库。<a href="https://gwas.mrcieu.ac.uk/">IEU OpenGWAS</a></li>
+<li>PheWeb：包含Biobank Japan，以及UKB等欧洲样本的GWAS结果。<a href="https://pheweb.jp/downloads">PheWeb</a></li>
+<li>GWAS catalog：内容较全，网页比较慢，建议使用特殊方式访问。<a href="https://www.ebi.ac.uk/gwas/downloads/summary-statistics">GWAS catalog</a>:</li>
+<li>EGG：早期生长联盟数据，包含出生体重，出生头围等。<a href="http://egg-consortium.org/index.html">EGG</a></li>
+<li>CKDGEN：包含慢性肾病、MA、eGFR等。<a href="http://ckdgen.imbi.uni-freiburg.de/?tdsourcetag=s_pctim_aiomsg">CKDGEN</a></li>
+<li>GLGC：血脂GWAS数据库。<a href="http://csg.sph.umich.edu/willer/public/glgc-lipids2021/">GLGC</a></li>
+<li>PGC：精神病学基因组学联盟。<a href="https://www.med.unc.edu/pgc/results-and-downloads/downloads">PGC</a></li>
+<li>GEFOS：骨质疏松联盟。<a href="http://www.gefos.org/">GEFOS</a></li>
+<li>DIAGRAM：二型糖尿病数据库。<a href="http://diagram-consortium.org/downloads.html">DIAGRAM</a>: </li>
+<li>代谢组学数据库：<a href="http://www.metabolomix.com/list-of-all-published-gwas-with-metabolomics/">A Table of all published GWAS with metabolomics</a></li>
+</ol>
+]]></content>
+      <categories>
+        <category>生物信息学</category>
+      </categories>
+      <tags>
+        <tag>生物信息学</tag>
+        <tag>单细胞测序</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>生物信息学笔记（一）：转录组测序技术</title>
     <url>/2024/02/05/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E8%BD%AC%E5%BD%95%E7%BB%84%E6%B5%8B%E5%BA%8F%E6%8A%80%E6%9C%AF/</url>
     <content><![CDATA[<h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>&emsp;&emsp;<strong>转录组</strong>是特定组织或细胞在某一发育阶段或功能状态下转录出来的所有RNA的集合，包括编码蛋白质的mRNA和非编码RNA（non coding RNA, ncRNA）。<strong>转录组测序</strong>是指利用第二代高通量测序技术进行<strong>cDNA</strong>测序，全面快速地获取某一物种特定器官或组织在某一状态下的几乎所有转录本。</p>
@@ -1568,37 +1602,40 @@
       </tags>
   </entry>
   <entry>
-    <title>单细胞测序教程资源聚合</title>
-    <url>/2023/08/12/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E6%95%99%E7%A8%8B%E5%92%8C%E8%B5%84%E6%BA%90%E8%81%9A%E5%90%88/</url>
-    <content><![CDATA[<h2 id="教程"><a href="#教程" class="headerlink" title="教程"></a>教程</h2><h4 id="转录组学"><a href="#转录组学" class="headerlink" title="转录组学"></a>转录组学</h4><ol>
-<li>单细胞测序-最佳的分析Pipeline <a href="https://single-cell-tutorial.readthedocs.io/zh/latest/">单细胞测序-最佳的分析Pipeline</a> ：Zehua Zeng等为主要作者，包括详细的原理和处理流程（Python）；其中重点介绍了Omicverse的使用； </li>
-<li>哈佛大学单细胞中文笔记：<a href="https://zhuanlan.zhihu.com/p/209018565">哈佛大学单细胞中文笔记</a> 陈同博士撰写。主要包括原理和Seurat的使用。<a href="https://hbctraining.github.io/main">原版教程</a>；</li>
-<li>RNA-SEQ BLOG：最新的RNA测序资讯：<a href="https://www.rna-seqblog.com/">RNA-Seq Blog</a></li>
+    <title>网络爬虫自动获取教务处最新通知</title>
+    <url>/2024/03/19/%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB%E8%87%AA%E5%8A%A8%E8%8E%B7%E5%8F%96%E6%95%99%E5%8A%A1%E5%A4%84%E6%9C%80%E6%96%B0%E9%80%9A%E7%9F%A5/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>&emsp;&emsp;在日常学习和工作中，及时获取学校教务处的最新通知非常重要。本文介绍了如何使用Python编写一个自动化脚本，该脚本能够爬取教务处网站的最新通知公告，并通过邮件发送给指定的收件人。这样，我们就可以在第一时间内获取到重要信息，不错过任何关键的通知或更新。<br>&emsp;&emsp;欢迎来给俺个星星✨！<a href="https://github.com/ForrestGump618/Notification_NMU">ForrestGump618/Notification_NMU</a>。</p>
+<h2 id="技术栈"><a href="#技术栈" class="headerlink" title="技术栈"></a>技术栈</h2><ul>
+<li><strong>Python</strong>：编程语言</li>
+<li><strong>requests</strong>：HTTP库，用于发送网络请求</li>
+<li><strong>BeautifulSoup</strong>：HTML解析库，用于解析网页内容</li>
+<li><strong>smtplib</strong>、<strong>email.mime.text</strong>、<strong>email.mime.multipart</strong>：邮件发送库，用于构建和发送邮件</li>
+</ul>
+<h2 id="主要功能及实现步骤"><a href="#主要功能及实现步骤" class="headerlink" title="主要功能及实现步骤"></a>主要功能及实现步骤</h2><h3 id="1-网页内容爬取（scrape-website-函数）"><a href="#1-网页内容爬取（scrape-website-函数）" class="headerlink" title="1. 网页内容爬取（scrape_website 函数）"></a>1. 网页内容爬取（<code>scrape_website</code> 函数）</h3><p>&emsp;&emsp;首先，定义<code>scrape_website(url)</code>函数，用于爬取教务处网站的通知公告列表。通过requests库发送GET请求获取网页内容，然后使用BeautifulSoup解析HTML，提取出通知公告的标题、链接和发布日期，最后将这些信息存储在列表中返回。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">scrape_website</span>(<span class="params">url</span>):</span><br><span class="line">    base_url = <span class="string">&quot;https://jwc.njmu.edu.cn&quot;</span></span><br><span class="line">    page = requests.get(url)</span><br><span class="line">    soup = BeautifulSoup(page.content, <span class="string">&#x27;html.parser&#x27;</span>)</span><br><span class="line">    items = soup.select(<span class="string">&#x27;.news_list li&#x27;</span>)</span><br><span class="line">    news_list = []</span><br><span class="line">    <span class="keyword">for</span> item <span class="keyword">in</span> items:</span><br><span class="line">        news = &#123;&#125;</span><br><span class="line">        news_anchor = item.select_one(<span class="string">&#x27;.news_title a&#x27;</span>)</span><br><span class="line">        news[<span class="string">&#x27;title&#x27;</span>] = news_anchor.get(<span class="string">&#x27;title&#x27;</span>).strip()</span><br><span class="line">        news[<span class="string">&#x27;link&#x27;</span>] = base_url + news_anchor.get(<span class="string">&#x27;href&#x27;</span>)</span><br><span class="line">        news[<span class="string">&#x27;date&#x27;</span>] = item.select_one(<span class="string">&#x27;.news_meta&#x27;</span>).text.strip()</span><br><span class="line">        news_list.append(news)</span><br><span class="line">    <span class="keyword">return</span> news_list</span><br></pre></td></tr></table></figure>
+<h3 id="2-获取通知详细内容（scrape-news-details-函数）"><a href="#2-获取通知详细内容（scrape-news-details-函数）" class="headerlink" title="2. 获取通知详细内容（scrape_news_details 函数）"></a>2. 获取通知详细内容（<code>scrape_news_details</code> 函数）</h3><p>&emsp;&emsp;定义<code>scrape_news_details(news_link)</code>函数，用于爬取每条通知的详细内容。同样使用requests和BeautifulSoup获取并解析页面，提取通知的正文内容，并生成一个简短的摘要返回。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">scrape_news_details</span>(<span class="params">news_link</span>):</span><br><span class="line">    page = requests.get(news_link)</span><br><span class="line">    soup = BeautifulSoup(page.content, <span class="string">&#x27;html.parser&#x27;</span>)</span><br><span class="line">    content_element = soup.select_one(<span class="string">&#x27;.wp_articlecontent&#x27;</span>)</span><br><span class="line">    <span class="keyword">if</span> content_element:</span><br><span class="line">        content_text = content_element.get_text(separator=<span class="string">&quot; &quot;</span>, strip=<span class="literal">True</span>)</span><br><span class="line">        length = <span class="built_in">len</span>(content_text)</span><br><span class="line">        <span class="keyword">if</span> length &gt; <span class="number">200</span>:</span><br><span class="line">            summary = content_text[:<span class="number">200</span>] + <span class="string">&quot; ......&quot;</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            summary = content_text</span><br><span class="line">        <span class="keyword">return</span> summary</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;No content found.&quot;</span></span><br></pre></td></tr></table></figure>
+<h3 id="3-邮件发送（send-email-函数）"><a href="#3-邮件发送（send-email-函数）" class="headerlink" title="3. 邮件发送（send_email 函数）"></a>3. 邮件发送（<code>send_email</code> 函数）</h3><p>&emsp;&emsp;定义<code>send_email(subject, content, to_email)</code>函数，使用smtplib和email.mime相关模块构建并发送邮件。这里需要预先设置发件人邮箱、密码以及SMTP服务器信息。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">send_email</span>(<span class="params">subject, content, to_email</span>):</span><br><span class="line">    sender_email = <span class="string">&quot;xxx&quot;</span></span><br><span class="line">    password = <span class="string">&quot;xxx&quot;</span></span><br><span class="line">    msg = MIMEMultipart()</span><br><span class="line">    msg[<span class="string">&#x27;Subject&#x27;</span>] = subject</span><br><span class="line">    msg[<span class="string">&#x27;From&#x27;</span>] = sender_email</span><br><span class="line">    msg[<span class="string">&#x27;To&#x27;</span>] = to_email</span><br><span class="line">    msg.attach(MIMEText(content, <span class="string">&#x27;html&#x27;</span>))</span><br><span class="line">    server = smtplib.SMTP_SSL(<span class="string">&#x27;smtp.qq.com&#x27;</span>, <span class="number">465</span>)</span><br><span class="line">    server.login(sender_email, password)</span><br><span class="line">    server.send_message(msg)</span><br><span class="line">    server.quit()</span><br></pre></td></tr></table></figure>
+<h3 id="4-主程序流程"><a href="#4-主程序流程" class="headerlink" title="4. 主程序流程"></a>4. 主程序流程</h3><p>&emsp;&emsp;在<code>if __name__ == &quot;__main__&quot;:</code>块中，脚本首先调用<code>scrape_website</code>函数获取最新的通知列表，然后为每条通知生成HTML格式的邮件内容。如果当日有更新，则通过<code>send_email</code>函数将这些通知以邮件的形式发送给预设的收件人列表。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    email_list = [<span class="string">&quot;xxx&quot;</span>]</span><br><span class="line">    url = <span class="string">&#x27;https://jwc.njmu.edu.cn/842/list.htm&#x27;</span></span><br><span class="line">    news_list = scrape_website(url)</span><br><span class="line">    <span class="comment"># 构建邮件内容省略，详见原始代码</span></span><br><span class="line">    <span class="keyword">for</span> email <span class="keyword">in</span> email_list:</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">str</span>(datetime.date.today()) <span class="keyword">in</span> content_mail:</span><br><span class="line">            send_email(<span class="string">&quot;今日有更新|教务处通知公告&quot;</span>, content_mail, email)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            send_email(<span class="string">&quot;教务处通知公告&quot;</span>, content_mail, email)</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;效果呈现如下：<br><img src="/2024/03/19/%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB%E8%87%AA%E5%8A%A8%E8%8E%B7%E5%8F%96%E6%95%99%E5%8A%A1%E5%A4%84%E6%9C%80%E6%96%B0%E9%80%9A%E7%9F%A5/1.png" alt="效果呈现"></p>
+<h3 id="5-自动部署"><a href="#5-自动部署" class="headerlink" title="5. 自动部署"></a>5. 自动部署</h3><p>&emsp;&emsp;利用批处理文件部署：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">@<span class="built_in">echo</span> off</span><br><span class="line">C:  </span><br><span class="line"><span class="built_in">cd</span> C:\Users\Zhuang Qingyuan\Desktop\Notification</span><br><span class="line">start python spyder.py</span><br></pre></td></tr></table></figure><br>&emsp;&emsp;保存为BAT文件后，放到电脑的开始-菜单/启动文件夹下，即可开机启动。</p>
+<h2 id="使用指南"><a href="#使用指南" class="headerlink" title="使用指南"></a>使用指南</h2><p>&emsp;&emsp;要使用这个脚本，你需要：</p>
+<ol>
+<li>安装Python及相关库（requests, BeautifulSoup4）。</li>
+<li>替换<code>sender_email</code>、<code>password</code>和<code>email_list</code>中的占位符为实际的邮箱地址和密码。</li>
+<li>运行脚本。脚本会自动检查教务处网站的更新，并将最新的通知发送到指定的邮箱中。</li>
 </ol>
-<h2 id="资源"><a href="#资源" class="headerlink" title="资源"></a>资源</h2><h4 id="肿瘤生信"><a href="#肿瘤生信" class="headerlink" title="肿瘤生信"></a>肿瘤生信</h4><ol>
-<li>GEPIA2：GEPIA2是一个无代码可视化平台，其数据来源于TCGA和GTEx数据库，用户可以自由探索指定基因的在肿瘤组织中的表达情况以及和预后的关系。<a href="http://gepia2.cancer-pku.cn/">GEPIA2</a></li>
-<li>Prognoscan：Prognoscan整合了2010年以前GEO上Microarray和相应临床信息，可以探索制定基因自不同数据集中和预后的关系。<a href="http://dna00.bio.kyutech.ac.jp/PrognoScan/">PrognoScan</a></li>
-<li>TIMER：TIMER用于分析不同癌症类型的免疫浸润（数据来自于TCGA）。<a href="http://timer.cistrome.org/">TIMER2.0</a></li>
-</ol>
-<h4 id="GWAS"><a href="#GWAS" class="headerlink" title="GWAS"></a>GWAS</h4><ol>
-<li>IEU OPEN GWAS：包含42,484 个GWAS摘要数据集的214,725,223,303 个遗传关联的数据库。<a href="https://gwas.mrcieu.ac.uk/">IEU OpenGWAS</a></li>
-<li>PheWeb：包含Biobank Japan，以及UKB等欧洲样本的GWAS结果。<a href="https://pheweb.jp/downloads">PheWeb</a></li>
-<li>GWAS catalog：内容较全，网页比较慢，建议使用特殊方式访问。<a href="https://www.ebi.ac.uk/gwas/downloads/summary-statistics">GWAS catalog</a>:</li>
-<li>EGG：早期生长联盟数据，包含出生体重，出生头围等。<a href="http://egg-consortium.org/index.html">EGG</a></li>
-<li>CKDGEN：包含慢性肾病、MA、eGFR等。<a href="http://ckdgen.imbi.uni-freiburg.de/?tdsourcetag=s_pctim_aiomsg">CKDGEN</a></li>
-<li>GLGC：血脂GWAS数据库。<a href="http://csg.sph.umich.edu/willer/public/glgc-lipids2021/">GLGC</a></li>
-<li>PGC：精神病学基因组学联盟。<a href="https://www.med.unc.edu/pgc/results-and-downloads/downloads">PGC</a></li>
-<li>GEFOS：骨质疏松联盟。<a href="http://www.gefos.org/">GEFOS</a></li>
-<li>DIAGRAM：二型糖尿病数据库。<a href="http://diagram-consortium.org/downloads.html">DIAGRAM</a>: </li>
-<li>代谢组学数据库：<a href="http://www.metabolomix.com/list-of-all-published-gwas-with-metabolomics/">A Table of all published GWAS with metabolomics</a></li>
-</ol>
+<p>&emsp;&emsp;通过以上步骤，我们可以构建一个自动化的信息获取和提醒系统，帮助用户及时获取重要的教务通知，有效提升信息获取的效率和时效性。</p>
 ]]></content>
       <categories>
-        <category>生物信息学</category>
+        <category>随笔</category>
       </categories>
       <tags>
-        <tag>生物信息学</tag>
-        <tag>单细胞测序</tag>
+        <tag>python</tag>
+        <tag>计算机</tag>
+        <tag>随笔</tag>
       </tags>
   </entry>
   <entry>
@@ -1682,40 +1719,33 @@
       </tags>
   </entry>
   <entry>
-    <title>网络爬虫自动获取教务处最新通知</title>
-    <url>/2024/03/19/%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB%E8%87%AA%E5%8A%A8%E8%8E%B7%E5%8F%96%E6%95%99%E5%8A%A1%E5%A4%84%E6%9C%80%E6%96%B0%E9%80%9A%E7%9F%A5/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>&emsp;&emsp;在日常学习和工作中，及时获取学校教务处的最新通知非常重要。本文介绍了如何使用Python编写一个自动化脚本，该脚本能够爬取教务处网站的最新通知公告，并通过邮件发送给指定的收件人。这样，我们就可以在第一时间内获取到重要信息，不错过任何关键的通知或更新。<br>&emsp;&emsp;欢迎来给俺个星星✨！<a href="https://github.com/ForrestGump618/Notification_NMU">ForrestGump618/Notification_NMU</a>。</p>
-<h2 id="技术栈"><a href="#技术栈" class="headerlink" title="技术栈"></a>技术栈</h2><ul>
-<li><strong>Python</strong>：编程语言</li>
-<li><strong>requests</strong>：HTTP库，用于发送网络请求</li>
-<li><strong>BeautifulSoup</strong>：HTML解析库，用于解析网页内容</li>
-<li><strong>smtplib</strong>、<strong>email.mime.text</strong>、<strong>email.mime.multipart</strong>：邮件发送库，用于构建和发送邮件</li>
-</ul>
-<h2 id="主要功能及实现步骤"><a href="#主要功能及实现步骤" class="headerlink" title="主要功能及实现步骤"></a>主要功能及实现步骤</h2><h3 id="1-网页内容爬取（scrape-website-函数）"><a href="#1-网页内容爬取（scrape-website-函数）" class="headerlink" title="1. 网页内容爬取（scrape_website 函数）"></a>1. 网页内容爬取（<code>scrape_website</code> 函数）</h3><p>&emsp;&emsp;首先，定义<code>scrape_website(url)</code>函数，用于爬取教务处网站的通知公告列表。通过requests库发送GET请求获取网页内容，然后使用BeautifulSoup解析HTML，提取出通知公告的标题、链接和发布日期，最后将这些信息存储在列表中返回。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">scrape_website</span>(<span class="params">url</span>):</span><br><span class="line">    base_url = <span class="string">&quot;https://jwc.njmu.edu.cn&quot;</span></span><br><span class="line">    page = requests.get(url)</span><br><span class="line">    soup = BeautifulSoup(page.content, <span class="string">&#x27;html.parser&#x27;</span>)</span><br><span class="line">    items = soup.select(<span class="string">&#x27;.news_list li&#x27;</span>)</span><br><span class="line">    news_list = []</span><br><span class="line">    <span class="keyword">for</span> item <span class="keyword">in</span> items:</span><br><span class="line">        news = &#123;&#125;</span><br><span class="line">        news_anchor = item.select_one(<span class="string">&#x27;.news_title a&#x27;</span>)</span><br><span class="line">        news[<span class="string">&#x27;title&#x27;</span>] = news_anchor.get(<span class="string">&#x27;title&#x27;</span>).strip()</span><br><span class="line">        news[<span class="string">&#x27;link&#x27;</span>] = base_url + news_anchor.get(<span class="string">&#x27;href&#x27;</span>)</span><br><span class="line">        news[<span class="string">&#x27;date&#x27;</span>] = item.select_one(<span class="string">&#x27;.news_meta&#x27;</span>).text.strip()</span><br><span class="line">        news_list.append(news)</span><br><span class="line">    <span class="keyword">return</span> news_list</span><br></pre></td></tr></table></figure>
-<h3 id="2-获取通知详细内容（scrape-news-details-函数）"><a href="#2-获取通知详细内容（scrape-news-details-函数）" class="headerlink" title="2. 获取通知详细内容（scrape_news_details 函数）"></a>2. 获取通知详细内容（<code>scrape_news_details</code> 函数）</h3><p>&emsp;&emsp;定义<code>scrape_news_details(news_link)</code>函数，用于爬取每条通知的详细内容。同样使用requests和BeautifulSoup获取并解析页面，提取通知的正文内容，并生成一个简短的摘要返回。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">scrape_news_details</span>(<span class="params">news_link</span>):</span><br><span class="line">    page = requests.get(news_link)</span><br><span class="line">    soup = BeautifulSoup(page.content, <span class="string">&#x27;html.parser&#x27;</span>)</span><br><span class="line">    content_element = soup.select_one(<span class="string">&#x27;.wp_articlecontent&#x27;</span>)</span><br><span class="line">    <span class="keyword">if</span> content_element:</span><br><span class="line">        content_text = content_element.get_text(separator=<span class="string">&quot; &quot;</span>, strip=<span class="literal">True</span>)</span><br><span class="line">        length = <span class="built_in">len</span>(content_text)</span><br><span class="line">        <span class="keyword">if</span> length &gt; <span class="number">200</span>:</span><br><span class="line">            summary = content_text[:<span class="number">200</span>] + <span class="string">&quot; ......&quot;</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            summary = content_text</span><br><span class="line">        <span class="keyword">return</span> summary</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;No content found.&quot;</span></span><br></pre></td></tr></table></figure>
-<h3 id="3-邮件发送（send-email-函数）"><a href="#3-邮件发送（send-email-函数）" class="headerlink" title="3. 邮件发送（send_email 函数）"></a>3. 邮件发送（<code>send_email</code> 函数）</h3><p>&emsp;&emsp;定义<code>send_email(subject, content, to_email)</code>函数，使用smtplib和email.mime相关模块构建并发送邮件。这里需要预先设置发件人邮箱、密码以及SMTP服务器信息。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">send_email</span>(<span class="params">subject, content, to_email</span>):</span><br><span class="line">    sender_email = <span class="string">&quot;xxx&quot;</span></span><br><span class="line">    password = <span class="string">&quot;xxx&quot;</span></span><br><span class="line">    msg = MIMEMultipart()</span><br><span class="line">    msg[<span class="string">&#x27;Subject&#x27;</span>] = subject</span><br><span class="line">    msg[<span class="string">&#x27;From&#x27;</span>] = sender_email</span><br><span class="line">    msg[<span class="string">&#x27;To&#x27;</span>] = to_email</span><br><span class="line">    msg.attach(MIMEText(content, <span class="string">&#x27;html&#x27;</span>))</span><br><span class="line">    server = smtplib.SMTP_SSL(<span class="string">&#x27;smtp.qq.com&#x27;</span>, <span class="number">465</span>)</span><br><span class="line">    server.login(sender_email, password)</span><br><span class="line">    server.send_message(msg)</span><br><span class="line">    server.quit()</span><br></pre></td></tr></table></figure>
-<h3 id="4-主程序流程"><a href="#4-主程序流程" class="headerlink" title="4. 主程序流程"></a>4. 主程序流程</h3><p>&emsp;&emsp;在<code>if __name__ == &quot;__main__&quot;:</code>块中，脚本首先调用<code>scrape_website</code>函数获取最新的通知列表，然后为每条通知生成HTML格式的邮件内容。如果当日有更新，则通过<code>send_email</code>函数将这些通知以邮件的形式发送给预设的收件人列表。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    email_list = [<span class="string">&quot;xxx&quot;</span>]</span><br><span class="line">    url = <span class="string">&#x27;https://jwc.njmu.edu.cn/842/list.htm&#x27;</span></span><br><span class="line">    news_list = scrape_website(url)</span><br><span class="line">    <span class="comment"># 构建邮件内容省略，详见原始代码</span></span><br><span class="line">    <span class="keyword">for</span> email <span class="keyword">in</span> email_list:</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">str</span>(datetime.date.today()) <span class="keyword">in</span> content_mail:</span><br><span class="line">            send_email(<span class="string">&quot;今日有更新|教务处通知公告&quot;</span>, content_mail, email)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            send_email(<span class="string">&quot;教务处通知公告&quot;</span>, content_mail, email)</span><br></pre></td></tr></table></figure>
-<p>&emsp;&emsp;效果呈现如下：<br><img src="/2024/03/19/%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB%E8%87%AA%E5%8A%A8%E8%8E%B7%E5%8F%96%E6%95%99%E5%8A%A1%E5%A4%84%E6%9C%80%E6%96%B0%E9%80%9A%E7%9F%A5/1.png" alt="效果呈现"></p>
-<h3 id="5-自动部署"><a href="#5-自动部署" class="headerlink" title="5. 自动部署"></a>5. 自动部署</h3><p>&emsp;&emsp;利用批处理文件部署：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">@<span class="built_in">echo</span> off</span><br><span class="line">C:  </span><br><span class="line"><span class="built_in">cd</span> C:\Users\Zhuang Qingyuan\Desktop\Notification</span><br><span class="line">start python spyder.py</span><br></pre></td></tr></table></figure><br>&emsp;&emsp;保存为BAT文件后，放到电脑的开始-菜单/启动文件夹下，即可开机启动。</p>
-<h2 id="使用指南"><a href="#使用指南" class="headerlink" title="使用指南"></a>使用指南</h2><p>&emsp;&emsp;要使用这个脚本，你需要：</p>
-<ol>
-<li>安装Python及相关库（requests, BeautifulSoup4）。</li>
-<li>替换<code>sender_email</code>、<code>password</code>和<code>email_list</code>中的占位符为实际的邮箱地址和密码。</li>
-<li>运行脚本。脚本会自动检查教务处网站的更新，并将最新的通知发送到指定的邮箱中。</li>
-</ol>
-<p>&emsp;&emsp;通过以上步骤，我们可以构建一个自动化的信息获取和提醒系统，帮助用户及时获取重要的教务通知，有效提升信息获取的效率和时效性。</p>
+    <title>记录的目的</title>
+    <url>/2023/10/11/%E8%AE%B0%E5%BD%95%E7%9A%84%E7%9B%AE%E7%9A%84/</url>
+    <content><![CDATA[<p><span style="font-size:14px;">我是一个普通的医学生，没有系统的计算机训练，没有系统学习数学课程。</span></p>
+<p>为什么会对这一切感兴趣，在上一个笔记里面说过啦~ <a href="https://forrestgump618.github.io/2023/10/04/%E4%B8%80%E8%B5%B7%E6%9D%A5%E6%84%9F%E5%8F%97%E6%95%B0%E6%8D%AE%E4%B9%8B%E7%BE%8E%E5%90%A7%EF%BC%81/">一起来感受数据之美吧！</a></p>
+<p>从不了解生信、统计，到自己真正涉猎，我花了很长时间。获取这些知识的过程是非常不易的。</p>
+<div style="background-color:#f9f9f9; margin:20px 0; padding:15px; border-left:6px solid #ccc;">
+    <strong>挑战与困惑：</strong><br>
+    有时会为了一个公式的使用从bing查到google，从文献查到专著，最狠的一次是查了50篇文献结果大家都对此语焉不详；
+    很多事情花了大把的时间但最后并没有结果，甚至考试月也是如此；
+    越向下学发现数学知识成为阻碍进步的门槛；
+    化用太多的方法发现自己思考的很少，会怀疑自己的意义。<br>
+    …………
+</div>
+
+<p>许多个日夜，真希望有个人能将我想知道的问题放在了网上。很多时候，国内网站搜不到的问题都能在bing和google上搜到。在知识上，很佩服老外们的分享能力。</p>
+<p><span style="color:grey;">印象最深的是和一位国外大咖的请教，在极短的时间内回复了邮件，估摸着大概是凌晨的2点钟。让我十分惶恐隔了许久才回信。</span></p>
+<p>太多的时候，不是知识抽象。而是一座大厦建立起来，需要有个人告诉你，这个大厦里面哪个电梯可以到哪。但太多时候，独自在大厦的摸索中，看到更多的是抽象名词所累积起来的水泥板。有幸还有些走过的人给你插个指向标。</p>
+<p>因此我在想，我把我自己的用过的方法，想过的事情，分享出来，让一些想获取类似问题解答方法的人能够获得启发。</p>
+<p>而一点点私心是，找个小站安放自己。</p>
+<p>我的学习之路是踩着别人的石头过来的，希望自己也能够给需要的人带来一些帮助~</p>
 ]]></content>
       <categories>
         <category>随笔</category>
       </categories>
       <tags>
-        <tag>python</tag>
-        <tag>随笔</tag>
-        <tag>计算机</tag>
+        <tag>统计学</tag>
+        <tag>交叉学科</tag>
       </tags>
   </entry>
   <entry>
@@ -1747,36 +1777,6 @@
       </categories>
       <tags>
         <tag>随笔</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>记录的目的</title>
-    <url>/2023/10/11/%E8%AE%B0%E5%BD%95%E7%9A%84%E7%9B%AE%E7%9A%84/</url>
-    <content><![CDATA[<p><span style="font-size:14px;">我是一个普通的医学生，没有系统的计算机训练，没有系统学习数学课程。</span></p>
-<p>为什么会对这一切感兴趣，在上一个笔记里面说过啦~ <a href="https://forrestgump618.github.io/2023/10/04/%E4%B8%80%E8%B5%B7%E6%9D%A5%E6%84%9F%E5%8F%97%E6%95%B0%E6%8D%AE%E4%B9%8B%E7%BE%8E%E5%90%A7%EF%BC%81/">一起来感受数据之美吧！</a></p>
-<p>从不了解生信、统计，到自己真正涉猎，我花了很长时间。获取这些知识的过程是非常不易的。</p>
-<div style="background-color:#f9f9f9; margin:20px 0; padding:15px; border-left:6px solid #ccc;">
-    <strong>挑战与困惑：</strong><br>
-    有时会为了一个公式的使用从bing查到google，从文献查到专著，最狠的一次是查了50篇文献结果大家都对此语焉不详；
-    很多事情花了大把的时间但最后并没有结果，甚至考试月也是如此；
-    越向下学发现数学知识成为阻碍进步的门槛；
-    化用太多的方法发现自己思考的很少，会怀疑自己的意义。<br>
-    …………
-</div>
-
-<p>许多个日夜，真希望有个人能将我想知道的问题放在了网上。很多时候，国内网站搜不到的问题都能在bing和google上搜到。在知识上，很佩服老外们的分享能力。</p>
-<p><span style="color:grey;">印象最深的是和一位国外大咖的请教，在极短的时间内回复了邮件，估摸着大概是凌晨的2点钟。让我十分惶恐隔了许久才回信。</span></p>
-<p>太多的时候，不是知识抽象。而是一座大厦建立起来，需要有个人告诉你，这个大厦里面哪个电梯可以到哪。但太多时候，独自在大厦的摸索中，看到更多的是抽象名词所累积起来的水泥板。有幸还有些走过的人给你插个指向标。</p>
-<p>因此我在想，我把我自己的用过的方法，想过的事情，分享出来，让一些想获取类似问题解答方法的人能够获得启发。</p>
-<p>而一点点私心是，找个小站安放自己。</p>
-<p>我的学习之路是踩着别人的石头过来的，希望自己也能够给需要的人带来一些帮助~</p>
-]]></content>
-      <categories>
-        <category>随笔</category>
-      </categories>
-      <tags>
-        <tag>统计学</tag>
-        <tag>交叉学科</tag>
       </tags>
   </entry>
 </search>
