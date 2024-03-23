@@ -87,42 +87,6 @@
       </tags>
   </entry>
   <entry>
-    <title>scPagwas——整合scRNA和GWAS识别疾病的驱动基因和关键细胞类型</title>
-    <url>/2023/08/25/scPagwas%E2%80%94%E2%80%94%E6%95%B4%E5%90%88scRNA%E5%92%8CGWAS%E8%AF%86%E5%88%AB%E7%96%BE%E7%97%85%E7%9A%84%E9%A9%B1%E5%8A%A8%E5%9F%BA%E5%9B%A0%E5%92%8C%E5%85%B3%E9%94%AE%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8B/</url>
-    <content><![CDATA[<p>&emsp;&emsp;<strong>scPagwas</strong>的基本思想和CMU张金野教授开发的<strong>scDRS</strong>工具一脉相承。总的来说，该框架可以概述为：  </p>
-<ol>
-<li>基于基因表达计算单个细胞的通路富集得分（PAS）；  </li>
-<li>SNP通过基因和通路联系，得到两者的回归系数，将该回归系数作为权数加权上面得到的PAS，得到一个细胞的gPAS。某种意义上，gPAS是一个细胞疾病相关通路组的富集得分；  </li>
-<li>将基因的表达和gPAS做相关性分析，确定最优先的疾病基因。<br>&emsp;&emsp;(1) 到 (3) 的步骤本质上是GWAS映射驱动基因的过程，接着我们根据驱动基因的表达量和驱动基因的权重对细胞的表达量进行加权，从而得到具体的细胞评分——性状相关分数TRS。<br>如果之间关注加权分数的绝对值，那么这个结果很容易受到细胞的检出count数影响，因此作者根据相应的表达值和方差匹配相近的表达基因。从而计算出经验分布，从而进行统计检验。隐含的思想是：疾病特征基因是显著高表达的。</li>
-</ol>
-<h2 id="GWAS-Summary-Statistics数据的预处理"><a href="#GWAS-Summary-Statistics数据的预处理" class="headerlink" title="GWAS Summary Statistics数据的预处理"></a>GWAS Summary Statistics数据的预处理</h2><p>&emsp;&emsp;<strong>下面的步骤可概述为：首先提取摘要数据中的SNP，然后去计算LD并过滤，最后将过滤后的SNP遴选出来，得到过滤后的GWAS数据。</strong><br>&emsp;&emsp;根据scPagwas和Plink的要求，GWAS文件的以下信息应当被提取，并且要命名为下面的名称：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="string">&quot;chrom&quot;</span>,<span class="string">&quot;pos&quot;</span>,<span class="string">&quot;REF&quot;</span>,<span class="string">&quot;ALT&quot;</span>,<span class="string">&quot;rsid&quot;</span>,<span class="string">&quot;nearest_genes&quot;</span>,<span class="string">&quot;beta&quot;</span>,<span class="string">&quot;se&quot;</span></span><br></pre></td></tr></table></figure><br>&emsp;&emsp;保存这个文件，比如我们命名为”Disease.txt”：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">write.table(GWAS_raw,file=<span class="string">&quot;./Disease.txt&quot;</span>,row.names=F,quote=F)</span><br></pre></td></tr></table></figure><br>&emsp;&emsp;提取其中的rsid列，用于后续的分析（awk后面的$5代表rsid列的索引）：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> tempfile  &lt;br&gt;awk  <span class="string">&#x27;&#123;print $5 &#125;&#x27;</span> Disease.txt  &gt; ./tempfile/Disease_SNP_list.txt</span><br></pre></td></tr></table></figure><br>&emsp;&emsp;下载并解压plink所需要的文件，如下，这里我们下载东亚人的数据：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">wget https://zenodo.org/record/7768714/files/1000G_Phase3_EAS_plinkfiles.tgz?download=1</span><br></pre></td></tr></table></figure><br>&emsp;&emsp;制作bed文件：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> $(<span class="built_in">seq</span> 1 22)</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$i</span></span><br><span class="line">plink</span><br><span class="line">--bfile ./1000G_EUR_Phase3_plink/1000G.EAS.QC.<span class="variable">$i</span></span><br><span class="line">--extract ./tempfile/Disease_SNP_list.txt</span><br><span class="line">--noweb --make-bed --out ./tempfile/1000G.EAS.QC.Disease_<span class="variable">$&#123;i&#125;</span>_filtered</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure><br>&emsp;&emsp;连锁不平衡过滤<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> $(<span class="built_in">seq</span> 1 22)    </span><br><span class="line"><span class="keyword">do</span>   </span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$i</span>  </span><br><span class="line">plink   </span><br><span class="line">--bfile ./tempfile/1000G.EAS.QC.Disease_<span class="variable">$&#123;i&#125;</span>_filtered   </span><br><span class="line">--indep-pairwise 50 5 0.8   </span><br><span class="line">--out  ./tempfile/Disease_<span class="variable">$&#123;i&#125;</span>_plink_prune_EAS_filtered_LD0.8  </span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure><br>&emsp;&emsp;结果整合<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cat</span> ./tempfile/[Disease]*.prune.in &gt; Disease_EAS_LD0.8.prune</span><br></pre></td></tr></table></figure><br>&emsp;&emsp;从GWAS中选择过滤后的SNP<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">library(readr)  </span><br><span class="line">library(dplyr)  </span><br><span class="line">gwas&lt;-read_table(<span class="string">&quot;./Disease.txt&quot;</span>)  </span><br><span class="line">SNP_prune&lt;- read_table(<span class="string">&quot;./tempfile/Disease_EAS_LD0.8.prune&quot;</span>)  </span><br><span class="line">SNP_prune&lt;-SNP_prune[!duplicated(unlist(SNP_prune)),]  </span><br><span class="line">colnames(SNP_prune)&lt;-<span class="string">&quot;rsid&quot;</span>  </span><br><span class="line"><span class="comment">#### Left Join using inner_join function   </span></span><br><span class="line">gwas= gwas %&gt;% inner_join(SNP_prune,by=<span class="string">&quot;rsid&quot;</span>)  </span><br><span class="line"><span class="built_in">print</span>(nrow(gwas))  </span><br><span class="line">write.table(gwas,file=<span class="string">&quot;./Disease_prune_gwas_data.txt&quot;</span>,row.names=F,quote=F)</span><br></pre></td></tr></table></figure></p>
-<h2 id="scRNA数据、Pathway数据、注释数据的准备"><a href="#scRNA数据、Pathway数据、注释数据的准备" class="headerlink" title="scRNA数据、Pathway数据、注释数据的准备"></a>scRNA数据、Pathway数据、注释数据的准备</h2><ol>
-<li>事实上，scPagwas所需单细胞数据的必要条件是：<strong>（1）单细胞数据已经完成了分群，并且给予了相应的注释；（2）单细胞数据已经被Normalized；</strong></li>
-<li>在scPagwas中预置了一个KEGG的通路数据集，所以不需要自己再额外处理；</li>
-<li>这一步骤完成的是导入外显子在基因组的范围，相应数据可以从<a href="https://www.gencodegenes.org/human/">GENCODE - Human Release 44 (gencodegenes.org)</a>下载：<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">library<span class="punctuation">(</span>rtracklayer<span class="punctuation">)</span>  </span><br><span class="line">gtf_df<span class="operator">&lt;-</span> rtracklayer<span class="operator">::</span>import<span class="punctuation">(</span><span class="string">&quot;gencode.v34.annotation.gtf.gz&quot;</span><span class="punctuation">)</span>  </span><br><span class="line">gtf_df <span class="operator">&lt;-</span> as.data.frame<span class="punctuation">(</span>gtf_df<span class="punctuation">)</span>  </span><br><span class="line">gtf_df <span class="operator">&lt;-</span> gtf_df<span class="punctuation">[</span><span class="punctuation">,</span><span class="built_in">c</span><span class="punctuation">(</span><span class="string">&quot;seqnames&quot;</span><span class="punctuation">,</span><span class="string">&quot;start&quot;</span><span class="punctuation">,</span><span class="string">&quot;end&quot;</span><span class="punctuation">,</span><span class="string">&quot;type&quot;</span><span class="punctuation">,</span><span class="string">&quot;gene_name&quot;</span><span class="punctuation">)</span><span class="punctuation">]</span>  </span><br><span class="line">gtf_df <span class="operator">&lt;-</span> gtf_df<span class="punctuation">[</span>gtf_df<span class="operator">$</span>type<span class="operator">==</span><span class="string">&quot;gene&quot;</span><span class="punctuation">,</span><span class="punctuation">]</span>  </span><br><span class="line">block_annotation<span class="operator">&lt;-</span>gtf_df<span class="punctuation">[</span><span class="punctuation">,</span><span class="built_in">c</span><span class="punctuation">(</span><span class="number">1</span><span class="punctuation">,</span><span class="number">2</span><span class="punctuation">,</span><span class="number">3</span><span class="punctuation">,</span><span class="number">5</span><span class="punctuation">)</span><span class="punctuation">]</span>  </span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<h2 id="标准分析流程"><a href="#标准分析流程" class="headerlink" title="标准分析流程"></a>标准分析流程</h2><h3 id="单细胞数据导入"><a href="#单细胞数据导入" class="headerlink" title="单细胞数据导入"></a>单细胞数据导入</h3><figure class="highlight r"><table><tr><td class="code"><pre><span class="line">library<span class="punctuation">(</span>scPagwas<span class="punctuation">)</span>  </span><br><span class="line">Pagwas <span class="operator">&lt;-</span> <span class="built_in">list</span><span class="punctuation">(</span><span class="punctuation">)</span>  </span><br><span class="line">Pagwas <span class="operator">&lt;-</span> Single_data_input<span class="punctuation">(</span>  </span><br><span class="line">      Pagwas <span class="operator">=</span> Pagwas<span class="punctuation">,</span>  </span><br><span class="line">      assay <span class="operator">=</span> <span class="string">&quot;RNA&quot;</span><span class="punctuation">,</span>  </span><br><span class="line">      Single_data <span class="operator">=</span> Single_data<span class="punctuation">,</span>  </span><br><span class="line">      Pathway_list <span class="operator">=</span> Genes_by_pathway_kegg  </span><br><span class="line">    <span class="punctuation">)</span>  </span><br><span class="line">Single_data <span class="operator">&lt;-</span> Single_data<span class="punctuation">[</span><span class="punctuation">,</span> </span><br></pre></td></tr></table></figure>
-<h3 id="计算每个细胞的通路富集分数"><a href="#计算每个细胞的通路富集分数" class="headerlink" title="计算每个细胞的通路富集分数"></a>计算每个细胞的通路富集分数</h3><figure class="highlight r"><table><tr><td class="code"><pre><span class="line">Pagwas <span class="operator">&lt;-</span> Pathway_pcascore_run<span class="punctuation">(</span>  </span><br><span class="line">        Pagwas <span class="operator">=</span> Pagwas<span class="punctuation">,</span>  </span><br><span class="line">        Pathway_list <span class="operator">=</span> Genes_by_pathway_kegg  </span><br><span class="line">      <span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
-<h3 id="输入GWAS数据"><a href="#输入GWAS数据" class="headerlink" title="输入GWAS数据"></a>输入GWAS数据</h3><p>&emsp;&emsp;注意，事实上，这里的maf不会对结果造成很大影响。<br><figure class="highlight r"><table><tr><td class="code"><pre><span class="line">Pagwas <span class="operator">&lt;-</span> GWAS_summary_input<span class="punctuation">(</span>  </span><br><span class="line">    Pagwas <span class="operator">=</span> Pagwas<span class="punctuation">,</span>  </span><br><span class="line">    gwas_data <span class="operator">=</span> gwas_data<span class="punctuation">,</span>  </span><br><span class="line">    maf_filter <span class="operator">=</span> <span class="number">0.1</span>  </span><br><span class="line">  <span class="punctuation">)</span></span><br></pre></td></tr></table></figure></p>
-<h3 id="SNP到基因的映射"><a href="#SNP到基因的映射" class="headerlink" title="SNP到基因的映射"></a>SNP到基因的映射</h3><p>&emsp;&emsp;marg可以设置windowsize，实际上在一些文献中会设计成10k；<br><figure class="highlight r"><table><tr><td class="code"><pre><span class="line">Pagwas<span class="operator">$</span>snp_gene_df <span class="operator">&lt;-</span> SnpToGene<span class="punctuation">(</span>  </span><br><span class="line">        gwas_data <span class="operator">=</span> Pagwas<span class="operator">$</span>gwas_data<span class="punctuation">,</span>  </span><br><span class="line">        block_annotation <span class="operator">=</span> block_annotation<span class="punctuation">,</span>  </span><br><span class="line">        marg <span class="operator">=</span> <span class="number">100000</span>  </span><br><span class="line">      <span class="punctuation">)</span></span><br></pre></td></tr></table></figure></p>
-<h3 id="SNP到通路的映射"><a href="#SNP到通路的映射" class="headerlink" title="SNP到通路的映射"></a>SNP到通路的映射</h3><p>&emsp;&emsp;这个步骤能够把通路注释到基因组上的区域。<br><figure class="highlight r"><table><tr><td class="code"><pre><span class="line">Pagwas <span class="operator">&lt;-</span> Pathway_annotation_input<span class="punctuation">(</span>  </span><br><span class="line">      Pagwas <span class="operator">=</span> Pagwas<span class="punctuation">,</span>  </span><br><span class="line">      block_annotation <span class="operator">=</span> block_annotation  </span><br><span class="line">    <span class="punctuation">)</span></span><br></pre></td></tr></table></figure><br>&emsp;&emsp;将通路的基因组位置和前面得到的pca矩阵（实质上是通路组）进行联系</p>
-<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">Pagwas <span class="operator">&lt;-</span> Link_pathway_blocks_gwas<span class="punctuation">(</span>  </span><br><span class="line">      Pagwas <span class="operator">=</span> Pagwas<span class="punctuation">,</span>  </span><br><span class="line">      chrom_ld <span class="operator">=</span> chrom_ld<span class="punctuation">,</span>  </span><br><span class="line">      singlecell <span class="operator">=</span> <span class="built_in">T</span><span class="punctuation">,</span>  </span><br><span class="line">      celltype <span class="operator">=</span> <span class="built_in">T</span><span class="punctuation">,</span>  </span><br><span class="line">      backingpath<span class="operator">=</span><span class="string">&quot;./temp&quot;</span><span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
-<h3 id="细胞类型回归"><a href="#细胞类型回归" class="headerlink" title="细胞类型回归"></a>细胞类型回归</h3><figure class="highlight r"><table><tr><td class="code"><pre><span class="line">Pagwas<span class="operator">$</span>lm_results <span class="operator">&lt;-</span> Pagwas_perform_regression<span class="punctuation">(</span>  </span><br><span class="line">	Pathway_ld_gwas_data <span class="operator">=</span>Pagwas<span class="operator">$</span>Pathway_ld_gwas_data  </span><br><span class="line"><span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
-<h3 id="计算gPAS，鉴定风险基因"><a href="#计算gPAS，鉴定风险基因" class="headerlink" title="计算gPAS，鉴定风险基因"></a>计算gPAS，鉴定风险基因</h3><figure class="highlight r"><table><tr><td class="code"><pre><span class="line">Pagwas <span class="operator">&lt;-</span> scPagwas_perform_score<span class="punctuation">(</span>  </span><br><span class="line">      Pagwas <span class="operator">=</span> Pagwas<span class="punctuation">,</span>  </span><br><span class="line">      remove_outlier <span class="operator">=</span> <span class="literal">TRUE</span>  </span><br><span class="line">    <span class="punctuation">)</span>  </span><br><span class="line">Pagwas<span class="operator">$</span>PCC <span class="operator">&lt;-</span> scPagwas<span class="operator">::</span>scGet_PCC<span class="punctuation">(</span>scPagwas.gPAS.score<span class="operator">=</span>Pagwas<span class="operator">$</span>scPagwas.gPAS.score<span class="punctuation">,</span>  </span><br><span class="line">                                    data_mat<span class="operator">=</span>Pagwas<span class="operator">$</span>data_mat<span class="punctuation">)</span>  </span><br><span class="line">mean_gpas<span class="operator">&lt;-</span>mean<span class="punctuation">(</span>Pagwas<span class="operator">$</span>scPagwas.gPAS.score<span class="punctuation">)</span>  </span><br><span class="line">a1<span class="operator">&lt;-</span>which<span class="punctuation">(</span>Pagwas<span class="operator">$</span>scPagwas.gPAS.score <span class="operator">&gt;=</span> mean_gpas<span class="punctuation">)</span>  </span><br><span class="line">a2<span class="operator">&lt;-</span>which<span class="punctuation">(</span>Pagwas<span class="operator">$</span>scPagwas.gPAS.score <span class="operator">&lt;</span> mean_gpas<span class="punctuation">)</span>  </span><br><span class="line">  </span><br><span class="line">PCC_up <span class="operator">&lt;-</span> scPagwas<span class="operator">::</span>scGet_PCC<span class="punctuation">(</span>scPagwas.gPAS.score<span class="operator">=</span>Pagwas<span class="operator">$</span>scPagwas.gPAS.score<span class="punctuation">[</span>a1<span class="punctuation">]</span><span class="punctuation">,</span>data_mat<span class="operator">=</span>Pagwas<span class="operator">$</span>data_mat<span class="punctuation">[</span><span class="punctuation">,</span>a1<span class="punctuation">]</span><span class="punctuation">)</span>  </span><br><span class="line">PCC1<span class="operator">&lt;-</span> data.frame<span class="punctuation">(</span>PCC<span class="operator">=</span>PCC_up<span class="punctuation">,</span>genes<span class="operator">=</span>rownames<span class="punctuation">(</span>PCC_up<span class="punctuation">)</span><span class="punctuation">)</span>  </span><br><span class="line">PCC1<span class="operator">&lt;-</span>PCC1<span class="punctuation">[</span>order<span class="punctuation">(</span>PCC1<span class="operator">$</span>PCC<span class="punctuation">,</span>decreasing<span class="operator">=</span><span class="built_in">T</span><span class="punctuation">)</span><span class="punctuation">,</span><span class="punctuation">]</span>  </span><br><span class="line">PCC<span class="operator">&lt;-</span> data.frame<span class="punctuation">(</span>PCC<span class="operator">=</span>PCC1<span class="operator">$</span>PCC<span class="punctuation">)</span>  </span><br><span class="line">rownames<span class="punctuation">(</span>PCC<span class="punctuation">)</span><span class="operator">&lt;-</span>PCC1<span class="operator">$</span>genes  </span><br><span class="line">Pagwas<span class="operator">$</span>PCC_up<span class="operator">&lt;-</span>PCC  </span><br><span class="line">  </span><br><span class="line">PCC_down <span class="operator">&lt;-</span> scPagwas<span class="operator">::</span>scGet_PCC<span class="punctuation">(</span>scPagwas.gPAS.score<span class="operator">=</span>Pagwas<span class="operator">$</span>scPagwas.gPAS.score<span class="punctuation">[</span>a2<span class="punctuation">]</span><span class="punctuation">,</span>data_mat<span class="operator">=</span>Pagwas<span class="operator">$</span>data_mat<span class="punctuation">[</span><span class="punctuation">,</span>a2<span class="punctuation">]</span><span class="punctuation">)</span>  </span><br><span class="line">PCC1<span class="operator">&lt;-</span> data.frame<span class="punctuation">(</span>PCC<span class="operator">=</span> <span class="operator">-</span>PCC_down<span class="punctuation">,</span>genes<span class="operator">=</span>rownames<span class="punctuation">(</span>PCC_down<span class="punctuation">)</span><span class="punctuation">)</span>  </span><br><span class="line">PCC1<span class="operator">&lt;-</span>PCC1<span class="punctuation">[</span>order<span class="punctuation">(</span>PCC1<span class="operator">$</span>PCC<span class="punctuation">,</span>decreasing<span class="operator">=</span><span class="built_in">F</span><span class="punctuation">)</span><span class="punctuation">,</span><span class="punctuation">]</span>  </span><br><span class="line">PCC<span class="operator">&lt;-</span> data.frame<span class="punctuation">(</span>PCC<span class="operator">=</span>PCC1<span class="operator">$</span>PCC<span class="punctuation">)</span>  </span><br><span class="line">rownames<span class="punctuation">(</span>PCC<span class="punctuation">)</span><span class="operator">&lt;-</span>PCC1<span class="operator">$</span>genes  </span><br><span class="line">Pagwas<span class="operator">$</span>PCC_down<span class="operator">&lt;-</span>PCC</span><br></pre></td></tr></table></figure>
-<h3 id="计算TRS"><a href="#计算TRS" class="headerlink" title="计算TRS"></a>计算TRS</h3><figure class="highlight r"><table><tr><td class="code"><pre><span class="line"><span class="comment">#Obtain the top 500 genes with the highest PCC.  </span></span><br><span class="line">n_topgenes<span class="operator">=</span><span class="number">500</span>  </span><br><span class="line">scPagwas_topgenes <span class="operator">&lt;-</span> rownames<span class="punctuation">(</span>Pagwas<span class="operator">$</span>PCC<span class="punctuation">)</span><span class="punctuation">[</span>order<span class="punctuation">(</span>Pagwas<span class="operator">$</span>PCC<span class="punctuation">,</span> decreasing <span class="operator">=</span> <span class="built_in">T</span><span class="punctuation">)</span><span class="punctuation">[</span><span class="number">1</span><span class="operator">:</span>n_topgenes<span class="punctuation">]</span><span class="punctuation">]</span>  </span><br><span class="line">scPagwas_upgenes <span class="operator">&lt;-</span> rownames<span class="punctuation">(</span>Pagwas<span class="operator">$</span>PCC_up<span class="punctuation">)</span><span class="punctuation">[</span><span class="number">1</span><span class="operator">:</span>n_topgenes<span class="punctuation">]</span>  </span><br><span class="line">scPagwas_downgenes <span class="operator">&lt;-</span> rownames<span class="punctuation">(</span>Pagwas<span class="operator">$</span>PCC_down<span class="punctuation">)</span><span class="punctuation">[</span><span class="number">1</span><span class="operator">:</span>n_topgenes<span class="punctuation">]</span>  </span><br><span class="line">  </span><br><span class="line"><span class="comment">#Single_data refers to the single-cell data initially inputted.  </span></span><br><span class="line">Single_data <span class="operator">&lt;-</span> Seurat<span class="operator">::</span>AddModuleScore<span class="punctuation">(</span>Single_data<span class="punctuation">,</span> assay <span class="operator">=</span> <span class="string">&quot;RNA&quot;</span><span class="punctuation">,</span> <span class="built_in">list</span><span class="punctuation">(</span>scPagwas_topgenes<span class="punctuation">,</span>scPagwas_upgenes<span class="punctuation">,</span>scPagwas_downgenes<span class="punctuation">)</span><span class="punctuation">,</span> name <span class="operator">=</span> <span class="built_in">c</span><span class="punctuation">(</span><span class="string">&quot;scPagwas.TRS.Score&quot;</span><span class="punctuation">,</span><span class="string">&quot;scPagwas.upTRS.Score&quot;</span><span class="punctuation">,</span><span class="string">&quot;scPagwas.downTRS.Score&quot;</span><span class="punctuation">)</span><span class="punctuation">)</span>  </span><br><span class="line">  </span><br><span class="line"><span class="comment">#Calculate the p-values for scPagwas.TRS.Score of single cells after background correction.  </span></span><br><span class="line">correct_pdf<span class="operator">&lt;-</span>Get_CorrectBg_p<span class="punctuation">(</span>Single_data<span class="operator">=</span>Single_data<span class="punctuation">,</span>  </span><br><span class="line">                             scPagwas.TRS.Score<span class="operator">=</span>Single_data<span class="operator">$</span>scPagwas.TRS.Score1<span class="punctuation">,</span>  </span><br><span class="line">                             iters_singlecell<span class="operator">=</span><span class="number">100</span><span class="punctuation">,</span>  </span><br><span class="line">                             n_topgenes<span class="operator">=</span><span class="number">1000</span><span class="punctuation">,</span>  </span><br><span class="line">                             scPagwas_topgenes<span class="operator">=</span>scPagwas_topgenes<span class="punctuation">)</span>  </span><br><span class="line">Pagwas<span class="operator">$</span>Random_Correct_BG_pdf <span class="operator">&lt;-</span> correct_pdf  </span><br><span class="line">  </span><br><span class="line"><span class="comment">#Merge the p-values of cells belonging to the same cell type into a single p-value for each cell type.  </span></span><br><span class="line">Pagwas<span class="operator">$</span>Merged_celltype_pvalue<span class="operator">&lt;-</span>Merge_celltype_p<span class="punctuation">(</span>single_p<span class="operator">=</span>correct_pdf<span class="operator">$</span>pooled_p<span class="punctuation">,</span>celltype<span class="operator">=</span>Pagwas<span class="operator">$</span>Celltype_anno<span class="operator">$</span>annotation<span class="punctuation">)</span>  </span><br></pre></td></tr></table></figure>
-<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p><a href="https://www.cell.com/cell-genomics/fulltext/S2666-979X(23">Polygenic regression uncovers trait-relevant cellular contexts through pathway activation transformation of single-cell RNA sequencing data: Cell Genomics</a>00180-5)</p>
-]]></content>
-      <categories>
-        <category>生物信息学</category>
-      </categories>
-      <tags>
-        <tag>GWAS</tag>
-        <tag>生物信息学</tag>
-        <tag>单细胞测序</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>一起来感受数据之美吧！</title>
     <url>/2023/10/04/%E4%B8%80%E8%B5%B7%E6%9D%A5%E6%84%9F%E5%8F%97%E6%95%B0%E6%8D%AE%E4%B9%8B%E7%BE%8E%E5%90%A7%EF%BC%81/</url>
     <content><![CDATA[<h2 id="资源记录"><a href="#资源记录" class="headerlink" title="资源记录"></a>资源记录</h2><ul>
@@ -186,6 +150,42 @@
       </tags>
   </entry>
   <entry>
+    <title>scPagwas——整合scRNA和GWAS识别疾病的驱动基因和关键细胞类型</title>
+    <url>/2023/08/25/scPagwas%E2%80%94%E2%80%94%E6%95%B4%E5%90%88scRNA%E5%92%8CGWAS%E8%AF%86%E5%88%AB%E7%96%BE%E7%97%85%E7%9A%84%E9%A9%B1%E5%8A%A8%E5%9F%BA%E5%9B%A0%E5%92%8C%E5%85%B3%E9%94%AE%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8B/</url>
+    <content><![CDATA[<p>&emsp;&emsp;<strong>scPagwas</strong>的基本思想和CMU张金野教授开发的<strong>scDRS</strong>工具一脉相承。总的来说，该框架可以概述为：  </p>
+<ol>
+<li>基于基因表达计算单个细胞的通路富集得分（PAS）；  </li>
+<li>SNP通过基因和通路联系，得到两者的回归系数，将该回归系数作为权数加权上面得到的PAS，得到一个细胞的gPAS。某种意义上，gPAS是一个细胞疾病相关通路组的富集得分；  </li>
+<li>将基因的表达和gPAS做相关性分析，确定最优先的疾病基因。<br>&emsp;&emsp;(1) 到 (3) 的步骤本质上是GWAS映射驱动基因的过程，接着我们根据驱动基因的表达量和驱动基因的权重对细胞的表达量进行加权，从而得到具体的细胞评分——性状相关分数TRS。<br>如果之间关注加权分数的绝对值，那么这个结果很容易受到细胞的检出count数影响，因此作者根据相应的表达值和方差匹配相近的表达基因。从而计算出经验分布，从而进行统计检验。隐含的思想是：疾病特征基因是显著高表达的。</li>
+</ol>
+<h2 id="GWAS-Summary-Statistics数据的预处理"><a href="#GWAS-Summary-Statistics数据的预处理" class="headerlink" title="GWAS Summary Statistics数据的预处理"></a>GWAS Summary Statistics数据的预处理</h2><p>&emsp;&emsp;<strong>下面的步骤可概述为：首先提取摘要数据中的SNP，然后去计算LD并过滤，最后将过滤后的SNP遴选出来，得到过滤后的GWAS数据。</strong><br>&emsp;&emsp;根据scPagwas和Plink的要求，GWAS文件的以下信息应当被提取，并且要命名为下面的名称：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="string">&quot;chrom&quot;</span>,<span class="string">&quot;pos&quot;</span>,<span class="string">&quot;REF&quot;</span>,<span class="string">&quot;ALT&quot;</span>,<span class="string">&quot;rsid&quot;</span>,<span class="string">&quot;nearest_genes&quot;</span>,<span class="string">&quot;beta&quot;</span>,<span class="string">&quot;se&quot;</span></span><br></pre></td></tr></table></figure><br>&emsp;&emsp;保存这个文件，比如我们命名为”Disease.txt”：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">write.table(GWAS_raw,file=<span class="string">&quot;./Disease.txt&quot;</span>,row.names=F,quote=F)</span><br></pre></td></tr></table></figure><br>&emsp;&emsp;提取其中的rsid列，用于后续的分析（awk后面的$5代表rsid列的索引）：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> tempfile  &lt;br&gt;awk  <span class="string">&#x27;&#123;print $5 &#125;&#x27;</span> Disease.txt  &gt; ./tempfile/Disease_SNP_list.txt</span><br></pre></td></tr></table></figure><br>&emsp;&emsp;下载并解压plink所需要的文件，如下，这里我们下载东亚人的数据：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">wget https://zenodo.org/record/7768714/files/1000G_Phase3_EAS_plinkfiles.tgz?download=1</span><br></pre></td></tr></table></figure><br>&emsp;&emsp;制作bed文件：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> $(<span class="built_in">seq</span> 1 22)</span><br><span class="line"><span class="keyword">do</span></span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$i</span></span><br><span class="line">plink</span><br><span class="line">--bfile ./1000G_EUR_Phase3_plink/1000G.EAS.QC.<span class="variable">$i</span></span><br><span class="line">--extract ./tempfile/Disease_SNP_list.txt</span><br><span class="line">--noweb --make-bed --out ./tempfile/1000G.EAS.QC.Disease_<span class="variable">$&#123;i&#125;</span>_filtered</span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure><br>&emsp;&emsp;连锁不平衡过滤<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> $(<span class="built_in">seq</span> 1 22)    </span><br><span class="line"><span class="keyword">do</span>   </span><br><span class="line"><span class="built_in">echo</span> <span class="variable">$i</span>  </span><br><span class="line">plink   </span><br><span class="line">--bfile ./tempfile/1000G.EAS.QC.Disease_<span class="variable">$&#123;i&#125;</span>_filtered   </span><br><span class="line">--indep-pairwise 50 5 0.8   </span><br><span class="line">--out  ./tempfile/Disease_<span class="variable">$&#123;i&#125;</span>_plink_prune_EAS_filtered_LD0.8  </span><br><span class="line"><span class="keyword">done</span></span><br></pre></td></tr></table></figure><br>&emsp;&emsp;结果整合<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cat</span> ./tempfile/[Disease]*.prune.in &gt; Disease_EAS_LD0.8.prune</span><br></pre></td></tr></table></figure><br>&emsp;&emsp;从GWAS中选择过滤后的SNP<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">library(readr)  </span><br><span class="line">library(dplyr)  </span><br><span class="line">gwas&lt;-read_table(<span class="string">&quot;./Disease.txt&quot;</span>)  </span><br><span class="line">SNP_prune&lt;- read_table(<span class="string">&quot;./tempfile/Disease_EAS_LD0.8.prune&quot;</span>)  </span><br><span class="line">SNP_prune&lt;-SNP_prune[!duplicated(unlist(SNP_prune)),]  </span><br><span class="line">colnames(SNP_prune)&lt;-<span class="string">&quot;rsid&quot;</span>  </span><br><span class="line"><span class="comment">#### Left Join using inner_join function   </span></span><br><span class="line">gwas= gwas %&gt;% inner_join(SNP_prune,by=<span class="string">&quot;rsid&quot;</span>)  </span><br><span class="line"><span class="built_in">print</span>(nrow(gwas))  </span><br><span class="line">write.table(gwas,file=<span class="string">&quot;./Disease_prune_gwas_data.txt&quot;</span>,row.names=F,quote=F)</span><br></pre></td></tr></table></figure></p>
+<h2 id="scRNA数据、Pathway数据、注释数据的准备"><a href="#scRNA数据、Pathway数据、注释数据的准备" class="headerlink" title="scRNA数据、Pathway数据、注释数据的准备"></a>scRNA数据、Pathway数据、注释数据的准备</h2><ol>
+<li>事实上，scPagwas所需单细胞数据的必要条件是：<strong>（1）单细胞数据已经完成了分群，并且给予了相应的注释；（2）单细胞数据已经被Normalized；</strong></li>
+<li>在scPagwas中预置了一个KEGG的通路数据集，所以不需要自己再额外处理；</li>
+<li>这一步骤完成的是导入外显子在基因组的范围，相应数据可以从<a href="https://www.gencodegenes.org/human/">GENCODE - Human Release 44 (gencodegenes.org)</a>下载：<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">library<span class="punctuation">(</span>rtracklayer<span class="punctuation">)</span>  </span><br><span class="line">gtf_df<span class="operator">&lt;-</span> rtracklayer<span class="operator">::</span>import<span class="punctuation">(</span><span class="string">&quot;gencode.v34.annotation.gtf.gz&quot;</span><span class="punctuation">)</span>  </span><br><span class="line">gtf_df <span class="operator">&lt;-</span> as.data.frame<span class="punctuation">(</span>gtf_df<span class="punctuation">)</span>  </span><br><span class="line">gtf_df <span class="operator">&lt;-</span> gtf_df<span class="punctuation">[</span><span class="punctuation">,</span><span class="built_in">c</span><span class="punctuation">(</span><span class="string">&quot;seqnames&quot;</span><span class="punctuation">,</span><span class="string">&quot;start&quot;</span><span class="punctuation">,</span><span class="string">&quot;end&quot;</span><span class="punctuation">,</span><span class="string">&quot;type&quot;</span><span class="punctuation">,</span><span class="string">&quot;gene_name&quot;</span><span class="punctuation">)</span><span class="punctuation">]</span>  </span><br><span class="line">gtf_df <span class="operator">&lt;-</span> gtf_df<span class="punctuation">[</span>gtf_df<span class="operator">$</span>type<span class="operator">==</span><span class="string">&quot;gene&quot;</span><span class="punctuation">,</span><span class="punctuation">]</span>  </span><br><span class="line">block_annotation<span class="operator">&lt;-</span>gtf_df<span class="punctuation">[</span><span class="punctuation">,</span><span class="built_in">c</span><span class="punctuation">(</span><span class="number">1</span><span class="punctuation">,</span><span class="number">2</span><span class="punctuation">,</span><span class="number">3</span><span class="punctuation">,</span><span class="number">5</span><span class="punctuation">)</span><span class="punctuation">]</span>  </span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="标准分析流程"><a href="#标准分析流程" class="headerlink" title="标准分析流程"></a>标准分析流程</h2><h3 id="单细胞数据导入"><a href="#单细胞数据导入" class="headerlink" title="单细胞数据导入"></a>单细胞数据导入</h3><figure class="highlight r"><table><tr><td class="code"><pre><span class="line">library<span class="punctuation">(</span>scPagwas<span class="punctuation">)</span>  </span><br><span class="line">Pagwas <span class="operator">&lt;-</span> <span class="built_in">list</span><span class="punctuation">(</span><span class="punctuation">)</span>  </span><br><span class="line">Pagwas <span class="operator">&lt;-</span> Single_data_input<span class="punctuation">(</span>  </span><br><span class="line">      Pagwas <span class="operator">=</span> Pagwas<span class="punctuation">,</span>  </span><br><span class="line">      assay <span class="operator">=</span> <span class="string">&quot;RNA&quot;</span><span class="punctuation">,</span>  </span><br><span class="line">      Single_data <span class="operator">=</span> Single_data<span class="punctuation">,</span>  </span><br><span class="line">      Pathway_list <span class="operator">=</span> Genes_by_pathway_kegg  </span><br><span class="line">    <span class="punctuation">)</span>  </span><br><span class="line">Single_data <span class="operator">&lt;-</span> Single_data<span class="punctuation">[</span><span class="punctuation">,</span> </span><br></pre></td></tr></table></figure>
+<h3 id="计算每个细胞的通路富集分数"><a href="#计算每个细胞的通路富集分数" class="headerlink" title="计算每个细胞的通路富集分数"></a>计算每个细胞的通路富集分数</h3><figure class="highlight r"><table><tr><td class="code"><pre><span class="line">Pagwas <span class="operator">&lt;-</span> Pathway_pcascore_run<span class="punctuation">(</span>  </span><br><span class="line">        Pagwas <span class="operator">=</span> Pagwas<span class="punctuation">,</span>  </span><br><span class="line">        Pathway_list <span class="operator">=</span> Genes_by_pathway_kegg  </span><br><span class="line">      <span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<h3 id="输入GWAS数据"><a href="#输入GWAS数据" class="headerlink" title="输入GWAS数据"></a>输入GWAS数据</h3><p>&emsp;&emsp;注意，事实上，这里的maf不会对结果造成很大影响。<br><figure class="highlight r"><table><tr><td class="code"><pre><span class="line">Pagwas <span class="operator">&lt;-</span> GWAS_summary_input<span class="punctuation">(</span>  </span><br><span class="line">    Pagwas <span class="operator">=</span> Pagwas<span class="punctuation">,</span>  </span><br><span class="line">    gwas_data <span class="operator">=</span> gwas_data<span class="punctuation">,</span>  </span><br><span class="line">    maf_filter <span class="operator">=</span> <span class="number">0.1</span>  </span><br><span class="line">  <span class="punctuation">)</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="SNP到基因的映射"><a href="#SNP到基因的映射" class="headerlink" title="SNP到基因的映射"></a>SNP到基因的映射</h3><p>&emsp;&emsp;marg可以设置windowsize，实际上在一些文献中会设计成10k；<br><figure class="highlight r"><table><tr><td class="code"><pre><span class="line">Pagwas<span class="operator">$</span>snp_gene_df <span class="operator">&lt;-</span> SnpToGene<span class="punctuation">(</span>  </span><br><span class="line">        gwas_data <span class="operator">=</span> Pagwas<span class="operator">$</span>gwas_data<span class="punctuation">,</span>  </span><br><span class="line">        block_annotation <span class="operator">=</span> block_annotation<span class="punctuation">,</span>  </span><br><span class="line">        marg <span class="operator">=</span> <span class="number">100000</span>  </span><br><span class="line">      <span class="punctuation">)</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="SNP到通路的映射"><a href="#SNP到通路的映射" class="headerlink" title="SNP到通路的映射"></a>SNP到通路的映射</h3><p>&emsp;&emsp;这个步骤能够把通路注释到基因组上的区域。<br><figure class="highlight r"><table><tr><td class="code"><pre><span class="line">Pagwas <span class="operator">&lt;-</span> Pathway_annotation_input<span class="punctuation">(</span>  </span><br><span class="line">      Pagwas <span class="operator">=</span> Pagwas<span class="punctuation">,</span>  </span><br><span class="line">      block_annotation <span class="operator">=</span> block_annotation  </span><br><span class="line">    <span class="punctuation">)</span></span><br></pre></td></tr></table></figure><br>&emsp;&emsp;将通路的基因组位置和前面得到的pca矩阵（实质上是通路组）进行联系</p>
+<figure class="highlight r"><table><tr><td class="code"><pre><span class="line">Pagwas <span class="operator">&lt;-</span> Link_pathway_blocks_gwas<span class="punctuation">(</span>  </span><br><span class="line">      Pagwas <span class="operator">=</span> Pagwas<span class="punctuation">,</span>  </span><br><span class="line">      chrom_ld <span class="operator">=</span> chrom_ld<span class="punctuation">,</span>  </span><br><span class="line">      singlecell <span class="operator">=</span> <span class="built_in">T</span><span class="punctuation">,</span>  </span><br><span class="line">      celltype <span class="operator">=</span> <span class="built_in">T</span><span class="punctuation">,</span>  </span><br><span class="line">      backingpath<span class="operator">=</span><span class="string">&quot;./temp&quot;</span><span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<h3 id="细胞类型回归"><a href="#细胞类型回归" class="headerlink" title="细胞类型回归"></a>细胞类型回归</h3><figure class="highlight r"><table><tr><td class="code"><pre><span class="line">Pagwas<span class="operator">$</span>lm_results <span class="operator">&lt;-</span> Pagwas_perform_regression<span class="punctuation">(</span>  </span><br><span class="line">	Pathway_ld_gwas_data <span class="operator">=</span>Pagwas<span class="operator">$</span>Pathway_ld_gwas_data  </span><br><span class="line"><span class="punctuation">)</span></span><br></pre></td></tr></table></figure>
+<h3 id="计算gPAS，鉴定风险基因"><a href="#计算gPAS，鉴定风险基因" class="headerlink" title="计算gPAS，鉴定风险基因"></a>计算gPAS，鉴定风险基因</h3><figure class="highlight r"><table><tr><td class="code"><pre><span class="line">Pagwas <span class="operator">&lt;-</span> scPagwas_perform_score<span class="punctuation">(</span>  </span><br><span class="line">      Pagwas <span class="operator">=</span> Pagwas<span class="punctuation">,</span>  </span><br><span class="line">      remove_outlier <span class="operator">=</span> <span class="literal">TRUE</span>  </span><br><span class="line">    <span class="punctuation">)</span>  </span><br><span class="line">Pagwas<span class="operator">$</span>PCC <span class="operator">&lt;-</span> scPagwas<span class="operator">::</span>scGet_PCC<span class="punctuation">(</span>scPagwas.gPAS.score<span class="operator">=</span>Pagwas<span class="operator">$</span>scPagwas.gPAS.score<span class="punctuation">,</span>  </span><br><span class="line">                                    data_mat<span class="operator">=</span>Pagwas<span class="operator">$</span>data_mat<span class="punctuation">)</span>  </span><br><span class="line">mean_gpas<span class="operator">&lt;-</span>mean<span class="punctuation">(</span>Pagwas<span class="operator">$</span>scPagwas.gPAS.score<span class="punctuation">)</span>  </span><br><span class="line">a1<span class="operator">&lt;-</span>which<span class="punctuation">(</span>Pagwas<span class="operator">$</span>scPagwas.gPAS.score <span class="operator">&gt;=</span> mean_gpas<span class="punctuation">)</span>  </span><br><span class="line">a2<span class="operator">&lt;-</span>which<span class="punctuation">(</span>Pagwas<span class="operator">$</span>scPagwas.gPAS.score <span class="operator">&lt;</span> mean_gpas<span class="punctuation">)</span>  </span><br><span class="line">  </span><br><span class="line">PCC_up <span class="operator">&lt;-</span> scPagwas<span class="operator">::</span>scGet_PCC<span class="punctuation">(</span>scPagwas.gPAS.score<span class="operator">=</span>Pagwas<span class="operator">$</span>scPagwas.gPAS.score<span class="punctuation">[</span>a1<span class="punctuation">]</span><span class="punctuation">,</span>data_mat<span class="operator">=</span>Pagwas<span class="operator">$</span>data_mat<span class="punctuation">[</span><span class="punctuation">,</span>a1<span class="punctuation">]</span><span class="punctuation">)</span>  </span><br><span class="line">PCC1<span class="operator">&lt;-</span> data.frame<span class="punctuation">(</span>PCC<span class="operator">=</span>PCC_up<span class="punctuation">,</span>genes<span class="operator">=</span>rownames<span class="punctuation">(</span>PCC_up<span class="punctuation">)</span><span class="punctuation">)</span>  </span><br><span class="line">PCC1<span class="operator">&lt;-</span>PCC1<span class="punctuation">[</span>order<span class="punctuation">(</span>PCC1<span class="operator">$</span>PCC<span class="punctuation">,</span>decreasing<span class="operator">=</span><span class="built_in">T</span><span class="punctuation">)</span><span class="punctuation">,</span><span class="punctuation">]</span>  </span><br><span class="line">PCC<span class="operator">&lt;-</span> data.frame<span class="punctuation">(</span>PCC<span class="operator">=</span>PCC1<span class="operator">$</span>PCC<span class="punctuation">)</span>  </span><br><span class="line">rownames<span class="punctuation">(</span>PCC<span class="punctuation">)</span><span class="operator">&lt;-</span>PCC1<span class="operator">$</span>genes  </span><br><span class="line">Pagwas<span class="operator">$</span>PCC_up<span class="operator">&lt;-</span>PCC  </span><br><span class="line">  </span><br><span class="line">PCC_down <span class="operator">&lt;-</span> scPagwas<span class="operator">::</span>scGet_PCC<span class="punctuation">(</span>scPagwas.gPAS.score<span class="operator">=</span>Pagwas<span class="operator">$</span>scPagwas.gPAS.score<span class="punctuation">[</span>a2<span class="punctuation">]</span><span class="punctuation">,</span>data_mat<span class="operator">=</span>Pagwas<span class="operator">$</span>data_mat<span class="punctuation">[</span><span class="punctuation">,</span>a2<span class="punctuation">]</span><span class="punctuation">)</span>  </span><br><span class="line">PCC1<span class="operator">&lt;-</span> data.frame<span class="punctuation">(</span>PCC<span class="operator">=</span> <span class="operator">-</span>PCC_down<span class="punctuation">,</span>genes<span class="operator">=</span>rownames<span class="punctuation">(</span>PCC_down<span class="punctuation">)</span><span class="punctuation">)</span>  </span><br><span class="line">PCC1<span class="operator">&lt;-</span>PCC1<span class="punctuation">[</span>order<span class="punctuation">(</span>PCC1<span class="operator">$</span>PCC<span class="punctuation">,</span>decreasing<span class="operator">=</span><span class="built_in">F</span><span class="punctuation">)</span><span class="punctuation">,</span><span class="punctuation">]</span>  </span><br><span class="line">PCC<span class="operator">&lt;-</span> data.frame<span class="punctuation">(</span>PCC<span class="operator">=</span>PCC1<span class="operator">$</span>PCC<span class="punctuation">)</span>  </span><br><span class="line">rownames<span class="punctuation">(</span>PCC<span class="punctuation">)</span><span class="operator">&lt;-</span>PCC1<span class="operator">$</span>genes  </span><br><span class="line">Pagwas<span class="operator">$</span>PCC_down<span class="operator">&lt;-</span>PCC</span><br></pre></td></tr></table></figure>
+<h3 id="计算TRS"><a href="#计算TRS" class="headerlink" title="计算TRS"></a>计算TRS</h3><figure class="highlight r"><table><tr><td class="code"><pre><span class="line"><span class="comment">#Obtain the top 500 genes with the highest PCC.  </span></span><br><span class="line">n_topgenes<span class="operator">=</span><span class="number">500</span>  </span><br><span class="line">scPagwas_topgenes <span class="operator">&lt;-</span> rownames<span class="punctuation">(</span>Pagwas<span class="operator">$</span>PCC<span class="punctuation">)</span><span class="punctuation">[</span>order<span class="punctuation">(</span>Pagwas<span class="operator">$</span>PCC<span class="punctuation">,</span> decreasing <span class="operator">=</span> <span class="built_in">T</span><span class="punctuation">)</span><span class="punctuation">[</span><span class="number">1</span><span class="operator">:</span>n_topgenes<span class="punctuation">]</span><span class="punctuation">]</span>  </span><br><span class="line">scPagwas_upgenes <span class="operator">&lt;-</span> rownames<span class="punctuation">(</span>Pagwas<span class="operator">$</span>PCC_up<span class="punctuation">)</span><span class="punctuation">[</span><span class="number">1</span><span class="operator">:</span>n_topgenes<span class="punctuation">]</span>  </span><br><span class="line">scPagwas_downgenes <span class="operator">&lt;-</span> rownames<span class="punctuation">(</span>Pagwas<span class="operator">$</span>PCC_down<span class="punctuation">)</span><span class="punctuation">[</span><span class="number">1</span><span class="operator">:</span>n_topgenes<span class="punctuation">]</span>  </span><br><span class="line">  </span><br><span class="line"><span class="comment">#Single_data refers to the single-cell data initially inputted.  </span></span><br><span class="line">Single_data <span class="operator">&lt;-</span> Seurat<span class="operator">::</span>AddModuleScore<span class="punctuation">(</span>Single_data<span class="punctuation">,</span> assay <span class="operator">=</span> <span class="string">&quot;RNA&quot;</span><span class="punctuation">,</span> <span class="built_in">list</span><span class="punctuation">(</span>scPagwas_topgenes<span class="punctuation">,</span>scPagwas_upgenes<span class="punctuation">,</span>scPagwas_downgenes<span class="punctuation">)</span><span class="punctuation">,</span> name <span class="operator">=</span> <span class="built_in">c</span><span class="punctuation">(</span><span class="string">&quot;scPagwas.TRS.Score&quot;</span><span class="punctuation">,</span><span class="string">&quot;scPagwas.upTRS.Score&quot;</span><span class="punctuation">,</span><span class="string">&quot;scPagwas.downTRS.Score&quot;</span><span class="punctuation">)</span><span class="punctuation">)</span>  </span><br><span class="line">  </span><br><span class="line"><span class="comment">#Calculate the p-values for scPagwas.TRS.Score of single cells after background correction.  </span></span><br><span class="line">correct_pdf<span class="operator">&lt;-</span>Get_CorrectBg_p<span class="punctuation">(</span>Single_data<span class="operator">=</span>Single_data<span class="punctuation">,</span>  </span><br><span class="line">                             scPagwas.TRS.Score<span class="operator">=</span>Single_data<span class="operator">$</span>scPagwas.TRS.Score1<span class="punctuation">,</span>  </span><br><span class="line">                             iters_singlecell<span class="operator">=</span><span class="number">100</span><span class="punctuation">,</span>  </span><br><span class="line">                             n_topgenes<span class="operator">=</span><span class="number">1000</span><span class="punctuation">,</span>  </span><br><span class="line">                             scPagwas_topgenes<span class="operator">=</span>scPagwas_topgenes<span class="punctuation">)</span>  </span><br><span class="line">Pagwas<span class="operator">$</span>Random_Correct_BG_pdf <span class="operator">&lt;-</span> correct_pdf  </span><br><span class="line">  </span><br><span class="line"><span class="comment">#Merge the p-values of cells belonging to the same cell type into a single p-value for each cell type.  </span></span><br><span class="line">Pagwas<span class="operator">$</span>Merged_celltype_pvalue<span class="operator">&lt;-</span>Merge_celltype_p<span class="punctuation">(</span>single_p<span class="operator">=</span>correct_pdf<span class="operator">$</span>pooled_p<span class="punctuation">,</span>celltype<span class="operator">=</span>Pagwas<span class="operator">$</span>Celltype_anno<span class="operator">$</span>annotation<span class="punctuation">)</span>  </span><br></pre></td></tr></table></figure>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p><a href="https://www.cell.com/cell-genomics/fulltext/S2666-979X(23">Polygenic regression uncovers trait-relevant cellular contexts through pathway activation transformation of single-cell RNA sequencing data: Cell Genomics</a>00180-5)</p>
+]]></content>
+      <categories>
+        <category>生物信息学</category>
+      </categories>
+      <tags>
+        <tag>GWAS</tag>
+        <tag>生物信息学</tag>
+        <tag>单细胞测序</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>单细胞转录组分析实战（一）：数据采集</title>
     <url>/2024/02/17/%E5%8D%95%E7%BB%86%E8%83%9E%E8%BD%AC%E5%BD%95%E7%BB%84%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E6%95%B0%E6%8D%AE%E9%87%87%E9%9B%86/</url>
     <content><![CDATA[<h2 id="写在前面的话"><a href="#写在前面的话" class="headerlink" title="写在前面的话"></a>写在前面的话</h2><p>&emsp;&emsp;本系列将基于张泽民团队发表的TNBC免疫图谱进行挖掘（<a href="https://www.cell.com/cancer-cell/fulltext/S1535-6108(21">Single-cell analyses reveal key immune cell subsets associated with response to PD-L1 blockade in triple-negative breast cancer: Cancer Cell</a>00499-2)），旨在探索原发灶和转移灶免疫微环境的差异及其原因。<br>&emsp;&emsp;准确严谨的采集和清洗数据是单细胞分析的开始，数据本身的质量和采集过程的规范程度决定了研究结果的可靠性。</p>
@@ -227,6 +227,28 @@
         <tag>单细胞测序</tag>
         <tag>免疫</tag>
         <tag>肿瘤</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>域名更换</title>
+    <url>/2024/03/23/%E5%9F%9F%E5%90%8D%E6%9B%B4%E6%8D%A2/</url>
+    <content><![CDATA[<h1 id="🎉-新的域名"><a href="#🎉-新的域名" class="headerlink" title="🎉 新的域名"></a>🎉 <strong>新的域名</strong></h1><p>欢迎来到新域名：<a href="http://www.zhuangqingyuan.site" style="color: #3498db;">www.zhuangqingyuan.site</a><br>今天开始，这个小破站有自己的顶级域名啦！</p>
+<div style="background-color: #f0f2f5; padding: 10px; margin: 10px 0; border-left: 5px solid #3498db;">
+    <h3>📊 站点数据清零</h3>
+    <p>随着域名的更换，之前的浏览数据将不再保留，这里作个记录：</p>
+    <ul>
+        <li><strong>访客量：</strong><span style="color: #e74c3c;">789</span></li>
+        <li><strong>浏览次数：</strong><span style="color: #e74c3c;">1562</span></li>
+    </ul>
+</div>
+
+<p>感谢大家支持，小破站继续努力！</p>
+]]></content>
+      <categories>
+        <category>随笔</category>
+      </categories>
+      <tags>
+        <tag>随笔</tag>
       </tags>
   </entry>
   <entry>
@@ -365,321 +387,6 @@
       <tags>
         <tag>生物信息学</tag>
         <tag>单细胞测序</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>域名更换</title>
-    <url>/2024/03/23/%E5%9F%9F%E5%90%8D%E6%9B%B4%E6%8D%A2/</url>
-    <content><![CDATA[<h1 id="🎉-新的域名"><a href="#🎉-新的域名" class="headerlink" title="🎉 新的域名"></a>🎉 <strong>新的域名</strong></h1><p>欢迎来到新域名：<a href="http://www.zhuangqingyuan.site" style="color: #3498db;">www.zhuangqingyuan.site</a><br>今天开始，这个小破站有自己的顶级域名啦！</p>
-<div style="background-color: #f0f2f5; padding: 10px; margin: 10px 0; border-left: 5px solid #3498db;">
-    <h3>📊 站点数据清零</h3>
-    <p>随着域名的更换，之前的浏览数据将不再保留，这里作个记录：</p>
-    <ul>
-        <li><strong>访客量：</strong><span style="color: #e74c3c;">789</span></li>
-        <li><strong>浏览次数：</strong><span style="color: #e74c3c;">1562</span></li>
-    </ul>
-</div>
-
-<p>感谢大家支持，小破站继续努力！</p>
-]]></content>
-      <categories>
-        <category>随笔</category>
-      </categories>
-      <tags>
-        <tag>随笔</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>孟德尔随机化标准流程代码示例</title>
-    <url>/2024/02/05/%E5%AD%9F%E5%BE%B7%E5%B0%94%E9%9A%8F%E6%9C%BA%E5%8C%96%E6%A0%87%E5%87%86%E6%B5%81%E7%A8%8B%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B/</url>
-    <content><![CDATA[<p>在这篇博客中，我们将通过R代码来探索非酒精性脂肪肝（NAFLD）对COVID-19严重程度的可能影响。我们将利用两个R包：<code>TwoSampleMR</code>和<code>MRPRESSO</code>，来执行Mendelian Randomization (MR)分析，这是一种利用基因变异作为工具变量来估计暴露和结果之间因果关系的统计方法。</p>
-<h3 id="开始之前"><a href="#开始之前" class="headerlink" title="开始之前"></a>开始之前</h3><p>首先，我们需要安装并加载必要的R包：</p>
-<p>rCopy code</p>
-<p><code># 安装（如果尚未安装） install.packages(&quot;TwoSampleMR&quot;) install.packages(&quot;MRPRESSO&quot;)  # 加载包 library(TwoSampleMR) library(MRPRESSO)</code></p>
-<h3 id="数据准备"><a href="#数据准备" class="headerlink" title="数据准备"></a>数据准备</h3><p>我们的目标是研究NAFLD对COVID-19严重程度的影响。为此，我们首先需要准备关于NAFLD的暴露数据：</p>
-<p>rCopy code</p>
-<p><code># 读取暴露数据 exposure_dat &lt;- read_exposure_data(filename = &quot;./NAFLD.txt&quot;, sep=&quot;\t&quot;,                                    snp_col = &quot;rsids&quot;, effect_allele_col = &quot;alt&quot;, other_allele_col = &quot;ref&quot;,                                    beta_col = &quot;beta&quot;, se_col = &quot;sebeta&quot;, pval_col = &quot;pval&quot;, eaf_col = &quot;af_alt&quot;) # 对数据进行命名，便于后续处理 exposure_dat$phenotype &lt;- &quot;NAFLD&quot;</code></p>
-<h3 id="数据处理"><a href="#数据处理" class="headerlink" title="数据处理"></a>数据处理</h3><p>为了确保我们分析的基因变异之间没有连锁不平衡，我们将对数据进行clump处理：</p>
-<p>rCopy code</p>
-<p><code># 连锁不平衡去除 exposure_dat &lt;- clump_data(exposure_dat)</code></p>
-<h3 id="结果数据获取"><a href="#结果数据获取" class="headerlink" title="结果数据获取"></a>结果数据获取</h3><p>接下来，我们需要获取COVID-19作为结果的数据：</p>
-<p>rCopy code</p>
-<p><code># 在线读取COVID-19结果数据 outcome_dat &lt;- extract_outcome_data(outcomes = &quot;ebi-a-GCST011081&quot;, snps = exposure_dat$SNP)</code></p>
-<h3 id="数据协调"><a href="#数据协调" class="headerlink" title="数据协调"></a>数据协调</h3><p>为了进行MR分析，暴露和结果数据需要进行协调，确保基因变异的方向一致：</p>
-<p>rCopy code</p>
-<p><code># 数据协调 dat &lt;- harmonise_data(exposure_dat = exposure_dat, outcome_dat = outcome_dat, action = 2)</code></p>
-<h3 id="分析与敏感性测试"><a href="#分析与敏感性测试" class="headerlink" title="分析与敏感性测试"></a>分析与敏感性测试</h3><p>进行MR分析前，我们先计算F值，以评估使用的工具变量的有效性，并进行敏感性测试：</p>
-<p>rCopy code</p>
-<p><code># F值计算与筛选 dat$F &lt;- (dat$beta.exposure/dat$se.exposure)**2 dat &lt;- subset(dat, F&gt;10)  # MR分析 mr_result &lt;- mr(dat)  # 敏感性测试 het &lt;- mr_heterogeneity(dat) ple &lt;- mr_pleiotropy_test(dat) mr_presso(data = dat, BetaOutcome = &quot;beta.outcome&quot;, BetaExposure = &quot;beta.exposure&quot;, SdOutcome = &quot;se.outcome&quot;, SdExposure = &quot;se.exposure&quot;)</code></p>
-<h3 id="结果呈现"><a href="#结果呈现" class="headerlink" title="结果呈现"></a>结果呈现</h3><p>最后，我们通过几种图表直观展示MR分析结果：</p>
-<p>rCopy code</p>
-<p><code># 结果图表展示 mr_funnel_plot(singlesnp_results = mr_singlesnp(dat)) # 漏斗图 mr_forest_plot(mr_singlesnp(dat)) # 森林图 mr_scatter_plot(mr_results = mr_result, dat = dat) # 散点图</code></p>
-<p>通过这些步骤，我们可以评估非酒精性脂肪肝（NAFLD）对COVID-19严重程度的潜在影响，提供更深入的理解和新的研究方向。这种基于Mendelian Randomization的方法为我们提供了一种强有力的工具，来探讨各种生物标志物与疾病之间的因果关系。</p>
-]]></content>
-      <categories>
-        <category>流行病学</category>
-      </categories>
-      <tags>
-        <tag>GWAS</tag>
-        <tag>统计学</tag>
-        <tag>孟德尔随机化</tag>
-        <tag>流行病学</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>实操：把chatGPT接入智能音箱？</title>
-    <url>/2024/03/18/%E5%AE%9E%E6%93%8D%EF%BC%9A%E6%8A%8AchatGPT%E6%8E%A5%E5%85%A5%E6%99%BA%E8%83%BD%E9%9F%B3%E7%AE%B1%EF%BC%9F/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>&emsp;&emsp;学院以前比赛发了个小米音箱，使用场景比较局限。突发奇想能否把大语言模型和小爱音响结合起来，于是就有了这番折腾。包的原理十分直接，就是通过TTS识别，发送给chatGPT，再返回结果进行朗读。</p>
-<h2 id="储存库"><a href="#储存库" class="headerlink" title="储存库"></a>储存库</h2><p>&emsp;&emsp;<a href="https://github.com/yihong0618/xiaogpt">yihong0618/xiaogpt: Play ChatGPT and other LLM with Xiaomi AI Speaker (github.com)</a><br>&emsp;&emsp;感谢大佬！</p>
-<h2 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h2><h3 id="软件环境"><a href="#软件环境" class="headerlink" title="软件环境"></a>软件环境</h3><p>&emsp;&emsp;实操过程中，发现Windows11系统无法兼容相关依赖包，所以建议通过Mac或者Linux系统的命令行运行如下指令。大家一般使用Windows系统，可以安装带有图形界面的Ubuntu双系统，或者在Windows下安装WSL-ubuntu子系统，相关教程可以bing！这里简述一下WSL-ubuntu的安装方法：</p>
-<ol>
-<li>首先，按下Win+R键打开运行对话框，然后输入”cmd”并按下回车键，这将打开CMD界面。</li>
-<li>在CMD界面中，输入以下命令以安装WSL-ubuntu子系统： <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">wsl --install</span><br></pre></td></tr></table></figure>
- 这个命令将自动下载并安装WSL-ubuntu子系统。</li>
-<li>安装完成后，重新启动计算机。</li>
-<li>在重新启动后的计算机上，点击Windows开始菜单，并搜索”WSL”。选择”WSL”或”WSL-ubuntu”来打开WSL-ubuntu子系统。</li>
-<li>第一次打开WSL-ubuntu子系统时，系统会提示你创建一个新的用户名和密码。按照提示进行操作，并记住你设置的用户名和密码。</li>
-<li>完成设置后，将进入WSL-ubuntu子系统的命令行界面。在这里，可以像在Linux系统中一样使用各种命令和工具。</li>
-</ol>
-<p>&emsp;&emsp;下面我们以WSL-ubuntu为例进行演示！<br>&emsp;&emsp;打开CMD界面（Win+R打开运行，输入cmd），输入指令进入linux操作界面：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">wsl</span><br><span class="line"><span class="comment">#or</span></span><br><span class="line">ubuntu</span><br></pre></td></tr></table></figure><br>&emsp;&emsp;为了避免每次进入系统都需要输入账号和密码，我们可以配置如下项目：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo visudo</span><br><span class="line">mancuoj ALL=(ALL) NOPASSWD: ALL</span><br></pre></td></tr></table></figure></p>
-<h3 id="网络环境"><a href="#网络环境" class="headerlink" title="网络环境"></a>网络环境</h3><p>&emsp;&emsp;安装python之前呢，我们可以建立特殊访问，不需要配置镜像源，但是注意，即便电脑挂载了相关软件，wsl是不能通过我们的电脑访问特殊站点的。<br>&emsp;&emsp;WSL-buntu系统是作为局域网内主机存在的，那么就有了解决方案。首先在windows的代理软件中，打开允许局域网访问，并记录电脑相关软件的端口号，一般为7890。接着进入WSL系统中，配置网络项目：<br>&emsp;&emsp;首先需要查看IP地址，然后设置环境变量。完成如下设置后即可让WSL访问特殊站点：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cat</span> /etc/resolv.conf</span><br><span class="line"><span class="built_in">export</span> ALL_PROXY=<span class="string">&quot;http://&#123;ip&#125;:&#123;端口号，查看代理软件&#125;&quot;</span></span><br></pre></td></tr></table></figure><br>&emsp;&emsp;<strong>免责声明：这里的代理设置不指代任何国家法律禁止的访问方法。以上资料是完全的技术分享。</strong><br>&emsp;&emsp;若配置国内镜像源，可按照如下方法：</p>
-<ol>
-<li>备份配置文件：<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cp</span> /etc/apt/sources.list /etc/apt/sources.list.bak</span><br></pre></td></tr></table></figure></li>
-<li>使用修改源的内容：<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo vim sources.list</span><br></pre></td></tr></table></figure></li>
-<li>全部删除后修改为阿里云的镜像：<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">deb http://mirrors.aliyun.com/ubuntu/ focal main restricted universe multiverse</span><br><span class="line">deb-src http://mirrors.aliyun.com/ubuntu/ focal main restricted universe multiverse</span><br><span class="line">deb http://mirrors.aliyun.com/ubuntu/ focal-security main restricted universe multiverse</span><br><span class="line">deb-src http://mirrors.aliyun.com/ubuntu/ focal-security main restricted universe multiverse</span><br><span class="line">deb http://mirrors.aliyun.com/ubuntu/ focal-updates main restricted universe multiverse</span><br><span class="line">deb-src http://mirrors.aliyun.com/ubuntu/ focal-updates main restricted universe multiverse</span><br><span class="line">deb http://mirrors.aliyun.com/ubuntu/ focal-proposed main restricted universe multiverse</span><br><span class="line">deb-src http://mirrors.aliyun.com/ubuntu/ focal-proposed main restricted universe multiverse</span><br><span class="line">deb http://mirrors.aliyun.com/ubuntu/ focal-backports main restricted universe multiverse</span><br><span class="line">deb-src http://mirrors.aliyun.com/ubuntu/ focal-backports main restricted universe multiverse</span><br></pre></td></tr></table></figure></li>
-<li>更新软件列表：<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt update </span><br><span class="line">sudo apt upgrade</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<h3 id="安装Python"><a href="#安装Python" class="headerlink" title="安装Python"></a>安装Python</h3><p>&emsp;&emsp;接下来，我们愉快的安装python！</p>
-<h4 id="安装："><a href="#安装：" class="headerlink" title="安装："></a>安装：</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt install python3</span><br><span class="line">sudo apt install python3-pip</span><br></pre></td></tr></table></figure>
-<h4 id="配置清华镜像源"><a href="#配置清华镜像源" class="headerlink" title="# 配置清华镜像源"></a># 配置清华镜像源</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~ </span><br><span class="line"><span class="built_in">mkdir</span> .pip</span><br><span class="line">sudo vim ~/.pip/pip.conf</span><br></pre></td></tr></table></figure>
-<p>&emsp;&emsp;修改为：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[global]</span><br><span class="line">index-url = https://pypi.tuna.tsinghua.edu.cn/simple/ </span><br><span class="line">[install]</span><br><span class="line">trusted-host = pypi.tuna.tsinghua.edu.cn</span><br></pre></td></tr></table></figure></p>
-<h4 id="默认进入Python3"><a href="#默认进入Python3" class="headerlink" title="默认进入Python3"></a>默认进入Python3</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 删掉原来软链接，如果没有直接新建</span></span><br><span class="line">sudo <span class="built_in">rm</span> /usr/bin/python</span><br><span class="line">sudo <span class="built_in">rm</span> /usr/bin/pip</span><br><span class="line"></span><br><span class="line"><span class="comment"># 新建软链接</span></span><br><span class="line">sudo <span class="built_in">ln</span> -s /usr/bin/python3 /usr/bin/python</span><br><span class="line">sudo <span class="built_in">ln</span> -s /usr/bin/pip3 /usr/bin/pip</span><br></pre></td></tr></table></figure>
-<p>&emsp;&emsp;可以输入python，测试是否安装成功。</p>
-<h3 id="xiaogpt包的使用"><a href="#xiaogpt包的使用" class="headerlink" title="xiaogpt包的使用"></a>xiaogpt包的使用</h3><h4 id="安装软件和依赖包"><a href="#安装软件和依赖包" class="headerlink" title="安装软件和依赖包"></a>安装软件和依赖包</h4><ol>
-<li>首先安装米家的开发者包：<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">pip install miservice_fork</span><br></pre></td></tr></table></figure></li>
-<li>设置米家的账号和密码（注意，不需要加引号）：<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">export</span> MI_USER=xxxx</span><br><span class="line"><span class="built_in">export</span> MI_PASS=xxx</span><br></pre></td></tr></table></figure></li>
-<li>查询设备ID（DID），设置米家开发者的操纵设备：<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">micli list</span><br><span class="line"><span class="built_in">set</span> MI_DID=xxxx</span><br></pre></td></tr></table></figure></li>
-<li>这里可以试验一些米家开发者包的常用函数<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">micli 5-3 你好</span><br></pre></td></tr></table></figure></li>
-<li>安装xiaogpt包<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pip install -U --force-reinstall xiaogpt</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<h4 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h4><ol>
-<li>设置chatgpt的api：<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">export</span> OPENAI_API_KEY=&#123;your_api_key&#125;</span><br></pre></td></tr></table></figure>
-&emsp;&emsp;注意，如果是官方API或者是非直接访问的第三方API，就需要如之前一般设置代理环境；否则，不需要设置。</li>
-<li>运行：这里的型号，可以从小爱的屁股上寻找，也可以用micli list的命令查看：<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">xiaogpt --hardware &#123;型号&#125; --use_chatgpt_api</span><br></pre></td></tr></table></figure></li>
-<li>对于部分机型，可能需要—use_comand指令，否则chatGPT会返回结果，但是不会通过TTS朗读；此外，mute_xiaoai命令可以剔除小爱自己的回答：<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">xiaogpt --hardware &#123;型号&#125; --use_chatgpt_api --use_command</span><br></pre></td></tr></table></figure></li>
-<li>如果chatGPT的API非官方，可以使用—api_base {api link}指定API服务提供商，有一个第三方站点实操是可以的（不是广告！）：<a href="https://one.aiskt.com/">AISKT API聚合</a>。</li>
-<li>使用阿里的通义千问，在网络环境上不需要特殊配置：<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">xiaogpt --hardware &#123;型号&#125;  --mute_xiaoai --use_qwen --qen_key &#123;qwen_key&#125;</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<h4 id="参数介绍"><a href="#参数介绍" class="headerlink" title="参数介绍"></a>参数介绍</h4><div class="table-container">
-<table>
-<thead>
-<tr>
-<th>参数</th>
-<th>说明</th>
-<th>默认值</th>
-<th>可选值</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>hardware</td>
-<td>设备型号</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>account</td>
-<td>小爱账户</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>password</td>
-<td>小爱账户密码</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>openai_key</td>
-<td>openai的apikey</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>serpapi_api_key</td>
-<td>serpapi的key 参考 <a href="https://serpapi.com/">SerpAPI</a></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>glm_key</td>
-<td>chatglm 的 apikey</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>gemini_key</td>
-<td>gemini 的 apikey <a href="https://makersuite.google.com/app/apikey">参考</a></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>qwen_key</td>
-<td>qwen 的 apikey <a href="https://help.aliyun.com/zh/dashscope/developer-reference/api-details">参考</a></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>bard_token</td>
-<td>bard 的 token 参考 <a href="https://github.com/dsdanielpark/Bard-API">Bard-API</a></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>cookie</td>
-<td>小爱账户cookie （如果用上面密码登录可以不填）</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>mi_did</td>
-<td>设备did</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>use_command</td>
-<td>使用 MI command 与小爱交互</td>
-<td><code>false</code></td>
-<td></td>
-</tr>
-<tr>
-<td>mute_xiaoai</td>
-<td>快速停掉小爱自己的回答</td>
-<td><code>true</code></td>
-<td></td>
-</tr>
-<tr>
-<td>verbose</td>
-<td>是否打印详细日志</td>
-<td><code>false</code></td>
-<td></td>
-</tr>
-<tr>
-<td>bot</td>
-<td>使用的 bot 类型，目前支持gpt3,chatgptapi和newbing</td>
-<td><code>chatgptapi</code></td>
-<td></td>
-</tr>
-<tr>
-<td>tts</td>
-<td>使用的 TTS 类型</td>
-<td><code>mi</code></td>
-<td><code>edge</code>、 <code>openai</code></td>
-</tr>
-<tr>
-<td>tts_voice</td>
-<td>TTS 的嗓音</td>
-<td><code>zh-CN-XiaoxiaoNeural</code>(edge), <code>alloy</code>(openai)</td>
-<td></td>
-</tr>
-<tr>
-<td>prompt</td>
-<td>自定义prompt</td>
-<td><code>请用100字以内回答</code></td>
-<td></td>
-</tr>
-<tr>
-<td>keyword</td>
-<td>自定义请求词列表</td>
-<td><code>[&quot;请&quot;]</code></td>
-<td></td>
-</tr>
-<tr>
-<td>change_prompt_keyword</td>
-<td>更改提示词触发列表</td>
-<td><code>[&quot;更改提示词&quot;]</code></td>
-<td></td>
-</tr>
-<tr>
-<td>start_conversation</td>
-<td>开始持续对话关键词</td>
-<td><code>开始持续对话</code></td>
-<td></td>
-</tr>
-<tr>
-<td>end_conversation</td>
-<td>结束持续对话关键词</td>
-<td><code>结束持续对话</code></td>
-<td></td>
-</tr>
-<tr>
-<td>stream</td>
-<td>使用流式响应，获得更快的响应</td>
-<td><code>false</code></td>
-<td></td>
-</tr>
-<tr>
-<td>proxy</td>
-<td>支持 HTTP 代理，传入 http proxy URL</td>
-<td>“”</td>
-<td></td>
-</tr>
-<tr>
-<td>gpt_options</td>
-<td>OpenAI API 的参数字典</td>
-<td><code>&#123;&#125;</code></td>
-<td></td>
-</tr>
-<tr>
-<td>bing_cookie_path</td>
-<td>NewBing使用的cookie路径，参考<a href="https://github.com/acheong08/EdgeGPT#getting-authentication-required">这里</a>获取</td>
-<td>也可通过环境变量 <code>COOKIE_FILE</code> 设置</td>
-<td></td>
-</tr>
-<tr>
-<td>bing_cookies</td>
-<td>NewBing使用的cookie字典，参考<a href="https://github.com/acheong08/EdgeGPT#getting-authentication-required">这里</a>获取</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>deployment_id</td>
-<td>Azure OpenAI 服务的 deployment ID</td>
-<td>参考这个<a href="https://github.com/yihong0618/xiaogpt/issues/347#issuecomment-1784410784">如何找到deployment_id</a></td>
-<td></td>
-</tr>
-<tr>
-<td>api_base</td>
-<td>如果需要替换默认的api,或者使用Azure OpenAI 服务</td>
-<td>例如：<code>https://abc-def.openai.azure.com/</code></td>
-</tr>
-</tbody>
-</table>
-</div>
-<h4 id="个性化代码"><a href="#个性化代码" class="headerlink" title="个性化代码"></a>个性化代码</h4><p>&emsp;&emsp;程序默认使用“请、帮我”两个开头进行提问，而根据源代码来看，命令行输入无法更改此参数。此外默认Prompt也必须要源代码进行修改，有如下两个方法：</p>
-<ol>
-<li>可以在Linux系统中找到源码，使用vim进行修改；</li>
-<li>打开Windows系统读写WSL文件的权限，用图形界面修改：<br>&emsp;&emsp;首先在cmd中修改权限：<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ubuntu config --default-user root</span><br></pre></td></tr></table></figure>
-&emsp;&emsp;接着打开Ubuntu的网络位置，进行寻找和修改。</li>
-<li>源代码的config.py可以修改prompt和唤醒词，xiaogpt.py还能更改小爱其他回复。</li>
-</ol>
-<h2 id="结束语"><a href="#结束语" class="headerlink" title="结束语"></a>结束语</h2><p>&emsp;&emsp;这个项目，实际上应用场景也很有限，花了很大的精力去整理技术文档和debug，最后听到小爱同学的一句“正在询问ChatGPT”，感觉很好玩！<br>&emsp;&emsp;现在，利用HomeAssistant和智能家居的开发者环境，俺们宿舍实现了灯具、空调、电脑和音箱的互联。通过语音或一些终端即可控制电器的开关；可以远程提醒睡觉的室友去签到……说效率嘛，也没提高不少，但对于一个医学生而言，很少能体会到技术进步的新奇，这也算一种满足叭！<br>&emsp;&emsp;在Github上还有很多其他的“联名”项目，比如最常见的微信接入Chatgpt。（<a href="https://github.com/cheungchazz/WeChat-AIChatbot-WinOnly">cheungchazz/WeChat-AIChatbot-WinOnly: 基于chatgpt-on-wechat框架，只能运行在Win平台的项目，通过本项目可以将微信或者企业微信个人号接入ChatGpt、文心一言、FastGpt、LinkAI，可以文字对话、语音对话、图片交互、文件交互等。 (github.com)</a>）</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
-<li><a href="https://blog.csdn.net/Mancuojie/article/details/120411171#_31">手把手教你在Ubuntu中愉快地使用Python_ubuntu使用python-CSDN博客</a></li>
-<li><a href="https://github.com/yihong0618/xiaogpt">yihong0618/xiaogpt: Play ChatGPT and other LLM with Xiaomi AI Speaker (github.com)</a></li>
-</ol>
-]]></content>
-      <categories>
-        <category>随笔</category>
-      </categories>
-      <tags>
-        <tag>LLM</tag>
-        <tag>AI</tag>
-        <tag>智能音箱</tag>
       </tags>
   </entry>
   <entry>
@@ -1377,6 +1084,346 @@
       </tags>
   </entry>
   <entry>
+    <title>实操：把chatGPT接入智能音箱？</title>
+    <url>/2024/03/18/%E5%AE%9E%E6%93%8D%EF%BC%9A%E6%8A%8AchatGPT%E6%8E%A5%E5%85%A5%E6%99%BA%E8%83%BD%E9%9F%B3%E7%AE%B1%EF%BC%9F/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>&emsp;&emsp;学院以前比赛发了个小米音箱，使用场景比较局限。突发奇想能否把大语言模型和小爱音响结合起来，于是就有了这番折腾。包的原理十分直接，就是通过TTS识别，发送给chatGPT，再返回结果进行朗读。</p>
+<h2 id="储存库"><a href="#储存库" class="headerlink" title="储存库"></a>储存库</h2><p>&emsp;&emsp;<a href="https://github.com/yihong0618/xiaogpt">yihong0618/xiaogpt: Play ChatGPT and other LLM with Xiaomi AI Speaker (github.com)</a><br>&emsp;&emsp;感谢大佬！</p>
+<h2 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h2><h3 id="软件环境"><a href="#软件环境" class="headerlink" title="软件环境"></a>软件环境</h3><p>&emsp;&emsp;实操过程中，发现Windows11系统无法兼容相关依赖包，所以建议通过Mac或者Linux系统的命令行运行如下指令。大家一般使用Windows系统，可以安装带有图形界面的Ubuntu双系统，或者在Windows下安装WSL-ubuntu子系统，相关教程可以bing！这里简述一下WSL-ubuntu的安装方法：</p>
+<ol>
+<li>首先，按下Win+R键打开运行对话框，然后输入”cmd”并按下回车键，这将打开CMD界面。</li>
+<li>在CMD界面中，输入以下命令以安装WSL-ubuntu子系统： <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">wsl --install</span><br></pre></td></tr></table></figure>
+ 这个命令将自动下载并安装WSL-ubuntu子系统。</li>
+<li>安装完成后，重新启动计算机。</li>
+<li>在重新启动后的计算机上，点击Windows开始菜单，并搜索”WSL”。选择”WSL”或”WSL-ubuntu”来打开WSL-ubuntu子系统。</li>
+<li>第一次打开WSL-ubuntu子系统时，系统会提示你创建一个新的用户名和密码。按照提示进行操作，并记住你设置的用户名和密码。</li>
+<li>完成设置后，将进入WSL-ubuntu子系统的命令行界面。在这里，可以像在Linux系统中一样使用各种命令和工具。</li>
+</ol>
+<p>&emsp;&emsp;下面我们以WSL-ubuntu为例进行演示！<br>&emsp;&emsp;打开CMD界面（Win+R打开运行，输入cmd），输入指令进入linux操作界面：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">wsl</span><br><span class="line"><span class="comment">#or</span></span><br><span class="line">ubuntu</span><br></pre></td></tr></table></figure><br>&emsp;&emsp;为了避免每次进入系统都需要输入账号和密码，我们可以配置如下项目：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo visudo</span><br><span class="line">mancuoj ALL=(ALL) NOPASSWD: ALL</span><br></pre></td></tr></table></figure></p>
+<h3 id="网络环境"><a href="#网络环境" class="headerlink" title="网络环境"></a>网络环境</h3><p>&emsp;&emsp;安装python之前呢，我们可以建立特殊访问，不需要配置镜像源，但是注意，即便电脑挂载了相关软件，wsl是不能通过我们的电脑访问特殊站点的。<br>&emsp;&emsp;WSL-buntu系统是作为局域网内主机存在的，那么就有了解决方案。首先在windows的代理软件中，打开允许局域网访问，并记录电脑相关软件的端口号，一般为7890。接着进入WSL系统中，配置网络项目：<br>&emsp;&emsp;首先需要查看IP地址，然后设置环境变量。完成如下设置后即可让WSL访问特殊站点：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cat</span> /etc/resolv.conf</span><br><span class="line"><span class="built_in">export</span> ALL_PROXY=<span class="string">&quot;http://&#123;ip&#125;:&#123;端口号，查看代理软件&#125;&quot;</span></span><br></pre></td></tr></table></figure><br>&emsp;&emsp;<strong>免责声明：这里的代理设置不指代任何国家法律禁止的访问方法。以上资料是完全的技术分享。</strong><br>&emsp;&emsp;若配置国内镜像源，可按照如下方法：</p>
+<ol>
+<li>备份配置文件：<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cp</span> /etc/apt/sources.list /etc/apt/sources.list.bak</span><br></pre></td></tr></table></figure></li>
+<li>使用修改源的内容：<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo vim sources.list</span><br></pre></td></tr></table></figure></li>
+<li>全部删除后修改为阿里云的镜像：<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">deb http://mirrors.aliyun.com/ubuntu/ focal main restricted universe multiverse</span><br><span class="line">deb-src http://mirrors.aliyun.com/ubuntu/ focal main restricted universe multiverse</span><br><span class="line">deb http://mirrors.aliyun.com/ubuntu/ focal-security main restricted universe multiverse</span><br><span class="line">deb-src http://mirrors.aliyun.com/ubuntu/ focal-security main restricted universe multiverse</span><br><span class="line">deb http://mirrors.aliyun.com/ubuntu/ focal-updates main restricted universe multiverse</span><br><span class="line">deb-src http://mirrors.aliyun.com/ubuntu/ focal-updates main restricted universe multiverse</span><br><span class="line">deb http://mirrors.aliyun.com/ubuntu/ focal-proposed main restricted universe multiverse</span><br><span class="line">deb-src http://mirrors.aliyun.com/ubuntu/ focal-proposed main restricted universe multiverse</span><br><span class="line">deb http://mirrors.aliyun.com/ubuntu/ focal-backports main restricted universe multiverse</span><br><span class="line">deb-src http://mirrors.aliyun.com/ubuntu/ focal-backports main restricted universe multiverse</span><br></pre></td></tr></table></figure></li>
+<li>更新软件列表：<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt update </span><br><span class="line">sudo apt upgrade</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="安装Python"><a href="#安装Python" class="headerlink" title="安装Python"></a>安装Python</h3><p>&emsp;&emsp;接下来，我们愉快的安装python！</p>
+<h4 id="安装："><a href="#安装：" class="headerlink" title="安装："></a>安装：</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt install python3</span><br><span class="line">sudo apt install python3-pip</span><br></pre></td></tr></table></figure>
+<h4 id="配置清华镜像源"><a href="#配置清华镜像源" class="headerlink" title="# 配置清华镜像源"></a># 配置清华镜像源</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~ </span><br><span class="line"><span class="built_in">mkdir</span> .pip</span><br><span class="line">sudo vim ~/.pip/pip.conf</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;修改为：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[global]</span><br><span class="line">index-url = https://pypi.tuna.tsinghua.edu.cn/simple/ </span><br><span class="line">[install]</span><br><span class="line">trusted-host = pypi.tuna.tsinghua.edu.cn</span><br></pre></td></tr></table></figure></p>
+<h4 id="默认进入Python3"><a href="#默认进入Python3" class="headerlink" title="默认进入Python3"></a>默认进入Python3</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 删掉原来软链接，如果没有直接新建</span></span><br><span class="line">sudo <span class="built_in">rm</span> /usr/bin/python</span><br><span class="line">sudo <span class="built_in">rm</span> /usr/bin/pip</span><br><span class="line"></span><br><span class="line"><span class="comment"># 新建软链接</span></span><br><span class="line">sudo <span class="built_in">ln</span> -s /usr/bin/python3 /usr/bin/python</span><br><span class="line">sudo <span class="built_in">ln</span> -s /usr/bin/pip3 /usr/bin/pip</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;可以输入python，测试是否安装成功。</p>
+<h3 id="xiaogpt包的使用"><a href="#xiaogpt包的使用" class="headerlink" title="xiaogpt包的使用"></a>xiaogpt包的使用</h3><h4 id="安装软件和依赖包"><a href="#安装软件和依赖包" class="headerlink" title="安装软件和依赖包"></a>安装软件和依赖包</h4><ol>
+<li>首先安装米家的开发者包：<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">pip install miservice_fork</span><br></pre></td></tr></table></figure></li>
+<li>设置米家的账号和密码（注意，不需要加引号）：<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">export</span> MI_USER=xxxx</span><br><span class="line"><span class="built_in">export</span> MI_PASS=xxx</span><br></pre></td></tr></table></figure></li>
+<li>查询设备ID（DID），设置米家开发者的操纵设备：<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">micli list</span><br><span class="line"><span class="built_in">set</span> MI_DID=xxxx</span><br></pre></td></tr></table></figure></li>
+<li>这里可以试验一些米家开发者包的常用函数<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">micli 5-3 你好</span><br></pre></td></tr></table></figure></li>
+<li>安装xiaogpt包<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pip install -U --force-reinstall xiaogpt</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h4 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h4><ol>
+<li>设置chatgpt的api：<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">export</span> OPENAI_API_KEY=&#123;your_api_key&#125;</span><br></pre></td></tr></table></figure>
+&emsp;&emsp;注意，如果是官方API或者是非直接访问的第三方API，就需要如之前一般设置代理环境；否则，不需要设置。</li>
+<li>运行：这里的型号，可以从小爱的屁股上寻找，也可以用micli list的命令查看：<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">xiaogpt --hardware &#123;型号&#125; --use_chatgpt_api</span><br></pre></td></tr></table></figure></li>
+<li>对于部分机型，可能需要—use_comand指令，否则chatGPT会返回结果，但是不会通过TTS朗读；此外，mute_xiaoai命令可以剔除小爱自己的回答：<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">xiaogpt --hardware &#123;型号&#125; --use_chatgpt_api --use_command</span><br></pre></td></tr></table></figure></li>
+<li>如果chatGPT的API非官方，可以使用—api_base {api link}指定API服务提供商，有一个第三方站点实操是可以的（不是广告！）：<a href="https://one.aiskt.com/">AISKT API聚合</a>。</li>
+<li>使用阿里的通义千问，在网络环境上不需要特殊配置：<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">xiaogpt --hardware &#123;型号&#125;  --mute_xiaoai --use_qwen --qen_key &#123;qwen_key&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h4 id="参数介绍"><a href="#参数介绍" class="headerlink" title="参数介绍"></a>参数介绍</h4><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+<th>默认值</th>
+<th>可选值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>hardware</td>
+<td>设备型号</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>account</td>
+<td>小爱账户</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>password</td>
+<td>小爱账户密码</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>openai_key</td>
+<td>openai的apikey</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>serpapi_api_key</td>
+<td>serpapi的key 参考 <a href="https://serpapi.com/">SerpAPI</a></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>glm_key</td>
+<td>chatglm 的 apikey</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>gemini_key</td>
+<td>gemini 的 apikey <a href="https://makersuite.google.com/app/apikey">参考</a></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>qwen_key</td>
+<td>qwen 的 apikey <a href="https://help.aliyun.com/zh/dashscope/developer-reference/api-details">参考</a></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>bard_token</td>
+<td>bard 的 token 参考 <a href="https://github.com/dsdanielpark/Bard-API">Bard-API</a></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>cookie</td>
+<td>小爱账户cookie （如果用上面密码登录可以不填）</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>mi_did</td>
+<td>设备did</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>use_command</td>
+<td>使用 MI command 与小爱交互</td>
+<td><code>false</code></td>
+<td></td>
+</tr>
+<tr>
+<td>mute_xiaoai</td>
+<td>快速停掉小爱自己的回答</td>
+<td><code>true</code></td>
+<td></td>
+</tr>
+<tr>
+<td>verbose</td>
+<td>是否打印详细日志</td>
+<td><code>false</code></td>
+<td></td>
+</tr>
+<tr>
+<td>bot</td>
+<td>使用的 bot 类型，目前支持gpt3,chatgptapi和newbing</td>
+<td><code>chatgptapi</code></td>
+<td></td>
+</tr>
+<tr>
+<td>tts</td>
+<td>使用的 TTS 类型</td>
+<td><code>mi</code></td>
+<td><code>edge</code>、 <code>openai</code></td>
+</tr>
+<tr>
+<td>tts_voice</td>
+<td>TTS 的嗓音</td>
+<td><code>zh-CN-XiaoxiaoNeural</code>(edge), <code>alloy</code>(openai)</td>
+<td></td>
+</tr>
+<tr>
+<td>prompt</td>
+<td>自定义prompt</td>
+<td><code>请用100字以内回答</code></td>
+<td></td>
+</tr>
+<tr>
+<td>keyword</td>
+<td>自定义请求词列表</td>
+<td><code>[&quot;请&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>change_prompt_keyword</td>
+<td>更改提示词触发列表</td>
+<td><code>[&quot;更改提示词&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>start_conversation</td>
+<td>开始持续对话关键词</td>
+<td><code>开始持续对话</code></td>
+<td></td>
+</tr>
+<tr>
+<td>end_conversation</td>
+<td>结束持续对话关键词</td>
+<td><code>结束持续对话</code></td>
+<td></td>
+</tr>
+<tr>
+<td>stream</td>
+<td>使用流式响应，获得更快的响应</td>
+<td><code>false</code></td>
+<td></td>
+</tr>
+<tr>
+<td>proxy</td>
+<td>支持 HTTP 代理，传入 http proxy URL</td>
+<td>“”</td>
+<td></td>
+</tr>
+<tr>
+<td>gpt_options</td>
+<td>OpenAI API 的参数字典</td>
+<td><code>&#123;&#125;</code></td>
+<td></td>
+</tr>
+<tr>
+<td>bing_cookie_path</td>
+<td>NewBing使用的cookie路径，参考<a href="https://github.com/acheong08/EdgeGPT#getting-authentication-required">这里</a>获取</td>
+<td>也可通过环境变量 <code>COOKIE_FILE</code> 设置</td>
+<td></td>
+</tr>
+<tr>
+<td>bing_cookies</td>
+<td>NewBing使用的cookie字典，参考<a href="https://github.com/acheong08/EdgeGPT#getting-authentication-required">这里</a>获取</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>deployment_id</td>
+<td>Azure OpenAI 服务的 deployment ID</td>
+<td>参考这个<a href="https://github.com/yihong0618/xiaogpt/issues/347#issuecomment-1784410784">如何找到deployment_id</a></td>
+<td></td>
+</tr>
+<tr>
+<td>api_base</td>
+<td>如果需要替换默认的api,或者使用Azure OpenAI 服务</td>
+<td>例如：<code>https://abc-def.openai.azure.com/</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<h4 id="个性化代码"><a href="#个性化代码" class="headerlink" title="个性化代码"></a>个性化代码</h4><p>&emsp;&emsp;程序默认使用“请、帮我”两个开头进行提问，而根据源代码来看，命令行输入无法更改此参数。此外默认Prompt也必须要源代码进行修改，有如下两个方法：</p>
+<ol>
+<li>可以在Linux系统中找到源码，使用vim进行修改；</li>
+<li>打开Windows系统读写WSL文件的权限，用图形界面修改：<br>&emsp;&emsp;首先在cmd中修改权限：<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ubuntu config --default-user root</span><br></pre></td></tr></table></figure>
+&emsp;&emsp;接着打开Ubuntu的网络位置，进行寻找和修改。</li>
+<li>源代码的config.py可以修改prompt和唤醒词，xiaogpt.py还能更改小爱其他回复。</li>
+</ol>
+<h2 id="结束语"><a href="#结束语" class="headerlink" title="结束语"></a>结束语</h2><p>&emsp;&emsp;这个项目，实际上应用场景也很有限，花了很大的精力去整理技术文档和debug，最后听到小爱同学的一句“正在询问ChatGPT”，感觉很好玩！<br>&emsp;&emsp;现在，利用HomeAssistant和智能家居的开发者环境，俺们宿舍实现了灯具、空调、电脑和音箱的互联。通过语音或一些终端即可控制电器的开关；可以远程提醒睡觉的室友去签到……说效率嘛，也没提高不少，但对于一个医学生而言，很少能体会到技术进步的新奇，这也算一种满足叭！<br>&emsp;&emsp;在Github上还有很多其他的“联名”项目，比如最常见的微信接入Chatgpt。（<a href="https://github.com/cheungchazz/WeChat-AIChatbot-WinOnly">cheungchazz/WeChat-AIChatbot-WinOnly: 基于chatgpt-on-wechat框架，只能运行在Win平台的项目，通过本项目可以将微信或者企业微信个人号接入ChatGpt、文心一言、FastGpt、LinkAI，可以文字对话、语音对话、图片交互、文件交互等。 (github.com)</a>）</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a href="https://blog.csdn.net/Mancuojie/article/details/120411171#_31">手把手教你在Ubuntu中愉快地使用Python_ubuntu使用python-CSDN博客</a></li>
+<li><a href="https://github.com/yihong0618/xiaogpt">yihong0618/xiaogpt: Play ChatGPT and other LLM with Xiaomi AI Speaker (github.com)</a></li>
+</ol>
+]]></content>
+      <categories>
+        <category>随笔</category>
+      </categories>
+      <tags>
+        <tag>LLM</tag>
+        <tag>AI</tag>
+        <tag>智能音箱</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>孟德尔随机化标准流程代码示例</title>
+    <url>/2024/02/05/%E5%AD%9F%E5%BE%B7%E5%B0%94%E9%9A%8F%E6%9C%BA%E5%8C%96%E6%A0%87%E5%87%86%E6%B5%81%E7%A8%8B%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B/</url>
+    <content><![CDATA[<p>在这篇博客中，我们将通过R代码来探索非酒精性脂肪肝（NAFLD）对COVID-19严重程度的可能影响。我们将利用两个R包：<code>TwoSampleMR</code>和<code>MRPRESSO</code>，来执行Mendelian Randomization (MR)分析，这是一种利用基因变异作为工具变量来估计暴露和结果之间因果关系的统计方法。</p>
+<h3 id="开始之前"><a href="#开始之前" class="headerlink" title="开始之前"></a>开始之前</h3><p>首先，我们需要安装并加载必要的R包：</p>
+<p>rCopy code</p>
+<p><code># 安装（如果尚未安装） install.packages(&quot;TwoSampleMR&quot;) install.packages(&quot;MRPRESSO&quot;)  # 加载包 library(TwoSampleMR) library(MRPRESSO)</code></p>
+<h3 id="数据准备"><a href="#数据准备" class="headerlink" title="数据准备"></a>数据准备</h3><p>我们的目标是研究NAFLD对COVID-19严重程度的影响。为此，我们首先需要准备关于NAFLD的暴露数据：</p>
+<p>rCopy code</p>
+<p><code># 读取暴露数据 exposure_dat &lt;- read_exposure_data(filename = &quot;./NAFLD.txt&quot;, sep=&quot;\t&quot;,                                    snp_col = &quot;rsids&quot;, effect_allele_col = &quot;alt&quot;, other_allele_col = &quot;ref&quot;,                                    beta_col = &quot;beta&quot;, se_col = &quot;sebeta&quot;, pval_col = &quot;pval&quot;, eaf_col = &quot;af_alt&quot;) # 对数据进行命名，便于后续处理 exposure_dat$phenotype &lt;- &quot;NAFLD&quot;</code></p>
+<h3 id="数据处理"><a href="#数据处理" class="headerlink" title="数据处理"></a>数据处理</h3><p>为了确保我们分析的基因变异之间没有连锁不平衡，我们将对数据进行clump处理：</p>
+<p>rCopy code</p>
+<p><code># 连锁不平衡去除 exposure_dat &lt;- clump_data(exposure_dat)</code></p>
+<h3 id="结果数据获取"><a href="#结果数据获取" class="headerlink" title="结果数据获取"></a>结果数据获取</h3><p>接下来，我们需要获取COVID-19作为结果的数据：</p>
+<p>rCopy code</p>
+<p><code># 在线读取COVID-19结果数据 outcome_dat &lt;- extract_outcome_data(outcomes = &quot;ebi-a-GCST011081&quot;, snps = exposure_dat$SNP)</code></p>
+<h3 id="数据协调"><a href="#数据协调" class="headerlink" title="数据协调"></a>数据协调</h3><p>为了进行MR分析，暴露和结果数据需要进行协调，确保基因变异的方向一致：</p>
+<p>rCopy code</p>
+<p><code># 数据协调 dat &lt;- harmonise_data(exposure_dat = exposure_dat, outcome_dat = outcome_dat, action = 2)</code></p>
+<h3 id="分析与敏感性测试"><a href="#分析与敏感性测试" class="headerlink" title="分析与敏感性测试"></a>分析与敏感性测试</h3><p>进行MR分析前，我们先计算F值，以评估使用的工具变量的有效性，并进行敏感性测试：</p>
+<p>rCopy code</p>
+<p><code># F值计算与筛选 dat$F &lt;- (dat$beta.exposure/dat$se.exposure)**2 dat &lt;- subset(dat, F&gt;10)  # MR分析 mr_result &lt;- mr(dat)  # 敏感性测试 het &lt;- mr_heterogeneity(dat) ple &lt;- mr_pleiotropy_test(dat) mr_presso(data = dat, BetaOutcome = &quot;beta.outcome&quot;, BetaExposure = &quot;beta.exposure&quot;, SdOutcome = &quot;se.outcome&quot;, SdExposure = &quot;se.exposure&quot;)</code></p>
+<h3 id="结果呈现"><a href="#结果呈现" class="headerlink" title="结果呈现"></a>结果呈现</h3><p>最后，我们通过几种图表直观展示MR分析结果：</p>
+<p>rCopy code</p>
+<p><code># 结果图表展示 mr_funnel_plot(singlesnp_results = mr_singlesnp(dat)) # 漏斗图 mr_forest_plot(mr_singlesnp(dat)) # 森林图 mr_scatter_plot(mr_results = mr_result, dat = dat) # 散点图</code></p>
+<p>通过这些步骤，我们可以评估非酒精性脂肪肝（NAFLD）对COVID-19严重程度的潜在影响，提供更深入的理解和新的研究方向。这种基于Mendelian Randomization的方法为我们提供了一种强有力的工具，来探讨各种生物标志物与疾病之间的因果关系。</p>
+]]></content>
+      <categories>
+        <category>流行病学</category>
+      </categories>
+      <tags>
+        <tag>GWAS</tag>
+        <tag>统计学</tag>
+        <tag>孟德尔随机化</tag>
+        <tag>流行病学</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>提升医学研究的严谨性：准确使用统计学</title>
+    <url>/2024/02/18/%E6%8F%90%E5%8D%87%E5%8C%BB%E5%AD%A6%E7%A0%94%E7%A9%B6%E7%9A%84%E4%B8%A5%E8%B0%A8%E6%80%A7%EF%BC%9A%E5%87%86%E7%A1%AE%E4%BD%BF%E7%94%A8%E7%BB%9F%E8%AE%A1%E5%AD%A6/</url>
+    <content><![CDATA[<h2 id="原文摘要"><a href="#原文摘要" class="headerlink" title="原文摘要"></a>原文摘要</h2><p>&emsp;&emsp;在不断进步的医学研究领域中，研究结果的可靠性不仅依赖于创新的思想，还依赖于严谨的方法论和统计学。然而，根据过去三年《柳叶刀》期刊集团对超过1000份手稿的统计审查经验，通讯发现许多医学研究者常常忽视这一点。</p>
+<p>&emsp;&emsp;这篇通讯旨在提供一些基本建议，帮助研究者准确地报告统计数据，避免常见的统计缺陷。以下是一些关键要点：</p>
+<ol>
+<li><strong>数据描述的准确性</strong>：根据数据分布，报告均值和标准差或中位数和四分位数范围。并提供显示分析中使用的变量的直方图或表格的补充材料。</li>
+<li><strong>模型假设的检验</strong>：尽可能使用可视化检查所有模型假设。</li>
+<li><strong>P值的处理</strong>：不要将P值简化为“大于或等于0.0001”，而应报告确切的P值（例如，0.032的P值应报告为P=0.032，而非P&lt;0.05）。</li>
+<li><strong>结果的解读</strong>：基于临床重要性解读结果，并提供适当的关联估计和95%置信区间。</li>
+<li><strong>混杂因素的识别</strong>：基于背景信息识别混杂因素，例如在因果定向无环图中描绘，而非仅依赖显著性检验。</li>
+<li><strong>处理缺失数据</strong>：如果缺失数据的比例足够高，可能影响结果，应使用超越简单丢弃不完整记录的方法，例如反概率缺失加权或多重插补。</li>
+<li><strong>稀疏数据偏差的处理</strong>：使用为此目的开发的方法评估并处理比率估计中的稀疏数据偏差，如逻辑或Cox回归中应使用惩罚或贝叶斯方法减少稀疏数据偏差。</li>
+<li><strong>选择适当的风险指标</strong>：如果结局发生率较高，应报告危险比（risk  ratio，RR）或危险差（risk difference，RD），而不是比值比（odds ratio，OR）。</li>
+<li><strong>统计推断</strong>：避免过度依赖统计测试，P值不应在0.05或0.01等水平上二分化。特别是，大的P值不应被解释为没有关联或没有效应。</li>
+<li><strong>评估加性相互作用，即使模型是乘法的</strong>。</li>
+</ol>
+<h2 id="原文翻译"><a href="#原文翻译" class="headerlink" title="原文翻译"></a>原文翻译</h2><p>&emsp;&emsp;医学研究有效性的一个重要要求是可靠的方法和统计数据，但这仍然经常被医学研究人员忽视。基于过去 3 年提交给《柳叶刀》集团期刊的 1000 多份手稿的统计数据审查经验，本通信为报告中常见的统计缺陷以及如何避免这些缺陷提供了指导</p>
+<p><strong>准确报告统计结果的基本建议</strong></p>
+<ul>
+<li>根据分布情况，报告均值和标准差或中位数和 IQR 以描述定量变量。提供补充材料，显示分析中使用的变量的直方图或表格。</li>
+<li>检查所有模型假设，最好在可行的情况下使用图表。</li>
+<li>不要将 p 值 ≥0·0001；相反，显示精确的 p 值（例如，p 值 0·032 应显示为 p=0·032，而不是 p&lt;0·05）。但是，不等式 p&lt;0·0001 可用于报告非常小的 p 值。</li>
+<li>不要将结果报告为无效果，除非区间估计内的所有效果在临床上都不重要。</li>
+<li>根据临床重要性解释结果，并适当估计与 95% CI 的相关性。</li>
+<li>根据背景信息识别混杂因素，如因果有向无环图中所述，而不是显著性检验。</li>
+<li>如果缺失数据的比例高到足以潜在地影响结果，请使用除简单地丢弃不完整记录之外的方法，例如，缺失的反概率加权或多重插补。</li>
+<li>使用为此目的开发的方法评估和处理比率估计中的稀疏数据偏差。</li>
+<li>如果结果频率较高，则报告风险比或风险差异，而不是比值比。</li>
+<li>评估加性相互作用，即使您的模型是乘法的。</li>
+</ul>
+<p>&emsp;&emsp;数据描述对于理解数据至关重要。平均值和标准差通常用于描述定量变量。尽管如此，对于高度偏斜的变量（例如，典型的环境暴露），应使用中位数和IQR；对于仅取正值的变量，$\frac {mean}{SD}$表示严重偏斜。完整的统计描述还需要给出连续性变量的直方图、分类变量的计数表、以及缺失数据的百分比，由于这部分内容较多，可在<strong>补充材料</strong>中给出。</p>
+<p>&emsp;&emsp;所有统计分析都建立在基础假设之上，比如选择性或治疗分配的随机性。统计模型的有效性依赖于对这些进一步假设的评估。为了达到这一目的，仅仅依赖统计检验是不够的，还需要运用图形方法。例如，大多数回归模型都假设定量预测变量是线性的（至少在某种程度上），这一假设需要通过分段多项式或回归样条等方法进行验证。尤其是对于定量变量的分类，这通常意味着一个不切实际的阶跃函数假设，可能会导致效能损失或不可控的混杂。</p>
+<p>&emsp;&emsp;在统计推断领域，我们仍主要依赖于假设检验和估计。然而，p 值可以提供有关数据与统计假设或模型兼容性的重要信息，应当准确报告，而不是简单地用是否显著的定性描述来代替。兼容性可以通过将 p 值转换为基于抛硬币实验的 s 值来衡量。我们应避免过度依赖统计检验，不应将 p 值简单地划分为 0.05 或 0.01 这样的固定水平。特别是，较大的 p 值不应解释为无关联或无影响，因为“没有证据”并不等同于“没有证据”。除非区间估计接近零值，且区间非常窄，才可以推断为研究没有发现重要的关联或影响。一般情况下，还应根据合适指标的区间估计（如均数差或危险差）来判断结果的临床重要性。</p>
+<p>&emsp;&emsp;许多研究关注的是因果关系，这就使得混杂因素的调整变得至关重要。混杂因素的选择应基于因果背景信息，例如通过有向无环图进行。基于显著性的方法，比如逐步选择算法，可能具有误导性，因为它们可能忽略了重要的混杂因素。</p>
+<p>&emsp;&emsp;数据缺失在研究中非常常见。简单处理缺失数据的方法，如完整案例分析（即逐列表删除）、缺失指标或最后观察结转，可能会导致显著偏差。如果缺失数据的比例较高（例如超过 5%），则应避免使用这些方法。更好的方法包括逆概率加权和多重插补，尽管这些方法也依赖于条件随机缺失的假设。</p>
+<p>&emsp;&emsp;在逻辑回归或 Cox 回归中，稀疏数据是一个重要的偏差来源，即在某些变量水平组合中事件数量较少。OR较大和置信区间较宽（例如，OR&gt;10，区间为2-50）提示存在数据稀疏偏倚，可以通过惩罚函数或贝叶斯方法减少偏倚。当因变量是一个常见结局的指标时，调整后的危险比（RR）在评估临床相关性方面优于OR，因前者更容易合理解释。在队列研究和随机对照试验中可使用改良的泊松回归或标准化回归系数来估计危险比（RR）和危险差（RD）。</p>
+<p>&emsp;&emsp;许多研究试图检查两种治疗对结局的相互作用，或者想要估计另一种变量（即效果-测量修改）对治疗效果的改变程度。建模者通常会在回归模型中添加乘积项，例如逻辑项或Cox项，这些项对应于赔率或比率量表上的乘法交互作用。然而，风险的加性相互作用与临床决策和公共卫生更相关，因此也应进行评估。无论哪种情况，研究通常都无法确定交互作用的方向，如果它们通过统计检验筛选交互作用，则有可能产生误导性的估计。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(24">Recommendations for accurate reporting in medical research statistics - The Lancet</a>00139-9/fulltext)</p>
+]]></content>
+      <categories>
+        <category>统计学</category>
+      </categories>
+      <tags>
+        <tag>统计学</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>心律失常治疗方式总结</title>
     <url>/2024/03/14/%E5%BF%83%E5%BE%8B%E5%A4%B1%E5%B8%B8%E6%B2%BB%E7%96%97%E6%96%B9%E5%BC%8F%E6%80%BB%E7%BB%93/</url>
     <content><![CDATA[<p>&emsp;&emsp;维持血流动力学处于稳定状态是心脏疾病的救治的落脚点，所以保障心室以适宜的频率进行协调的收缩舒张运动是心律失常救治的首要任务。其次，需要改善心脏内部的血流动力学紊乱，预防血栓形成；必要时需要考虑心房功能，避免前负荷不足。归根结底，心律失常的治疗是以心室为核心的。</p>
@@ -1429,53 +1476,6 @@
       <tags>
         <tag>生物信息学</tag>
         <tag>单细胞测序</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>提升医学研究的严谨性：准确使用统计学</title>
-    <url>/2024/02/18/%E6%8F%90%E5%8D%87%E5%8C%BB%E5%AD%A6%E7%A0%94%E7%A9%B6%E7%9A%84%E4%B8%A5%E8%B0%A8%E6%80%A7%EF%BC%9A%E5%87%86%E7%A1%AE%E4%BD%BF%E7%94%A8%E7%BB%9F%E8%AE%A1%E5%AD%A6/</url>
-    <content><![CDATA[<h2 id="原文摘要"><a href="#原文摘要" class="headerlink" title="原文摘要"></a>原文摘要</h2><p>&emsp;&emsp;在不断进步的医学研究领域中，研究结果的可靠性不仅依赖于创新的思想，还依赖于严谨的方法论和统计学。然而，根据过去三年《柳叶刀》期刊集团对超过1000份手稿的统计审查经验，通讯发现许多医学研究者常常忽视这一点。</p>
-<p>&emsp;&emsp;这篇通讯旨在提供一些基本建议，帮助研究者准确地报告统计数据，避免常见的统计缺陷。以下是一些关键要点：</p>
-<ol>
-<li><strong>数据描述的准确性</strong>：根据数据分布，报告均值和标准差或中位数和四分位数范围。并提供显示分析中使用的变量的直方图或表格的补充材料。</li>
-<li><strong>模型假设的检验</strong>：尽可能使用可视化检查所有模型假设。</li>
-<li><strong>P值的处理</strong>：不要将P值简化为“大于或等于0.0001”，而应报告确切的P值（例如，0.032的P值应报告为P=0.032，而非P&lt;0.05）。</li>
-<li><strong>结果的解读</strong>：基于临床重要性解读结果，并提供适当的关联估计和95%置信区间。</li>
-<li><strong>混杂因素的识别</strong>：基于背景信息识别混杂因素，例如在因果定向无环图中描绘，而非仅依赖显著性检验。</li>
-<li><strong>处理缺失数据</strong>：如果缺失数据的比例足够高，可能影响结果，应使用超越简单丢弃不完整记录的方法，例如反概率缺失加权或多重插补。</li>
-<li><strong>稀疏数据偏差的处理</strong>：使用为此目的开发的方法评估并处理比率估计中的稀疏数据偏差，如逻辑或Cox回归中应使用惩罚或贝叶斯方法减少稀疏数据偏差。</li>
-<li><strong>选择适当的风险指标</strong>：如果结局发生率较高，应报告危险比（risk  ratio，RR）或危险差（risk difference，RD），而不是比值比（odds ratio，OR）。</li>
-<li><strong>统计推断</strong>：避免过度依赖统计测试，P值不应在0.05或0.01等水平上二分化。特别是，大的P值不应被解释为没有关联或没有效应。</li>
-<li><strong>评估加性相互作用，即使模型是乘法的</strong>。</li>
-</ol>
-<h2 id="原文翻译"><a href="#原文翻译" class="headerlink" title="原文翻译"></a>原文翻译</h2><p>&emsp;&emsp;医学研究有效性的一个重要要求是可靠的方法和统计数据，但这仍然经常被医学研究人员忽视。基于过去 3 年提交给《柳叶刀》集团期刊的 1000 多份手稿的统计数据审查经验，本通信为报告中常见的统计缺陷以及如何避免这些缺陷提供了指导</p>
-<p><strong>准确报告统计结果的基本建议</strong></p>
-<ul>
-<li>根据分布情况，报告均值和标准差或中位数和 IQR 以描述定量变量。提供补充材料，显示分析中使用的变量的直方图或表格。</li>
-<li>检查所有模型假设，最好在可行的情况下使用图表。</li>
-<li>不要将 p 值 ≥0·0001；相反，显示精确的 p 值（例如，p 值 0·032 应显示为 p=0·032，而不是 p&lt;0·05）。但是，不等式 p&lt;0·0001 可用于报告非常小的 p 值。</li>
-<li>不要将结果报告为无效果，除非区间估计内的所有效果在临床上都不重要。</li>
-<li>根据临床重要性解释结果，并适当估计与 95% CI 的相关性。</li>
-<li>根据背景信息识别混杂因素，如因果有向无环图中所述，而不是显著性检验。</li>
-<li>如果缺失数据的比例高到足以潜在地影响结果，请使用除简单地丢弃不完整记录之外的方法，例如，缺失的反概率加权或多重插补。</li>
-<li>使用为此目的开发的方法评估和处理比率估计中的稀疏数据偏差。</li>
-<li>如果结果频率较高，则报告风险比或风险差异，而不是比值比。</li>
-<li>评估加性相互作用，即使您的模型是乘法的。</li>
-</ul>
-<p>&emsp;&emsp;数据描述对于理解数据至关重要。平均值和标准差通常用于描述定量变量。尽管如此，对于高度偏斜的变量（例如，典型的环境暴露），应使用中位数和IQR；对于仅取正值的变量，$\frac {mean}{SD}$表示严重偏斜。完整的统计描述还需要给出连续性变量的直方图、分类变量的计数表、以及缺失数据的百分比，由于这部分内容较多，可在<strong>补充材料</strong>中给出。</p>
-<p>&emsp;&emsp;所有统计分析都建立在基础假设之上，比如选择性或治疗分配的随机性。统计模型的有效性依赖于对这些进一步假设的评估。为了达到这一目的，仅仅依赖统计检验是不够的，还需要运用图形方法。例如，大多数回归模型都假设定量预测变量是线性的（至少在某种程度上），这一假设需要通过分段多项式或回归样条等方法进行验证。尤其是对于定量变量的分类，这通常意味着一个不切实际的阶跃函数假设，可能会导致效能损失或不可控的混杂。</p>
-<p>&emsp;&emsp;在统计推断领域，我们仍主要依赖于假设检验和估计。然而，p 值可以提供有关数据与统计假设或模型兼容性的重要信息，应当准确报告，而不是简单地用是否显著的定性描述来代替。兼容性可以通过将 p 值转换为基于抛硬币实验的 s 值来衡量。我们应避免过度依赖统计检验，不应将 p 值简单地划分为 0.05 或 0.01 这样的固定水平。特别是，较大的 p 值不应解释为无关联或无影响，因为“没有证据”并不等同于“没有证据”。除非区间估计接近零值，且区间非常窄，才可以推断为研究没有发现重要的关联或影响。一般情况下，还应根据合适指标的区间估计（如均数差或危险差）来判断结果的临床重要性。</p>
-<p>&emsp;&emsp;许多研究关注的是因果关系，这就使得混杂因素的调整变得至关重要。混杂因素的选择应基于因果背景信息，例如通过有向无环图进行。基于显著性的方法，比如逐步选择算法，可能具有误导性，因为它们可能忽略了重要的混杂因素。</p>
-<p>&emsp;&emsp;数据缺失在研究中非常常见。简单处理缺失数据的方法，如完整案例分析（即逐列表删除）、缺失指标或最后观察结转，可能会导致显著偏差。如果缺失数据的比例较高（例如超过 5%），则应避免使用这些方法。更好的方法包括逆概率加权和多重插补，尽管这些方法也依赖于条件随机缺失的假设。</p>
-<p>&emsp;&emsp;在逻辑回归或 Cox 回归中，稀疏数据是一个重要的偏差来源，即在某些变量水平组合中事件数量较少。OR较大和置信区间较宽（例如，OR&gt;10，区间为2-50）提示存在数据稀疏偏倚，可以通过惩罚函数或贝叶斯方法减少偏倚。当因变量是一个常见结局的指标时，调整后的危险比（RR）在评估临床相关性方面优于OR，因前者更容易合理解释。在队列研究和随机对照试验中可使用改良的泊松回归或标准化回归系数来估计危险比（RR）和危险差（RD）。</p>
-<p>&emsp;&emsp;许多研究试图检查两种治疗对结局的相互作用，或者想要估计另一种变量（即效果-测量修改）对治疗效果的改变程度。建模者通常会在回归模型中添加乘积项，例如逻辑项或Cox项，这些项对应于赔率或比率量表上的乘法交互作用。然而，风险的加性相互作用与临床决策和公共卫生更相关，因此也应进行评估。无论哪种情况，研究通常都无法确定交互作用的方向，如果它们通过统计检验筛选交互作用，则有可能产生误导性的估计。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(24">Recommendations for accurate reporting in medical research statistics - The Lancet</a>00139-9/fulltext)</p>
-]]></content>
-      <categories>
-        <category>统计学</category>
-      </categories>
-      <tags>
-        <tag>统计学</tag>
       </tags>
   </entry>
   <entry>
@@ -1553,6 +1553,43 @@
       <tags>
         <tag>生物信息学</tag>
         <tag>转录组学</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>网络爬虫自动获取教务处最新通知</title>
+    <url>/2024/03/19/%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB%E8%87%AA%E5%8A%A8%E8%8E%B7%E5%8F%96%E6%95%99%E5%8A%A1%E5%A4%84%E6%9C%80%E6%96%B0%E9%80%9A%E7%9F%A5/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>&emsp;&emsp;在日常学习和工作中，及时获取学校教务处的最新通知非常重要。本文介绍了如何使用Python编写一个自动化脚本，该脚本能够爬取教务处网站的最新通知公告，并通过邮件发送给指定的收件人。这样，我们就可以在第一时间内获取到重要信息，不错过任何关键的通知或更新。<br>&emsp;&emsp;欢迎来给俺个星星✨！<a href="https://github.com/ForrestGump618/Notification_NMU">ForrestGump618/Notification_NMU</a>。</p>
+<h2 id="技术栈"><a href="#技术栈" class="headerlink" title="技术栈"></a>技术栈</h2><ul>
+<li><strong>Python</strong>：编程语言</li>
+<li><strong>requests</strong>：HTTP库，用于发送网络请求</li>
+<li><strong>BeautifulSoup</strong>：HTML解析库，用于解析网页内容</li>
+<li><strong>smtplib</strong>、<strong>email.mime.text</strong>、<strong>email.mime.multipart</strong>：邮件发送库，用于构建和发送邮件</li>
+</ul>
+<h2 id="主要功能及实现步骤"><a href="#主要功能及实现步骤" class="headerlink" title="主要功能及实现步骤"></a>主要功能及实现步骤</h2><h3 id="1-网页内容爬取（scrape-website-函数）"><a href="#1-网页内容爬取（scrape-website-函数）" class="headerlink" title="1. 网页内容爬取（scrape_website 函数）"></a>1. 网页内容爬取（<code>scrape_website</code> 函数）</h3><p>&emsp;&emsp;首先，定义<code>scrape_website(url)</code>函数，用于爬取教务处网站的通知公告列表。通过requests库发送GET请求获取网页内容，然后使用BeautifulSoup解析HTML，提取出通知公告的标题、链接和发布日期，最后将这些信息存储在列表中返回。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">scrape_website</span>(<span class="params">url</span>):</span><br><span class="line">    base_url = <span class="string">&quot;https://jwc.njmu.edu.cn&quot;</span></span><br><span class="line">    page = requests.get(url)</span><br><span class="line">    soup = BeautifulSoup(page.content, <span class="string">&#x27;html.parser&#x27;</span>)</span><br><span class="line">    items = soup.select(<span class="string">&#x27;.news_list li&#x27;</span>)</span><br><span class="line">    news_list = []</span><br><span class="line">    <span class="keyword">for</span> item <span class="keyword">in</span> items:</span><br><span class="line">        news = &#123;&#125;</span><br><span class="line">        news_anchor = item.select_one(<span class="string">&#x27;.news_title a&#x27;</span>)</span><br><span class="line">        news[<span class="string">&#x27;title&#x27;</span>] = news_anchor.get(<span class="string">&#x27;title&#x27;</span>).strip()</span><br><span class="line">        news[<span class="string">&#x27;link&#x27;</span>] = base_url + news_anchor.get(<span class="string">&#x27;href&#x27;</span>)</span><br><span class="line">        news[<span class="string">&#x27;date&#x27;</span>] = item.select_one(<span class="string">&#x27;.news_meta&#x27;</span>).text.strip()</span><br><span class="line">        news_list.append(news)</span><br><span class="line">    <span class="keyword">return</span> news_list</span><br></pre></td></tr></table></figure>
+<h3 id="2-获取通知详细内容（scrape-news-details-函数）"><a href="#2-获取通知详细内容（scrape-news-details-函数）" class="headerlink" title="2. 获取通知详细内容（scrape_news_details 函数）"></a>2. 获取通知详细内容（<code>scrape_news_details</code> 函数）</h3><p>&emsp;&emsp;定义<code>scrape_news_details(news_link)</code>函数，用于爬取每条通知的详细内容。同样使用requests和BeautifulSoup获取并解析页面，提取通知的正文内容，并生成一个简短的摘要返回。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">scrape_news_details</span>(<span class="params">news_link</span>):</span><br><span class="line">    page = requests.get(news_link)</span><br><span class="line">    soup = BeautifulSoup(page.content, <span class="string">&#x27;html.parser&#x27;</span>)</span><br><span class="line">    content_element = soup.select_one(<span class="string">&#x27;.wp_articlecontent&#x27;</span>)</span><br><span class="line">    <span class="keyword">if</span> content_element:</span><br><span class="line">        content_text = content_element.get_text(separator=<span class="string">&quot; &quot;</span>, strip=<span class="literal">True</span>)</span><br><span class="line">        length = <span class="built_in">len</span>(content_text)</span><br><span class="line">        <span class="keyword">if</span> length &gt; <span class="number">200</span>:</span><br><span class="line">            summary = content_text[:<span class="number">200</span>] + <span class="string">&quot; ......&quot;</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            summary = content_text</span><br><span class="line">        <span class="keyword">return</span> summary</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;No content found.&quot;</span></span><br></pre></td></tr></table></figure>
+<h3 id="3-邮件发送（send-email-函数）"><a href="#3-邮件发送（send-email-函数）" class="headerlink" title="3. 邮件发送（send_email 函数）"></a>3. 邮件发送（<code>send_email</code> 函数）</h3><p>&emsp;&emsp;定义<code>send_email(subject, content, to_email)</code>函数，使用smtplib和email.mime相关模块构建并发送邮件。这里需要预先设置发件人邮箱、密码以及SMTP服务器信息。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">send_email</span>(<span class="params">subject, content, to_email</span>):</span><br><span class="line">    sender_email = <span class="string">&quot;xxx&quot;</span></span><br><span class="line">    password = <span class="string">&quot;xxx&quot;</span></span><br><span class="line">    msg = MIMEMultipart()</span><br><span class="line">    msg[<span class="string">&#x27;Subject&#x27;</span>] = subject</span><br><span class="line">    msg[<span class="string">&#x27;From&#x27;</span>] = sender_email</span><br><span class="line">    msg[<span class="string">&#x27;To&#x27;</span>] = to_email</span><br><span class="line">    msg.attach(MIMEText(content, <span class="string">&#x27;html&#x27;</span>))</span><br><span class="line">    server = smtplib.SMTP_SSL(<span class="string">&#x27;smtp.qq.com&#x27;</span>, <span class="number">465</span>)</span><br><span class="line">    server.login(sender_email, password)</span><br><span class="line">    server.send_message(msg)</span><br><span class="line">    server.quit()</span><br></pre></td></tr></table></figure>
+<h3 id="4-主程序流程"><a href="#4-主程序流程" class="headerlink" title="4. 主程序流程"></a>4. 主程序流程</h3><p>&emsp;&emsp;在<code>if __name__ == &quot;__main__&quot;:</code>块中，脚本首先调用<code>scrape_website</code>函数获取最新的通知列表，然后为每条通知生成HTML格式的邮件内容。如果当日有更新，则通过<code>send_email</code>函数将这些通知以邮件的形式发送给预设的收件人列表。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    email_list = [<span class="string">&quot;xxx&quot;</span>]</span><br><span class="line">    url = <span class="string">&#x27;https://jwc.njmu.edu.cn/842/list.htm&#x27;</span></span><br><span class="line">    news_list = scrape_website(url)</span><br><span class="line">    <span class="comment"># 构建邮件内容省略，详见原始代码</span></span><br><span class="line">    <span class="keyword">for</span> email <span class="keyword">in</span> email_list:</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">str</span>(datetime.date.today()) <span class="keyword">in</span> content_mail:</span><br><span class="line">            send_email(<span class="string">&quot;今日有更新|教务处通知公告&quot;</span>, content_mail, email)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            send_email(<span class="string">&quot;教务处通知公告&quot;</span>, content_mail, email)</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;效果呈现如下：<br><img src="/2024/03/19/%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB%E8%87%AA%E5%8A%A8%E8%8E%B7%E5%8F%96%E6%95%99%E5%8A%A1%E5%A4%84%E6%9C%80%E6%96%B0%E9%80%9A%E7%9F%A5/1.png" alt="效果呈现"></p>
+<h3 id="5-自动部署"><a href="#5-自动部署" class="headerlink" title="5. 自动部署"></a>5. 自动部署</h3><p>&emsp;&emsp;利用批处理文件部署：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">@<span class="built_in">echo</span> off</span><br><span class="line">C:  </span><br><span class="line"><span class="built_in">cd</span> C:\Users\Zhuang Qingyuan\Desktop\Notification</span><br><span class="line">start python spyder.py</span><br></pre></td></tr></table></figure><br>&emsp;&emsp;保存为BAT文件后，放到电脑的开始-菜单/启动文件夹下，即可开机启动。</p>
+<h2 id="使用指南"><a href="#使用指南" class="headerlink" title="使用指南"></a>使用指南</h2><p>&emsp;&emsp;要使用这个脚本，你需要：</p>
+<ol>
+<li>安装Python及相关库（requests, BeautifulSoup4）。</li>
+<li>替换<code>sender_email</code>、<code>password</code>和<code>email_list</code>中的占位符为实际的邮箱地址和密码。</li>
+<li>运行脚本。脚本会自动检查教务处网站的更新，并将最新的通知发送到指定的邮箱中。</li>
+</ol>
+<p>&emsp;&emsp;通过以上步骤，我们可以构建一个自动化的信息获取和提醒系统，帮助用户及时获取重要的教务通知，有效提升信息获取的效率和时效性。</p>
+]]></content>
+      <categories>
+        <category>随笔</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+        <tag>计算机</tag>
+        <tag>随笔</tag>
       </tags>
   </entry>
   <entry>
@@ -1680,39 +1717,33 @@
       </tags>
   </entry>
   <entry>
-    <title>网络爬虫自动获取教务处最新通知</title>
-    <url>/2024/03/19/%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB%E8%87%AA%E5%8A%A8%E8%8E%B7%E5%8F%96%E6%95%99%E5%8A%A1%E5%A4%84%E6%9C%80%E6%96%B0%E9%80%9A%E7%9F%A5/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>&emsp;&emsp;在日常学习和工作中，及时获取学校教务处的最新通知非常重要。本文介绍了如何使用Python编写一个自动化脚本，该脚本能够爬取教务处网站的最新通知公告，并通过邮件发送给指定的收件人。这样，我们就可以在第一时间内获取到重要信息，不错过任何关键的通知或更新。<br>&emsp;&emsp;欢迎来给俺个星星✨！<a href="https://github.com/ForrestGump618/Notification_NMU">ForrestGump618/Notification_NMU</a>。</p>
-<h2 id="技术栈"><a href="#技术栈" class="headerlink" title="技术栈"></a>技术栈</h2><ul>
-<li><strong>Python</strong>：编程语言</li>
-<li><strong>requests</strong>：HTTP库，用于发送网络请求</li>
-<li><strong>BeautifulSoup</strong>：HTML解析库，用于解析网页内容</li>
-<li><strong>smtplib</strong>、<strong>email.mime.text</strong>、<strong>email.mime.multipart</strong>：邮件发送库，用于构建和发送邮件</li>
-</ul>
-<h2 id="主要功能及实现步骤"><a href="#主要功能及实现步骤" class="headerlink" title="主要功能及实现步骤"></a>主要功能及实现步骤</h2><h3 id="1-网页内容爬取（scrape-website-函数）"><a href="#1-网页内容爬取（scrape-website-函数）" class="headerlink" title="1. 网页内容爬取（scrape_website 函数）"></a>1. 网页内容爬取（<code>scrape_website</code> 函数）</h3><p>&emsp;&emsp;首先，定义<code>scrape_website(url)</code>函数，用于爬取教务处网站的通知公告列表。通过requests库发送GET请求获取网页内容，然后使用BeautifulSoup解析HTML，提取出通知公告的标题、链接和发布日期，最后将这些信息存储在列表中返回。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">scrape_website</span>(<span class="params">url</span>):</span><br><span class="line">    base_url = <span class="string">&quot;https://jwc.njmu.edu.cn&quot;</span></span><br><span class="line">    page = requests.get(url)</span><br><span class="line">    soup = BeautifulSoup(page.content, <span class="string">&#x27;html.parser&#x27;</span>)</span><br><span class="line">    items = soup.select(<span class="string">&#x27;.news_list li&#x27;</span>)</span><br><span class="line">    news_list = []</span><br><span class="line">    <span class="keyword">for</span> item <span class="keyword">in</span> items:</span><br><span class="line">        news = &#123;&#125;</span><br><span class="line">        news_anchor = item.select_one(<span class="string">&#x27;.news_title a&#x27;</span>)</span><br><span class="line">        news[<span class="string">&#x27;title&#x27;</span>] = news_anchor.get(<span class="string">&#x27;title&#x27;</span>).strip()</span><br><span class="line">        news[<span class="string">&#x27;link&#x27;</span>] = base_url + news_anchor.get(<span class="string">&#x27;href&#x27;</span>)</span><br><span class="line">        news[<span class="string">&#x27;date&#x27;</span>] = item.select_one(<span class="string">&#x27;.news_meta&#x27;</span>).text.strip()</span><br><span class="line">        news_list.append(news)</span><br><span class="line">    <span class="keyword">return</span> news_list</span><br></pre></td></tr></table></figure>
-<h3 id="2-获取通知详细内容（scrape-news-details-函数）"><a href="#2-获取通知详细内容（scrape-news-details-函数）" class="headerlink" title="2. 获取通知详细内容（scrape_news_details 函数）"></a>2. 获取通知详细内容（<code>scrape_news_details</code> 函数）</h3><p>&emsp;&emsp;定义<code>scrape_news_details(news_link)</code>函数，用于爬取每条通知的详细内容。同样使用requests和BeautifulSoup获取并解析页面，提取通知的正文内容，并生成一个简短的摘要返回。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">scrape_news_details</span>(<span class="params">news_link</span>):</span><br><span class="line">    page = requests.get(news_link)</span><br><span class="line">    soup = BeautifulSoup(page.content, <span class="string">&#x27;html.parser&#x27;</span>)</span><br><span class="line">    content_element = soup.select_one(<span class="string">&#x27;.wp_articlecontent&#x27;</span>)</span><br><span class="line">    <span class="keyword">if</span> content_element:</span><br><span class="line">        content_text = content_element.get_text(separator=<span class="string">&quot; &quot;</span>, strip=<span class="literal">True</span>)</span><br><span class="line">        length = <span class="built_in">len</span>(content_text)</span><br><span class="line">        <span class="keyword">if</span> length &gt; <span class="number">200</span>:</span><br><span class="line">            summary = content_text[:<span class="number">200</span>] + <span class="string">&quot; ......&quot;</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            summary = content_text</span><br><span class="line">        <span class="keyword">return</span> summary</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;No content found.&quot;</span></span><br></pre></td></tr></table></figure>
-<h3 id="3-邮件发送（send-email-函数）"><a href="#3-邮件发送（send-email-函数）" class="headerlink" title="3. 邮件发送（send_email 函数）"></a>3. 邮件发送（<code>send_email</code> 函数）</h3><p>&emsp;&emsp;定义<code>send_email(subject, content, to_email)</code>函数，使用smtplib和email.mime相关模块构建并发送邮件。这里需要预先设置发件人邮箱、密码以及SMTP服务器信息。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">send_email</span>(<span class="params">subject, content, to_email</span>):</span><br><span class="line">    sender_email = <span class="string">&quot;xxx&quot;</span></span><br><span class="line">    password = <span class="string">&quot;xxx&quot;</span></span><br><span class="line">    msg = MIMEMultipart()</span><br><span class="line">    msg[<span class="string">&#x27;Subject&#x27;</span>] = subject</span><br><span class="line">    msg[<span class="string">&#x27;From&#x27;</span>] = sender_email</span><br><span class="line">    msg[<span class="string">&#x27;To&#x27;</span>] = to_email</span><br><span class="line">    msg.attach(MIMEText(content, <span class="string">&#x27;html&#x27;</span>))</span><br><span class="line">    server = smtplib.SMTP_SSL(<span class="string">&#x27;smtp.qq.com&#x27;</span>, <span class="number">465</span>)</span><br><span class="line">    server.login(sender_email, password)</span><br><span class="line">    server.send_message(msg)</span><br><span class="line">    server.quit()</span><br></pre></td></tr></table></figure>
-<h3 id="4-主程序流程"><a href="#4-主程序流程" class="headerlink" title="4. 主程序流程"></a>4. 主程序流程</h3><p>&emsp;&emsp;在<code>if __name__ == &quot;__main__&quot;:</code>块中，脚本首先调用<code>scrape_website</code>函数获取最新的通知列表，然后为每条通知生成HTML格式的邮件内容。如果当日有更新，则通过<code>send_email</code>函数将这些通知以邮件的形式发送给预设的收件人列表。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    email_list = [<span class="string">&quot;xxx&quot;</span>]</span><br><span class="line">    url = <span class="string">&#x27;https://jwc.njmu.edu.cn/842/list.htm&#x27;</span></span><br><span class="line">    news_list = scrape_website(url)</span><br><span class="line">    <span class="comment"># 构建邮件内容省略，详见原始代码</span></span><br><span class="line">    <span class="keyword">for</span> email <span class="keyword">in</span> email_list:</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">str</span>(datetime.date.today()) <span class="keyword">in</span> content_mail:</span><br><span class="line">            send_email(<span class="string">&quot;今日有更新|教务处通知公告&quot;</span>, content_mail, email)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            send_email(<span class="string">&quot;教务处通知公告&quot;</span>, content_mail, email)</span><br></pre></td></tr></table></figure>
-<p>&emsp;&emsp;效果呈现如下：<br><img src="/2024/03/19/%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB%E8%87%AA%E5%8A%A8%E8%8E%B7%E5%8F%96%E6%95%99%E5%8A%A1%E5%A4%84%E6%9C%80%E6%96%B0%E9%80%9A%E7%9F%A5/1.png" alt="效果呈现"></p>
-<h3 id="5-自动部署"><a href="#5-自动部署" class="headerlink" title="5. 自动部署"></a>5. 自动部署</h3><p>&emsp;&emsp;利用批处理文件部署：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">@<span class="built_in">echo</span> off</span><br><span class="line">C:  </span><br><span class="line"><span class="built_in">cd</span> C:\Users\Zhuang Qingyuan\Desktop\Notification</span><br><span class="line">start python spyder.py</span><br></pre></td></tr></table></figure><br>&emsp;&emsp;保存为BAT文件后，放到电脑的开始-菜单/启动文件夹下，即可开机启动。</p>
-<h2 id="使用指南"><a href="#使用指南" class="headerlink" title="使用指南"></a>使用指南</h2><p>&emsp;&emsp;要使用这个脚本，你需要：</p>
+    <title>能解答一切的答案</title>
+    <url>/2024/03/07/%E8%83%BD%E8%A7%A3%E7%AD%94%E4%B8%80%E5%88%87%E7%9A%84%E7%AD%94%E6%A1%88/</url>
+    <content><![CDATA[<p>&emsp;&emsp;医学所以成为医学，是因为什么？医学中能解答一切问题的答案又来自哪里？是技术还是人文？</p>
+<p>&emsp;&emsp;科技的迅速发展，带来了医学的巨大进步。从前我们将希波克拉底的“体液说”奉为圭臬，到今天有了从分子层面体系完备的生理科学；从感冒腹泻夺走人的生命，到今天疑难杂症的治愈变成可能；从前的医学不过经验，而今天的医学可以层层剖析病理。似乎只要有了技术，医学就可以解决所有的问题。 以至于今天的人们都把健康寄托于技术、生命寄托于未来。看着科学主义的日渐泛滥，我也不禁发问：医学的人文宗旨，在今天这个时代是不是已经过时了呢？</p>
+<p>&emsp;&emsp;本世纪初发表的《医师宣言》中明确指出：“将患者利益放在首位。这一原则是建立在为患者服务的基础上。信任是医患关系的核心，而利他主义是这种信任的基础。一切力量都不能影响这一原则。”古今中外的医学巨匠一再肯定这样的医学属性和人文精神。从药王孙思邈一篇《大医精诚》——“凡大医治病，必当安神定志，无欲无求，先发大慈恻隐之心，誓愿普救含灵之苦”，到特鲁多闻名遐迩的三句“有时去治愈，常常去帮助，总是去安慰”。这种医学传统，是医学长期发展形成的，是医学内在的，是医学的本性，不是外在强加于医学的，在任何时候也是不应当去改变的。如果用技术至上的思想远离对生命的关爱和对人的关怀，背离医学救人生命的人文宗旨，医学就不是医学，甚至走向医学的反面。</p>
+<p>&emsp;&emsp;所以说，医学的人文宗旨，不但没有过时，甚至是医学的灵魂所在。</p>
+<p>&emsp;&emsp;高三时读过一篇关乎“语言”的高考作文——《达芬奇密码》。这篇作文构建出一个依赖于人文而存在的科学殿堂，当时的我对此不以为然，甚至认为这篇作文不过是唯心主义。一年后在医学导论的课堂上，当我听到丁教授和王教授两位院长讲授医学的起源、目的和现代临床医疗的准则时，我又回想起这篇文章，才逐渐明白——失去了人文底色的科学不过是机械、冰冷的器物，作为客观世界真理的科学技术也不能无限制的扩张，不能代替人们的情感和信仰。撒尔顿说：“向科学注入人文精神，唤醒科学不要忘记人和爱，不要忘记自身存在的根本”，此言得之。回到医学这样一个具有极高道德属性的学科，医学人文宗旨的重要性不言而喻。</p>
+<p>&emsp;&emsp;科学意味求真；而人文意味求善。求真的目的是求善。理论物理学家杨振宁先生强调：“科学研究的最终价值不会取决与为了科学的科学，而是取决与科学是否对人类有益“。为了善念而去的医学才能真正做有益于人类的事，为了善念，一个医生才会真正地精诚于学术，博学至精。</p>
+<p>&emsp;&emsp;医学起源于祛除病痛的执着信仰，由此才有无数医家的探索。今天的医学依然适用这一亘古不变的准则。医学成为医学，是因为医学有温度。医学的魅力不是有多么先进的技术，而是从内心给出的真心、正义和同理，尤其对于今天这样一个时代。解决一切医学问题的答案也许有很多，但根本都在于明德至善。</p>
+<p>&emsp;&emsp;虽然，我依然坚信，这个美丽宇宙的唯一真理是科学，刘慈欣的《朝闻道》中写“没有科学的世界，我的心脏都懒得跳动”深得我心。但今天讨论的问题，是有时代和职业语境的。市场经济的发展，让技术的作用被神话了，拉大了医患之间的距离，恶化了医疗环境，在这个时候，犹需要在科学发展之外，多一份理想情怀。</p>
+<p>&emsp;&emsp;偶尔会去思考我会成为一个什么样的医生。不知道会不会像王娟院长一样会在医院关门的时候会心软给迟到的病人看病，也不知道会不会像王锦帆教授说的那样用自己一句加油的话就能把一个人从鬼门关拉回来，或者像丁义涛院长死马当活马医救回来一个现在天天一起打惯蛋的好友……嗯，我还不知道，但我希望我按照热力学第二定律回归大地之前，可以经历这些温暖而可爱的时刻，这些时刻，就是对问题最好的答案。</p>
+<p><strong>【医学导论课的感动瞬间】</strong></p>
+<p>怎么说，这是一门特殊的课，虽然有着让人一言难尽而又抓狂的考核标准，自己的笔记也日渐粗糙。但是在听大医们的开讲中，收获了很多新的想法，遇到了不少鼻头一酸的时刻，这也是一种独特的体验吧？</p>
 <ol>
-<li>安装Python及相关库（requests, BeautifulSoup4）。</li>
-<li>替换<code>sender_email</code>、<code>password</code>和<code>email_list</code>中的占位符为实际的邮箱地址和密码。</li>
-<li>运行脚本。脚本会自动检查教务处网站的更新，并将最新的通知发送到指定的邮箱中。</li>
+<li>王虹院长：“本来这个时候我应该下班了，但是你看到那个病人在那你是无法拒绝的，医者仁心啊……“（以后我会不会也有这样的想法？）</li>
+<li>王锦帆教授：“言语对于一名医生很重要，很多时候一个快死的病人，也许就是听见你的一声鼓励，潜意识中就有了活下去的勇气，这个病人就挺过来了。“（在这句话之前，科学主义一直占据着我的思想，这句话之后，我开始真正思考人文的作用。）</li>
+<li>丁义涛院长：“那个主任现在说我是他的救命恩人，天天找我约掼蛋。“（医生的幸福感和成就感大概就是这个时候吧？）</li>
+<li>王虹院长：“医生的群体都是向善的，医生的价值不是赚钱，金钱买不到我们得到行业精神，医生的价值就是救人。“（对这个职业充满了自豪感，突然想起高三班主任在班级前面贴的毛笔字”德业双馨、成名成家“，对医生而言适合不过。）</li>
+<li>王虹院长：“做医生，一辈子都要吃苦。“（愿苦中作乐）</li>
 </ol>
-<p>&emsp;&emsp;通过以上步骤，我们可以构建一个自动化的信息获取和提醒系统，帮助用户及时获取重要的教务通知，有效提升信息获取的效率和时效性。</p>
+<p>……</p>
+<p>2020年12月18日</p>
 ]]></content>
       <categories>
         <category>随笔</category>
       </categories>
       <tags>
-        <tag>python</tag>
-        <tag>计算机</tag>
         <tag>随笔</tag>
       </tags>
   </entry>
@@ -1744,37 +1775,6 @@
       <tags>
         <tag>统计学</tag>
         <tag>交叉学科</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>能解答一切的答案</title>
-    <url>/2024/03/07/%E8%83%BD%E8%A7%A3%E7%AD%94%E4%B8%80%E5%88%87%E7%9A%84%E7%AD%94%E6%A1%88/</url>
-    <content><![CDATA[<p>&emsp;&emsp;医学所以成为医学，是因为什么？医学中能解答一切问题的答案又来自哪里？是技术还是人文？</p>
-<p>&emsp;&emsp;科技的迅速发展，带来了医学的巨大进步。从前我们将希波克拉底的“体液说”奉为圭臬，到今天有了从分子层面体系完备的生理科学；从感冒腹泻夺走人的生命，到今天疑难杂症的治愈变成可能；从前的医学不过经验，而今天的医学可以层层剖析病理。似乎只要有了技术，医学就可以解决所有的问题。 以至于今天的人们都把健康寄托于技术、生命寄托于未来。看着科学主义的日渐泛滥，我也不禁发问：医学的人文宗旨，在今天这个时代是不是已经过时了呢？</p>
-<p>&emsp;&emsp;本世纪初发表的《医师宣言》中明确指出：“将患者利益放在首位。这一原则是建立在为患者服务的基础上。信任是医患关系的核心，而利他主义是这种信任的基础。一切力量都不能影响这一原则。”古今中外的医学巨匠一再肯定这样的医学属性和人文精神。从药王孙思邈一篇《大医精诚》——“凡大医治病，必当安神定志，无欲无求，先发大慈恻隐之心，誓愿普救含灵之苦”，到特鲁多闻名遐迩的三句“有时去治愈，常常去帮助，总是去安慰”。这种医学传统，是医学长期发展形成的，是医学内在的，是医学的本性，不是外在强加于医学的，在任何时候也是不应当去改变的。如果用技术至上的思想远离对生命的关爱和对人的关怀，背离医学救人生命的人文宗旨，医学就不是医学，甚至走向医学的反面。</p>
-<p>&emsp;&emsp;所以说，医学的人文宗旨，不但没有过时，甚至是医学的灵魂所在。</p>
-<p>&emsp;&emsp;高三时读过一篇关乎“语言”的高考作文——《达芬奇密码》。这篇作文构建出一个依赖于人文而存在的科学殿堂，当时的我对此不以为然，甚至认为这篇作文不过是唯心主义。一年后在医学导论的课堂上，当我听到丁教授和王教授两位院长讲授医学的起源、目的和现代临床医疗的准则时，我又回想起这篇文章，才逐渐明白——失去了人文底色的科学不过是机械、冰冷的器物，作为客观世界真理的科学技术也不能无限制的扩张，不能代替人们的情感和信仰。撒尔顿说：“向科学注入人文精神，唤醒科学不要忘记人和爱，不要忘记自身存在的根本”，此言得之。回到医学这样一个具有极高道德属性的学科，医学人文宗旨的重要性不言而喻。</p>
-<p>&emsp;&emsp;科学意味求真；而人文意味求善。求真的目的是求善。理论物理学家杨振宁先生强调：“科学研究的最终价值不会取决与为了科学的科学，而是取决与科学是否对人类有益“。为了善念而去的医学才能真正做有益于人类的事，为了善念，一个医生才会真正地精诚于学术，博学至精。</p>
-<p>&emsp;&emsp;医学起源于祛除病痛的执着信仰，由此才有无数医家的探索。今天的医学依然适用这一亘古不变的准则。医学成为医学，是因为医学有温度。医学的魅力不是有多么先进的技术，而是从内心给出的真心、正义和同理，尤其对于今天这样一个时代。解决一切医学问题的答案也许有很多，但根本都在于明德至善。</p>
-<p>&emsp;&emsp;虽然，我依然坚信，这个美丽宇宙的唯一真理是科学，刘慈欣的《朝闻道》中写“没有科学的世界，我的心脏都懒得跳动”深得我心。但今天讨论的问题，是有时代和职业语境的。市场经济的发展，让技术的作用被神话了，拉大了医患之间的距离，恶化了医疗环境，在这个时候，犹需要在科学发展之外，多一份理想情怀。</p>
-<p>&emsp;&emsp;偶尔会去思考我会成为一个什么样的医生。不知道会不会像王娟院长一样会在医院关门的时候会心软给迟到的病人看病，也不知道会不会像王锦帆教授说的那样用自己一句加油的话就能把一个人从鬼门关拉回来，或者像丁义涛院长死马当活马医救回来一个现在天天一起打惯蛋的好友……嗯，我还不知道，但我希望我按照热力学第二定律回归大地之前，可以经历这些温暖而可爱的时刻，这些时刻，就是对问题最好的答案。</p>
-<p><strong>【医学导论课的感动瞬间】</strong></p>
-<p>怎么说，这是一门特殊的课，虽然有着让人一言难尽而又抓狂的考核标准，自己的笔记也日渐粗糙。但是在听大医们的开讲中，收获了很多新的想法，遇到了不少鼻头一酸的时刻，这也是一种独特的体验吧？</p>
-<ol>
-<li>王虹院长：“本来这个时候我应该下班了，但是你看到那个病人在那你是无法拒绝的，医者仁心啊……“（以后我会不会也有这样的想法？）</li>
-<li>王锦帆教授：“言语对于一名医生很重要，很多时候一个快死的病人，也许就是听见你的一声鼓励，潜意识中就有了活下去的勇气，这个病人就挺过来了。“（在这句话之前，科学主义一直占据着我的思想，这句话之后，我开始真正思考人文的作用。）</li>
-<li>丁义涛院长：“那个主任现在说我是他的救命恩人，天天找我约掼蛋。“（医生的幸福感和成就感大概就是这个时候吧？）</li>
-<li>王虹院长：“医生的群体都是向善的，医生的价值不是赚钱，金钱买不到我们得到行业精神，医生的价值就是救人。“（对这个职业充满了自豪感，突然想起高三班主任在班级前面贴的毛笔字”德业双馨、成名成家“，对医生而言适合不过。）</li>
-<li>王虹院长：“做医生，一辈子都要吃苦。“（愿苦中作乐）</li>
-</ol>
-<p>……</p>
-<p>2020年12月18日</p>
-]]></content>
-      <categories>
-        <category>随笔</category>
-      </categories>
-      <tags>
-        <tag>随笔</tag>
       </tags>
   </entry>
 </search>
