@@ -82,33 +82,33 @@
       </tags>
   </entry>
   <entry>
-    <title>从医行公众号内容整理</title>
-    <url>/2024/03/19/%E4%BB%8E%E5%8C%BB%E8%A1%8C%E5%85%AC%E4%BC%97%E5%8F%B7%E5%86%85%E5%AE%B9%E6%95%B4%E7%90%86/</url>
-    <content><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>公众号上有非常丰富的通知资源，这里做一个归纳。表格内容通过爬虫技术自动收集并手动整理，包含了各类对考研、保研有帮助的资讯和资源。</p>
-<p><a href="https://pan.baidu.com/s/1tzK6lw5xahyo5S4rTMu_kw?pwd=8bkq">百度网盘资源链接</a> (提取码: 8bkq) - 复制这段内容后打开百度网盘手机App，操作更方便哦。</p>
-<h2 id="数据表格内容概览"><a href="#数据表格内容概览" class="headerlink" title="数据表格内容概览"></a>数据表格内容概览</h2><p>表格包含以下主要字段：</p>
-<ul>
-<li><strong>标题</strong>: 文章的标题。</li>
-<li><strong>作者</strong>: 撰写文章的作者名称。(部分条目可能为空，表示未提供作者信息)</li>
-<li><strong>发文时间</strong>: 文章在公众号上发布的时间。</li>
-<li><strong>摘要</strong>: 文章内容的简短概述，帮助读者快速了解文章主旨。</li>
-<li><strong>链接</strong>: 指向原文章的网页链接，方便读者直接访问原文。</li>
-<li><strong>主标题</strong>和<strong>副标题</strong>: 是对标题的拆分，从医行习惯用“|”进行分割。</li>
-<li><strong>分类</strong>: 文章的分类标签，便于读者根据兴趣或需求筛选文章（包括夏令营等字段）。</li>
-<li><strong>学校</strong>、<strong>医院</strong>、<strong>科室</strong>: 特定文章可能涉及的学校、医院或科室信息。(许多条目可能为空，取决于文章内容)</li>
-<li><strong>专硕/学硕</strong>: 指文章内容更偏向于专业硕士或学术硕士的相关信息。(部分条目可能为空)</li>
-<li><strong>分类_新</strong>: 和分类同，把不重要的内容归为“其他”。</li>
-</ul>
-<h2 id="结尾"><a href="#结尾" class="headerlink" title="结尾"></a>结尾</h2><p>数据来自从医行公众号的整理，致谢。</p>
-<p>祝大家一切顺利！</p>
+    <title>一起来感受数据之美吧！</title>
+    <url>/2023/10/04/%E4%B8%80%E8%B5%B7%E6%9D%A5%E6%84%9F%E5%8F%97%E6%95%B0%E6%8D%AE%E4%B9%8B%E7%BE%8E%E5%90%A7%EF%BC%81/</url>
+    <content><![CDATA[<h2 id="资源记录"><a href="#资源记录" class="headerlink" title="资源记录"></a>资源记录</h2><ol>
+<li><a href="https://bookdown.org/wangminjie/R4DS/">前言 | 数据科学中的 R 语言 (bookdown.org)</a>（四川师范大学研究生公选课《数据科学中的R语言》的课程内容，其中也会涉及简单的数据科学原理）；</li>
+<li><a href="https://www.bioinfo-scrounger.com/">KeepNotes blog (bioinfo-scrounger.com)</a>（一些R语言和统计问题拾贝）；</li>
+<li><a href="https://cosx.org/">统计之都 (cosx.org)</a>（中文统计学论坛，会定期发表文章，介绍最新的R包，统计学模型和访谈）；</li>
+<li><a href="https://csdiy.wiki/">CS自学指南 (csdiy.wiki)</a>（计算机科学自学指南，其中包括了一个计算机专业学生的知识体系）；</li>
+<li><a href="https://www.writebug.com/">WRITE-BUG数字空间 - 新一代一站式团队协作知识库 (writebug.com)</a>（Writebug有很多高质量的，类似于微信公众号的文章）；</li>
+<li><a href="https://book.ncrnalab.org/teaching/">Bioinformatics Tutorial - Bioinformatics Tutorial (ncrnalab.org)</a> （一个以应用为导向的生物信息学学习站）；</li>
+<li><a href="https://www.cnblogs.com/leezx/">Life·Intelligence - 博客园 (cnblogs.com)</a>）（博主主要关注生物科学、单细胞测序的知识）；</li>
+<li><a href="https://ailearning.apachecn.org/">【布客】AI Learning (apachecn.org)</a>（AI学习的一站式，偏应用）；</li>
+<li><a href="https://forrestgump618.github.io/2023/08/12/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F%E6%95%99%E7%A8%8B%E8%B5%84%E6%BA%90%E8%81%9A%E5%90%88/">单细胞测序教程资源聚合 | 一个夏天的年少 (forrestgump618.github.io)</a> （单细胞测序教程资源整合）；<br> 此外，多去关注Github上有趣的教程和项目。<br> 书本推荐：</li>
+<li>《高等数学》（同济）；《线性代数》（上交）；《概率论和数理统计》（浙大）；</li>
+<li>《生物统计学基础》（Fundamentals of Biostatistics；Bernard Rosner）；《流行病学》（人民卫生出版社）；</li>
+<li>《鸢尾花书：从加减乘除到机器学习》（<a href="https://github.com/Visualize-ML">Visualize-ML (Iris Series: Visualize Math – From Arithmetic Basics to Machine Learning) · GitHub</a>）；</li>
+<li>《R语言编程—基于tidyverse》；</li>
+<li>《遗传学基础》（ <a href="https://book.douban.com/search/William%20S.Klug">William S.Klug</a> / <a href="https://book.douban.com/search/Michael%20R.Cummings">Michael R.Cummings</a> / <a href="https://book.douban.com/search/Charlotte%20A.Spencer">Charlotte A.Spencer</a> / <a href="https://book.douban.com/search/Michael%20A.Palladino">Michael A.Palladino</a>）。</li>
+</ol>
+<h2 id="一些牢骚"><a href="#一些牢骚" class="headerlink" title="一些牢骚"></a>一些牢骚</h2><p>&emsp;&emsp;大一，医用物理学的最后一章——混沌理论，采用数学的方法建模复杂动力学系统的运行规律，并提出了一点轻微的初值改变就可以让整个系统天翻地覆，即著名的蝴蝶定律。<br>&emsp;&emsp;当然，这并不意味着倘若那只蝴蝶扇动翅膀，就必然会引起飓风；但若我们逮到所有的蝴蝶，那么飓风可以预测。这强烈提示人们一种认知观点，复杂的现象背后可以拆解为简单的论断；基于底层法则，自然界得以混沌。<br>&emsp;&emsp;生命是自然界最复杂的现象，就在您读这句话的一刹那，组成我们身体的亿万细胞正发生着无法计数的生命事件，伴随着无法计数的化学物质数量和性质的变化。医学发展的某些部分，尤其是中医学，习惯用系统论的思维去认识生命活动，化繁为简，这方便了知识的理解，也让机械零碎的医学知识得到整合，但其似乎无法回答最根本的问题——生命究竟是什么？<br>&emsp;&emsp;还原论把知识构建在底层逻辑上，如薛定谔尝试用基本的物理学去解释生命发生。但还原论有时会陷入机械唯物论的窠臼。<br>&emsp;&emsp;人类的智慧在于突破概念，不必困惑在还原论和系统论的是非之中。认识世界的方向一定是刨根问底，寻根思因的；在其中，系统论帮助我们更进一步了解可能的逻辑……但这是符合人类思维的逻辑，人类是否能认知最后的核心还不得而知。<br>&emsp;&emsp;对于生命而言，其现象本身是基于自然界的物理规律。故探根问底，也会在我们能理解的知识结构内。<br>&emsp;&emsp;如何寻找生命科学的原子命题？我想，就不能完全依靠传统生命科学逐个知识的积累，而应该充分利用生物数据去解析其背后的模式。<br>&emsp;&emsp;感谢大一时的计算机课，感谢大一时候用免疫学逻辑启蒙我的刘文涛教授，给我打开一扇理解世界的门。<br>&emsp;&emsp;看似的有序中，人们会发现无序。而我们的梦想就是，发现无序背后更深刻的有序，那么我们就有可能进一步探索用现有范式所不能描述、解释或预测的现象。</p>
+<h2 id="学习体会"><a href="#学习体会" class="headerlink" title="学习体会"></a>学习体会</h2><p>&emsp;&emsp;陷于晋升、升学的要求，互联网上主要是快餐式的学习，一些便捷的工具也层出不穷。<br>&emsp;&emsp;基于应用的学习并不困难，许多优秀的公众号和博客，以及Github上有丰富的资源。但是大家未必有这个意识，从而形成所谓壁垒，构建了虚伪的不可替代性，而实际上人人都应该能获取这样的知识。<br>&emsp;&emsp;但，如果有兴趣，我们可以尝试啃一啃硬骨头，理解其基本原理，掌握基本的思维方法，从中认识到人类思维探索的规律。<br>&emsp;&emsp;我的学习路径，是从应用式的学习开始：<br>（1）统计学理论（掌握统计学的基本思维模式，所以了解知识的来历很重要）：生物统计学基础（Fundamentals of Biostatistics；Bernard Rosner）；<br>（2）流行病学理论（掌握流行病学的基本思想，我觉得流行病学最核心观点是比较，而由于主要研究样本，所以如何妥善解决样本相关问题占据了流行病学中大部分内容（可以概括为代表性和可比性）。重点是要能够设计合理的研究框架）：流行病学（人民卫生出版社；沈洪兵）；<br>（3）公众号（主要的反而不是里面的代码，而是推送的文章，文章里面会采用各种统计模型；善于用微信搜索东西，但是……看多了也会信息爆炸）：生信技能树（转录组学）；灵活胖子的科研进步之路（临床统计等）；<br>（4）编程：Python；R语言（mlr3包弥补了R语言机器学习较弱的历史）：推荐《R语言编程—基于tidyverse》；张敬信；C++（Python和R处理矩阵读写非常耗时间，C++可以有效解决这一问题）；Linux（linux学习后，对于计算机会用得更加得心应手，习惯用命令行解决问题后效率会大大提高）：系统架构的原理，基本命令的掌握。<br>（5）其他人的文章；<br>（6）基础数学（和几个高中同学一直保持联系，感受到数学系的同学的确是有一种独特的思维特性去思考问题的，而且我这个时候也遇上了数学基础不够深入理解原理的瓶颈）：《数学分析》（主要是基本的微积分，多元函数看一部分；用《高等数学》（同济）或者《数学分析》（复旦）都可以）；《线性代数》（对于处理生物数据非常重要！但医学生往往不深入学习这个。理解线性代数的基本思想，推荐上海交通大学的《线性代数》）；《概率论和数理统计》（生物统计学那本书里面只会关注基本的统计检验，对于不同的统计学学派，原理不会过多介绍。但概率论和数理统计中大量的数学推导就要求有数学分析的基础）。<br>&emsp;&emsp;其他：<br>&emsp;&emsp;对于基础数学部分，推荐《鸢尾花书：从加减乘除到机器学习》。这套书在Github有开源版本，里面丰富的可视化对于理解线性代数相关知识非常直观。<br>&emsp;&emsp;机器学习部分推荐从《统计学习方法》入门，先修分析学、线性代数和概率论。周志华的《机器学习》实际上数学理论比《统计学习方法》低一点，能够构建对机器学习是什么的认知。<br>&emsp;&emsp;上述理论部分所蕴含的思维方法对于认识世界是一种角度，同时上述的技术部分也的确在方便我们生活，发散我们思维，所以感觉是充实的。<br>&emsp;&emsp;期间，可能需要对遗传学、尤其是基因组学数据有深入了解。可以去啃一下国外的《遗传学基础》（可以当作工具书）。<br>&emsp;&emsp;有时候会有点间断，这个时候会想起已故南大计算机教授徐家福教授八十多岁跨界学习量子力学的实例，共勉~</p>
 ]]></content>
       <categories>
-        <category>医学课程</category>
+        <category>随笔</category>
       </categories>
       <tags>
-        <tag>计算机</tag>
-        <tag>爬虫</tag>
-        <tag>研究生</tag>
+        <tag>统计学</tag>
+        <tag>交叉学科</tag>
       </tags>
   </entry>
   <entry>
@@ -145,36 +145,6 @@
         <tag>GWAS</tag>
         <tag>生物信息学</tag>
         <tag>单细胞测序</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>一起来感受数据之美吧！</title>
-    <url>/2023/10/04/%E4%B8%80%E8%B5%B7%E6%9D%A5%E6%84%9F%E5%8F%97%E6%95%B0%E6%8D%AE%E4%B9%8B%E7%BE%8E%E5%90%A7%EF%BC%81/</url>
-    <content><![CDATA[<h2 id="资源记录"><a href="#资源记录" class="headerlink" title="资源记录"></a>资源记录</h2><ol>
-<li><a href="https://bookdown.org/wangminjie/R4DS/">前言 | 数据科学中的 R 语言 (bookdown.org)</a>（四川师范大学研究生公选课《数据科学中的R语言》的课程内容，其中也会涉及简单的数据科学原理）；</li>
-<li><a href="https://www.bioinfo-scrounger.com/">KeepNotes blog (bioinfo-scrounger.com)</a>（一些R语言和统计问题拾贝）；</li>
-<li><a href="https://cosx.org/">统计之都 (cosx.org)</a>（中文统计学论坛，会定期发表文章，介绍最新的R包，统计学模型和访谈）；</li>
-<li><a href="https://csdiy.wiki/">CS自学指南 (csdiy.wiki)</a>（计算机科学自学指南，其中包括了一个计算机专业学生的知识体系）；</li>
-<li><a href="https://www.writebug.com/">WRITE-BUG数字空间 - 新一代一站式团队协作知识库 (writebug.com)</a>（Writebug有很多高质量的，类似于微信公众号的文章）；</li>
-<li><a href="https://book.ncrnalab.org/teaching/">Bioinformatics Tutorial - Bioinformatics Tutorial (ncrnalab.org)</a> （一个以应用为导向的生物信息学学习站）；</li>
-<li><a href="https://www.cnblogs.com/leezx/">Life·Intelligence - 博客园 (cnblogs.com)</a>）（博主主要关注生物科学、单细胞测序的知识）；</li>
-<li><a href="https://ailearning.apachecn.org/">【布客】AI Learning (apachecn.org)</a>（AI学习的一站式，偏应用）；</li>
-<li><a href="https://forrestgump618.github.io/2023/08/12/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F%E6%95%99%E7%A8%8B%E8%B5%84%E6%BA%90%E8%81%9A%E5%90%88/">单细胞测序教程资源聚合 | 一个夏天的年少 (forrestgump618.github.io)</a> （单细胞测序教程资源整合）；<br> 此外，多去关注Github上有趣的教程和项目。<br> 书本推荐：</li>
-<li>《高等数学》（同济）；《线性代数》（上交）；《概率论和数理统计》（浙大）；</li>
-<li>《生物统计学基础》（Fundamentals of Biostatistics；Bernard Rosner）；《流行病学》（人民卫生出版社）；</li>
-<li>《鸢尾花书：从加减乘除到机器学习》（<a href="https://github.com/Visualize-ML">Visualize-ML (Iris Series: Visualize Math – From Arithmetic Basics to Machine Learning) · GitHub</a>）；</li>
-<li>《R语言编程—基于tidyverse》；</li>
-<li>《遗传学基础》（ <a href="https://book.douban.com/search/William%20S.Klug">William S.Klug</a> / <a href="https://book.douban.com/search/Michael%20R.Cummings">Michael R.Cummings</a> / <a href="https://book.douban.com/search/Charlotte%20A.Spencer">Charlotte A.Spencer</a> / <a href="https://book.douban.com/search/Michael%20A.Palladino">Michael A.Palladino</a>）。</li>
-</ol>
-<h2 id="一些牢骚"><a href="#一些牢骚" class="headerlink" title="一些牢骚"></a>一些牢骚</h2><p>&emsp;&emsp;大一，医用物理学的最后一章——混沌理论，采用数学的方法建模复杂动力学系统的运行规律，并提出了一点轻微的初值改变就可以让整个系统天翻地覆，即著名的蝴蝶定律。<br>&emsp;&emsp;当然，这并不意味着倘若那只蝴蝶扇动翅膀，就必然会引起飓风；但若我们逮到所有的蝴蝶，那么飓风可以预测。这强烈提示人们一种认知观点，复杂的现象背后可以拆解为简单的论断；基于底层法则，自然界得以混沌。<br>&emsp;&emsp;生命是自然界最复杂的现象，就在您读这句话的一刹那，组成我们身体的亿万细胞正发生着无法计数的生命事件，伴随着无法计数的化学物质数量和性质的变化。医学发展的某些部分，尤其是中医学，习惯用系统论的思维去认识生命活动，化繁为简，这方便了知识的理解，也让机械零碎的医学知识得到整合，但其似乎无法回答最根本的问题——生命究竟是什么？<br>&emsp;&emsp;还原论把知识构建在底层逻辑上，如薛定谔尝试用基本的物理学去解释生命发生。但还原论有时会陷入机械唯物论的窠臼。<br>&emsp;&emsp;人类的智慧在于突破概念，不必困惑在还原论和系统论的是非之中。认识世界的方向一定是刨根问底，寻根思因的；在其中，系统论帮助我们更进一步了解可能的逻辑……但这是符合人类思维的逻辑，人类是否能认知最后的核心还不得而知。<br>&emsp;&emsp;对于生命而言，其现象本身是基于自然界的物理规律。故探根问底，也会在我们能理解的知识结构内。<br>&emsp;&emsp;如何寻找生命科学的原子命题？我想，就不能完全依靠传统生命科学逐个知识的积累，而应该充分利用生物数据去解析其背后的模式。<br>&emsp;&emsp;感谢大一时的计算机课，感谢大一时候用免疫学逻辑启蒙我的刘文涛教授，给我打开一扇理解世界的门。<br>&emsp;&emsp;看似的有序中，人们会发现无序。而我们的梦想就是，发现无序背后更深刻的有序，那么我们就有可能进一步探索用现有范式所不能描述、解释或预测的现象。</p>
-<h2 id="学习体会"><a href="#学习体会" class="headerlink" title="学习体会"></a>学习体会</h2><p>&emsp;&emsp;陷于晋升、升学的要求，互联网上主要是快餐式的学习，一些便捷的工具也层出不穷。<br>&emsp;&emsp;基于应用的学习并不困难，许多优秀的公众号和博客，以及Github上有丰富的资源。但是大家未必有这个意识，从而形成所谓壁垒，构建了虚伪的不可替代性，而实际上人人都应该能获取这样的知识。<br>&emsp;&emsp;但，如果有兴趣，我们可以尝试啃一啃硬骨头，理解其基本原理，掌握基本的思维方法，从中认识到人类思维探索的规律。<br>&emsp;&emsp;我的学习路径，是从应用式的学习开始：<br>（1）统计学理论（掌握统计学的基本思维模式，所以了解知识的来历很重要）：生物统计学基础（Fundamentals of Biostatistics；Bernard Rosner）；<br>（2）流行病学理论（掌握流行病学的基本思想，我觉得流行病学最核心观点是比较，而由于主要研究样本，所以如何妥善解决样本相关问题占据了流行病学中大部分内容（可以概括为代表性和可比性）。重点是要能够设计合理的研究框架）：流行病学（人民卫生出版社；沈洪兵）；<br>（3）公众号（主要的反而不是里面的代码，而是推送的文章，文章里面会采用各种统计模型；善于用微信搜索东西，但是……看多了也会信息爆炸）：生信技能树（转录组学）；灵活胖子的科研进步之路（临床统计等）；<br>（4）编程：Python；R语言（mlr3包弥补了R语言机器学习较弱的历史）：推荐《R语言编程—基于tidyverse》；张敬信；C++（Python和R处理矩阵读写非常耗时间，C++可以有效解决这一问题）；Linux（linux学习后，对于计算机会用得更加得心应手，习惯用命令行解决问题后效率会大大提高）：系统架构的原理，基本命令的掌握。<br>（5）其他人的文章；<br>（6）基础数学（和几个高中同学一直保持联系，感受到数学系的同学的确是有一种独特的思维特性去思考问题的，而且我这个时候也遇上了数学基础不够深入理解原理的瓶颈）：《数学分析》（主要是基本的微积分，多元函数看一部分；用《高等数学》（同济）或者《数学分析》（复旦）都可以）；《线性代数》（对于处理生物数据非常重要！但医学生往往不深入学习这个。理解线性代数的基本思想，推荐上海交通大学的《线性代数》）；《概率论和数理统计》（生物统计学那本书里面只会关注基本的统计检验，对于不同的统计学学派，原理不会过多介绍。但概率论和数理统计中大量的数学推导就要求有数学分析的基础）。<br>&emsp;&emsp;其他：<br>&emsp;&emsp;对于基础数学部分，推荐《鸢尾花书：从加减乘除到机器学习》。这套书在Github有开源版本，里面丰富的可视化对于理解线性代数相关知识非常直观。<br>&emsp;&emsp;机器学习部分推荐从《统计学习方法》入门，先修分析学、线性代数和概率论。周志华的《机器学习》实际上数学理论比《统计学习方法》低一点，能够构建对机器学习是什么的认知。<br>&emsp;&emsp;上述理论部分所蕴含的思维方法对于认识世界是一种角度，同时上述的技术部分也的确在方便我们生活，发散我们思维，所以感觉是充实的。<br>&emsp;&emsp;期间，可能需要对遗传学、尤其是基因组学数据有深入了解。可以去啃一下国外的《遗传学基础》（可以当作工具书）。<br>&emsp;&emsp;有时候会有点间断，这个时候会想起已故南大计算机教授徐家福教授八十多岁跨界学习量子力学的实例，共勉~</p>
-]]></content>
-      <categories>
-        <category>随笔</category>
-      </categories>
-      <tags>
-        <tag>统计学</tag>
-        <tag>交叉学科</tag>
       </tags>
   </entry>
   <entry>
@@ -219,6 +189,36 @@
         <tag>单细胞测序</tag>
         <tag>免疫</tag>
         <tag>肿瘤</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>从医行公众号内容整理</title>
+    <url>/2024/03/19/%E4%BB%8E%E5%8C%BB%E8%A1%8C%E5%85%AC%E4%BC%97%E5%8F%B7%E5%86%85%E5%AE%B9%E6%95%B4%E7%90%86/</url>
+    <content><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>公众号上有非常丰富的通知资源，这里做一个归纳。表格内容通过爬虫技术自动收集并手动整理，包含了各类对考研、保研有帮助的资讯和资源。</p>
+<p><a href="https://pan.baidu.com/s/1tzK6lw5xahyo5S4rTMu_kw?pwd=8bkq">百度网盘资源链接</a> (提取码: 8bkq) - 复制这段内容后打开百度网盘手机App，操作更方便哦。</p>
+<h2 id="数据表格内容概览"><a href="#数据表格内容概览" class="headerlink" title="数据表格内容概览"></a>数据表格内容概览</h2><p>表格包含以下主要字段：</p>
+<ul>
+<li><strong>标题</strong>: 文章的标题。</li>
+<li><strong>作者</strong>: 撰写文章的作者名称。(部分条目可能为空，表示未提供作者信息)</li>
+<li><strong>发文时间</strong>: 文章在公众号上发布的时间。</li>
+<li><strong>摘要</strong>: 文章内容的简短概述，帮助读者快速了解文章主旨。</li>
+<li><strong>链接</strong>: 指向原文章的网页链接，方便读者直接访问原文。</li>
+<li><strong>主标题</strong>和<strong>副标题</strong>: 是对标题的拆分，从医行习惯用“|”进行分割。</li>
+<li><strong>分类</strong>: 文章的分类标签，便于读者根据兴趣或需求筛选文章（包括夏令营等字段）。</li>
+<li><strong>学校</strong>、<strong>医院</strong>、<strong>科室</strong>: 特定文章可能涉及的学校、医院或科室信息。(许多条目可能为空，取决于文章内容)</li>
+<li><strong>专硕/学硕</strong>: 指文章内容更偏向于专业硕士或学术硕士的相关信息。(部分条目可能为空)</li>
+<li><strong>分类_新</strong>: 和分类同，把不重要的内容归为“其他”。</li>
+</ul>
+<h2 id="结尾"><a href="#结尾" class="headerlink" title="结尾"></a>结尾</h2><p>数据来自从医行公众号的整理，致谢。</p>
+<p>祝大家一切顺利！</p>
+]]></content>
+      <categories>
+        <category>医学课程</category>
+      </categories>
+      <tags>
+        <tag>计算机</tag>
+        <tag>爬虫</tag>
+        <tag>研究生</tag>
       </tags>
   </entry>
   <entry>
@@ -357,43 +357,6 @@
       <tags>
         <tag>生物信息学</tag>
         <tag>单细胞测序</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>孟德尔随机化标准流程代码示例</title>
-    <url>/2024/02/05/%E5%AD%9F%E5%BE%B7%E5%B0%94%E9%9A%8F%E6%9C%BA%E5%8C%96%E6%A0%87%E5%87%86%E6%B5%81%E7%A8%8B%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B/</url>
-    <content><![CDATA[<p>在这篇博客中，我们将通过R代码来探索非酒精性脂肪肝（NAFLD）对COVID-19严重程度的可能影响。我们将利用两个R包：<code>TwoSampleMR</code>和<code>MRPRESSO</code>，来执行Mendelian Randomization (MR)分析，这是一种利用基因变异作为工具变量来估计暴露和结果之间因果关系的统计方法。</p>
-<h3 id="开始之前"><a href="#开始之前" class="headerlink" title="开始之前"></a>开始之前</h3><p>首先，我们需要安装并加载必要的R包：</p>
-<p>rCopy code</p>
-<p><code># 安装（如果尚未安装） install.packages(&quot;TwoSampleMR&quot;) install.packages(&quot;MRPRESSO&quot;)  # 加载包 library(TwoSampleMR) library(MRPRESSO)</code></p>
-<h3 id="数据准备"><a href="#数据准备" class="headerlink" title="数据准备"></a>数据准备</h3><p>我们的目标是研究NAFLD对COVID-19严重程度的影响。为此，我们首先需要准备关于NAFLD的暴露数据：</p>
-<p>rCopy code</p>
-<p><code># 读取暴露数据 exposure_dat &lt;- read_exposure_data(filename = &quot;./NAFLD.txt&quot;, sep=&quot;\t&quot;,                                    snp_col = &quot;rsids&quot;, effect_allele_col = &quot;alt&quot;, other_allele_col = &quot;ref&quot;,                                    beta_col = &quot;beta&quot;, se_col = &quot;sebeta&quot;, pval_col = &quot;pval&quot;, eaf_col = &quot;af_alt&quot;) # 对数据进行命名，便于后续处理 exposure_dat$phenotype &lt;- &quot;NAFLD&quot;</code></p>
-<h3 id="数据处理"><a href="#数据处理" class="headerlink" title="数据处理"></a>数据处理</h3><p>为了确保我们分析的基因变异之间没有连锁不平衡，我们将对数据进行clump处理：</p>
-<p>rCopy code</p>
-<p><code># 连锁不平衡去除 exposure_dat &lt;- clump_data(exposure_dat)</code></p>
-<h3 id="结果数据获取"><a href="#结果数据获取" class="headerlink" title="结果数据获取"></a>结果数据获取</h3><p>接下来，我们需要获取COVID-19作为结果的数据：</p>
-<p>rCopy code</p>
-<p><code># 在线读取COVID-19结果数据 outcome_dat &lt;- extract_outcome_data(outcomes = &quot;ebi-a-GCST011081&quot;, snps = exposure_dat$SNP)</code></p>
-<h3 id="数据协调"><a href="#数据协调" class="headerlink" title="数据协调"></a>数据协调</h3><p>为了进行MR分析，暴露和结果数据需要进行协调，确保基因变异的方向一致：</p>
-<p>rCopy code</p>
-<p><code># 数据协调 dat &lt;- harmonise_data(exposure_dat = exposure_dat, outcome_dat = outcome_dat, action = 2)</code></p>
-<h3 id="分析与敏感性测试"><a href="#分析与敏感性测试" class="headerlink" title="分析与敏感性测试"></a>分析与敏感性测试</h3><p>进行MR分析前，我们先计算F值，以评估使用的工具变量的有效性，并进行敏感性测试：</p>
-<p>rCopy code</p>
-<p><code># F值计算与筛选 dat$F &lt;- (dat$beta.exposure/dat$se.exposure)**2 dat &lt;- subset(dat, F&gt;10)  # MR分析 mr_result &lt;- mr(dat)  # 敏感性测试 het &lt;- mr_heterogeneity(dat) ple &lt;- mr_pleiotropy_test(dat) mr_presso(data = dat, BetaOutcome = &quot;beta.outcome&quot;, BetaExposure = &quot;beta.exposure&quot;, SdOutcome = &quot;se.outcome&quot;, SdExposure = &quot;se.exposure&quot;)</code></p>
-<h3 id="结果呈现"><a href="#结果呈现" class="headerlink" title="结果呈现"></a>结果呈现</h3><p>最后，我们通过几种图表直观展示MR分析结果：</p>
-<p>rCopy code</p>
-<p><code># 结果图表展示 mr_funnel_plot(singlesnp_results = mr_singlesnp(dat)) # 漏斗图 mr_forest_plot(mr_singlesnp(dat)) # 森林图 mr_scatter_plot(mr_results = mr_result, dat = dat) # 散点图</code></p>
-<p>通过这些步骤，我们可以评估非酒精性脂肪肝（NAFLD）对COVID-19严重程度的潜在影响，提供更深入的理解和新的研究方向。这种基于Mendelian Randomization的方法为我们提供了一种强有力的工具，来探讨各种生物标志物与疾病之间的因果关系。</p>
-]]></content>
-      <categories>
-        <category>流行病学</category>
-      </categories>
-      <tags>
-        <tag>GWAS</tag>
-        <tag>统计学</tag>
-        <tag>孟德尔随机化</tag>
-        <tag>流行病学</tag>
       </tags>
   </entry>
   <entry>
@@ -1091,6 +1054,43 @@
       </tags>
   </entry>
   <entry>
+    <title>孟德尔随机化标准流程代码示例</title>
+    <url>/2024/02/05/%E5%AD%9F%E5%BE%B7%E5%B0%94%E9%9A%8F%E6%9C%BA%E5%8C%96%E6%A0%87%E5%87%86%E6%B5%81%E7%A8%8B%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B/</url>
+    <content><![CDATA[<p>在这篇博客中，我们将通过R代码来探索非酒精性脂肪肝（NAFLD）对COVID-19严重程度的可能影响。我们将利用两个R包：<code>TwoSampleMR</code>和<code>MRPRESSO</code>，来执行Mendelian Randomization (MR)分析，这是一种利用基因变异作为工具变量来估计暴露和结果之间因果关系的统计方法。</p>
+<h3 id="开始之前"><a href="#开始之前" class="headerlink" title="开始之前"></a>开始之前</h3><p>首先，我们需要安装并加载必要的R包：</p>
+<p>rCopy code</p>
+<p><code># 安装（如果尚未安装） install.packages(&quot;TwoSampleMR&quot;) install.packages(&quot;MRPRESSO&quot;)  # 加载包 library(TwoSampleMR) library(MRPRESSO)</code></p>
+<h3 id="数据准备"><a href="#数据准备" class="headerlink" title="数据准备"></a>数据准备</h3><p>我们的目标是研究NAFLD对COVID-19严重程度的影响。为此，我们首先需要准备关于NAFLD的暴露数据：</p>
+<p>rCopy code</p>
+<p><code># 读取暴露数据 exposure_dat &lt;- read_exposure_data(filename = &quot;./NAFLD.txt&quot;, sep=&quot;\t&quot;,                                    snp_col = &quot;rsids&quot;, effect_allele_col = &quot;alt&quot;, other_allele_col = &quot;ref&quot;,                                    beta_col = &quot;beta&quot;, se_col = &quot;sebeta&quot;, pval_col = &quot;pval&quot;, eaf_col = &quot;af_alt&quot;) # 对数据进行命名，便于后续处理 exposure_dat$phenotype &lt;- &quot;NAFLD&quot;</code></p>
+<h3 id="数据处理"><a href="#数据处理" class="headerlink" title="数据处理"></a>数据处理</h3><p>为了确保我们分析的基因变异之间没有连锁不平衡，我们将对数据进行clump处理：</p>
+<p>rCopy code</p>
+<p><code># 连锁不平衡去除 exposure_dat &lt;- clump_data(exposure_dat)</code></p>
+<h3 id="结果数据获取"><a href="#结果数据获取" class="headerlink" title="结果数据获取"></a>结果数据获取</h3><p>接下来，我们需要获取COVID-19作为结果的数据：</p>
+<p>rCopy code</p>
+<p><code># 在线读取COVID-19结果数据 outcome_dat &lt;- extract_outcome_data(outcomes = &quot;ebi-a-GCST011081&quot;, snps = exposure_dat$SNP)</code></p>
+<h3 id="数据协调"><a href="#数据协调" class="headerlink" title="数据协调"></a>数据协调</h3><p>为了进行MR分析，暴露和结果数据需要进行协调，确保基因变异的方向一致：</p>
+<p>rCopy code</p>
+<p><code># 数据协调 dat &lt;- harmonise_data(exposure_dat = exposure_dat, outcome_dat = outcome_dat, action = 2)</code></p>
+<h3 id="分析与敏感性测试"><a href="#分析与敏感性测试" class="headerlink" title="分析与敏感性测试"></a>分析与敏感性测试</h3><p>进行MR分析前，我们先计算F值，以评估使用的工具变量的有效性，并进行敏感性测试：</p>
+<p>rCopy code</p>
+<p><code># F值计算与筛选 dat$F &lt;- (dat$beta.exposure/dat$se.exposure)**2 dat &lt;- subset(dat, F&gt;10)  # MR分析 mr_result &lt;- mr(dat)  # 敏感性测试 het &lt;- mr_heterogeneity(dat) ple &lt;- mr_pleiotropy_test(dat) mr_presso(data = dat, BetaOutcome = &quot;beta.outcome&quot;, BetaExposure = &quot;beta.exposure&quot;, SdOutcome = &quot;se.outcome&quot;, SdExposure = &quot;se.exposure&quot;)</code></p>
+<h3 id="结果呈现"><a href="#结果呈现" class="headerlink" title="结果呈现"></a>结果呈现</h3><p>最后，我们通过几种图表直观展示MR分析结果：</p>
+<p>rCopy code</p>
+<p><code># 结果图表展示 mr_funnel_plot(singlesnp_results = mr_singlesnp(dat)) # 漏斗图 mr_forest_plot(mr_singlesnp(dat)) # 森林图 mr_scatter_plot(mr_results = mr_result, dat = dat) # 散点图</code></p>
+<p>通过这些步骤，我们可以评估非酒精性脂肪肝（NAFLD）对COVID-19严重程度的潜在影响，提供更深入的理解和新的研究方向。这种基于Mendelian Randomization的方法为我们提供了一种强有力的工具，来探讨各种生物标志物与疾病之间的因果关系。</p>
+]]></content>
+      <categories>
+        <category>流行病学</category>
+      </categories>
+      <tags>
+        <tag>GWAS</tag>
+        <tag>统计学</tag>
+        <tag>孟德尔随机化</tag>
+        <tag>流行病学</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>心律失常治疗方式总结</title>
     <url>/2024/03/14/%E5%BF%83%E5%BE%8B%E5%A4%B1%E5%B8%B8%E6%B2%BB%E7%96%97%E6%96%B9%E5%BC%8F%E6%80%BB%E7%BB%93/</url>
     <content><![CDATA[<p>&emsp;&emsp;维持血流动力学处于稳定状态是心脏疾病的救治的落脚点，所以保障心室以适宜的频率进行协调的收缩舒张运动是心律失常救治的首要任务。其次，需要改善心脏内部的血流动力学紊乱，预防血栓形成；必要时需要考虑心房功能，避免前负荷不足。归根结底，心律失常的治疗是以心室为核心的。</p>
@@ -1368,106 +1368,38 @@
       </tags>
   </entry>
   <entry>
-    <title>单细胞测序教程资源聚合</title>
-    <url>/2023/08/12/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E6%95%99%E7%A8%8B%E5%92%8C%E8%B5%84%E6%BA%90%E8%81%9A%E5%90%88/</url>
-    <content><![CDATA[<h2 id="教程"><a href="#教程" class="headerlink" title="教程"></a>教程</h2><h4 id="转录组学"><a href="#转录组学" class="headerlink" title="转录组学"></a>转录组学</h4><ol>
-<li>单细胞测序-最佳的分析Pipeline <a href="https://single-cell-tutorial.readthedocs.io/zh/latest/">单细胞测序-最佳的分析Pipeline</a> ：Zehua Zeng等为主要作者，包括详细的原理和处理流程（Python）；其中重点介绍了Omicverse的使用； </li>
-<li>哈佛大学单细胞中文笔记：<a href="https://zhuanlan.zhihu.com/p/209018565">哈佛大学单细胞中文笔记</a> 陈同博士撰写。主要包括原理和Seurat的使用。<a href="https://hbctraining.github.io/main">原版教程</a>；</li>
-<li>RNA-SEQ BLOG：最新的RNA测序资讯：<a href="https://www.rna-seqblog.com/">RNA-Seq Blog</a></li>
-</ol>
-<h2 id="资源"><a href="#资源" class="headerlink" title="资源"></a>资源</h2><h4 id="肿瘤生信"><a href="#肿瘤生信" class="headerlink" title="肿瘤生信"></a>肿瘤生信</h4><ol>
-<li>GEPIA2：GEPIA2是一个无代码可视化平台，其数据来源于TCGA和GTEx数据库，用户可以自由探索指定基因的在肿瘤组织中的表达情况以及和预后的关系。<a href="http://gepia2.cancer-pku.cn/">GEPIA2</a></li>
-<li>Prognoscan：Prognoscan整合了2010年以前GEO上Microarray和相应临床信息，可以探索制定基因自不同数据集中和预后的关系。<a href="http://dna00.bio.kyutech.ac.jp/PrognoScan/">PrognoScan</a></li>
-<li>TIMER：TIMER用于分析不同癌症类型的免疫浸润（数据来自于TCGA）。<a href="http://timer.cistrome.org/">TIMER2.0</a></li>
-</ol>
-<h4 id="GWAS"><a href="#GWAS" class="headerlink" title="GWAS"></a>GWAS</h4><ol>
-<li>IEU OPEN GWAS：包含42,484 个GWAS摘要数据集的214,725,223,303 个遗传关联的数据库。<a href="https://gwas.mrcieu.ac.uk/">IEU OpenGWAS</a></li>
-<li>PheWeb：包含Biobank Japan，以及UKB等欧洲样本的GWAS结果。<a href="https://pheweb.jp/downloads">PheWeb</a></li>
-<li>GWAS catalog：内容较全，网页比较慢，建议使用特殊方式访问。<a href="https://www.ebi.ac.uk/gwas/downloads/summary-statistics">GWAS catalog</a>:</li>
-<li>EGG：早期生长联盟数据，包含出生体重，出生头围等。<a href="http://egg-consortium.org/index.html">EGG</a></li>
-<li>CKDGEN：包含慢性肾病、MA、eGFR等。<a href="http://ckdgen.imbi.uni-freiburg.de/?tdsourcetag=s_pctim_aiomsg">CKDGEN</a></li>
-<li>GLGC：血脂GWAS数据库。<a href="http://csg.sph.umich.edu/willer/public/glgc-lipids2021/">GLGC</a></li>
-<li>PGC：精神病学基因组学联盟。<a href="https://www.med.unc.edu/pgc/results-and-downloads/downloads">PGC</a></li>
-<li>GEFOS：骨质疏松联盟。<a href="http://www.gefos.org/">GEFOS</a></li>
-<li>DIAGRAM：二型糖尿病数据库。<a href="http://diagram-consortium.org/downloads.html">DIAGRAM</a>: </li>
-<li>代谢组学数据库：<a href="http://www.metabolomix.com/list-of-all-published-gwas-with-metabolomics/">A Table of all published GWAS with metabolomics</a></li>
-</ol>
-]]></content>
-      <categories>
-        <category>生物信息学</category>
-      </categories>
-      <tags>
-        <tag>生物信息学</tag>
-        <tag>单细胞测序</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>生物信息学笔记（一）：转录组测序技术</title>
-    <url>/2024/02/05/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E8%BD%AC%E5%BD%95%E7%BB%84%E6%B5%8B%E5%BA%8F%E6%8A%80%E6%9C%AF/</url>
-    <content><![CDATA[<h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>&emsp;&emsp;<strong>转录组</strong>是特定组织或细胞在某一发育阶段或功能状态下转录出来的所有RNA的集合，包括编码蛋白质的mRNA和非编码RNA（non coding RNA, ncRNA）。<strong>转录组测序</strong>是指利用第二代高通量测序技术进行<strong>cDNA</strong>测序，全面快速地获取某一物种特定器官或组织在某一状态下的几乎所有转录本。</p>
-<p>&emsp;&emsp;转录组分析的主要目标是：</p>
+    <title>生物信息学笔记（三）：基因定量</title>
+    <url>/2024/02/16/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89%EF%BC%9A%E5%9F%BA%E5%9B%A0%E5%AE%9A%E9%87%8F/</url>
+    <content><![CDATA[<h2 id="为什么要对进行基因定量"><a href="#为什么要对进行基因定量" class="headerlink" title="为什么要对进行基因定量"></a>为什么要对进行基因定量</h2><p>&emsp;&emsp;转录组数据分析中，一个转录本反转录后的cDNA会被打碎成片段测序并和基因组比对，就会导致长转录本在给定的cDNA长度下可能会映射更多的cDNA，也就是说基因长度会影响Reads数。<br>&emsp;&emsp;测序深度是指测序过程中每个碱基被测序的平均次数，其计算公式为：$\frac{Reads数*Read长度}{参考序列长度}$：例如，对长100bp的目标区域进行捕获测序：采用单端测序，每个read长5bp；总共得到了200个reads；把所有的reads比对到目标区域后，100bp的目标区域中有98bp的位置至少有1个read覆盖到，换言之，剩余的2bp没有1个read覆盖。则测序深度为 200 x 5 / 100 = 10 我们说这此测序的深度为10X。显而易见，若测序越深，则对于相同长度的转录本，测序所得的Reads数更多。<br>&emsp;&emsp;综上所述，测序深度、基因长度和Reads数相关，所以需要在最终基因表达计数中去除相应的影响。注意，在基因定量的过程中，可能会由于样本本身的原因，如某个基因Reads数过高，导致基因定量后其他基因的表达量低于实际情况，这也是基因定量过程中需要去考虑的。</p>
+<h2 id="Raw-count"><a href="#Raw-count" class="headerlink" title="Raw count"></a>Raw count</h2><p>&emsp;&emsp;所谓Raw count，又称为count数，和上一部分所说的Reads数是同一概念，是指和参考序列比对上的序列数目。原始的读取计数矩阵使用Raw count作为基础，但由于不同基因的长度和测序深度存在差异，因此无法直接比较。为了消除技术偏差的影响并赋予后续差异分析以统计学意义，需要对这些基因计数矩阵进行标准化处理，将其转化为相对值。<br>&emsp;&emsp;但注意，我们进行基因定量时需要充分考虑测序技术和原理，如在 10x 基因组学基因表达检测中，每个转录本都标有作为唯一分子标识符 （unique molecular identifier，UMI） 的序列。这些 UMI 能够准确定量基因表达水平，因为我们可以分辨出哪些读段是从同一个 mRNA 分子中产生的。因此，Cell Ranger 和 Space Ranger 执行 UMI 计数（不是读取计数）以测量基因表达水平，并且所有二次分析步骤都基于 UMI 计数执行。在传统的RNA-seq数据中，完整的转录本被片段化，然后进行cDNA合成、末端修复和衔接连接。在此工作流程中，从长转录本中采样片段的概率高于从短转录本中采样的概率。因此，按转录本长度（例如，TPM、RPKM、FPKM）对读取计数进行归一化是有意义的。然而，在 10x 基因表达测定中，这种基因长度偏差并不存在。因此，不建议按基因长度对UMI计数进行归一化。</p>
+<h2 id="RPKM-FPKM"><a href="#RPKM-FPKM" class="headerlink" title="RPKM/FPKM"></a>RPKM/FPKM</h2><p>&emsp;&emsp;RPKM (Reads Per Kilobase of exon model per Million mapped reads)：每千个碱基的转录每百万映射读取的reads数，是针对单端测序的基因定量方法；FPKM (Fragment Per Kilobase of transcript, per Million mapped reads)：每千碱基片段每百万映射读取的 reads 数，是针对双端测序的基因定量方法。<br>&emsp;&emsp;以RPKM为例，其操作方法为：</p>
 <ol>
-<li>对所有的转录产物进行分类；</li>
-<li>确定基因的转录结构，如其起始位点，5′和3′末端，剪接模式和其他转录后修饰；</li>
-<li>量化各转录本在发育过程中和不同条件下(如生理/病理)表达水平的变化。</li>
+<li>计算样本中的总读数，然后将该数字除以 1,000,000——这是“每百万”比例因子；</li>
+<li>将读取计数除以“每百万”比例因子。这针对测序深度进行了归一化，得到每百万次读数（reads per million，RPM）；</li>
+<li>将 RPM 值除以基因的长度，以千碱基为单位，得到RPKM。</li>
 </ol>
-<p>&emsp;&emsp;在更早的科学研究中，人们主要利用芯片杂交平台，预先设计基因探针从而完成测序。下一代测序（Next generation sequencing, NGS）的发展变革了测序方法，实现了单核苷酸水平的精准识别，人们不必预先设计探针，并能探索基因精细、稀有的转录结构。</p>
-<h2 id="基因芯片"><a href="#基因芯片" class="headerlink" title="基因芯片"></a>基因芯片</h2><p>&emsp;&emsp;虽然本文主要介绍RNA-seq这一技术，但实际上RNA-seq的目的和最终获得的数据格式与基因芯片有着相似之处，即都是以数据矩阵的形式呈现。因此，在介绍RNA-seq之前，我们有必要先了解一下基因芯片。</p>
-<ul>
-<li><strong>原理</strong>：基于分子杂交技术，基因芯片主要依赖于印刷有荧光标记的探针来实现。例如，基因组芯片是一种常见的基因芯片类型，它集成了高密度的探针，具有高达几个碱基对到100个碱基对的分辨率。通过将样品与这些探针进行杂交，并使用荧光染料进行显色，可以揭示转录组的信息。这一原理与血浆cfDNA的测定方法非常相似（即使用<strong>分光光度仪</strong>）。</li>
-<li><strong>流程</strong>：<ol>
-<li>标记mRNA或cDNA文库；</li>
-<li>与设计好的探针相杂交；</li>
-<li>洗脱之后，只有与探针特异性结合的cDNA得以保留；</li>
-<li>成像系统拍照捕捉信息；</li>
+<p>&emsp;&emsp;在第二代测序过程中，常采用一种方法将DNA分子打碎成片段（fragment），然后进行测序。在单末端测序中，每个片段对应一个读取序列（Read），而在双末端测序中，每个片段将从两个端点分别进行测序。因此，这两个成对的读取序列对应于同一个片段（虽然偶尔会出现只有一个读取序列与某个片段相对应的情况，这是由于某些原因导致另一个读取序列被排除或丢失了）。在这一点上存在着区别，对于FPKM（每百万片段计数）这一测量指标而言，与同一片段相关联的两个读取序列只被计算为一个读取序列。换句话说，FPKM是基于片段计数，而不是基于读取序列数量计算的，其他计算方法完全相同。<br>&emsp;&emsp;两者计算公式如下：</p>
+<script type="math/tex; mode=display">FPKM = \frac{Read\quad counts}{Mapped\quad reads(Millions)\quad \times \quad Transcript\quad length(KB)}</script><script type="math/tex; mode=display">RPKM = \frac{Read\quad counts(Fragments)}{Mapped\quad reads(Millions)\quad \times \quad Transcript\quad length(KB)}</script><h2 id="TPM"><a href="#TPM" class="headerlink" title="TPM"></a>TPM</h2><p>&emsp;&emsp;TPM（Transcripts Per Million） 是一种常用的基因表达量归一化方法，它将基因的表达量调整为每百万条转录本的数量。TPM 值考虑了基因的长度和测序深度，通过将每个基因的 Counts 值除以其长度，并进行适当的归一化，将基因的表达量转换为每百万转录本数，以便进行样本间的比较和分析。TPM 值消除了样本间测序深度的差异和基因长度的影响，实质上，TPM相当于重新标准化的文库，保证每个样本中所有TPM的总和是相同的。TPM 与 RPKM 和 FPKM 非常相似。唯一的区别是操作顺序。以下是计算 TPM 的方法：</p>
+<ol>
+<li>将读取计数除以每个基因的长度（以千碱基为单位），得到每千碱基读数（reads per kilobase，RPK）；</li>
+<li>计算样本中的所有 RPK 值的和，并将此数字除以 1,000,000，得到如前的“每百万”比例因子；</li>
+<li>将 RPK 值除以“每百万”比例因子，得到TPM。</li>
 </ol>
-</li>
-<li><strong>原始数据</strong>：由仪器对杂交结果照像生成的图片，保存格式为CEL格式；</li>
-<li><strong>参考数据</strong>：基因芯片探针排布的信息，保存为CDF格式；</li>
-<li><strong>优点</strong>：高度集成，易于应用，成本低；</li>
-<li><strong>缺点</strong>：  <ol>
-<li>高度地依赖已知信息；  </li>
-<li>高背景噪音，非特异杂交会带来的<strong>无法分辨弱信号</strong>和<strong>信号过饱和</strong>的问题；  </li>
-<li>在不同样品的比较当中，甚至在同一芯片内部，都存在杂交不均匀带来的各种问题，需要<strong>标准化</strong>等统计学方法来对结果校正；  </li>
-<li>无法对可变剪接进行分析。<br>&emsp;&emsp;数据清洗和标准化我们会在后续章节进行阐述。</li>
+<p>&emsp;&emsp;综上，在计算TPM时，和前述指标唯一的区别是你首先对基因长度进行归一化，然后对测序深度进行归一化。然而，这种差异的影响是相当深远的。<br>&emsp;&emsp;使用 TPM 时，每个示例中所有 TPM 的总和是相同的。这样可以更容易地比较每个样品中映射到基因的reads比例。相比之下，使用RPKM和FPKM，每个样本中归一化读数的总和可能不同，这使得直接比较样本变得更加困难，在某种意义上，TPM降低了样本本身的影响，从而让样本具有可比性，即TPM实际上改进了RPKM/FPKM方法在跨样品间定量的不准确性。<br>&emsp;&emsp;其计算公式如下：</p>
+<script type="math/tex; mode=display">TPM = 10^6 \times \frac{\frac {Read\quad counts}{Transcript \quad length(KB)}}{\Sigma \frac {Read\quad counts}{Transcript \quad length(KB)}}</script><h2 id="适用范围"><a href="#适用范围" class="headerlink" title="适用范围"></a>适用范围</h2><ol>
+<li>如前所述，基于测序计数选择基因定量的方案，如对于10×测序，直接使用原始Count即可；</li>
+<li>对于传统的二代测序，应当进行标准化基因定量：<ol>
+<li>RPKM和FPKM已经不推荐使用（参考：<a href="https://pubmed.ncbi.nlm.nih.gov/22872506/">Measurement of mRNA abundance using RNA-seq data: RPKM measure is inconsistent among samples</a>；<a href="https://academic.oup.com/bib/article/14/6/671/189645">comprehensive evaluation of normalization methods for Illumina high-throughput RNA sequencing data analysis</a>）；</li>
+<li>TPM、DESeq适合组间比较，有研究更推荐DESeq进行组间比较（<a href="https://academic.oup.com/bib/article/14/6/671/189645#1808405">comprehensive evaluation of normalization methods for Illumina high-throughput RNA sequencing data analysis</a>；<a href="https://translational-medicine.biomedcentral.com/articles/10.1186/s12967-021-02936-w#Sec21">TPM, FPKM, or Normalized Counts? A Comparative Study of Quantification Measures for the Analysis of RNA-seq Data from the NCI Patient-Derived Models Repository</a>）。</li>
 </ol>
 </li>
-</ul>
-<h2 id="NGS"><a href="#NGS" class="headerlink" title="NGS"></a>NGS</h2><p>&emsp;&emsp;NGS是一种高通量、高效率的基因组测序技术，它在基因组学和生物学研究中具有广泛的应用。下一代测序相对于传统的Sanger测序方法，具有更快速、更经济、更高通量的特点。</p>
-<ul>
-<li><strong>原理</strong>：将待测DNA样本分离成小片段，并使用特定的方法进行扩增、捕获和测序。然后在高通量平台上进行并行测序，生成大量的序列片段。这些片段随后通过计算和分析，可以重构原始的DNA序列信息。</li>
-<li><strong>步骤</strong>：<ol>
-<li>分离样本中的RNA，反转录为DNA；</li>
-<li>样品制备：DNA样本需要被处理和准备成适合测序的库。这包括DNA提取、片段化和标记等步骤。</li>
-<li>文库构建：将片段化的DNA样本连接到适当的测序适配器上，形成文库。适配器中包含了特定的序列，用于后续的扩增和测序。</li>
-<li>扩增：将文库中的DNA片段进行扩增，通常采用PCR（聚合酶链式反应）方法。扩增后的文库可以包含成百上千万个DNA片段的复制。</li>
-<li>测序：将扩增的文库加载到下一代测序仪中，进行高通量的并行测序。不同的下一代测序技术会使用不同的原理和方法，如Illumina的测序-by-synthesis技术、Ion Torrent的测序-by-detection技术等。</li>
-<li>数据分析：通过计算和分析，将测序仪输出的原始数据转化为DNA序列信息。这包括图像处理、碱基识别、序列拼接、质量控制和变异检测等步骤。<img src="/2024/02/05/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E8%BD%AC%E5%BD%95%E7%BB%84%E6%B5%8B%E5%BA%8F%E6%8A%80%E6%9C%AF/1.png" alt></li>
 </ol>
-</li>
-<li><strong>步骤（细节）</strong> ：<ol>
-<li>目前很多PCR使用的高保真Pfu聚合酶产生的片段末端是平齐的（即没有不配对的碱基）；鸟枪法产生的片段则是随机断裂，其末端可能是平齐的也可能是不平的，那么我们首先可以使用Taq聚合酶补齐不平的末端，在DNA双链的末端（3‘ 端），我们添加突出的A碱基，以为连接接头做准备（Adaptor）；<img src="/2024/02/05/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E8%BD%AC%E5%BD%95%E7%BB%84%E6%B5%8B%E5%BA%8F%E6%8A%80%E6%9C%AF/2.png" alt></li>
-<li>接头有突出的T，上述操作的DNA双链末端有突出的A，恰能配对。通过连接酶将接头连接上到DNA上；</li>
-<li>NEBNext接头是一个U碱基在中间的环形接头，连接上DNA后将U碱基删除，从而形成“Y形“末端；</li>
-<li>接头添加的目的是作为引物实现这些序列的扩增：文库index（Barcode）、PCR引物Rd1 SP/Rd2 SP，以及和测序平台互补的寡核苷酸链扩增（P7、P5）【其中与P5端连接的Index称为Index 2，又称之为i5；与P7端连接的称为Index1，也称为i7】；</li>
-<li>Y形接头的设计，确保了DNA链两端是不配对的碱基序列引物，从而能够结合不同寡核苷酸序列，实现PCR中DNA链两端不会结合同一段序列（index、PCR引物以及和测序平台互补的寡核苷酸链），为后面的桥式扩增做准备；</li>
-<li>Illumina平台的测序技术为基于<strong>基因芯片的边合成边测序</strong>：在Illumina测序平台的流通池（Flow cell）表面（如下图），通过基因芯片技术交错固定了无数条分别文库接头中P5和P7互补的寡核苷酸链（即短核苷酸链），单链化的文库DNA片段进入流通池后，可以与表面的寡核苷酸结合，从而进入测序过程。<img src="/2024/02/05/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E8%BD%AC%E5%BD%95%E7%BB%84%E6%B5%8B%E5%BA%8F%E6%8A%80%E6%9C%AF/3.png" alt></li>
-<li>由于单链DNA的另一端具有不同的接头序列，因此它可以与相邻的另一种寡核苷酸互补配对，从而进行”桥”式扩增。假设第一次配对的接头是P7，一旦复制完成并洗脱模板后，DNA顶端可以与相邻的P5接头互补配对，形成一个”桥”结构。然后，以P5为引物进行复制。复制完成后，再次解链，并与相邻的不同种类接头结合，以进行下一轮复制。这个过程不断重复。25-28个循环完成后，原来散布在表面的核苷酸序列变成散布的DNA簇【何为散布的核苷酸序列？即一开始结合在P5或者P7上的序列】；<img src="/2024/02/05/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E8%BD%AC%E5%BD%95%E7%BB%84%E6%B5%8B%E5%BA%8F%E6%8A%80%E6%9C%AF/4.png" alt></li>
-<li>接着，再次解链线性化，切割并洗去连接在P5上的DNA链，只留下P7上的DNA单链【仅保留正向链，即一开始进入flowcell的模板链】；</li>
-<li>边合成边测序技术：合成过程发出碱基特异荧光信号被捕捉，合成循环数决定读取长度，对于某一特定的DNA簇，相同的DNA链会被同时读取【为什么要用簇？是为了增强信号】。</li>
-<li>接着测序index序列，从而提示样本来源；</li>
-<li>我们接着进行模板链的另一端开始的测序，这一次也能同时完成index2的测序，双端测序有利于纠正首尾错配：步骤是再次桥式扩增（但一次循环就够了），然后如前测序；</li>
-<li>测序完成，按照相同index进行分类，样本内具有相似base call的序列被聚类，正向和反向read被配为连续序列；</li>
-<li>连续序列和参考基因组进行比对，确定基因和突变。</li>
-</ol>
-</li>
-</ul>
-<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>&emsp;&emsp;对实验原理的透彻理解，是数据分析的基础。后续的归一化、标准化等数据清洗要求都是建立在实验原理上。</p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
-<li><a href="https://zhuanlan.zhihu.com/p/282790878">第二章：NGS原理解析01：二代测序流程 - 知乎 (zhihu.com)</a></li>
-<li><a href="https://zhuanlan.zhihu.com/p/371040548#:~:text=Index%20%E5%8F%88%E7%A7%B0%20Barcode,%EF%BC%8C%E6%98%AF%E6%88%91%E4%BB%AC%E8%BF%9B%E8%A1%8C%20%E6%96%87%E5%BA%93%E6%B7%B7%E5%90%88%E6%B5%8B%E5%BA%8F%E6%97%B6%E7%94%A8%E4%BA%8E%E6%95%B0%E6%8D%AE%E6%8B%86%E5%88%86%E7%9A%84%E4%B8%80%E4%B8%AA%E6%A0%87%E7%AD%BE%20%EF%BC%8C%E5%85%B6%E4%B8%AD%E4%B8%8EP5%E7%AB%AF%E8%BF%9E%E6%8E%A5%E7%9A%84Index%E7%A7%B0%E4%B8%BAIndex%202%EF%BC%8C%E5%8F%88%E7%A7%B0%E4%B9%8B%E4%B8%BAi5%EF%BC%9B%E4%B8%8EP7%E7%AB%AF%E8%BF%9E%E6%8E%A5%E7%9A%84%E7%A7%B0%E4%B8%BAIndex1%EF%BC%8C%E4%B9%9F%E7%A7%B0%E4%B8%BAi7%E3%80%82">干货 | Index这件小事，你get了吗？ - 知乎 (zhihu.com)</a></li>
-<li><a href="https://microbeonline.com/next-generation-sequencing/">Next Generation Sequencing: Principle, Steps Involved, and Applications • Microbe Online</a></li>
-<li><a href="https://www.thermofisher.com/us/en/home/life-science/cloning/cloning-learning-center/invitrogen-school-of-molecular-biology/next-generation-sequencing/illumina-workflow.html">Next-Generation Sequencing Illumina Workflow–4 Key Steps | Thermo Fisher Scientific - US</a></li>
+<li><a href="https://pubmed.ncbi.nlm.nih.gov/22872506/">Measurement of mRNA abundance using RNA-seq data: RPKM measure is inconsistent among samples</a></li>
+<li><a href="https://academic.oup.com/bib/article/14/6/671/189645">comprehensive evaluation of normalization methods for Illumina high-throughput RNA sequencing data analysis</a></li>
+<li><a href="https://translational-medicine.biomedcentral.com/articles/10.1186/s12967-021-02936-w#Sec21">TPM, FPKM, or Normalized Counts? A Comparative Study of Quantification Measures for the Analysis of RNA-seq Data from the NCI Patient-Derived Models Repository</a></li>
+<li><a href="https://kb.10xgenomics.com/hc/en-us/articles/115003684783-Should-I-calculate-TPM-RPKM-or-FPKM-instead-of-counts-for-10x-Genomics-data">Should I calculate TPM, RPKM or FPKM, instead of counts for 10x Genomics data? – 10X Genomics</a></li>
+<li><a href="https://www.rna-seqblog.com/rpkm-fpkm-and-tpm-clearly-explained/">RPKM, FPKM and TPM, clearly explained | RNA-Seq Blog</a></li>
 </ol>
 ]]></content>
       <categories>
@@ -1476,6 +1408,7 @@
       <tags>
         <tag>生物信息学</tag>
         <tag>转录组学</tag>
+        <tag>计数</tag>
       </tags>
   </entry>
   <entry>
@@ -1526,38 +1459,29 @@
       </tags>
   </entry>
   <entry>
-    <title>生物信息学笔记（三）：基因定量</title>
-    <url>/2024/02/16/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89%EF%BC%9A%E5%9F%BA%E5%9B%A0%E5%AE%9A%E9%87%8F/</url>
-    <content><![CDATA[<h2 id="为什么要对进行基因定量"><a href="#为什么要对进行基因定量" class="headerlink" title="为什么要对进行基因定量"></a>为什么要对进行基因定量</h2><p>&emsp;&emsp;转录组数据分析中，一个转录本反转录后的cDNA会被打碎成片段测序并和基因组比对，就会导致长转录本在给定的cDNA长度下可能会映射更多的cDNA，也就是说基因长度会影响Reads数。<br>&emsp;&emsp;测序深度是指测序过程中每个碱基被测序的平均次数，其计算公式为：$\frac{Reads数*Read长度}{参考序列长度}$：例如，对长100bp的目标区域进行捕获测序：采用单端测序，每个read长5bp；总共得到了200个reads；把所有的reads比对到目标区域后，100bp的目标区域中有98bp的位置至少有1个read覆盖到，换言之，剩余的2bp没有1个read覆盖。则测序深度为 200 x 5 / 100 = 10 我们说这此测序的深度为10X。显而易见，若测序越深，则对于相同长度的转录本，测序所得的Reads数更多。<br>&emsp;&emsp;综上所述，测序深度、基因长度和Reads数相关，所以需要在最终基因表达计数中去除相应的影响。注意，在基因定量的过程中，可能会由于样本本身的原因，如某个基因Reads数过高，导致基因定量后其他基因的表达量低于实际情况，这也是基因定量过程中需要去考虑的。</p>
-<h2 id="Raw-count"><a href="#Raw-count" class="headerlink" title="Raw count"></a>Raw count</h2><p>&emsp;&emsp;所谓Raw count，又称为count数，和上一部分所说的Reads数是同一概念，是指和参考序列比对上的序列数目。原始的读取计数矩阵使用Raw count作为基础，但由于不同基因的长度和测序深度存在差异，因此无法直接比较。为了消除技术偏差的影响并赋予后续差异分析以统计学意义，需要对这些基因计数矩阵进行标准化处理，将其转化为相对值。<br>&emsp;&emsp;但注意，我们进行基因定量时需要充分考虑测序技术和原理，如在 10x 基因组学基因表达检测中，每个转录本都标有作为唯一分子标识符 （unique molecular identifier，UMI） 的序列。这些 UMI 能够准确定量基因表达水平，因为我们可以分辨出哪些读段是从同一个 mRNA 分子中产生的。因此，Cell Ranger 和 Space Ranger 执行 UMI 计数（不是读取计数）以测量基因表达水平，并且所有二次分析步骤都基于 UMI 计数执行。在传统的RNA-seq数据中，完整的转录本被片段化，然后进行cDNA合成、末端修复和衔接连接。在此工作流程中，从长转录本中采样片段的概率高于从短转录本中采样的概率。因此，按转录本长度（例如，TPM、RPKM、FPKM）对读取计数进行归一化是有意义的。然而，在 10x 基因表达测定中，这种基因长度偏差并不存在。因此，不建议按基因长度对UMI计数进行归一化。</p>
-<h2 id="RPKM-FPKM"><a href="#RPKM-FPKM" class="headerlink" title="RPKM/FPKM"></a>RPKM/FPKM</h2><p>&emsp;&emsp;RPKM (Reads Per Kilobase of exon model per Million mapped reads)：每千个碱基的转录每百万映射读取的reads数，是针对单端测序的基因定量方法；FPKM (Fragment Per Kilobase of transcript, per Million mapped reads)：每千碱基片段每百万映射读取的 reads 数，是针对双端测序的基因定量方法。<br>&emsp;&emsp;以RPKM为例，其操作方法为：</p>
-<ol>
-<li>计算样本中的总读数，然后将该数字除以 1,000,000——这是“每百万”比例因子；</li>
-<li>将读取计数除以“每百万”比例因子。这针对测序深度进行了归一化，得到每百万次读数（reads per million，RPM）；</li>
-<li>将 RPM 值除以基因的长度，以千碱基为单位，得到RPKM。</li>
+    <title>单细胞测序教程资源聚合</title>
+    <url>/2023/08/12/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E6%95%99%E7%A8%8B%E5%92%8C%E8%B5%84%E6%BA%90%E8%81%9A%E5%90%88/</url>
+    <content><![CDATA[<h2 id="教程"><a href="#教程" class="headerlink" title="教程"></a>教程</h2><h4 id="转录组学"><a href="#转录组学" class="headerlink" title="转录组学"></a>转录组学</h4><ol>
+<li>单细胞测序-最佳的分析Pipeline <a href="https://single-cell-tutorial.readthedocs.io/zh/latest/">单细胞测序-最佳的分析Pipeline</a> ：Zehua Zeng等为主要作者，包括详细的原理和处理流程（Python）；其中重点介绍了Omicverse的使用； </li>
+<li>哈佛大学单细胞中文笔记：<a href="https://zhuanlan.zhihu.com/p/209018565">哈佛大学单细胞中文笔记</a> 陈同博士撰写。主要包括原理和Seurat的使用。<a href="https://hbctraining.github.io/main">原版教程</a>；</li>
+<li>RNA-SEQ BLOG：最新的RNA测序资讯：<a href="https://www.rna-seqblog.com/">RNA-Seq Blog</a></li>
 </ol>
-<p>&emsp;&emsp;在第二代测序过程中，常采用一种方法将DNA分子打碎成片段（fragment），然后进行测序。在单末端测序中，每个片段对应一个读取序列（Read），而在双末端测序中，每个片段将从两个端点分别进行测序。因此，这两个成对的读取序列对应于同一个片段（虽然偶尔会出现只有一个读取序列与某个片段相对应的情况，这是由于某些原因导致另一个读取序列被排除或丢失了）。在这一点上存在着区别，对于FPKM（每百万片段计数）这一测量指标而言，与同一片段相关联的两个读取序列只被计算为一个读取序列。换句话说，FPKM是基于片段计数，而不是基于读取序列数量计算的，其他计算方法完全相同。<br>&emsp;&emsp;两者计算公式如下：</p>
-<script type="math/tex; mode=display">FPKM = \frac{Read\quad counts}{Mapped\quad reads(Millions)\quad \times \quad Transcript\quad length(KB)}</script><script type="math/tex; mode=display">RPKM = \frac{Read\quad counts(Fragments)}{Mapped\quad reads(Millions)\quad \times \quad Transcript\quad length(KB)}</script><h2 id="TPM"><a href="#TPM" class="headerlink" title="TPM"></a>TPM</h2><p>&emsp;&emsp;TPM（Transcripts Per Million） 是一种常用的基因表达量归一化方法，它将基因的表达量调整为每百万条转录本的数量。TPM 值考虑了基因的长度和测序深度，通过将每个基因的 Counts 值除以其长度，并进行适当的归一化，将基因的表达量转换为每百万转录本数，以便进行样本间的比较和分析。TPM 值消除了样本间测序深度的差异和基因长度的影响，实质上，TPM相当于重新标准化的文库，保证每个样本中所有TPM的总和是相同的。TPM 与 RPKM 和 FPKM 非常相似。唯一的区别是操作顺序。以下是计算 TPM 的方法：</p>
-<ol>
-<li>将读取计数除以每个基因的长度（以千碱基为单位），得到每千碱基读数（reads per kilobase，RPK）；</li>
-<li>计算样本中的所有 RPK 值的和，并将此数字除以 1,000,000，得到如前的“每百万”比例因子；</li>
-<li>将 RPK 值除以“每百万”比例因子，得到TPM。</li>
+<h2 id="资源"><a href="#资源" class="headerlink" title="资源"></a>资源</h2><h4 id="肿瘤生信"><a href="#肿瘤生信" class="headerlink" title="肿瘤生信"></a>肿瘤生信</h4><ol>
+<li>GEPIA2：GEPIA2是一个无代码可视化平台，其数据来源于TCGA和GTEx数据库，用户可以自由探索指定基因的在肿瘤组织中的表达情况以及和预后的关系。<a href="http://gepia2.cancer-pku.cn/">GEPIA2</a></li>
+<li>Prognoscan：Prognoscan整合了2010年以前GEO上Microarray和相应临床信息，可以探索制定基因自不同数据集中和预后的关系。<a href="http://dna00.bio.kyutech.ac.jp/PrognoScan/">PrognoScan</a></li>
+<li>TIMER：TIMER用于分析不同癌症类型的免疫浸润（数据来自于TCGA）。<a href="http://timer.cistrome.org/">TIMER2.0</a></li>
 </ol>
-<p>&emsp;&emsp;综上，在计算TPM时，和前述指标唯一的区别是你首先对基因长度进行归一化，然后对测序深度进行归一化。然而，这种差异的影响是相当深远的。<br>&emsp;&emsp;使用 TPM 时，每个示例中所有 TPM 的总和是相同的。这样可以更容易地比较每个样品中映射到基因的reads比例。相比之下，使用RPKM和FPKM，每个样本中归一化读数的总和可能不同，这使得直接比较样本变得更加困难，在某种意义上，TPM降低了样本本身的影响，从而让样本具有可比性，即TPM实际上改进了RPKM/FPKM方法在跨样品间定量的不准确性。<br>&emsp;&emsp;其计算公式如下：</p>
-<script type="math/tex; mode=display">TPM = 10^6 \times \frac{\frac {Read\quad counts}{Transcript \quad length(KB)}}{\Sigma \frac {Read\quad counts}{Transcript \quad length(KB)}}</script><h2 id="适用范围"><a href="#适用范围" class="headerlink" title="适用范围"></a>适用范围</h2><ol>
-<li>如前所述，基于测序计数选择基因定量的方案，如对于10×测序，直接使用原始Count即可；</li>
-<li>对于传统的二代测序，应当进行标准化基因定量：<ol>
-<li>RPKM和FPKM已经不推荐使用（参考：<a href="https://pubmed.ncbi.nlm.nih.gov/22872506/">Measurement of mRNA abundance using RNA-seq data: RPKM measure is inconsistent among samples</a>；<a href="https://academic.oup.com/bib/article/14/6/671/189645">comprehensive evaluation of normalization methods for Illumina high-throughput RNA sequencing data analysis</a>）；</li>
-<li>TPM、DESeq适合组间比较，有研究更推荐DESeq进行组间比较（<a href="https://academic.oup.com/bib/article/14/6/671/189645#1808405">comprehensive evaluation of normalization methods for Illumina high-throughput RNA sequencing data analysis</a>；<a href="https://translational-medicine.biomedcentral.com/articles/10.1186/s12967-021-02936-w#Sec21">TPM, FPKM, or Normalized Counts? A Comparative Study of Quantification Measures for the Analysis of RNA-seq Data from the NCI Patient-Derived Models Repository</a>）。</li>
-</ol>
-</li>
-</ol>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
-<li><a href="https://pubmed.ncbi.nlm.nih.gov/22872506/">Measurement of mRNA abundance using RNA-seq data: RPKM measure is inconsistent among samples</a></li>
-<li><a href="https://academic.oup.com/bib/article/14/6/671/189645">comprehensive evaluation of normalization methods for Illumina high-throughput RNA sequencing data analysis</a></li>
-<li><a href="https://translational-medicine.biomedcentral.com/articles/10.1186/s12967-021-02936-w#Sec21">TPM, FPKM, or Normalized Counts? A Comparative Study of Quantification Measures for the Analysis of RNA-seq Data from the NCI Patient-Derived Models Repository</a></li>
-<li><a href="https://kb.10xgenomics.com/hc/en-us/articles/115003684783-Should-I-calculate-TPM-RPKM-or-FPKM-instead-of-counts-for-10x-Genomics-data">Should I calculate TPM, RPKM or FPKM, instead of counts for 10x Genomics data? – 10X Genomics</a></li>
-<li><a href="https://www.rna-seqblog.com/rpkm-fpkm-and-tpm-clearly-explained/">RPKM, FPKM and TPM, clearly explained | RNA-Seq Blog</a></li>
+<h4 id="GWAS"><a href="#GWAS" class="headerlink" title="GWAS"></a>GWAS</h4><ol>
+<li>IEU OPEN GWAS：包含42,484 个GWAS摘要数据集的214,725,223,303 个遗传关联的数据库。<a href="https://gwas.mrcieu.ac.uk/">IEU OpenGWAS</a></li>
+<li>PheWeb：包含Biobank Japan，以及UKB等欧洲样本的GWAS结果。<a href="https://pheweb.jp/downloads">PheWeb</a></li>
+<li>GWAS catalog：内容较全，网页比较慢，建议使用特殊方式访问。<a href="https://www.ebi.ac.uk/gwas/downloads/summary-statistics">GWAS catalog</a>:</li>
+<li>EGG：早期生长联盟数据，包含出生体重，出生头围等。<a href="http://egg-consortium.org/index.html">EGG</a></li>
+<li>CKDGEN：包含慢性肾病、MA、eGFR等。<a href="http://ckdgen.imbi.uni-freiburg.de/?tdsourcetag=s_pctim_aiomsg">CKDGEN</a></li>
+<li>GLGC：血脂GWAS数据库。<a href="http://csg.sph.umich.edu/willer/public/glgc-lipids2021/">GLGC</a></li>
+<li>PGC：精神病学基因组学联盟。<a href="https://www.med.unc.edu/pgc/results-and-downloads/downloads">PGC</a></li>
+<li>GEFOS：骨质疏松联盟。<a href="http://www.gefos.org/">GEFOS</a></li>
+<li>DIAGRAM：二型糖尿病数据库。<a href="http://diagram-consortium.org/downloads.html">DIAGRAM</a>: </li>
+<li>代谢组学数据库：<a href="http://www.metabolomix.com/list-of-all-published-gwas-with-metabolomics/">A Table of all published GWAS with metabolomics</a></li>
 </ol>
 ]]></content>
       <categories>
@@ -1565,45 +1489,7 @@
       </categories>
       <tags>
         <tag>生物信息学</tag>
-        <tag>转录组学</tag>
-        <tag>计数</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>网络爬虫自动获取教务处最新通知</title>
-    <url>/2024/03/19/%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB%E8%87%AA%E5%8A%A8%E8%8E%B7%E5%8F%96%E6%95%99%E5%8A%A1%E5%A4%84%E6%9C%80%E6%96%B0%E9%80%9A%E7%9F%A5/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>&emsp;&emsp;在日常学习和工作中，及时获取学校教务处的最新通知非常重要。本文介绍了如何使用Python编写一个自动化脚本，该脚本能够爬取教务处网站的最新通知公告，并通过邮件发送给指定的收件人。这样，我们就可以在第一时间内获取到重要信息，不错过任何关键的通知或更新。<br>&emsp;&emsp;欢迎来给俺个星星✨！<a href="https://github.com/ForrestGump618/Notification_NMU">ForrestGump618/Notification_NMU</a>。</p>
-<h2 id="技术栈"><a href="#技术栈" class="headerlink" title="技术栈"></a>技术栈</h2><ul>
-<li><strong>Python</strong>：编程语言</li>
-<li><strong>requests</strong>：HTTP库，用于发送网络请求</li>
-<li><strong>BeautifulSoup</strong>：HTML解析库，用于解析网页内容</li>
-<li><strong>smtplib</strong>、<strong>email.mime.text</strong>、<strong>email.mime.multipart</strong>：邮件发送库，用于构建和发送邮件</li>
-</ul>
-<h2 id="主要功能及实现步骤"><a href="#主要功能及实现步骤" class="headerlink" title="主要功能及实现步骤"></a>主要功能及实现步骤</h2><h3 id="1-网页内容爬取（scrape-website-函数）"><a href="#1-网页内容爬取（scrape-website-函数）" class="headerlink" title="1. 网页内容爬取（scrape_website 函数）"></a>1. 网页内容爬取（<code>scrape_website</code> 函数）</h3><p>&emsp;&emsp;首先，定义<code>scrape_website(url)</code>函数，用于爬取教务处网站的通知公告列表。通过requests库发送GET请求获取网页内容，然后使用BeautifulSoup解析HTML，提取出通知公告的标题、链接和发布日期，最后将这些信息存储在列表中返回。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">scrape_website</span>(<span class="params">url</span>):</span><br><span class="line">    base_url = <span class="string">&quot;https://jwc.njmu.edu.cn&quot;</span></span><br><span class="line">    page = requests.get(url)</span><br><span class="line">    soup = BeautifulSoup(page.content, <span class="string">&#x27;html.parser&#x27;</span>)</span><br><span class="line">    items = soup.select(<span class="string">&#x27;.news_list li&#x27;</span>)</span><br><span class="line">    news_list = []</span><br><span class="line">    <span class="keyword">for</span> item <span class="keyword">in</span> items:</span><br><span class="line">        news = &#123;&#125;</span><br><span class="line">        news_anchor = item.select_one(<span class="string">&#x27;.news_title a&#x27;</span>)</span><br><span class="line">        news[<span class="string">&#x27;title&#x27;</span>] = news_anchor.get(<span class="string">&#x27;title&#x27;</span>).strip()</span><br><span class="line">        news[<span class="string">&#x27;link&#x27;</span>] = base_url + news_anchor.get(<span class="string">&#x27;href&#x27;</span>)</span><br><span class="line">        news[<span class="string">&#x27;date&#x27;</span>] = item.select_one(<span class="string">&#x27;.news_meta&#x27;</span>).text.strip()</span><br><span class="line">        news_list.append(news)</span><br><span class="line">    <span class="keyword">return</span> news_list</span><br></pre></td></tr></table></figure>
-<h3 id="2-获取通知详细内容（scrape-news-details-函数）"><a href="#2-获取通知详细内容（scrape-news-details-函数）" class="headerlink" title="2. 获取通知详细内容（scrape_news_details 函数）"></a>2. 获取通知详细内容（<code>scrape_news_details</code> 函数）</h3><p>&emsp;&emsp;定义<code>scrape_news_details(news_link)</code>函数，用于爬取每条通知的详细内容。同样使用requests和BeautifulSoup获取并解析页面，提取通知的正文内容，并生成一个简短的摘要返回。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">scrape_news_details</span>(<span class="params">news_link</span>):</span><br><span class="line">    page = requests.get(news_link)</span><br><span class="line">    soup = BeautifulSoup(page.content, <span class="string">&#x27;html.parser&#x27;</span>)</span><br><span class="line">    content_element = soup.select_one(<span class="string">&#x27;.wp_articlecontent&#x27;</span>)</span><br><span class="line">    <span class="keyword">if</span> content_element:</span><br><span class="line">        content_text = content_element.get_text(separator=<span class="string">&quot; &quot;</span>, strip=<span class="literal">True</span>)</span><br><span class="line">        length = <span class="built_in">len</span>(content_text)</span><br><span class="line">        <span class="keyword">if</span> length &gt; <span class="number">200</span>:</span><br><span class="line">            summary = content_text[:<span class="number">200</span>] + <span class="string">&quot; ......&quot;</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            summary = content_text</span><br><span class="line">        <span class="keyword">return</span> summary</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;No content found.&quot;</span></span><br></pre></td></tr></table></figure>
-<h3 id="3-邮件发送（send-email-函数）"><a href="#3-邮件发送（send-email-函数）" class="headerlink" title="3. 邮件发送（send_email 函数）"></a>3. 邮件发送（<code>send_email</code> 函数）</h3><p>&emsp;&emsp;定义<code>send_email(subject, content, to_email)</code>函数，使用smtplib和email.mime相关模块构建并发送邮件。这里需要预先设置发件人邮箱、密码以及SMTP服务器信息。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">send_email</span>(<span class="params">subject, content, to_email</span>):</span><br><span class="line">    sender_email = <span class="string">&quot;xxx&quot;</span></span><br><span class="line">    password = <span class="string">&quot;xxx&quot;</span></span><br><span class="line">    msg = MIMEMultipart()</span><br><span class="line">    msg[<span class="string">&#x27;Subject&#x27;</span>] = subject</span><br><span class="line">    msg[<span class="string">&#x27;From&#x27;</span>] = sender_email</span><br><span class="line">    msg[<span class="string">&#x27;To&#x27;</span>] = to_email</span><br><span class="line">    msg.attach(MIMEText(content, <span class="string">&#x27;html&#x27;</span>))</span><br><span class="line">    server = smtplib.SMTP_SSL(<span class="string">&#x27;smtp.qq.com&#x27;</span>, <span class="number">465</span>)</span><br><span class="line">    server.login(sender_email, password)</span><br><span class="line">    server.send_message(msg)</span><br><span class="line">    server.quit()</span><br></pre></td></tr></table></figure>
-<h3 id="4-主程序流程"><a href="#4-主程序流程" class="headerlink" title="4. 主程序流程"></a>4. 主程序流程</h3><p>&emsp;&emsp;在<code>if __name__ == &quot;__main__&quot;:</code>块中，脚本首先调用<code>scrape_website</code>函数获取最新的通知列表，然后为每条通知生成HTML格式的邮件内容。如果当日有更新，则通过<code>send_email</code>函数将这些通知以邮件的形式发送给预设的收件人列表。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    email_list = [<span class="string">&quot;xxx&quot;</span>]</span><br><span class="line">    url = <span class="string">&#x27;https://jwc.njmu.edu.cn/842/list.htm&#x27;</span></span><br><span class="line">    news_list = scrape_website(url)</span><br><span class="line">    <span class="comment"># 构建邮件内容省略，详见原始代码</span></span><br><span class="line">    <span class="keyword">for</span> email <span class="keyword">in</span> email_list:</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">str</span>(datetime.date.today()) <span class="keyword">in</span> content_mail:</span><br><span class="line">            send_email(<span class="string">&quot;今日有更新|教务处通知公告&quot;</span>, content_mail, email)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            send_email(<span class="string">&quot;教务处通知公告&quot;</span>, content_mail, email)</span><br></pre></td></tr></table></figure>
-<p>&emsp;&emsp;效果呈现如下：<br><img src="/2024/03/19/%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB%E8%87%AA%E5%8A%A8%E8%8E%B7%E5%8F%96%E6%95%99%E5%8A%A1%E5%A4%84%E6%9C%80%E6%96%B0%E9%80%9A%E7%9F%A5/1.png" alt="效果呈现"></p>
-<h3 id="5-自动部署"><a href="#5-自动部署" class="headerlink" title="5. 自动部署"></a>5. 自动部署</h3><p>&emsp;&emsp;利用批处理文件部署：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">@<span class="built_in">echo</span> off</span><br><span class="line">C:  </span><br><span class="line"><span class="built_in">cd</span> C:\Users\Zhuang Qingyuan\Desktop\Notification</span><br><span class="line">start python spyder.py</span><br></pre></td></tr></table></figure><br>&emsp;&emsp;保存为BAT文件后，放到电脑的开始-菜单/启动文件夹下，即可开机启动。</p>
-<h2 id="使用指南"><a href="#使用指南" class="headerlink" title="使用指南"></a>使用指南</h2><p>&emsp;&emsp;要使用这个脚本，你需要：</p>
-<ol>
-<li>安装Python及相关库（requests, BeautifulSoup4）。</li>
-<li>替换<code>sender_email</code>、<code>password</code>和<code>email_list</code>中的占位符为实际的邮箱地址和密码。</li>
-<li>运行脚本。脚本会自动检查教务处网站的更新，并将最新的通知发送到指定的邮箱中。</li>
-</ol>
-<p>&emsp;&emsp;通过以上步骤，我们可以构建一个自动化的信息获取和提醒系统，帮助用户及时获取重要的教务通知，有效提升信息获取的效率和时效性。</p>
-]]></content>
-      <categories>
-        <category>随笔</category>
-      </categories>
-      <tags>
-        <tag>python</tag>
-        <tag>计算机</tag>
-        <tag>随笔</tag>
+        <tag>单细胞测序</tag>
       </tags>
   </entry>
   <entry>
@@ -1687,6 +1573,83 @@
       </tags>
   </entry>
   <entry>
+    <title>生物信息学笔记（一）：转录组测序技术</title>
+    <url>/2024/02/05/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E8%BD%AC%E5%BD%95%E7%BB%84%E6%B5%8B%E5%BA%8F%E6%8A%80%E6%9C%AF/</url>
+    <content><![CDATA[<h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>&emsp;&emsp;<strong>转录组</strong>是特定组织或细胞在某一发育阶段或功能状态下转录出来的所有RNA的集合，包括编码蛋白质的mRNA和非编码RNA（non coding RNA, ncRNA）。<strong>转录组测序</strong>是指利用第二代高通量测序技术进行<strong>cDNA</strong>测序，全面快速地获取某一物种特定器官或组织在某一状态下的几乎所有转录本。</p>
+<p>&emsp;&emsp;转录组分析的主要目标是：</p>
+<ol>
+<li>对所有的转录产物进行分类；</li>
+<li>确定基因的转录结构，如其起始位点，5′和3′末端，剪接模式和其他转录后修饰；</li>
+<li>量化各转录本在发育过程中和不同条件下(如生理/病理)表达水平的变化。</li>
+</ol>
+<p>&emsp;&emsp;在更早的科学研究中，人们主要利用芯片杂交平台，预先设计基因探针从而完成测序。下一代测序（Next generation sequencing, NGS）的发展变革了测序方法，实现了单核苷酸水平的精准识别，人们不必预先设计探针，并能探索基因精细、稀有的转录结构。</p>
+<h2 id="基因芯片"><a href="#基因芯片" class="headerlink" title="基因芯片"></a>基因芯片</h2><p>&emsp;&emsp;虽然本文主要介绍RNA-seq这一技术，但实际上RNA-seq的目的和最终获得的数据格式与基因芯片有着相似之处，即都是以数据矩阵的形式呈现。因此，在介绍RNA-seq之前，我们有必要先了解一下基因芯片。</p>
+<ul>
+<li><strong>原理</strong>：基于分子杂交技术，基因芯片主要依赖于印刷有荧光标记的探针来实现。例如，基因组芯片是一种常见的基因芯片类型，它集成了高密度的探针，具有高达几个碱基对到100个碱基对的分辨率。通过将样品与这些探针进行杂交，并使用荧光染料进行显色，可以揭示转录组的信息。这一原理与血浆cfDNA的测定方法非常相似（即使用<strong>分光光度仪</strong>）。</li>
+<li><strong>流程</strong>：<ol>
+<li>标记mRNA或cDNA文库；</li>
+<li>与设计好的探针相杂交；</li>
+<li>洗脱之后，只有与探针特异性结合的cDNA得以保留；</li>
+<li>成像系统拍照捕捉信息；</li>
+</ol>
+</li>
+<li><strong>原始数据</strong>：由仪器对杂交结果照像生成的图片，保存格式为CEL格式；</li>
+<li><strong>参考数据</strong>：基因芯片探针排布的信息，保存为CDF格式；</li>
+<li><strong>优点</strong>：高度集成，易于应用，成本低；</li>
+<li><strong>缺点</strong>：  <ol>
+<li>高度地依赖已知信息；  </li>
+<li>高背景噪音，非特异杂交会带来的<strong>无法分辨弱信号</strong>和<strong>信号过饱和</strong>的问题；  </li>
+<li>在不同样品的比较当中，甚至在同一芯片内部，都存在杂交不均匀带来的各种问题，需要<strong>标准化</strong>等统计学方法来对结果校正；  </li>
+<li>无法对可变剪接进行分析。<br>&emsp;&emsp;数据清洗和标准化我们会在后续章节进行阐述。</li>
+</ol>
+</li>
+</ul>
+<h2 id="NGS"><a href="#NGS" class="headerlink" title="NGS"></a>NGS</h2><p>&emsp;&emsp;NGS是一种高通量、高效率的基因组测序技术，它在基因组学和生物学研究中具有广泛的应用。下一代测序相对于传统的Sanger测序方法，具有更快速、更经济、更高通量的特点。</p>
+<ul>
+<li><strong>原理</strong>：将待测DNA样本分离成小片段，并使用特定的方法进行扩增、捕获和测序。然后在高通量平台上进行并行测序，生成大量的序列片段。这些片段随后通过计算和分析，可以重构原始的DNA序列信息。</li>
+<li><strong>步骤</strong>：<ol>
+<li>分离样本中的RNA，反转录为DNA；</li>
+<li>样品制备：DNA样本需要被处理和准备成适合测序的库。这包括DNA提取、片段化和标记等步骤。</li>
+<li>文库构建：将片段化的DNA样本连接到适当的测序适配器上，形成文库。适配器中包含了特定的序列，用于后续的扩增和测序。</li>
+<li>扩增：将文库中的DNA片段进行扩增，通常采用PCR（聚合酶链式反应）方法。扩增后的文库可以包含成百上千万个DNA片段的复制。</li>
+<li>测序：将扩增的文库加载到下一代测序仪中，进行高通量的并行测序。不同的下一代测序技术会使用不同的原理和方法，如Illumina的测序-by-synthesis技术、Ion Torrent的测序-by-detection技术等。</li>
+<li>数据分析：通过计算和分析，将测序仪输出的原始数据转化为DNA序列信息。这包括图像处理、碱基识别、序列拼接、质量控制和变异检测等步骤。<img src="/2024/02/05/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E8%BD%AC%E5%BD%95%E7%BB%84%E6%B5%8B%E5%BA%8F%E6%8A%80%E6%9C%AF/1.png" alt></li>
+</ol>
+</li>
+<li><strong>步骤（细节）</strong> ：<ol>
+<li>目前很多PCR使用的高保真Pfu聚合酶产生的片段末端是平齐的（即没有不配对的碱基）；鸟枪法产生的片段则是随机断裂，其末端可能是平齐的也可能是不平的，那么我们首先可以使用Taq聚合酶补齐不平的末端，在DNA双链的末端（3‘ 端），我们添加突出的A碱基，以为连接接头做准备（Adaptor）；<img src="/2024/02/05/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E8%BD%AC%E5%BD%95%E7%BB%84%E6%B5%8B%E5%BA%8F%E6%8A%80%E6%9C%AF/2.png" alt></li>
+<li>接头有突出的T，上述操作的DNA双链末端有突出的A，恰能配对。通过连接酶将接头连接上到DNA上；</li>
+<li>NEBNext接头是一个U碱基在中间的环形接头，连接上DNA后将U碱基删除，从而形成“Y形“末端；</li>
+<li>接头添加的目的是作为引物实现这些序列的扩增：文库index（Barcode）、PCR引物Rd1 SP/Rd2 SP，以及和测序平台互补的寡核苷酸链扩增（P7、P5）【其中与P5端连接的Index称为Index 2，又称之为i5；与P7端连接的称为Index1，也称为i7】；</li>
+<li>Y形接头的设计，确保了DNA链两端是不配对的碱基序列引物，从而能够结合不同寡核苷酸序列，实现PCR中DNA链两端不会结合同一段序列（index、PCR引物以及和测序平台互补的寡核苷酸链），为后面的桥式扩增做准备；</li>
+<li>Illumina平台的测序技术为基于<strong>基因芯片的边合成边测序</strong>：在Illumina测序平台的流通池（Flow cell）表面（如下图），通过基因芯片技术交错固定了无数条分别文库接头中P5和P7互补的寡核苷酸链（即短核苷酸链），单链化的文库DNA片段进入流通池后，可以与表面的寡核苷酸结合，从而进入测序过程。<img src="/2024/02/05/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E8%BD%AC%E5%BD%95%E7%BB%84%E6%B5%8B%E5%BA%8F%E6%8A%80%E6%9C%AF/3.png" alt></li>
+<li>由于单链DNA的另一端具有不同的接头序列，因此它可以与相邻的另一种寡核苷酸互补配对，从而进行”桥”式扩增。假设第一次配对的接头是P7，一旦复制完成并洗脱模板后，DNA顶端可以与相邻的P5接头互补配对，形成一个”桥”结构。然后，以P5为引物进行复制。复制完成后，再次解链，并与相邻的不同种类接头结合，以进行下一轮复制。这个过程不断重复。25-28个循环完成后，原来散布在表面的核苷酸序列变成散布的DNA簇【何为散布的核苷酸序列？即一开始结合在P5或者P7上的序列】；<img src="/2024/02/05/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E8%BD%AC%E5%BD%95%E7%BB%84%E6%B5%8B%E5%BA%8F%E6%8A%80%E6%9C%AF/4.png" alt></li>
+<li>接着，再次解链线性化，切割并洗去连接在P5上的DNA链，只留下P7上的DNA单链【仅保留正向链，即一开始进入flowcell的模板链】；</li>
+<li>边合成边测序技术：合成过程发出碱基特异荧光信号被捕捉，合成循环数决定读取长度，对于某一特定的DNA簇，相同的DNA链会被同时读取【为什么要用簇？是为了增强信号】。</li>
+<li>接着测序index序列，从而提示样本来源；</li>
+<li>我们接着进行模板链的另一端开始的测序，这一次也能同时完成index2的测序，双端测序有利于纠正首尾错配：步骤是再次桥式扩增（但一次循环就够了），然后如前测序；</li>
+<li>测序完成，按照相同index进行分类，样本内具有相似base call的序列被聚类，正向和反向read被配为连续序列；</li>
+<li>连续序列和参考基因组进行比对，确定基因和突变。</li>
+</ol>
+</li>
+</ul>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>&emsp;&emsp;对实验原理的透彻理解，是数据分析的基础。后续的归一化、标准化等数据清洗要求都是建立在实验原理上。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a href="https://zhuanlan.zhihu.com/p/282790878">第二章：NGS原理解析01：二代测序流程 - 知乎 (zhihu.com)</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/371040548#:~:text=Index%20%E5%8F%88%E7%A7%B0%20Barcode,%EF%BC%8C%E6%98%AF%E6%88%91%E4%BB%AC%E8%BF%9B%E8%A1%8C%20%E6%96%87%E5%BA%93%E6%B7%B7%E5%90%88%E6%B5%8B%E5%BA%8F%E6%97%B6%E7%94%A8%E4%BA%8E%E6%95%B0%E6%8D%AE%E6%8B%86%E5%88%86%E7%9A%84%E4%B8%80%E4%B8%AA%E6%A0%87%E7%AD%BE%20%EF%BC%8C%E5%85%B6%E4%B8%AD%E4%B8%8EP5%E7%AB%AF%E8%BF%9E%E6%8E%A5%E7%9A%84Index%E7%A7%B0%E4%B8%BAIndex%202%EF%BC%8C%E5%8F%88%E7%A7%B0%E4%B9%8B%E4%B8%BAi5%EF%BC%9B%E4%B8%8EP7%E7%AB%AF%E8%BF%9E%E6%8E%A5%E7%9A%84%E7%A7%B0%E4%B8%BAIndex1%EF%BC%8C%E4%B9%9F%E7%A7%B0%E4%B8%BAi7%E3%80%82">干货 | Index这件小事，你get了吗？ - 知乎 (zhihu.com)</a></li>
+<li><a href="https://microbeonline.com/next-generation-sequencing/">Next Generation Sequencing: Principle, Steps Involved, and Applications • Microbe Online</a></li>
+<li><a href="https://www.thermofisher.com/us/en/home/life-science/cloning/cloning-learning-center/invitrogen-school-of-molecular-biology/next-generation-sequencing/illumina-workflow.html">Next-Generation Sequencing Illumina Workflow–4 Key Steps | Thermo Fisher Scientific - US</a></li>
+</ol>
+]]></content>
+      <categories>
+        <category>生物信息学</category>
+      </categories>
+      <tags>
+        <tag>生物信息学</tag>
+        <tag>转录组学</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>能解答一切的答案</title>
     <url>/2024/03/07/%E8%83%BD%E8%A7%A3%E7%AD%94%E4%B8%80%E5%88%87%E7%9A%84%E7%AD%94%E6%A1%88/</url>
     <content><![CDATA[<p>&emsp;&emsp;医学所以成为医学，是因为什么？医学中能解答一切问题的答案又来自哪里？是技术还是人文？</p>
@@ -1738,6 +1701,43 @@
       <tags>
         <tag>统计学</tag>
         <tag>交叉学科</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>网络爬虫自动获取教务处最新通知</title>
+    <url>/2024/03/19/%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB%E8%87%AA%E5%8A%A8%E8%8E%B7%E5%8F%96%E6%95%99%E5%8A%A1%E5%A4%84%E6%9C%80%E6%96%B0%E9%80%9A%E7%9F%A5/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>&emsp;&emsp;在日常学习和工作中，及时获取学校教务处的最新通知非常重要。本文介绍了如何使用Python编写一个自动化脚本，该脚本能够爬取教务处网站的最新通知公告，并通过邮件发送给指定的收件人。这样，我们就可以在第一时间内获取到重要信息，不错过任何关键的通知或更新。<br>&emsp;&emsp;欢迎来给俺个星星✨！<a href="https://github.com/ForrestGump618/Notification_NMU">ForrestGump618/Notification_NMU</a>。</p>
+<h2 id="技术栈"><a href="#技术栈" class="headerlink" title="技术栈"></a>技术栈</h2><ul>
+<li><strong>Python</strong>：编程语言</li>
+<li><strong>requests</strong>：HTTP库，用于发送网络请求</li>
+<li><strong>BeautifulSoup</strong>：HTML解析库，用于解析网页内容</li>
+<li><strong>smtplib</strong>、<strong>email.mime.text</strong>、<strong>email.mime.multipart</strong>：邮件发送库，用于构建和发送邮件</li>
+</ul>
+<h2 id="主要功能及实现步骤"><a href="#主要功能及实现步骤" class="headerlink" title="主要功能及实现步骤"></a>主要功能及实现步骤</h2><h3 id="1-网页内容爬取（scrape-website-函数）"><a href="#1-网页内容爬取（scrape-website-函数）" class="headerlink" title="1. 网页内容爬取（scrape_website 函数）"></a>1. 网页内容爬取（<code>scrape_website</code> 函数）</h3><p>&emsp;&emsp;首先，定义<code>scrape_website(url)</code>函数，用于爬取教务处网站的通知公告列表。通过requests库发送GET请求获取网页内容，然后使用BeautifulSoup解析HTML，提取出通知公告的标题、链接和发布日期，最后将这些信息存储在列表中返回。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">scrape_website</span>(<span class="params">url</span>):</span><br><span class="line">    base_url = <span class="string">&quot;https://jwc.njmu.edu.cn&quot;</span></span><br><span class="line">    page = requests.get(url)</span><br><span class="line">    soup = BeautifulSoup(page.content, <span class="string">&#x27;html.parser&#x27;</span>)</span><br><span class="line">    items = soup.select(<span class="string">&#x27;.news_list li&#x27;</span>)</span><br><span class="line">    news_list = []</span><br><span class="line">    <span class="keyword">for</span> item <span class="keyword">in</span> items:</span><br><span class="line">        news = &#123;&#125;</span><br><span class="line">        news_anchor = item.select_one(<span class="string">&#x27;.news_title a&#x27;</span>)</span><br><span class="line">        news[<span class="string">&#x27;title&#x27;</span>] = news_anchor.get(<span class="string">&#x27;title&#x27;</span>).strip()</span><br><span class="line">        news[<span class="string">&#x27;link&#x27;</span>] = base_url + news_anchor.get(<span class="string">&#x27;href&#x27;</span>)</span><br><span class="line">        news[<span class="string">&#x27;date&#x27;</span>] = item.select_one(<span class="string">&#x27;.news_meta&#x27;</span>).text.strip()</span><br><span class="line">        news_list.append(news)</span><br><span class="line">    <span class="keyword">return</span> news_list</span><br></pre></td></tr></table></figure>
+<h3 id="2-获取通知详细内容（scrape-news-details-函数）"><a href="#2-获取通知详细内容（scrape-news-details-函数）" class="headerlink" title="2. 获取通知详细内容（scrape_news_details 函数）"></a>2. 获取通知详细内容（<code>scrape_news_details</code> 函数）</h3><p>&emsp;&emsp;定义<code>scrape_news_details(news_link)</code>函数，用于爬取每条通知的详细内容。同样使用requests和BeautifulSoup获取并解析页面，提取通知的正文内容，并生成一个简短的摘要返回。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">scrape_news_details</span>(<span class="params">news_link</span>):</span><br><span class="line">    page = requests.get(news_link)</span><br><span class="line">    soup = BeautifulSoup(page.content, <span class="string">&#x27;html.parser&#x27;</span>)</span><br><span class="line">    content_element = soup.select_one(<span class="string">&#x27;.wp_articlecontent&#x27;</span>)</span><br><span class="line">    <span class="keyword">if</span> content_element:</span><br><span class="line">        content_text = content_element.get_text(separator=<span class="string">&quot; &quot;</span>, strip=<span class="literal">True</span>)</span><br><span class="line">        length = <span class="built_in">len</span>(content_text)</span><br><span class="line">        <span class="keyword">if</span> length &gt; <span class="number">200</span>:</span><br><span class="line">            summary = content_text[:<span class="number">200</span>] + <span class="string">&quot; ......&quot;</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            summary = content_text</span><br><span class="line">        <span class="keyword">return</span> summary</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;No content found.&quot;</span></span><br></pre></td></tr></table></figure>
+<h3 id="3-邮件发送（send-email-函数）"><a href="#3-邮件发送（send-email-函数）" class="headerlink" title="3. 邮件发送（send_email 函数）"></a>3. 邮件发送（<code>send_email</code> 函数）</h3><p>&emsp;&emsp;定义<code>send_email(subject, content, to_email)</code>函数，使用smtplib和email.mime相关模块构建并发送邮件。这里需要预先设置发件人邮箱、密码以及SMTP服务器信息。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">send_email</span>(<span class="params">subject, content, to_email</span>):</span><br><span class="line">    sender_email = <span class="string">&quot;xxx&quot;</span></span><br><span class="line">    password = <span class="string">&quot;xxx&quot;</span></span><br><span class="line">    msg = MIMEMultipart()</span><br><span class="line">    msg[<span class="string">&#x27;Subject&#x27;</span>] = subject</span><br><span class="line">    msg[<span class="string">&#x27;From&#x27;</span>] = sender_email</span><br><span class="line">    msg[<span class="string">&#x27;To&#x27;</span>] = to_email</span><br><span class="line">    msg.attach(MIMEText(content, <span class="string">&#x27;html&#x27;</span>))</span><br><span class="line">    server = smtplib.SMTP_SSL(<span class="string">&#x27;smtp.qq.com&#x27;</span>, <span class="number">465</span>)</span><br><span class="line">    server.login(sender_email, password)</span><br><span class="line">    server.send_message(msg)</span><br><span class="line">    server.quit()</span><br></pre></td></tr></table></figure>
+<h3 id="4-主程序流程"><a href="#4-主程序流程" class="headerlink" title="4. 主程序流程"></a>4. 主程序流程</h3><p>&emsp;&emsp;在<code>if __name__ == &quot;__main__&quot;:</code>块中，脚本首先调用<code>scrape_website</code>函数获取最新的通知列表，然后为每条通知生成HTML格式的邮件内容。如果当日有更新，则通过<code>send_email</code>函数将这些通知以邮件的形式发送给预设的收件人列表。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    email_list = [<span class="string">&quot;xxx&quot;</span>]</span><br><span class="line">    url = <span class="string">&#x27;https://jwc.njmu.edu.cn/842/list.htm&#x27;</span></span><br><span class="line">    news_list = scrape_website(url)</span><br><span class="line">    <span class="comment"># 构建邮件内容省略，详见原始代码</span></span><br><span class="line">    <span class="keyword">for</span> email <span class="keyword">in</span> email_list:</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">str</span>(datetime.date.today()) <span class="keyword">in</span> content_mail:</span><br><span class="line">            send_email(<span class="string">&quot;今日有更新|教务处通知公告&quot;</span>, content_mail, email)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            send_email(<span class="string">&quot;教务处通知公告&quot;</span>, content_mail, email)</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;效果呈现如下：<br><img src="/2024/03/19/%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB%E8%87%AA%E5%8A%A8%E8%8E%B7%E5%8F%96%E6%95%99%E5%8A%A1%E5%A4%84%E6%9C%80%E6%96%B0%E9%80%9A%E7%9F%A5/1.png" alt="效果呈现"></p>
+<h3 id="5-自动部署"><a href="#5-自动部署" class="headerlink" title="5. 自动部署"></a>5. 自动部署</h3><p>&emsp;&emsp;利用批处理文件部署：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">@<span class="built_in">echo</span> off</span><br><span class="line">C:  </span><br><span class="line"><span class="built_in">cd</span> C:\Users\Zhuang Qingyuan\Desktop\Notification</span><br><span class="line">start python spyder.py</span><br></pre></td></tr></table></figure><br>&emsp;&emsp;保存为BAT文件后，放到电脑的开始-菜单/启动文件夹下，即可开机启动。</p>
+<h2 id="使用指南"><a href="#使用指南" class="headerlink" title="使用指南"></a>使用指南</h2><p>&emsp;&emsp;要使用这个脚本，你需要：</p>
+<ol>
+<li>安装Python及相关库（requests, BeautifulSoup4）。</li>
+<li>替换<code>sender_email</code>、<code>password</code>和<code>email_list</code>中的占位符为实际的邮箱地址和密码。</li>
+<li>运行脚本。脚本会自动检查教务处网站的更新，并将最新的通知发送到指定的邮箱中。</li>
+</ol>
+<p>&emsp;&emsp;通过以上步骤，我们可以构建一个自动化的信息获取和提醒系统，帮助用户及时获取重要的教务通知，有效提升信息获取的效率和时效性。</p>
+]]></content>
+      <categories>
+        <category>随笔</category>
+      </categories>
+      <tags>
+        <tag>python</tag>
+        <tag>计算机</tag>
+        <tag>随笔</tag>
       </tags>
   </entry>
 </search>
