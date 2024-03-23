@@ -6,7 +6,7 @@
   <link href="https://forrestgump618.github.io/atom.xml" rel="self"/>
   
   <link href="https://forrestgump618.github.io/"/>
-  <updated>2024-03-19T07:20:03.214Z</updated>
+  <updated>2024-03-23T03:03:21.028Z</updated>
   <id>https://forrestgump618.github.io/</id>
   
   <author>
@@ -15,6 +15,25 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>域名更换</title>
+    <link href="https://forrestgump618.github.io/2024/03/23/%E5%9F%9F%E5%90%8D%E6%9B%B4%E6%8D%A2/"/>
+    <id>https://forrestgump618.github.io/2024/03/23/%E5%9F%9F%E5%90%8D%E6%9B%B4%E6%8D%A2/</id>
+    <published>2024-03-23T00:00:00.000Z</published>
+    <updated>2024-03-23T03:03:21.028Z</updated>
+    
+    
+    <summary type="html">本站新域名 www.zhuangqingyuan.site</summary>
+    
+    
+    
+    <category term="随笔" scheme="https://forrestgump618.github.io/categories/%E9%9A%8F%E7%AC%94/"/>
+    
+    
+    <category term="随笔" scheme="https://forrestgump618.github.io/tags/%E9%9A%8F%E7%AC%94/"/>
+    
+  </entry>
   
   <entry>
     <title>网络爬虫自动获取教务处最新通知</title>
@@ -163,9 +182,9 @@
     <category term="生物信息学" scheme="https://forrestgump618.github.io/categories/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
     
     
-    <category term="单细胞测序" scheme="https://forrestgump618.github.io/tags/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F/"/>
-    
     <category term="生物信息学" scheme="https://forrestgump618.github.io/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
+    
+    <category term="单细胞测序" scheme="https://forrestgump618.github.io/tags/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F/"/>
     
   </entry>
   
@@ -362,9 +381,9 @@
     
     <category term="GWAS" scheme="https://forrestgump618.github.io/tags/GWAS/"/>
     
-    <category term="单细胞测序" scheme="https://forrestgump618.github.io/tags/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F/"/>
-    
     <category term="生物信息学" scheme="https://forrestgump618.github.io/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
+    
+    <category term="单细胞测序" scheme="https://forrestgump618.github.io/tags/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F/"/>
     
   </entry>
   
@@ -404,9 +423,9 @@
     <category term="生物信息学" scheme="https://forrestgump618.github.io/categories/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
     
     
-    <category term="单细胞测序" scheme="https://forrestgump618.github.io/tags/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F/"/>
-    
     <category term="生物信息学" scheme="https://forrestgump618.github.io/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
+    
+    <category term="单细胞测序" scheme="https://forrestgump618.github.io/tags/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F/"/>
     
   </entry>
   
@@ -427,31 +446,9 @@
     
     <category term="GWAS" scheme="https://forrestgump618.github.io/tags/GWAS/"/>
     
-    <category term="单细胞测序" scheme="https://forrestgump618.github.io/tags/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F/"/>
-    
     <category term="生物信息学" scheme="https://forrestgump618.github.io/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
     
-  </entry>
-  
-  <entry>
-    <title>Hello World！</title>
-    <link href="https://forrestgump618.github.io/2023/08/10/Hello%20World%EF%BC%81/"/>
-    <id>https://forrestgump618.github.io/2023/08/10/Hello%20World%EF%BC%81/</id>
-    <published>2023-08-10T00:00:00.000Z</published>
-    <updated>2024-01-31T04:10:34.000Z</updated>
-    
-    
-      
-      
-        
-        
-    <summary type="html">&lt;p&gt;&amp;emsp;&amp;emsp;欢迎来到我的主页，这里将记录我学习医学、统计和流行病学的一些收获，以及一些生活碎片。欢迎来踩！&lt;br&gt;&amp;emsp;&amp;emsp;希望这些笔记对您的学习有帮助，最好的东西是免费的，最好的知识是开源的。&lt;br&gt;2023年8月11日&lt;/p&gt;
-</summary>
-        
-      
-    
-    
-    
+    <category term="单细胞测序" scheme="https://forrestgump618.github.io/tags/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F/"/>
     
   </entry>
   
