@@ -1387,7 +1387,7 @@ img:hover {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #0b37ff;
+  background: #ff70fb;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
@@ -2231,6 +2231,12 @@ img:hover {
     border-bottom-right-radius, border-bottom-left-radius */
   margin: 10px; /* 添加外边距，防止元素紧贴浏览器边缘 */
 /* 继续调整以上属性以满足具体设计需求 */
+}
+.markedown-body pre code {
+  color: #38a06e;
+}
+code {
+  color: #38a06e;
 }
 .category-all-page .category-all-title {
   text-align: center;
