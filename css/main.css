@@ -1387,7 +1387,7 @@ img:hover {
 }
 .links-of-author a::before,
 .links-of-author span.exturl::before {
-  background: #e8117d;
+  background: #0b37ff;
   border-radius: 50%;
   content: ' ';
   display: inline-block;
@@ -2219,6 +2219,18 @@ img:hover {
   color: #fc6423;
   border-bottom: none;
   border-bottom: 1px solid #fc6423;
+}
+.box {
+  border-left: 5px solid #008000;
+  background-color: #f0f0f0;
+  padding: 10px 20px; /* 增加了右侧的内边距以平衡视觉效果 */
+  font-family: Arial, sans-serif;
+  border-radius: 10px; /* 这会给盒子的四个角添加圆角 */
+/* 如需只对特定角添加圆角，可以使用：
+    border-top-left-radius, border-top-right-radius,
+    border-bottom-right-radius, border-bottom-left-radius */
+  margin: 10px; /* 添加外边距，防止元素紧贴浏览器边缘 */
+/* 继续调整以上属性以满足具体设计需求 */
 }
 .category-all-page .category-all-title {
   text-align: center;
