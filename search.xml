@@ -12,6 +12,30 @@
 ]]></content>
   </entry>
   <entry>
+    <title>celltogwas：细胞类型注释到基因组的工具包</title>
+    <url>/2023/08/19/celltogwas%EF%BC%9A%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8B%E6%B3%A8%E9%87%8A%E5%88%B0%E5%9F%BA%E5%9B%A0%E7%BB%84%E7%9A%84%E5%B7%A5%E5%85%B7%E5%8C%85/</url>
+    <content><![CDATA[<h2 id="celltogwas"><a href="#celltogwas" class="headerlink" title="celltogwas"></a>celltogwas</h2><p>This code is a toolkit for genomic analysis. It includes several functions and helper functions to extract gene information from a genomic annotation file, merge gene intervals, generate genomic ranges based on cell types and window size, and annotate GWAS (Genome-Wide Association Study) data.</p>
+<h2 id="Explanation-of-each-function"><a href="#Explanation-of-each-function" class="headerlink" title="Explanation of each function"></a>Explanation of each function</h2><p><strong>extract_gene_info(gtf_file)</strong>: Extracts gene information from a genomic annotation file. It opens a gzip-compressed file, reads it line by line, and extracts gene name, chromosome, start position, and end position from each line. The extracted data is then stored in a Pandas DataFrame and returned.</p>
+<p><strong>merge_intervals(intervals)</strong>: Merges overlapping intervals. This function takes a list of intervals as input and merges overlapping intervals into larger intervals. It first sorts the intervals based on their start positions, then iterates through the intervals. If the current interval does not overlap with the merged interval, it adds the current interval to the merged list. Otherwise, it updates the end position of the merged interval. Finally, it returns the merged interval list.</p>
+<p><strong>celltype_genome_range(cell_gene_dict, gene_info, windowsize)</strong>: Generates genomic ranges based on cell types and window size. This function takes a dictionary mapping cell types to gene lists, a DataFrame of gene information, and a window size as input. It retrieves the gene list corresponding to each cell type from the dictionary and performs an inner join with the gene information to obtain the chromosome, start position, and end position of the corresponding genes. It then adjusts the start and end positions based on the window size and converts the data into a specific format of a list. Finally, it stores the genomic ranges for each cell type in a dictionary and returns it.</p>
+<p><strong>check_value_in_intervals(intervals, value)</strong>: Checks if a value is within the intervals. This function takes a list of intervals and a value as input. It uses binary search to determine if the value falls within the intervals. It first extracts the left boundaries of the intervals, then performs a binary search to find the position of the value in the left boundary list. If the position is less than the length of the interval list, it retrieves the corresponding interval and checks if the value falls within that interval. If the value is within the interval, it returns True; otherwise, it returns False.</p>
+<p><strong>gwas_annotaion(gwas, celltype_range)</strong>: Annotates GWAS data based on genomic ranges. This function takes a DataFrame of GWAS data and a dictionary of genomic ranges as input. It first retrieves the list of chromosomes from the GWAS data. Then, it iterates through the genomic ranges for each cell type. For each chromosome, it retrieves the subset of GWAS data corresponding to that chromosome and the annotation ranges from the genomic ranges. It then iterates through each data item in the subset and uses the check_value_in_intervals function to check if the position of the data item falls within the annotation ranges. If it does, the data item is marked as annotated. Finally, it stores the annotation results for all cell types in a dictionary and returns it.</p>
+<h2 id="File-format"><a href="#File-format" class="headerlink" title="File format"></a>File format</h2><p><strong>gtf_file</strong>: Include CHR, START, END, Other info(GENE Symbol);</p>
+<p><strong>cell_gene_dict</strong>: A dictionary:(1) key:celltype’s name;(2)value:a list of genes;</p>
+<p><strong>gene_info</strong>: Output file from <strong>extract_gene_info(gtf_file)</strong>: Include: GENE, CHR, START, END;</p>
+<p><strong>gwas</strong>: First teo columns: chr, pos;</p>
+<p><strong>celltype_range</strong>: A dictionary:(1) key:celltype’s name;(2)value:a list of genome position:[chr, start, end];</p>
+<p><strong>output_file</strong>: A dictionary:(1) key:celltype’s name;(2)value:[chr, pos ,…… , annotation] (annotation: 1 for anntation and 0 for null).</p>
+]]></content>
+      <categories>
+        <category>生物信息学</category>
+      </categories>
+      <tags>
+        <tag>GWAS</tag>
+        <tag>python</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>scDRS：基于GWAS和scRNA评估细胞类型和生物学过程的疾病相关性</title>
     <url>/2023/08/11/scDRS%EF%BC%9A%E5%9F%BA%E4%BA%8EGWAS%E5%92%8CscRNA%E8%AF%84%E4%BC%B0%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8B%E5%92%8C%E7%94%9F%E7%89%A9%E5%AD%A6%E8%BF%87%E7%A8%8B%E7%9A%84%E7%96%BE%E7%97%85%E7%9B%B8%E5%85%B3%E6%80%A7/</url>
     <content><![CDATA[<h2 id="方法学概述"><a href="#方法学概述" class="headerlink" title="方法学概述"></a>方法学概述</h2><p>&emsp;&emsp;scDRS的核心思想是建立合适的权重从而根据基因的表达对基因程序进行评分，即加权基因表达量。其算法可概述为：首先将基因根据MAGMA得到的gene-level z-scores从大到小排列（也可以自定义基因程序）, 选择潜在的致病基因。基于致病基因的表达量和权重接着计算致病基因程序加权表达量。从而评估该细胞的基因程序和疾病的相关度。<br>&emsp;&emsp;算法对z-score采用算数加权，对技术噪声指标采用逆加权。也就是说，在GWAS中鉴定出的越相关的，且测序过程中技术原因造成误差较小的基因。根据输入数据集的基因表达，在蒙特卡洛随机模拟生成的B个对照组中，从而推断分布，进而对研究的疾病进行统计检验。利用这样的方法，我们可以计算单个细胞和疾病的相关性，以及鉴定相应的驱动基因，并基于此进行下游分析。</p>
@@ -57,33 +81,9 @@
         <category>生物信息学</category>
       </categories>
       <tags>
+        <tag>GWAS</tag>
         <tag>生物信息学</tag>
-        <tag>GWAS</tag>
         <tag>单细胞测序</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>celltogwas：细胞类型注释到基因组的工具包</title>
-    <url>/2023/08/19/celltogwas%EF%BC%9A%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8B%E6%B3%A8%E9%87%8A%E5%88%B0%E5%9F%BA%E5%9B%A0%E7%BB%84%E7%9A%84%E5%B7%A5%E5%85%B7%E5%8C%85/</url>
-    <content><![CDATA[<h2 id="celltogwas"><a href="#celltogwas" class="headerlink" title="celltogwas"></a>celltogwas</h2><p>This code is a toolkit for genomic analysis. It includes several functions and helper functions to extract gene information from a genomic annotation file, merge gene intervals, generate genomic ranges based on cell types and window size, and annotate GWAS (Genome-Wide Association Study) data.</p>
-<h2 id="Explanation-of-each-function"><a href="#Explanation-of-each-function" class="headerlink" title="Explanation of each function"></a>Explanation of each function</h2><p><strong>extract_gene_info(gtf_file)</strong>: Extracts gene information from a genomic annotation file. It opens a gzip-compressed file, reads it line by line, and extracts gene name, chromosome, start position, and end position from each line. The extracted data is then stored in a Pandas DataFrame and returned.</p>
-<p><strong>merge_intervals(intervals)</strong>: Merges overlapping intervals. This function takes a list of intervals as input and merges overlapping intervals into larger intervals. It first sorts the intervals based on their start positions, then iterates through the intervals. If the current interval does not overlap with the merged interval, it adds the current interval to the merged list. Otherwise, it updates the end position of the merged interval. Finally, it returns the merged interval list.</p>
-<p><strong>celltype_genome_range(cell_gene_dict, gene_info, windowsize)</strong>: Generates genomic ranges based on cell types and window size. This function takes a dictionary mapping cell types to gene lists, a DataFrame of gene information, and a window size as input. It retrieves the gene list corresponding to each cell type from the dictionary and performs an inner join with the gene information to obtain the chromosome, start position, and end position of the corresponding genes. It then adjusts the start and end positions based on the window size and converts the data into a specific format of a list. Finally, it stores the genomic ranges for each cell type in a dictionary and returns it.</p>
-<p><strong>check_value_in_intervals(intervals, value)</strong>: Checks if a value is within the intervals. This function takes a list of intervals and a value as input. It uses binary search to determine if the value falls within the intervals. It first extracts the left boundaries of the intervals, then performs a binary search to find the position of the value in the left boundary list. If the position is less than the length of the interval list, it retrieves the corresponding interval and checks if the value falls within that interval. If the value is within the interval, it returns True; otherwise, it returns False.</p>
-<p><strong>gwas_annotaion(gwas, celltype_range)</strong>: Annotates GWAS data based on genomic ranges. This function takes a DataFrame of GWAS data and a dictionary of genomic ranges as input. It first retrieves the list of chromosomes from the GWAS data. Then, it iterates through the genomic ranges for each cell type. For each chromosome, it retrieves the subset of GWAS data corresponding to that chromosome and the annotation ranges from the genomic ranges. It then iterates through each data item in the subset and uses the check_value_in_intervals function to check if the position of the data item falls within the annotation ranges. If it does, the data item is marked as annotated. Finally, it stores the annotation results for all cell types in a dictionary and returns it.</p>
-<h2 id="File-format"><a href="#File-format" class="headerlink" title="File format"></a>File format</h2><p><strong>gtf_file</strong>: Include CHR, START, END, Other info(GENE Symbol);</p>
-<p><strong>cell_gene_dict</strong>: A dictionary:(1) key:celltype’s name;(2)value:a list of genes;</p>
-<p><strong>gene_info</strong>: Output file from <strong>extract_gene_info(gtf_file)</strong>: Include: GENE, CHR, START, END;</p>
-<p><strong>gwas</strong>: First teo columns: chr, pos;</p>
-<p><strong>celltype_range</strong>: A dictionary:(1) key:celltype’s name;(2)value:a list of genome position:[chr, start, end];</p>
-<p><strong>output_file</strong>: A dictionary:(1) key:celltype’s name;(2)value:[chr, pos ,…… , annotation] (annotation: 1 for anntation and 0 for null).</p>
-]]></content>
-      <categories>
-        <category>生物信息学</category>
-      </categories>
-      <tags>
-        <tag>GWAS</tag>
-        <tag>python</tag>
       </tags>
   </entry>
   <entry>
@@ -117,9 +117,42 @@
         <category>生物信息学</category>
       </categories>
       <tags>
-        <tag>生物信息学</tag>
         <tag>GWAS</tag>
+        <tag>生物信息学</tag>
         <tag>单细胞测序</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>一起来感受数据之美吧！</title>
+    <url>/2023/10/04/%E4%B8%80%E8%B5%B7%E6%9D%A5%E6%84%9F%E5%8F%97%E6%95%B0%E6%8D%AE%E4%B9%8B%E7%BE%8E%E5%90%A7%EF%BC%81/</url>
+    <content><![CDATA[<h2 id="资源记录"><a href="#资源记录" class="headerlink" title="资源记录"></a>资源记录</h2><ul>
+<li><a href="https://bookdown.org/wangminjie/R4DS/"><strong>前言 | 数据科学中的 R 语言</strong></a> 📘 - 四川师范大学研究生公选课《数据科学中的R语言》的课程内容，其中也会涉及简单的数据科学原理。</li>
+<li><a href="https://www.bioinfo-scrounger.com/"><strong>KeepNotes blog</strong></a> 📝 - 一些R语言和统计问题拾贝。</li>
+<li><a href="https://cosx.org/"><strong>统计之都</strong></a> 📊 - 中文统计学论坛，会定期发表文章，介绍最新的R包，统计学模型和访谈。</li>
+<li><a href="https://csdiy.wiki/"><strong>CS自学指南</strong></a> 💻 - 计算机科学自学指南，其中包括了一个计算机专业学生的知识体系。</li>
+<li><a href="https://www.writebug.com/"><strong>WRITE-BUG数字空间 - 新一代一站式团队协作知识库</strong></a> 🚀 - Writebug有很多高质量的，类似于微信公众号的文章。</li>
+<li><a href="https://book.ncrnalab.org/teaching/"><strong>Bioinformatics Tutorial - Bioinformatics Tutorial</strong></a> 🧬 - 一个以应用为导向的生物信息学学习站。</li>
+<li><a href="https://www.cnblogs.com/leezx/"><strong>Life·Intelligence - 博客园</strong></a> 🌱 - 博主主要关注生物科学、单细胞测序的知识。</li>
+<li><a href="https://ailearning.apachecn.org/"><strong>【布客】AI Learning</strong></a> 🤖 - AI学习的一站式，偏应用。</li>
+<li><a href="https://forrestgump618.github.io/2023/08/12/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F%E6%95%99%E7%A8%8B%E8%B5%84%E6%BA%90%E8%81%9A%E5%90%88/"><strong>单细胞测序教程资源聚合 | 一个夏天的年少</strong></a> 🌟 - 单细胞测序教程资源整合。</li>
+</ul>
+<p>此外，多去关注Github上有趣的教程和项目。<br>书本推荐：</p>
+<ul>
+<li>《高等数学》（同济）；《线性代数》（上交）；《概率论和数理统计》（浙大）；</li>
+<li>《生物统计学基础》（_Fundamentals of Biostatistics_；Bernard Rosner）；《流行病学》（人民卫生出版社）；</li>
+<li>《鸢尾花书：从加减乘除到机器学习》（<a href="https://github.com/Visualize-ML">Visualize-ML</a>）；</li>
+<li>《R语言编程—基于tidyverse》；</li>
+<li>《遗传学基础》（<a href="https://book.douban.com/search/William%20S.Klug">William S.Klug</a> / <a href="https://book.douban.com/search/Michael%20R.Cummings">Michael R.Cummings</a> / <a href="https://book.douban.com/search/Charlotte%20A.Spencer">Charlotte A.Spencer</a> / <a href="https://book.douban.com/search/Michael%20A.Palladino">Michael A.Palladino</a>）。</li>
+</ul>
+<h2 id="一些牢骚"><a href="#一些牢骚" class="headerlink" title="一些牢骚"></a>一些牢骚</h2><p>&emsp;&emsp;大一，医用物理学的最后一章——混沌理论，采用数学的方法建模复杂动力学系统的运行规律，并提出了一点轻微的初值改变就可以让整个系统天翻地覆，即著名的蝴蝶定律。<br>&emsp;&emsp;当然，这并不意味着倘若那只蝴蝶扇动翅膀，就必然会引起飓风；但若我们逮到所有的蝴蝶，那么飓风可以预测。这强烈提示人们一种认知观点，复杂的现象背后可以拆解为简单的论断；基于底层法则，自然界得以混沌。<br>&emsp;&emsp;生命是自然界最复杂的现象，就在您读这句话的一刹那，组成我们身体的亿万细胞正发生着无法计数的生命事件，伴随着无法计数的化学物质数量和性质的变化。医学发展的某些部分，尤其是中医学，习惯用系统论的思维去认识生命活动，化繁为简，这方便了知识的理解，也让机械零碎的医学知识得到整合，但其似乎无法回答最根本的问题——生命究竟是什么？<br>&emsp;&emsp;还原论把知识构建在底层逻辑上，如薛定谔尝试用基本的物理学去解释生命发生。但还原论有时会陷入机械唯物论的窠臼。<br>&emsp;&emsp;人类的智慧在于突破概念，不必困惑在还原论和系统论的是非之中。认识世界的方向一定是刨根问底，寻根思因的；在其中，系统论帮助我们更进一步了解可能的逻辑……但这是符合人类思维的逻辑，人类是否能认知最后的核心还不得而知。<br>&emsp;&emsp;对于生命而言，其现象本身是基于自然界的物理规律。故探根问底，也会在我们能理解的知识结构内。<br>&emsp;&emsp;如何寻找生命科学的原子命题？我想，就不能完全依靠传统生命科学逐个知识的积累，而应该充分利用生物数据去解析其背后的模式。<br>&emsp;&emsp;感谢大一时的计算机课，感谢大一时候用免疫学逻辑启蒙我的刘文涛教授，给我打开一扇理解世界的门。<br>&emsp;&emsp;看似的有序中，人们会发现无序。而我们的梦想就是，发现无序背后更深刻的有序，那么我们就有可能进一步探索用现有范式所不能描述、解释或预测的现象。</p>
+<h2 id="学习体会"><a href="#学习体会" class="headerlink" title="学习体会"></a>学习体会</h2><p>&emsp;&emsp;陷于晋升、升学的要求，互联网上主要是快餐式的学习，一些便捷的工具也层出不穷。<br>&emsp;&emsp;基于应用的学习并不困难，许多优秀的公众号和博客，以及Github上有丰富的资源。但是大家未必有这个意识，从而形成所谓壁垒，构建了虚伪的不可替代性，而实际上人人都应该能获取这样的知识。<br>&emsp;&emsp;但，如果有兴趣，我们可以尝试啃一啃硬骨头，理解其基本原理，掌握基本的思维方法，从中认识到人类思维探索的规律。<br>&emsp;&emsp;我的学习路径，是从应用式的学习开始：<br>（1）统计学理论（掌握统计学的基本思维模式，所以了解知识的来历很重要）：生物统计学基础（Fundamentals of Biostatistics；Bernard Rosner）；<br>（2）流行病学理论（掌握流行病学的基本思想，我觉得流行病学最核心观点是比较，而由于主要研究样本，所以如何妥善解决样本相关问题占据了流行病学中大部分内容（可以概括为代表性和可比性）。重点是要能够设计合理的研究框架）：流行病学（人民卫生出版社；沈洪兵）；<br>（3）公众号（主要的反而不是里面的代码，而是推送的文章，文章里面会采用各种统计模型；善于用微信搜索东西，但是……看多了也会信息爆炸）：生信技能树（转录组学）；灵活胖子的科研进步之路（临床统计等）；<br>（4）编程：Python；R语言（mlr3包弥补了R语言机器学习较弱的历史）：推荐《R语言编程—基于tidyverse》；张敬信；C++（Python和R处理矩阵读写非常耗时间，C++可以有效解决这一问题）；Linux（linux学习后，对于计算机会用得更加得心应手，习惯用命令行解决问题后效率会大大提高）：系统架构的原理，基本命令的掌握。<br>（5）其他人的文章；<br>（6）基础数学（和几个高中同学一直保持联系，感受到数学系的同学的确是有一种独特的思维特性去思考问题的，而且我这个时候也遇上了数学基础不够深入理解原理的瓶颈）：《数学分析》（主要是基本的微积分，多元函数看一部分；用《高等数学》（同济）或者《数学分析》（复旦）都可以）；《线性代数》（对于处理生物数据非常重要！但医学生往往不深入学习这个。理解线性代数的基本思想，推荐上海交通大学的《线性代数》）；《概率论和数理统计》（生物统计学那本书里面只会关注基本的统计检验，对于不同的统计学学派，原理不会过多介绍。但概率论和数理统计中大量的数学推导就要求有数学分析的基础）。<br>&emsp;&emsp;其他：<br>&emsp;&emsp;对于基础数学部分，推荐《鸢尾花书：从加减乘除到机器学习》。这套书在Github有开源版本，里面丰富的可视化对于理解线性代数相关知识非常直观。<br>&emsp;&emsp;机器学习部分推荐从《统计学习方法》入门，先修分析学、线性代数和概率论。周志华的《机器学习》实际上数学理论比《统计学习方法》低一点，能够构建对机器学习是什么的认知。<br>&emsp;&emsp;上述理论部分所蕴含的思维方法对于认识世界是一种角度，同时上述的技术部分也的确在方便我们生活，发散我们思维，所以感觉是充实的。<br>&emsp;&emsp;期间，可能需要对遗传学、尤其是基因组学数据有深入了解。可以去啃一下国外的《遗传学基础》（可以当作工具书）。<br>&emsp;&emsp;有时候会有点间断，这个时候会想起已故南大计算机教授徐家福教授八十多岁跨界学习量子力学的实例，共勉~</p>
+]]></content>
+      <categories>
+        <category>随笔</category>
+      </categories>
+      <tags>
+        <tag>统计学</tag>
+        <tag>交叉学科</tag>
       </tags>
   </entry>
   <entry>
@@ -354,39 +387,6 @@
       </categories>
       <tags>
         <tag>随笔</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>一起来感受数据之美吧！</title>
-    <url>/2023/10/04/%E4%B8%80%E8%B5%B7%E6%9D%A5%E6%84%9F%E5%8F%97%E6%95%B0%E6%8D%AE%E4%B9%8B%E7%BE%8E%E5%90%A7%EF%BC%81/</url>
-    <content><![CDATA[<h2 id="资源记录"><a href="#资源记录" class="headerlink" title="资源记录"></a>资源记录</h2><ul>
-<li><a href="https://bookdown.org/wangminjie/R4DS/"><strong>前言 | 数据科学中的 R 语言</strong></a> 📘 - 四川师范大学研究生公选课《数据科学中的R语言》的课程内容，其中也会涉及简单的数据科学原理。</li>
-<li><a href="https://www.bioinfo-scrounger.com/"><strong>KeepNotes blog</strong></a> 📝 - 一些R语言和统计问题拾贝。</li>
-<li><a href="https://cosx.org/"><strong>统计之都</strong></a> 📊 - 中文统计学论坛，会定期发表文章，介绍最新的R包，统计学模型和访谈。</li>
-<li><a href="https://csdiy.wiki/"><strong>CS自学指南</strong></a> 💻 - 计算机科学自学指南，其中包括了一个计算机专业学生的知识体系。</li>
-<li><a href="https://www.writebug.com/"><strong>WRITE-BUG数字空间 - 新一代一站式团队协作知识库</strong></a> 🚀 - Writebug有很多高质量的，类似于微信公众号的文章。</li>
-<li><a href="https://book.ncrnalab.org/teaching/"><strong>Bioinformatics Tutorial - Bioinformatics Tutorial</strong></a> 🧬 - 一个以应用为导向的生物信息学学习站。</li>
-<li><a href="https://www.cnblogs.com/leezx/"><strong>Life·Intelligence - 博客园</strong></a> 🌱 - 博主主要关注生物科学、单细胞测序的知识。</li>
-<li><a href="https://ailearning.apachecn.org/"><strong>【布客】AI Learning</strong></a> 🤖 - AI学习的一站式，偏应用。</li>
-<li><a href="https://forrestgump618.github.io/2023/08/12/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F%E6%95%99%E7%A8%8B%E8%B5%84%E6%BA%90%E8%81%9A%E5%90%88/"><strong>单细胞测序教程资源聚合 | 一个夏天的年少</strong></a> 🌟 - 单细胞测序教程资源整合。</li>
-</ul>
-<p>此外，多去关注Github上有趣的教程和项目。<br>书本推荐：</p>
-<ul>
-<li>《高等数学》（同济）；《线性代数》（上交）；《概率论和数理统计》（浙大）；</li>
-<li>《生物统计学基础》（_Fundamentals of Biostatistics_；Bernard Rosner）；《流行病学》（人民卫生出版社）；</li>
-<li>《鸢尾花书：从加减乘除到机器学习》（<a href="https://github.com/Visualize-ML">Visualize-ML</a>）；</li>
-<li>《R语言编程—基于tidyverse》；</li>
-<li>《遗传学基础》（<a href="https://book.douban.com/search/William%20S.Klug">William S.Klug</a> / <a href="https://book.douban.com/search/Michael%20R.Cummings">Michael R.Cummings</a> / <a href="https://book.douban.com/search/Charlotte%20A.Spencer">Charlotte A.Spencer</a> / <a href="https://book.douban.com/search/Michael%20A.Palladino">Michael A.Palladino</a>）。</li>
-</ul>
-<h2 id="一些牢骚"><a href="#一些牢骚" class="headerlink" title="一些牢骚"></a>一些牢骚</h2><p>&emsp;&emsp;大一，医用物理学的最后一章——混沌理论，采用数学的方法建模复杂动力学系统的运行规律，并提出了一点轻微的初值改变就可以让整个系统天翻地覆，即著名的蝴蝶定律。<br>&emsp;&emsp;当然，这并不意味着倘若那只蝴蝶扇动翅膀，就必然会引起飓风；但若我们逮到所有的蝴蝶，那么飓风可以预测。这强烈提示人们一种认知观点，复杂的现象背后可以拆解为简单的论断；基于底层法则，自然界得以混沌。<br>&emsp;&emsp;生命是自然界最复杂的现象，就在您读这句话的一刹那，组成我们身体的亿万细胞正发生着无法计数的生命事件，伴随着无法计数的化学物质数量和性质的变化。医学发展的某些部分，尤其是中医学，习惯用系统论的思维去认识生命活动，化繁为简，这方便了知识的理解，也让机械零碎的医学知识得到整合，但其似乎无法回答最根本的问题——生命究竟是什么？<br>&emsp;&emsp;还原论把知识构建在底层逻辑上，如薛定谔尝试用基本的物理学去解释生命发生。但还原论有时会陷入机械唯物论的窠臼。<br>&emsp;&emsp;人类的智慧在于突破概念，不必困惑在还原论和系统论的是非之中。认识世界的方向一定是刨根问底，寻根思因的；在其中，系统论帮助我们更进一步了解可能的逻辑……但这是符合人类思维的逻辑，人类是否能认知最后的核心还不得而知。<br>&emsp;&emsp;对于生命而言，其现象本身是基于自然界的物理规律。故探根问底，也会在我们能理解的知识结构内。<br>&emsp;&emsp;如何寻找生命科学的原子命题？我想，就不能完全依靠传统生命科学逐个知识的积累，而应该充分利用生物数据去解析其背后的模式。<br>&emsp;&emsp;感谢大一时的计算机课，感谢大一时候用免疫学逻辑启蒙我的刘文涛教授，给我打开一扇理解世界的门。<br>&emsp;&emsp;看似的有序中，人们会发现无序。而我们的梦想就是，发现无序背后更深刻的有序，那么我们就有可能进一步探索用现有范式所不能描述、解释或预测的现象。</p>
-<h2 id="学习体会"><a href="#学习体会" class="headerlink" title="学习体会"></a>学习体会</h2><p>&emsp;&emsp;陷于晋升、升学的要求，互联网上主要是快餐式的学习，一些便捷的工具也层出不穷。<br>&emsp;&emsp;基于应用的学习并不困难，许多优秀的公众号和博客，以及Github上有丰富的资源。但是大家未必有这个意识，从而形成所谓壁垒，构建了虚伪的不可替代性，而实际上人人都应该能获取这样的知识。<br>&emsp;&emsp;但，如果有兴趣，我们可以尝试啃一啃硬骨头，理解其基本原理，掌握基本的思维方法，从中认识到人类思维探索的规律。<br>&emsp;&emsp;我的学习路径，是从应用式的学习开始：<br>（1）统计学理论（掌握统计学的基本思维模式，所以了解知识的来历很重要）：生物统计学基础（Fundamentals of Biostatistics；Bernard Rosner）；<br>（2）流行病学理论（掌握流行病学的基本思想，我觉得流行病学最核心观点是比较，而由于主要研究样本，所以如何妥善解决样本相关问题占据了流行病学中大部分内容（可以概括为代表性和可比性）。重点是要能够设计合理的研究框架）：流行病学（人民卫生出版社；沈洪兵）；<br>（3）公众号（主要的反而不是里面的代码，而是推送的文章，文章里面会采用各种统计模型；善于用微信搜索东西，但是……看多了也会信息爆炸）：生信技能树（转录组学）；灵活胖子的科研进步之路（临床统计等）；<br>（4）编程：Python；R语言（mlr3包弥补了R语言机器学习较弱的历史）：推荐《R语言编程—基于tidyverse》；张敬信；C++（Python和R处理矩阵读写非常耗时间，C++可以有效解决这一问题）；Linux（linux学习后，对于计算机会用得更加得心应手，习惯用命令行解决问题后效率会大大提高）：系统架构的原理，基本命令的掌握。<br>（5）其他人的文章；<br>（6）基础数学（和几个高中同学一直保持联系，感受到数学系的同学的确是有一种独特的思维特性去思考问题的，而且我这个时候也遇上了数学基础不够深入理解原理的瓶颈）：《数学分析》（主要是基本的微积分，多元函数看一部分；用《高等数学》（同济）或者《数学分析》（复旦）都可以）；《线性代数》（对于处理生物数据非常重要！但医学生往往不深入学习这个。理解线性代数的基本思想，推荐上海交通大学的《线性代数》）；《概率论和数理统计》（生物统计学那本书里面只会关注基本的统计检验，对于不同的统计学学派，原理不会过多介绍。但概率论和数理统计中大量的数学推导就要求有数学分析的基础）。<br>&emsp;&emsp;其他：<br>&emsp;&emsp;对于基础数学部分，推荐《鸢尾花书：从加减乘除到机器学习》。这套书在Github有开源版本，里面丰富的可视化对于理解线性代数相关知识非常直观。<br>&emsp;&emsp;机器学习部分推荐从《统计学习方法》入门，先修分析学、线性代数和概率论。周志华的《机器学习》实际上数学理论比《统计学习方法》低一点，能够构建对机器学习是什么的认知。<br>&emsp;&emsp;上述理论部分所蕴含的思维方法对于认识世界是一种角度，同时上述的技术部分也的确在方便我们生活，发散我们思维，所以感觉是充实的。<br>&emsp;&emsp;期间，可能需要对遗传学、尤其是基因组学数据有深入了解。可以去啃一下国外的《遗传学基础》（可以当作工具书）。<br>&emsp;&emsp;有时候会有点间断，这个时候会想起已故南大计算机教授徐家福教授八十多岁跨界学习量子力学的实例，共勉~</p>
-]]></content>
-      <categories>
-        <category>随笔</category>
-      </categories>
-      <tags>
-        <tag>统计学</tag>
-        <tag>交叉学科</tag>
       </tags>
   </entry>
   <entry>
@@ -1127,6 +1127,43 @@
       </tags>
   </entry>
   <entry>
+    <title>孟德尔随机化标准流程代码示例</title>
+    <url>/2024/02/05/%E5%AD%9F%E5%BE%B7%E5%B0%94%E9%9A%8F%E6%9C%BA%E5%8C%96%E6%A0%87%E5%87%86%E6%B5%81%E7%A8%8B%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B/</url>
+    <content><![CDATA[<p>在这篇博客中，我们将通过R代码来探索非酒精性脂肪肝（NAFLD）对COVID-19严重程度的可能影响。我们将利用两个R包：<code>TwoSampleMR</code>和<code>MRPRESSO</code>，来执行Mendelian Randomization (MR)分析，这是一种利用基因变异作为工具变量来估计暴露和结果之间因果关系的统计方法。</p>
+<h3 id="开始之前"><a href="#开始之前" class="headerlink" title="开始之前"></a>开始之前</h3><p>首先，我们需要安装并加载必要的R包：</p>
+<p>rCopy code</p>
+<p><code># 安装（如果尚未安装） install.packages(&quot;TwoSampleMR&quot;) install.packages(&quot;MRPRESSO&quot;)  # 加载包 library(TwoSampleMR) library(MRPRESSO)</code></p>
+<h3 id="数据准备"><a href="#数据准备" class="headerlink" title="数据准备"></a>数据准备</h3><p>我们的目标是研究NAFLD对COVID-19严重程度的影响。为此，我们首先需要准备关于NAFLD的暴露数据：</p>
+<p>rCopy code</p>
+<p><code># 读取暴露数据 exposure_dat &lt;- read_exposure_data(filename = &quot;./NAFLD.txt&quot;, sep=&quot;\t&quot;,                                    snp_col = &quot;rsids&quot;, effect_allele_col = &quot;alt&quot;, other_allele_col = &quot;ref&quot;,                                    beta_col = &quot;beta&quot;, se_col = &quot;sebeta&quot;, pval_col = &quot;pval&quot;, eaf_col = &quot;af_alt&quot;) # 对数据进行命名，便于后续处理 exposure_dat$phenotype &lt;- &quot;NAFLD&quot;</code></p>
+<h3 id="数据处理"><a href="#数据处理" class="headerlink" title="数据处理"></a>数据处理</h3><p>为了确保我们分析的基因变异之间没有连锁不平衡，我们将对数据进行clump处理：</p>
+<p>rCopy code</p>
+<p><code># 连锁不平衡去除 exposure_dat &lt;- clump_data(exposure_dat)</code></p>
+<h3 id="结果数据获取"><a href="#结果数据获取" class="headerlink" title="结果数据获取"></a>结果数据获取</h3><p>接下来，我们需要获取COVID-19作为结果的数据：</p>
+<p>rCopy code</p>
+<p><code># 在线读取COVID-19结果数据 outcome_dat &lt;- extract_outcome_data(outcomes = &quot;ebi-a-GCST011081&quot;, snps = exposure_dat$SNP)</code></p>
+<h3 id="数据协调"><a href="#数据协调" class="headerlink" title="数据协调"></a>数据协调</h3><p>为了进行MR分析，暴露和结果数据需要进行协调，确保基因变异的方向一致：</p>
+<p>rCopy code</p>
+<p><code># 数据协调 dat &lt;- harmonise_data(exposure_dat = exposure_dat, outcome_dat = outcome_dat, action = 2)</code></p>
+<h3 id="分析与敏感性测试"><a href="#分析与敏感性测试" class="headerlink" title="分析与敏感性测试"></a>分析与敏感性测试</h3><p>进行MR分析前，我们先计算F值，以评估使用的工具变量的有效性，并进行敏感性测试：</p>
+<p>rCopy code</p>
+<p><code># F值计算与筛选 dat$F &lt;- (dat$beta.exposure/dat$se.exposure)**2 dat &lt;- subset(dat, F&gt;10)  # MR分析 mr_result &lt;- mr(dat)  # 敏感性测试 het &lt;- mr_heterogeneity(dat) ple &lt;- mr_pleiotropy_test(dat) mr_presso(data = dat, BetaOutcome = &quot;beta.outcome&quot;, BetaExposure = &quot;beta.exposure&quot;, SdOutcome = &quot;se.outcome&quot;, SdExposure = &quot;se.exposure&quot;)</code></p>
+<h3 id="结果呈现"><a href="#结果呈现" class="headerlink" title="结果呈现"></a>结果呈现</h3><p>最后，我们通过几种图表直观展示MR分析结果：</p>
+<p>rCopy code</p>
+<p><code># 结果图表展示 mr_funnel_plot(singlesnp_results = mr_singlesnp(dat)) # 漏斗图 mr_forest_plot(mr_singlesnp(dat)) # 森林图 mr_scatter_plot(mr_results = mr_result, dat = dat) # 散点图</code></p>
+<p>通过这些步骤，我们可以评估非酒精性脂肪肝（NAFLD）对COVID-19严重程度的潜在影响，提供更深入的理解和新的研究方向。这种基于Mendelian Randomization的方法为我们提供了一种强有力的工具，来探讨各种生物标志物与疾病之间的因果关系。</p>
+]]></content>
+      <categories>
+        <category>流行病学</category>
+      </categories>
+      <tags>
+        <tag>GWAS</tag>
+        <tag>统计学</tag>
+        <tag>孟德尔随机化</tag>
+        <tag>流行病学</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>实操：把chatGPT接入智能音箱？</title>
     <url>/2024/03/18/%E5%AE%9E%E6%93%8D%EF%BC%9A%E6%8A%8AchatGPT%E6%8E%A5%E5%85%A5%E6%99%BA%E8%83%BD%E9%9F%B3%E7%AE%B1%EF%BC%9F/</url>
     <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>&emsp;&emsp;学院以前比赛发了个小米音箱，使用场景比较局限。突发奇想能否把大语言模型和小爱音响结合起来，于是就有了这番折腾。包的原理十分直接，就是通过TTS识别，发送给chatGPT，再返回结果进行朗读。</p>
@@ -1383,87 +1420,26 @@
       </tags>
   </entry>
   <entry>
-    <title>孟德尔随机化标准流程代码示例</title>
-    <url>/2024/02/05/%E5%AD%9F%E5%BE%B7%E5%B0%94%E9%9A%8F%E6%9C%BA%E5%8C%96%E6%A0%87%E5%87%86%E6%B5%81%E7%A8%8B%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B/</url>
-    <content><![CDATA[<p>在这篇博客中，我们将通过R代码来探索非酒精性脂肪肝（NAFLD）对COVID-19严重程度的可能影响。我们将利用两个R包：<code>TwoSampleMR</code>和<code>MRPRESSO</code>，来执行Mendelian Randomization (MR)分析，这是一种利用基因变异作为工具变量来估计暴露和结果之间因果关系的统计方法。</p>
-<h3 id="开始之前"><a href="#开始之前" class="headerlink" title="开始之前"></a>开始之前</h3><p>首先，我们需要安装并加载必要的R包：</p>
-<p>rCopy code</p>
-<p><code># 安装（如果尚未安装） install.packages(&quot;TwoSampleMR&quot;) install.packages(&quot;MRPRESSO&quot;)  # 加载包 library(TwoSampleMR) library(MRPRESSO)</code></p>
-<h3 id="数据准备"><a href="#数据准备" class="headerlink" title="数据准备"></a>数据准备</h3><p>我们的目标是研究NAFLD对COVID-19严重程度的影响。为此，我们首先需要准备关于NAFLD的暴露数据：</p>
-<p>rCopy code</p>
-<p><code># 读取暴露数据 exposure_dat &lt;- read_exposure_data(filename = &quot;./NAFLD.txt&quot;, sep=&quot;\t&quot;,                                    snp_col = &quot;rsids&quot;, effect_allele_col = &quot;alt&quot;, other_allele_col = &quot;ref&quot;,                                    beta_col = &quot;beta&quot;, se_col = &quot;sebeta&quot;, pval_col = &quot;pval&quot;, eaf_col = &quot;af_alt&quot;) # 对数据进行命名，便于后续处理 exposure_dat$phenotype &lt;- &quot;NAFLD&quot;</code></p>
-<h3 id="数据处理"><a href="#数据处理" class="headerlink" title="数据处理"></a>数据处理</h3><p>为了确保我们分析的基因变异之间没有连锁不平衡，我们将对数据进行clump处理：</p>
-<p>rCopy code</p>
-<p><code># 连锁不平衡去除 exposure_dat &lt;- clump_data(exposure_dat)</code></p>
-<h3 id="结果数据获取"><a href="#结果数据获取" class="headerlink" title="结果数据获取"></a>结果数据获取</h3><p>接下来，我们需要获取COVID-19作为结果的数据：</p>
-<p>rCopy code</p>
-<p><code># 在线读取COVID-19结果数据 outcome_dat &lt;- extract_outcome_data(outcomes = &quot;ebi-a-GCST011081&quot;, snps = exposure_dat$SNP)</code></p>
-<h3 id="数据协调"><a href="#数据协调" class="headerlink" title="数据协调"></a>数据协调</h3><p>为了进行MR分析，暴露和结果数据需要进行协调，确保基因变异的方向一致：</p>
-<p>rCopy code</p>
-<p><code># 数据协调 dat &lt;- harmonise_data(exposure_dat = exposure_dat, outcome_dat = outcome_dat, action = 2)</code></p>
-<h3 id="分析与敏感性测试"><a href="#分析与敏感性测试" class="headerlink" title="分析与敏感性测试"></a>分析与敏感性测试</h3><p>进行MR分析前，我们先计算F值，以评估使用的工具变量的有效性，并进行敏感性测试：</p>
-<p>rCopy code</p>
-<p><code># F值计算与筛选 dat$F &lt;- (dat$beta.exposure/dat$se.exposure)**2 dat &lt;- subset(dat, F&gt;10)  # MR分析 mr_result &lt;- mr(dat)  # 敏感性测试 het &lt;- mr_heterogeneity(dat) ple &lt;- mr_pleiotropy_test(dat) mr_presso(data = dat, BetaOutcome = &quot;beta.outcome&quot;, BetaExposure = &quot;beta.exposure&quot;, SdOutcome = &quot;se.outcome&quot;, SdExposure = &quot;se.exposure&quot;)</code></p>
-<h3 id="结果呈现"><a href="#结果呈现" class="headerlink" title="结果呈现"></a>结果呈现</h3><p>最后，我们通过几种图表直观展示MR分析结果：</p>
-<p>rCopy code</p>
-<p><code># 结果图表展示 mr_funnel_plot(singlesnp_results = mr_singlesnp(dat)) # 漏斗图 mr_forest_plot(mr_singlesnp(dat)) # 森林图 mr_scatter_plot(mr_results = mr_result, dat = dat) # 散点图</code></p>
-<p>通过这些步骤，我们可以评估非酒精性脂肪肝（NAFLD）对COVID-19严重程度的潜在影响，提供更深入的理解和新的研究方向。这种基于Mendelian Randomization的方法为我们提供了一种强有力的工具，来探讨各种生物标志物与疾病之间的因果关系。</p>
-]]></content>
-      <categories>
-        <category>流行病学</category>
-      </categories>
-      <tags>
-        <tag>GWAS</tag>
-        <tag>统计学</tag>
-        <tag>孟德尔随机化</tag>
-        <tag>流行病学</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>提升医学研究的严谨性：准确使用统计学</title>
-    <url>/2024/02/18/%E6%8F%90%E5%8D%87%E5%8C%BB%E5%AD%A6%E7%A0%94%E7%A9%B6%E7%9A%84%E4%B8%A5%E8%B0%A8%E6%80%A7%EF%BC%9A%E5%87%86%E7%A1%AE%E4%BD%BF%E7%94%A8%E7%BB%9F%E8%AE%A1%E5%AD%A6/</url>
-    <content><![CDATA[<h2 id="原文摘要"><a href="#原文摘要" class="headerlink" title="原文摘要"></a>原文摘要</h2><p>&emsp;&emsp;在不断进步的医学研究领域中，研究结果的可靠性不仅依赖于创新的思想，还依赖于严谨的方法论和统计学。然而，根据过去三年《柳叶刀》期刊集团对超过1000份手稿的统计审查经验，通讯发现许多医学研究者常常忽视这一点。</p>
-<p>&emsp;&emsp;这篇通讯旨在提供一些基本建议，帮助研究者准确地报告统计数据，避免常见的统计缺陷。以下是一些关键要点：</p>
-<ol>
-<li><strong>数据描述的准确性</strong>：根据数据分布，报告均值和标准差或中位数和四分位数范围。并提供显示分析中使用的变量的直方图或表格的补充材料。</li>
-<li><strong>模型假设的检验</strong>：尽可能使用可视化检查所有模型假设。</li>
-<li><strong>P值的处理</strong>：不要将P值简化为“大于或等于0.0001”，而应报告确切的P值（例如，0.032的P值应报告为P=0.032，而非P&lt;0.05）。</li>
-<li><strong>结果的解读</strong>：基于临床重要性解读结果，并提供适当的关联估计和95%置信区间。</li>
-<li><strong>混杂因素的识别</strong>：基于背景信息识别混杂因素，例如在因果定向无环图中描绘，而非仅依赖显著性检验。</li>
-<li><strong>处理缺失数据</strong>：如果缺失数据的比例足够高，可能影响结果，应使用超越简单丢弃不完整记录的方法，例如反概率缺失加权或多重插补。</li>
-<li><strong>稀疏数据偏差的处理</strong>：使用为此目的开发的方法评估并处理比率估计中的稀疏数据偏差，如逻辑或Cox回归中应使用惩罚或贝叶斯方法减少稀疏数据偏差。</li>
-<li><strong>选择适当的风险指标</strong>：如果结局发生率较高，应报告危险比（risk  ratio，RR）或危险差（risk difference，RD），而不是比值比（odds ratio，OR）。</li>
-<li><strong>统计推断</strong>：避免过度依赖统计测试，P值不应在0.05或0.01等水平上二分化。特别是，大的P值不应被解释为没有关联或没有效应。</li>
-<li><strong>评估加性相互作用，即使模型是乘法的</strong>。</li>
-</ol>
-<h2 id="原文翻译"><a href="#原文翻译" class="headerlink" title="原文翻译"></a>原文翻译</h2><p>&emsp;&emsp;医学研究有效性的一个重要要求是可靠的方法和统计数据，但这仍然经常被医学研究人员忽视。基于过去 3 年提交给《柳叶刀》集团期刊的 1000 多份手稿的统计数据审查经验，本通信为报告中常见的统计缺陷以及如何避免这些缺陷提供了指导</p>
-<p><strong>准确报告统计结果的基本建议</strong></p>
+    <title>心律失常治疗方式总结</title>
+    <url>/2024/03/14/%E5%BF%83%E5%BE%8B%E5%A4%B1%E5%B8%B8%E6%B2%BB%E7%96%97%E6%96%B9%E5%BC%8F%E6%80%BB%E7%BB%93/</url>
+    <content><![CDATA[<p>&emsp;&emsp;维持血流动力学处于稳定状态是心脏疾病的救治的落脚点，所以保障心室以适宜的频率进行协调的收缩舒张运动是心律失常救治的首要任务。其次，需要改善心脏内部的血流动力学紊乱，预防血栓形成；必要时需要考虑心房功能，避免前负荷不足。归根结底，心律失常的治疗是以心室为核心的。</p>
+<p>&emsp;&emsp;缓慢型心律失常由迷走神经张力过高导致，常常采用阿托品和异丙肾上腺素治疗，后者有潜在的致心律失常风险，所以临床多以弃用。药物治疗无效、症状明显或有严重血流动力学障碍应当及时安装起搏器。</p>
+<p>&emsp;&emsp;快速型心律失常发生机制常为自律细胞的自律性升高，非自律细胞产生异常自律性以及折返。自律细胞的自律性升高多见于窦性心动过速，其治疗只需降低交感神经或增加迷走神经张力，因而采用β受体阻断剂、非二氢吡啶类钙通道阻滞剂。新研药伊伐布雷定靶向P细胞自动复极的If电流，也可以用于治疗窦性心动过速。非自律细胞产生异常自律性包括期前收缩、心动过速、扑动和颤动，其发生原因多为缺氧、交感神经张力高、电解质紊乱。若成功解除细胞的应激状态，纠正细胞钙超载，降低交感神经张力或延长总体的不应期，则可消灭异常自律性产生的源头；其次，我们可以适当阻滞房室结，进行合适的导管消融，孤立异常自律点，避免影响心脏其他部位，尤其是心室的节律。举例而言，对房性期前收缩可采用β受体阻断剂（ICa）、非二氢吡啶类钙通道阻断剂（ICa）和胺碘酮（不应期），对室性期前收缩采用β受体阻断剂（ICa）、非二氢吡啶类钙通道阻滞剂（ICa）和普罗帕酮（（ICa）。值得注意的是，在室上性的心动过速（除了AVNRT）、扑动和颤动中，靶向ICa主要是为了降低心室率，转复律则依赖广谱抗心律失常药物。对于室性快速型心律失常，强调针对原因，并且在药物中添加了靶向快心肌细胞的IB类药物。非窦性快速型心律失常若伴随血流动力学紊乱采用电复律，若根治往往采用导管消融。</p>
+<p>&emsp;&emsp;AVNRT是一类特殊的心动过速，靶向房室结降低心室率的同时也是阻断径路传导，因此治疗中强调增加迷走神经张力和阻断钙离子通道。预激综合征中存在旁路和房室结的矛盾，治疗过程始终遵守压抑旁路但不祸害房室结的默契。</p>
 <ul>
-<li>根据分布情况，报告均值和标准差或中位数和 IQR 以描述定量变量。提供补充材料，显示分析中使用的变量的直方图或表格。</li>
-<li>检查所有模型假设，最好在可行的情况下使用图表。</li>
-<li>不要将 p 值 ≥0·0001；相反，显示精确的 p 值（例如，p 值 0·032 应显示为 p=0·032，而不是 p&lt;0·05）。但是，不等式 p&lt;0·0001 可用于报告非常小的 p 值。</li>
-<li>不要将结果报告为无效果，除非区间估计内的所有效果在临床上都不重要。</li>
-<li>根据临床重要性解释结果，并适当估计与 95% CI 的相关性。</li>
-<li>根据背景信息识别混杂因素，如因果有向无环图中所述，而不是显著性检验。</li>
-<li>如果缺失数据的比例高到足以潜在地影响结果，请使用除简单地丢弃不完整记录之外的方法，例如，缺失的反概率加权或多重插补。</li>
-<li>使用为此目的开发的方法评估和处理比率估计中的稀疏数据偏差。</li>
-<li>如果结果频率较高，则报告风险比或风险差异，而不是比值比。</li>
-<li>评估加性相互作用，即使您的模型是乘法的。</li>
+<li><strong>广谱抗心律失常药</strong>：IA、IC、III；</li>
+<li><strong>室性心律失常专用</strong>：IB</li>
+<li><strong>抑制交感神经、增加迷走神经张力、靶向钙通道</strong>：IV、III、IC、洋地黄、升压药、腺苷</li>
+<li><strong>缩短有效不应期</strong>：洋地黄</li>
+<li><strong>延长QT</strong>：IA、III</li>
 </ul>
-<p>&emsp;&emsp;数据描述对于理解数据至关重要。平均值和标准差通常用于描述定量变量。尽管如此，对于高度偏斜的变量（例如，典型的环境暴露），应使用中位数和IQR；对于仅取正值的变量，$\frac {mean}{SD}$表示严重偏斜。完整的统计描述还需要给出连续性变量的直方图、分类变量的计数表、以及缺失数据的百分比，由于这部分内容较多，可在<strong>补充材料</strong>中给出。</p>
-<p>&emsp;&emsp;所有统计分析都建立在基础假设之上，比如选择性或治疗分配的随机性。统计模型的有效性依赖于对这些进一步假设的评估。为了达到这一目的，仅仅依赖统计检验是不够的，还需要运用图形方法。例如，大多数回归模型都假设定量预测变量是线性的（至少在某种程度上），这一假设需要通过分段多项式或回归样条等方法进行验证。尤其是对于定量变量的分类，这通常意味着一个不切实际的阶跃函数假设，可能会导致效能损失或不可控的混杂。</p>
-<p>&emsp;&emsp;在统计推断领域，我们仍主要依赖于假设检验和估计。然而，p 值可以提供有关数据与统计假设或模型兼容性的重要信息，应当准确报告，而不是简单地用是否显著的定性描述来代替。兼容性可以通过将 p 值转换为基于抛硬币实验的 s 值来衡量。我们应避免过度依赖统计检验，不应将 p 值简单地划分为 0.05 或 0.01 这样的固定水平。特别是，较大的 p 值不应解释为无关联或无影响，因为“没有证据”并不等同于“没有证据”。除非区间估计接近零值，且区间非常窄，才可以推断为研究没有发现重要的关联或影响。一般情况下，还应根据合适指标的区间估计（如均数差或危险差）来判断结果的临床重要性。</p>
-<p>&emsp;&emsp;许多研究关注的是因果关系，这就使得混杂因素的调整变得至关重要。混杂因素的选择应基于因果背景信息，例如通过有向无环图进行。基于显著性的方法，比如逐步选择算法，可能具有误导性，因为它们可能忽略了重要的混杂因素。</p>
-<p>&emsp;&emsp;数据缺失在研究中非常常见。简单处理缺失数据的方法，如完整案例分析（即逐列表删除）、缺失指标或最后观察结转，可能会导致显著偏差。如果缺失数据的比例较高（例如超过 5%），则应避免使用这些方法。更好的方法包括逆概率加权和多重插补，尽管这些方法也依赖于条件随机缺失的假设。</p>
-<p>&emsp;&emsp;在逻辑回归或 Cox 回归中，稀疏数据是一个重要的偏差来源，即在某些变量水平组合中事件数量较少。OR较大和置信区间较宽（例如，OR&gt;10，区间为2-50）提示存在数据稀疏偏倚，可以通过惩罚函数或贝叶斯方法减少偏倚。当因变量是一个常见结局的指标时，调整后的危险比（RR）在评估临床相关性方面优于OR，因前者更容易合理解释。在队列研究和随机对照试验中可使用改良的泊松回归或标准化回归系数来估计危险比（RR）和危险差（RD）。</p>
-<p>&emsp;&emsp;许多研究试图检查两种治疗对结局的相互作用，或者想要估计另一种变量（即效果-测量修改）对治疗效果的改变程度。建模者通常会在回归模型中添加乘积项，例如逻辑项或Cox项，这些项对应于赔率或比率量表上的乘法交互作用。然而，风险的加性相互作用与临床决策和公共卫生更相关，因此也应进行评估。无论哪种情况，研究通常都无法确定交互作用的方向，如果它们通过统计检验筛选交互作用，则有可能产生误导性的估计。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(24">Recommendations for accurate reporting in medical research statistics - The Lancet</a>00139-9/fulltext)</p>
 ]]></content>
       <categories>
-        <category>统计学</category>
+        <category>医学课程</category>
       </categories>
       <tags>
-        <tag>统计学</tag>
+        <tag>医学</tag>
+        <tag>医学生</tag>
       </tags>
   </entry>
   <entry>
@@ -1778,26 +1754,50 @@
       </tags>
   </entry>
   <entry>
-    <title>心律失常治疗方式总结</title>
-    <url>/2024/03/14/%E5%BF%83%E5%BE%8B%E5%A4%B1%E5%B8%B8%E6%B2%BB%E7%96%97%E6%96%B9%E5%BC%8F%E6%80%BB%E7%BB%93/</url>
-    <content><![CDATA[<p>&emsp;&emsp;维持血流动力学处于稳定状态是心脏疾病的救治的落脚点，所以保障心室以适宜的频率进行协调的收缩舒张运动是心律失常救治的首要任务。其次，需要改善心脏内部的血流动力学紊乱，预防血栓形成；必要时需要考虑心房功能，避免前负荷不足。归根结底，心律失常的治疗是以心室为核心的。</p>
-<p>&emsp;&emsp;缓慢型心律失常由迷走神经张力过高导致，常常采用阿托品和异丙肾上腺素治疗，后者有潜在的致心律失常风险，所以临床多以弃用。药物治疗无效、症状明显或有严重血流动力学障碍应当及时安装起搏器。</p>
-<p>&emsp;&emsp;快速型心律失常发生机制常为自律细胞的自律性升高，非自律细胞产生异常自律性以及折返。自律细胞的自律性升高多见于窦性心动过速，其治疗只需降低交感神经或增加迷走神经张力，因而采用β受体阻断剂、非二氢吡啶类钙通道阻滞剂。新研药伊伐布雷定靶向P细胞自动复极的If电流，也可以用于治疗窦性心动过速。非自律细胞产生异常自律性包括期前收缩、心动过速、扑动和颤动，其发生原因多为缺氧、交感神经张力高、电解质紊乱。若成功解除细胞的应激状态，纠正细胞钙超载，降低交感神经张力或延长总体的不应期，则可消灭异常自律性产生的源头；其次，我们可以适当阻滞房室结，进行合适的导管消融，孤立异常自律点，避免影响心脏其他部位，尤其是心室的节律。举例而言，对房性期前收缩可采用β受体阻断剂（ICa）、非二氢吡啶类钙通道阻断剂（ICa）和胺碘酮（不应期），对室性期前收缩采用β受体阻断剂（ICa）、非二氢吡啶类钙通道阻滞剂（ICa）和普罗帕酮（（ICa）。值得注意的是，在室上性的心动过速（除了AVNRT）、扑动和颤动中，靶向ICa主要是为了降低心室率，转复律则依赖广谱抗心律失常药物。对于室性快速型心律失常，强调针对原因，并且在药物中添加了靶向快心肌细胞的IB类药物。非窦性快速型心律失常若伴随血流动力学紊乱采用电复律，若根治往往采用导管消融。</p>
-<p>&emsp;&emsp;AVNRT是一类特殊的心动过速，靶向房室结降低心室率的同时也是阻断径路传导，因此治疗中强调增加迷走神经张力和阻断钙离子通道。预激综合征中存在旁路和房室结的矛盾，治疗过程始终遵守压抑旁路但不祸害房室结的默契。</p>
+    <title>提升医学研究的严谨性：准确使用统计学</title>
+    <url>/2024/02/18/%E6%8F%90%E5%8D%87%E5%8C%BB%E5%AD%A6%E7%A0%94%E7%A9%B6%E7%9A%84%E4%B8%A5%E8%B0%A8%E6%80%A7%EF%BC%9A%E5%87%86%E7%A1%AE%E4%BD%BF%E7%94%A8%E7%BB%9F%E8%AE%A1%E5%AD%A6/</url>
+    <content><![CDATA[<h2 id="原文摘要"><a href="#原文摘要" class="headerlink" title="原文摘要"></a>原文摘要</h2><p>&emsp;&emsp;在不断进步的医学研究领域中，研究结果的可靠性不仅依赖于创新的思想，还依赖于严谨的方法论和统计学。然而，根据过去三年《柳叶刀》期刊集团对超过1000份手稿的统计审查经验，通讯发现许多医学研究者常常忽视这一点。</p>
+<p>&emsp;&emsp;这篇通讯旨在提供一些基本建议，帮助研究者准确地报告统计数据，避免常见的统计缺陷。以下是一些关键要点：</p>
+<ol>
+<li><strong>数据描述的准确性</strong>：根据数据分布，报告均值和标准差或中位数和四分位数范围。并提供显示分析中使用的变量的直方图或表格的补充材料。</li>
+<li><strong>模型假设的检验</strong>：尽可能使用可视化检查所有模型假设。</li>
+<li><strong>P值的处理</strong>：不要将P值简化为“大于或等于0.0001”，而应报告确切的P值（例如，0.032的P值应报告为P=0.032，而非P&lt;0.05）。</li>
+<li><strong>结果的解读</strong>：基于临床重要性解读结果，并提供适当的关联估计和95%置信区间。</li>
+<li><strong>混杂因素的识别</strong>：基于背景信息识别混杂因素，例如在因果定向无环图中描绘，而非仅依赖显著性检验。</li>
+<li><strong>处理缺失数据</strong>：如果缺失数据的比例足够高，可能影响结果，应使用超越简单丢弃不完整记录的方法，例如反概率缺失加权或多重插补。</li>
+<li><strong>稀疏数据偏差的处理</strong>：使用为此目的开发的方法评估并处理比率估计中的稀疏数据偏差，如逻辑或Cox回归中应使用惩罚或贝叶斯方法减少稀疏数据偏差。</li>
+<li><strong>选择适当的风险指标</strong>：如果结局发生率较高，应报告危险比（risk  ratio，RR）或危险差（risk difference，RD），而不是比值比（odds ratio，OR）。</li>
+<li><strong>统计推断</strong>：避免过度依赖统计测试，P值不应在0.05或0.01等水平上二分化。特别是，大的P值不应被解释为没有关联或没有效应。</li>
+<li><strong>评估加性相互作用，即使模型是乘法的</strong>。</li>
+</ol>
+<h2 id="原文翻译"><a href="#原文翻译" class="headerlink" title="原文翻译"></a>原文翻译</h2><p>&emsp;&emsp;医学研究有效性的一个重要要求是可靠的方法和统计数据，但这仍然经常被医学研究人员忽视。基于过去 3 年提交给《柳叶刀》集团期刊的 1000 多份手稿的统计数据审查经验，本通信为报告中常见的统计缺陷以及如何避免这些缺陷提供了指导</p>
+<p><strong>准确报告统计结果的基本建议</strong></p>
 <ul>
-<li><strong>广谱抗心律失常药</strong>：IA、IC、III；</li>
-<li><strong>室性心律失常专用</strong>：IB</li>
-<li><strong>抑制交感神经、增加迷走神经张力、靶向钙通道</strong>：IV、III、IC、洋地黄、升压药、腺苷</li>
-<li><strong>缩短有效不应期</strong>：洋地黄</li>
-<li><strong>延长QT</strong>：IA、III</li>
+<li>根据分布情况，报告均值和标准差或中位数和 IQR 以描述定量变量。提供补充材料，显示分析中使用的变量的直方图或表格。</li>
+<li>检查所有模型假设，最好在可行的情况下使用图表。</li>
+<li>不要将 p 值 ≥0·0001；相反，显示精确的 p 值（例如，p 值 0·032 应显示为 p=0·032，而不是 p&lt;0·05）。但是，不等式 p&lt;0·0001 可用于报告非常小的 p 值。</li>
+<li>不要将结果报告为无效果，除非区间估计内的所有效果在临床上都不重要。</li>
+<li>根据临床重要性解释结果，并适当估计与 95% CI 的相关性。</li>
+<li>根据背景信息识别混杂因素，如因果有向无环图中所述，而不是显著性检验。</li>
+<li>如果缺失数据的比例高到足以潜在地影响结果，请使用除简单地丢弃不完整记录之外的方法，例如，缺失的反概率加权或多重插补。</li>
+<li>使用为此目的开发的方法评估和处理比率估计中的稀疏数据偏差。</li>
+<li>如果结果频率较高，则报告风险比或风险差异，而不是比值比。</li>
+<li>评估加性相互作用，即使您的模型是乘法的。</li>
 </ul>
+<p>&emsp;&emsp;数据描述对于理解数据至关重要。平均值和标准差通常用于描述定量变量。尽管如此，对于高度偏斜的变量（例如，典型的环境暴露），应使用中位数和IQR；对于仅取正值的变量，$\frac {mean}{SD}$表示严重偏斜。完整的统计描述还需要给出连续性变量的直方图、分类变量的计数表、以及缺失数据的百分比，由于这部分内容较多，可在<strong>补充材料</strong>中给出。</p>
+<p>&emsp;&emsp;所有统计分析都建立在基础假设之上，比如选择性或治疗分配的随机性。统计模型的有效性依赖于对这些进一步假设的评估。为了达到这一目的，仅仅依赖统计检验是不够的，还需要运用图形方法。例如，大多数回归模型都假设定量预测变量是线性的（至少在某种程度上），这一假设需要通过分段多项式或回归样条等方法进行验证。尤其是对于定量变量的分类，这通常意味着一个不切实际的阶跃函数假设，可能会导致效能损失或不可控的混杂。</p>
+<p>&emsp;&emsp;在统计推断领域，我们仍主要依赖于假设检验和估计。然而，p 值可以提供有关数据与统计假设或模型兼容性的重要信息，应当准确报告，而不是简单地用是否显著的定性描述来代替。兼容性可以通过将 p 值转换为基于抛硬币实验的 s 值来衡量。我们应避免过度依赖统计检验，不应将 p 值简单地划分为 0.05 或 0.01 这样的固定水平。特别是，较大的 p 值不应解释为无关联或无影响，因为“没有证据”并不等同于“没有证据”。除非区间估计接近零值，且区间非常窄，才可以推断为研究没有发现重要的关联或影响。一般情况下，还应根据合适指标的区间估计（如均数差或危险差）来判断结果的临床重要性。</p>
+<p>&emsp;&emsp;许多研究关注的是因果关系，这就使得混杂因素的调整变得至关重要。混杂因素的选择应基于因果背景信息，例如通过有向无环图进行。基于显著性的方法，比如逐步选择算法，可能具有误导性，因为它们可能忽略了重要的混杂因素。</p>
+<p>&emsp;&emsp;数据缺失在研究中非常常见。简单处理缺失数据的方法，如完整案例分析（即逐列表删除）、缺失指标或最后观察结转，可能会导致显著偏差。如果缺失数据的比例较高（例如超过 5%），则应避免使用这些方法。更好的方法包括逆概率加权和多重插补，尽管这些方法也依赖于条件随机缺失的假设。</p>
+<p>&emsp;&emsp;在逻辑回归或 Cox 回归中，稀疏数据是一个重要的偏差来源，即在某些变量水平组合中事件数量较少。OR较大和置信区间较宽（例如，OR&gt;10，区间为2-50）提示存在数据稀疏偏倚，可以通过惩罚函数或贝叶斯方法减少偏倚。当因变量是一个常见结局的指标时，调整后的危险比（RR）在评估临床相关性方面优于OR，因前者更容易合理解释。在队列研究和随机对照试验中可使用改良的泊松回归或标准化回归系数来估计危险比（RR）和危险差（RD）。</p>
+<p>&emsp;&emsp;许多研究试图检查两种治疗对结局的相互作用，或者想要估计另一种变量（即效果-测量修改）对治疗效果的改变程度。建模者通常会在回归模型中添加乘积项，例如逻辑项或Cox项，这些项对应于赔率或比率量表上的乘法交互作用。然而，风险的加性相互作用与临床决策和公共卫生更相关，因此也应进行评估。无论哪种情况，研究通常都无法确定交互作用的方向，如果它们通过统计检验筛选交互作用，则有可能产生误导性的估计。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(24">Recommendations for accurate reporting in medical research statistics - The Lancet</a>00139-9/fulltext)</p>
 ]]></content>
       <categories>
-        <category>医学课程</category>
+        <category>统计学</category>
       </categories>
       <tags>
-        <tag>医学</tag>
-        <tag>医学生</tag>
+        <tag>统计学</tag>
       </tags>
   </entry>
   <entry>
@@ -1832,6 +1832,50 @@
       <tags>
         <tag>生物信息学</tag>
         <tag>单细胞测序</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>生物信息学笔记（三）：基因定量</title>
+    <url>/2024/02/16/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89%EF%BC%9A%E5%9F%BA%E5%9B%A0%E5%AE%9A%E9%87%8F/</url>
+    <content><![CDATA[<h2 id="为什么要对进行基因定量"><a href="#为什么要对进行基因定量" class="headerlink" title="为什么要对进行基因定量"></a>为什么要对进行基因定量</h2><p>&emsp;&emsp;转录组数据分析中，一个转录本反转录后的cDNA会被打碎成片段测序并和基因组比对，就会导致长转录本在给定的cDNA长度下可能会映射更多的cDNA，也就是说基因长度会影响Reads数。<br>&emsp;&emsp;测序深度是指测序过程中每个碱基被测序的平均次数，其计算公式为：$\frac{Reads数*Read长度}{参考序列长度}$：例如，对长100bp的目标区域进行捕获测序：采用单端测序，每个read长5bp；总共得到了200个reads；把所有的reads比对到目标区域后，100bp的目标区域中有98bp的位置至少有1个read覆盖到，换言之，剩余的2bp没有1个read覆盖。则测序深度为 200 x 5 / 100 = 10 我们说这此测序的深度为10X。显而易见，若测序越深，则对于相同长度的转录本，测序所得的Reads数更多。<br>&emsp;&emsp;综上所述，测序深度、基因长度和Reads数相关，所以需要在最终基因表达计数中去除相应的影响。注意，在基因定量的过程中，可能会由于样本本身的原因，如某个基因Reads数过高，导致基因定量后其他基因的表达量低于实际情况，这也是基因定量过程中需要去考虑的。</p>
+<h2 id="Raw-count"><a href="#Raw-count" class="headerlink" title="Raw count"></a>Raw count</h2><p>&emsp;&emsp;所谓Raw count，又称为count数，和上一部分所说的Reads数是同一概念，是指和参考序列比对上的序列数目。原始的读取计数矩阵使用Raw count作为基础，但由于不同基因的长度和测序深度存在差异，因此无法直接比较。为了消除技术偏差的影响并赋予后续差异分析以统计学意义，需要对这些基因计数矩阵进行标准化处理，将其转化为相对值。<br>&emsp;&emsp;但注意，我们进行基因定量时需要充分考虑测序技术和原理，如在 10x 基因组学基因表达检测中，每个转录本都标有作为唯一分子标识符 （unique molecular identifier，UMI） 的序列。这些 UMI 能够准确定量基因表达水平，因为我们可以分辨出哪些读段是从同一个 mRNA 分子中产生的。因此，Cell Ranger 和 Space Ranger 执行 UMI 计数（不是读取计数）以测量基因表达水平，并且所有二次分析步骤都基于 UMI 计数执行。在传统的RNA-seq数据中，完整的转录本被片段化，然后进行cDNA合成、末端修复和衔接连接。在此工作流程中，从长转录本中采样片段的概率高于从短转录本中采样的概率。因此，按转录本长度（例如，TPM、RPKM、FPKM）对读取计数进行归一化是有意义的。然而，在 10x 基因表达测定中，这种基因长度偏差并不存在。因此，不建议按基因长度对UMI计数进行归一化。</p>
+<h2 id="RPKM-FPKM"><a href="#RPKM-FPKM" class="headerlink" title="RPKM/FPKM"></a>RPKM/FPKM</h2><p>&emsp;&emsp;RPKM (Reads Per Kilobase of exon model per Million mapped reads)：每千个碱基的转录每百万映射读取的reads数，是针对单端测序的基因定量方法；FPKM (Fragment Per Kilobase of transcript, per Million mapped reads)：每千碱基片段每百万映射读取的 reads 数，是针对双端测序的基因定量方法。<br>&emsp;&emsp;以RPKM为例，其操作方法为：</p>
+<ol>
+<li>计算样本中的总读数，然后将该数字除以 1,000,000——这是“每百万”比例因子；</li>
+<li>将读取计数除以“每百万”比例因子。这针对测序深度进行了归一化，得到每百万次读数（reads per million，RPM）；</li>
+<li>将 RPM 值除以基因的长度，以千碱基为单位，得到RPKM。</li>
+</ol>
+<p>&emsp;&emsp;在第二代测序过程中，常采用一种方法将DNA分子打碎成片段（fragment），然后进行测序。在单末端测序中，每个片段对应一个读取序列（Read），而在双末端测序中，每个片段将从两个端点分别进行测序。因此，这两个成对的读取序列对应于同一个片段（虽然偶尔会出现只有一个读取序列与某个片段相对应的情况，这是由于某些原因导致另一个读取序列被排除或丢失了）。在这一点上存在着区别，对于FPKM（每百万片段计数）这一测量指标而言，与同一片段相关联的两个读取序列只被计算为一个读取序列。换句话说，FPKM是基于片段计数，而不是基于读取序列数量计算的，其他计算方法完全相同。<br>&emsp;&emsp;两者计算公式如下：</p>
+<script type="math/tex; mode=display">FPKM = \frac{Read\quad counts}{Mapped\quad reads(Millions)\quad \times \quad Transcript\quad length(KB)}</script><script type="math/tex; mode=display">RPKM = \frac{Read\quad counts(Fragments)}{Mapped\quad reads(Millions)\quad \times \quad Transcript\quad length(KB)}</script><h2 id="TPM"><a href="#TPM" class="headerlink" title="TPM"></a>TPM</h2><p>&emsp;&emsp;TPM（Transcripts Per Million） 是一种常用的基因表达量归一化方法，它将基因的表达量调整为每百万条转录本的数量。TPM 值考虑了基因的长度和测序深度，通过将每个基因的 Counts 值除以其长度，并进行适当的归一化，将基因的表达量转换为每百万转录本数，以便进行样本间的比较和分析。TPM 值消除了样本间测序深度的差异和基因长度的影响，实质上，TPM相当于重新标准化的文库，保证每个样本中所有TPM的总和是相同的。TPM 与 RPKM 和 FPKM 非常相似。唯一的区别是操作顺序。以下是计算 TPM 的方法：</p>
+<ol>
+<li>将读取计数除以每个基因的长度（以千碱基为单位），得到每千碱基读数（reads per kilobase，RPK）；</li>
+<li>计算样本中的所有 RPK 值的和，并将此数字除以 1,000,000，得到如前的“每百万”比例因子；</li>
+<li>将 RPK 值除以“每百万”比例因子，得到TPM。</li>
+</ol>
+<p>&emsp;&emsp;综上，在计算TPM时，和前述指标唯一的区别是你首先对基因长度进行归一化，然后对测序深度进行归一化。然而，这种差异的影响是相当深远的。<br>&emsp;&emsp;使用 TPM 时，每个示例中所有 TPM 的总和是相同的。这样可以更容易地比较每个样品中映射到基因的reads比例。相比之下，使用RPKM和FPKM，每个样本中归一化读数的总和可能不同，这使得直接比较样本变得更加困难，在某种意义上，TPM降低了样本本身的影响，从而让样本具有可比性，即TPM实际上改进了RPKM/FPKM方法在跨样品间定量的不准确性。<br>&emsp;&emsp;其计算公式如下：</p>
+<script type="math/tex; mode=display">TPM = 10^6 \times \frac{\frac {Read\quad counts}{Transcript \quad length(KB)}}{\Sigma \frac {Read\quad counts}{Transcript \quad length(KB)}}</script><h2 id="适用范围"><a href="#适用范围" class="headerlink" title="适用范围"></a>适用范围</h2><ol>
+<li>如前所述，基于测序计数选择基因定量的方案，如对于10×测序，直接使用原始Count即可；</li>
+<li>对于传统的二代测序，应当进行标准化基因定量：<ol>
+<li>RPKM和FPKM已经不推荐使用（参考：<a href="https://pubmed.ncbi.nlm.nih.gov/22872506/">Measurement of mRNA abundance using RNA-seq data: RPKM measure is inconsistent among samples</a>；<a href="https://academic.oup.com/bib/article/14/6/671/189645">comprehensive evaluation of normalization methods for Illumina high-throughput RNA sequencing data analysis</a>）；</li>
+<li>TPM、DESeq适合组间比较，有研究更推荐DESeq进行组间比较（<a href="https://academic.oup.com/bib/article/14/6/671/189645#1808405">comprehensive evaluation of normalization methods for Illumina high-throughput RNA sequencing data analysis</a>；<a href="https://translational-medicine.biomedcentral.com/articles/10.1186/s12967-021-02936-w#Sec21">TPM, FPKM, or Normalized Counts? A Comparative Study of Quantification Measures for the Analysis of RNA-seq Data from the NCI Patient-Derived Models Repository</a>）。</li>
+</ol>
+</li>
+</ol>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a href="https://pubmed.ncbi.nlm.nih.gov/22872506/">Measurement of mRNA abundance using RNA-seq data: RPKM measure is inconsistent among samples</a></li>
+<li><a href="https://academic.oup.com/bib/article/14/6/671/189645">comprehensive evaluation of normalization methods for Illumina high-throughput RNA sequencing data analysis</a></li>
+<li><a href="https://translational-medicine.biomedcentral.com/articles/10.1186/s12967-021-02936-w#Sec21">TPM, FPKM, or Normalized Counts? A Comparative Study of Quantification Measures for the Analysis of RNA-seq Data from the NCI Patient-Derived Models Repository</a></li>
+<li><a href="https://kb.10xgenomics.com/hc/en-us/articles/115003684783-Should-I-calculate-TPM-RPKM-or-FPKM-instead-of-counts-for-10x-Genomics-data">Should I calculate TPM, RPKM or FPKM, instead of counts for 10x Genomics data? – 10X Genomics</a></li>
+<li><a href="https://www.rna-seqblog.com/rpkm-fpkm-and-tpm-clearly-explained/">RPKM, FPKM and TPM, clearly explained | RNA-Seq Blog</a></li>
+</ol>
+]]></content>
+      <categories>
+        <category>生物信息学</category>
+      </categories>
+      <tags>
+        <tag>生物信息学</tag>
+        <tag>转录组学</tag>
+        <tag>计数</tag>
       </tags>
   </entry>
   <entry>
@@ -1909,50 +1953,6 @@
       <tags>
         <tag>生物信息学</tag>
         <tag>转录组学</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>生物信息学笔记（三）：基因定量</title>
-    <url>/2024/02/16/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89%EF%BC%9A%E5%9F%BA%E5%9B%A0%E5%AE%9A%E9%87%8F/</url>
-    <content><![CDATA[<h2 id="为什么要对进行基因定量"><a href="#为什么要对进行基因定量" class="headerlink" title="为什么要对进行基因定量"></a>为什么要对进行基因定量</h2><p>&emsp;&emsp;转录组数据分析中，一个转录本反转录后的cDNA会被打碎成片段测序并和基因组比对，就会导致长转录本在给定的cDNA长度下可能会映射更多的cDNA，也就是说基因长度会影响Reads数。<br>&emsp;&emsp;测序深度是指测序过程中每个碱基被测序的平均次数，其计算公式为：$\frac{Reads数*Read长度}{参考序列长度}$：例如，对长100bp的目标区域进行捕获测序：采用单端测序，每个read长5bp；总共得到了200个reads；把所有的reads比对到目标区域后，100bp的目标区域中有98bp的位置至少有1个read覆盖到，换言之，剩余的2bp没有1个read覆盖。则测序深度为 200 x 5 / 100 = 10 我们说这此测序的深度为10X。显而易见，若测序越深，则对于相同长度的转录本，测序所得的Reads数更多。<br>&emsp;&emsp;综上所述，测序深度、基因长度和Reads数相关，所以需要在最终基因表达计数中去除相应的影响。注意，在基因定量的过程中，可能会由于样本本身的原因，如某个基因Reads数过高，导致基因定量后其他基因的表达量低于实际情况，这也是基因定量过程中需要去考虑的。</p>
-<h2 id="Raw-count"><a href="#Raw-count" class="headerlink" title="Raw count"></a>Raw count</h2><p>&emsp;&emsp;所谓Raw count，又称为count数，和上一部分所说的Reads数是同一概念，是指和参考序列比对上的序列数目。原始的读取计数矩阵使用Raw count作为基础，但由于不同基因的长度和测序深度存在差异，因此无法直接比较。为了消除技术偏差的影响并赋予后续差异分析以统计学意义，需要对这些基因计数矩阵进行标准化处理，将其转化为相对值。<br>&emsp;&emsp;但注意，我们进行基因定量时需要充分考虑测序技术和原理，如在 10x 基因组学基因表达检测中，每个转录本都标有作为唯一分子标识符 （unique molecular identifier，UMI） 的序列。这些 UMI 能够准确定量基因表达水平，因为我们可以分辨出哪些读段是从同一个 mRNA 分子中产生的。因此，Cell Ranger 和 Space Ranger 执行 UMI 计数（不是读取计数）以测量基因表达水平，并且所有二次分析步骤都基于 UMI 计数执行。在传统的RNA-seq数据中，完整的转录本被片段化，然后进行cDNA合成、末端修复和衔接连接。在此工作流程中，从长转录本中采样片段的概率高于从短转录本中采样的概率。因此，按转录本长度（例如，TPM、RPKM、FPKM）对读取计数进行归一化是有意义的。然而，在 10x 基因表达测定中，这种基因长度偏差并不存在。因此，不建议按基因长度对UMI计数进行归一化。</p>
-<h2 id="RPKM-FPKM"><a href="#RPKM-FPKM" class="headerlink" title="RPKM/FPKM"></a>RPKM/FPKM</h2><p>&emsp;&emsp;RPKM (Reads Per Kilobase of exon model per Million mapped reads)：每千个碱基的转录每百万映射读取的reads数，是针对单端测序的基因定量方法；FPKM (Fragment Per Kilobase of transcript, per Million mapped reads)：每千碱基片段每百万映射读取的 reads 数，是针对双端测序的基因定量方法。<br>&emsp;&emsp;以RPKM为例，其操作方法为：</p>
-<ol>
-<li>计算样本中的总读数，然后将该数字除以 1,000,000——这是“每百万”比例因子；</li>
-<li>将读取计数除以“每百万”比例因子。这针对测序深度进行了归一化，得到每百万次读数（reads per million，RPM）；</li>
-<li>将 RPM 值除以基因的长度，以千碱基为单位，得到RPKM。</li>
-</ol>
-<p>&emsp;&emsp;在第二代测序过程中，常采用一种方法将DNA分子打碎成片段（fragment），然后进行测序。在单末端测序中，每个片段对应一个读取序列（Read），而在双末端测序中，每个片段将从两个端点分别进行测序。因此，这两个成对的读取序列对应于同一个片段（虽然偶尔会出现只有一个读取序列与某个片段相对应的情况，这是由于某些原因导致另一个读取序列被排除或丢失了）。在这一点上存在着区别，对于FPKM（每百万片段计数）这一测量指标而言，与同一片段相关联的两个读取序列只被计算为一个读取序列。换句话说，FPKM是基于片段计数，而不是基于读取序列数量计算的，其他计算方法完全相同。<br>&emsp;&emsp;两者计算公式如下：</p>
-<script type="math/tex; mode=display">FPKM = \frac{Read\quad counts}{Mapped\quad reads(Millions)\quad \times \quad Transcript\quad length(KB)}</script><script type="math/tex; mode=display">RPKM = \frac{Read\quad counts(Fragments)}{Mapped\quad reads(Millions)\quad \times \quad Transcript\quad length(KB)}</script><h2 id="TPM"><a href="#TPM" class="headerlink" title="TPM"></a>TPM</h2><p>&emsp;&emsp;TPM（Transcripts Per Million） 是一种常用的基因表达量归一化方法，它将基因的表达量调整为每百万条转录本的数量。TPM 值考虑了基因的长度和测序深度，通过将每个基因的 Counts 值除以其长度，并进行适当的归一化，将基因的表达量转换为每百万转录本数，以便进行样本间的比较和分析。TPM 值消除了样本间测序深度的差异和基因长度的影响，实质上，TPM相当于重新标准化的文库，保证每个样本中所有TPM的总和是相同的。TPM 与 RPKM 和 FPKM 非常相似。唯一的区别是操作顺序。以下是计算 TPM 的方法：</p>
-<ol>
-<li>将读取计数除以每个基因的长度（以千碱基为单位），得到每千碱基读数（reads per kilobase，RPK）；</li>
-<li>计算样本中的所有 RPK 值的和，并将此数字除以 1,000,000，得到如前的“每百万”比例因子；</li>
-<li>将 RPK 值除以“每百万”比例因子，得到TPM。</li>
-</ol>
-<p>&emsp;&emsp;综上，在计算TPM时，和前述指标唯一的区别是你首先对基因长度进行归一化，然后对测序深度进行归一化。然而，这种差异的影响是相当深远的。<br>&emsp;&emsp;使用 TPM 时，每个示例中所有 TPM 的总和是相同的。这样可以更容易地比较每个样品中映射到基因的reads比例。相比之下，使用RPKM和FPKM，每个样本中归一化读数的总和可能不同，这使得直接比较样本变得更加困难，在某种意义上，TPM降低了样本本身的影响，从而让样本具有可比性，即TPM实际上改进了RPKM/FPKM方法在跨样品间定量的不准确性。<br>&emsp;&emsp;其计算公式如下：</p>
-<script type="math/tex; mode=display">TPM = 10^6 \times \frac{\frac {Read\quad counts}{Transcript \quad length(KB)}}{\Sigma \frac {Read\quad counts}{Transcript \quad length(KB)}}</script><h2 id="适用范围"><a href="#适用范围" class="headerlink" title="适用范围"></a>适用范围</h2><ol>
-<li>如前所述，基于测序计数选择基因定量的方案，如对于10×测序，直接使用原始Count即可；</li>
-<li>对于传统的二代测序，应当进行标准化基因定量：<ol>
-<li>RPKM和FPKM已经不推荐使用（参考：<a href="https://pubmed.ncbi.nlm.nih.gov/22872506/">Measurement of mRNA abundance using RNA-seq data: RPKM measure is inconsistent among samples</a>；<a href="https://academic.oup.com/bib/article/14/6/671/189645">comprehensive evaluation of normalization methods for Illumina high-throughput RNA sequencing data analysis</a>）；</li>
-<li>TPM、DESeq适合组间比较，有研究更推荐DESeq进行组间比较（<a href="https://academic.oup.com/bib/article/14/6/671/189645#1808405">comprehensive evaluation of normalization methods for Illumina high-throughput RNA sequencing data analysis</a>；<a href="https://translational-medicine.biomedcentral.com/articles/10.1186/s12967-021-02936-w#Sec21">TPM, FPKM, or Normalized Counts? A Comparative Study of Quantification Measures for the Analysis of RNA-seq Data from the NCI Patient-Derived Models Repository</a>）。</li>
-</ol>
-</li>
-</ol>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
-<li><a href="https://pubmed.ncbi.nlm.nih.gov/22872506/">Measurement of mRNA abundance using RNA-seq data: RPKM measure is inconsistent among samples</a></li>
-<li><a href="https://academic.oup.com/bib/article/14/6/671/189645">comprehensive evaluation of normalization methods for Illumina high-throughput RNA sequencing data analysis</a></li>
-<li><a href="https://translational-medicine.biomedcentral.com/articles/10.1186/s12967-021-02936-w#Sec21">TPM, FPKM, or Normalized Counts? A Comparative Study of Quantification Measures for the Analysis of RNA-seq Data from the NCI Patient-Derived Models Repository</a></li>
-<li><a href="https://kb.10xgenomics.com/hc/en-us/articles/115003684783-Should-I-calculate-TPM-RPKM-or-FPKM-instead-of-counts-for-10x-Genomics-data">Should I calculate TPM, RPKM or FPKM, instead of counts for 10x Genomics data? – 10X Genomics</a></li>
-<li><a href="https://www.rna-seqblog.com/rpkm-fpkm-and-tpm-clearly-explained/">RPKM, FPKM and TPM, clearly explained | RNA-Seq Blog</a></li>
-</ol>
-]]></content>
-      <categories>
-        <category>生物信息学</category>
-      </categories>
-      <tags>
-        <tag>生物信息学</tag>
-        <tag>转录组学</tag>
-        <tag>计数</tag>
       </tags>
   </entry>
   <entry>
@@ -2073,36 +2073,6 @@
       </tags>
   </entry>
   <entry>
-    <title>记录的目的</title>
-    <url>/2023/10/11/%E8%AE%B0%E5%BD%95%E7%9A%84%E7%9B%AE%E7%9A%84/</url>
-    <content><![CDATA[<p><span style="font-size:14px;">我是一个普通的医学生，没有系统的计算机训练，没有系统学习数学课程。</span></p>
-<p>为什么会对这一切感兴趣，在上一个笔记里面说过啦~ <a href="https://forrestgump618.github.io/2023/10/04/%E4%B8%80%E8%B5%B7%E6%9D%A5%E6%84%9F%E5%8F%97%E6%95%B0%E6%8D%AE%E4%B9%8B%E7%BE%8E%E5%90%A7%EF%BC%81/">一起来感受数据之美吧！</a></p>
-<p>从不了解生信、统计，到自己真正涉猎，我花了很长时间。获取这些知识的过程是非常不易的。</p>
-<div style="background-color:#f9f9f9; margin:20px 0; padding:15px; border-left:6px solid #ccc;">
-    <strong>挑战与困惑：</strong><br>
-    有时会为了一个公式的使用从bing查到google，从文献查到专著，最狠的一次是查了50篇文献结果大家都对此语焉不详；
-    很多事情花了大把的时间但最后并没有结果，甚至考试月也是如此；
-    越向下学发现数学知识成为阻碍进步的门槛；
-    化用太多的方法发现自己思考的很少，会怀疑自己的意义。<br>
-    …………
-</div>
-
-<p>许多个日夜，真希望有个人能将我想知道的问题放在了网上。很多时候，国内网站搜不到的问题都能在bing和google上搜到。在知识上，很佩服老外们的分享能力。</p>
-<p><span style="color:grey;">印象最深的是和一位国外大咖的请教，在极短的时间内回复了邮件，估摸着大概是凌晨的2点钟。让我十分惶恐隔了许久才回信。</span></p>
-<p>太多的时候，不是知识抽象。而是一座大厦建立起来，需要有个人告诉你，这个大厦里面哪个电梯可以到哪。但太多时候，独自在大厦的摸索中，看到更多的是抽象名词所累积起来的水泥板。有幸还有些走过的人给你插个指向标。</p>
-<p>因此我在想，我把我自己的用过的方法，想过的事情，分享出来，让一些想获取类似问题解答方法的人能够获得启发。</p>
-<p>而一点点私心是，找个小站安放自己。</p>
-<p>我的学习之路是踩着别人的石头过来的，希望自己也能够给需要的人带来一些帮助~</p>
-]]></content>
-      <categories>
-        <category>随笔</category>
-      </categories>
-      <tags>
-        <tag>统计学</tag>
-        <tag>交叉学科</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>能解答一切的答案</title>
     <url>/2024/03/07/%E8%83%BD%E8%A7%A3%E7%AD%94%E4%B8%80%E5%88%87%E7%9A%84%E7%AD%94%E6%A1%88/</url>
     <content><![CDATA[<p>&emsp;&emsp;医学所以成为医学，是因为什么？医学中能解答一切问题的答案又来自哪里？是技术还是人文？</p>
@@ -2131,6 +2101,36 @@
       </categories>
       <tags>
         <tag>随笔</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>记录的目的</title>
+    <url>/2023/10/11/%E8%AE%B0%E5%BD%95%E7%9A%84%E7%9B%AE%E7%9A%84/</url>
+    <content><![CDATA[<p><span style="font-size:14px;">我是一个普通的医学生，没有系统的计算机训练，没有系统学习数学课程。</span></p>
+<p>为什么会对这一切感兴趣，在上一个笔记里面说过啦~ <a href="https://forrestgump618.github.io/2023/10/04/%E4%B8%80%E8%B5%B7%E6%9D%A5%E6%84%9F%E5%8F%97%E6%95%B0%E6%8D%AE%E4%B9%8B%E7%BE%8E%E5%90%A7%EF%BC%81/">一起来感受数据之美吧！</a></p>
+<p>从不了解生信、统计，到自己真正涉猎，我花了很长时间。获取这些知识的过程是非常不易的。</p>
+<div style="background-color:#f9f9f9; margin:20px 0; padding:15px; border-left:6px solid #ccc;">
+    <strong>挑战与困惑：</strong><br>
+    有时会为了一个公式的使用从bing查到google，从文献查到专著，最狠的一次是查了50篇文献结果大家都对此语焉不详；
+    很多事情花了大把的时间但最后并没有结果，甚至考试月也是如此；
+    越向下学发现数学知识成为阻碍进步的门槛；
+    化用太多的方法发现自己思考的很少，会怀疑自己的意义。<br>
+    …………
+</div>
+
+<p>许多个日夜，真希望有个人能将我想知道的问题放在了网上。很多时候，国内网站搜不到的问题都能在bing和google上搜到。在知识上，很佩服老外们的分享能力。</p>
+<p><span style="color:grey;">印象最深的是和一位国外大咖的请教，在极短的时间内回复了邮件，估摸着大概是凌晨的2点钟。让我十分惶恐隔了许久才回信。</span></p>
+<p>太多的时候，不是知识抽象。而是一座大厦建立起来，需要有个人告诉你，这个大厦里面哪个电梯可以到哪。但太多时候，独自在大厦的摸索中，看到更多的是抽象名词所累积起来的水泥板。有幸还有些走过的人给你插个指向标。</p>
+<p>因此我在想，我把我自己的用过的方法，想过的事情，分享出来，让一些想获取类似问题解答方法的人能够获得启发。</p>
+<p>而一点点私心是，找个小站安放自己。</p>
+<p>我的学习之路是踩着别人的石头过来的，希望自己也能够给需要的人带来一些帮助~</p>
+]]></content>
+      <categories>
+        <category>随笔</category>
+      </categories>
+      <tags>
+        <tag>统计学</tag>
+        <tag>交叉学科</tag>
       </tags>
   </entry>
 </search>
