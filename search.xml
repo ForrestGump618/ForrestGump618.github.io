@@ -387,6 +387,28 @@
       </tags>
   </entry>
   <entry>
+    <title>域名更换</title>
+    <url>/2024/03/23/%E5%9F%9F%E5%90%8D%E6%9B%B4%E6%8D%A2/</url>
+    <content><![CDATA[<h1 id="🎉-新的域名"><a href="#🎉-新的域名" class="headerlink" title="🎉 新的域名"></a>🎉 <strong>新的域名</strong></h1><p>欢迎来到新域名：<a href="http://www.zhuangqingyuan.site" style="color: #3498db;">www.zhuangqingyuan.site</a><br>今天开始，这个小破站有自己的顶级域名啦！</p>
+<div style="background-color: #f0f2f5; padding: 10px; margin: 10px 0; border-left: 5px solid #3498db;">
+    <h3>📊 站点数据清零</h3>
+    <p>随着域名的更换，之前的浏览数据将不再保留，这里作个记录：</p>
+    <ul>
+        <li><strong>访客量：</strong><span style="color: #e74c3c;">789</span></li>
+        <li><strong>浏览次数：</strong><span style="color: #e74c3c;">1562</span></li>
+    </ul>
+</div>
+
+<p>感谢大家支持，小破站继续努力！</p>
+]]></content>
+      <categories>
+        <category>随笔</category>
+      </categories>
+      <tags>
+        <tag>随笔</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>基于NLP的密钥解码工具：Ciphey</title>
     <url>/2024/03/26/%E5%9F%BA%E4%BA%8ENLP%E7%9A%84%E5%AF%86%E9%92%A5%E8%A7%A3%E7%A0%81%E5%B7%A5%E5%85%B7%EF%BC%9ACiphey/</url>
     <content><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>Ciphey是一款自动化的解密和解码工具，它可以帮助用户快速识别和解密被加密的数据。Ciphey 使用一个带有密文检测接口(_Cipher Detection Interface_)的定制 AI 模型(_AuSearch_)来估测一个东西是用什么方式加密的。以及一个定制过的自然语言处理接口(_Language Checker Interface_)来检测给定文本何时变为纯文本。</p>
@@ -497,65 +519,6 @@
         <tag>开源</tag>
         <tag>密码学</tag>
         <tag>Docker</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>域名更换</title>
-    <url>/2024/03/23/%E5%9F%9F%E5%90%8D%E6%9B%B4%E6%8D%A2/</url>
-    <content><![CDATA[<h1 id="🎉-新的域名"><a href="#🎉-新的域名" class="headerlink" title="🎉 新的域名"></a>🎉 <strong>新的域名</strong></h1><p>欢迎来到新域名：<a href="http://www.zhuangqingyuan.site" style="color: #3498db;">www.zhuangqingyuan.site</a><br>今天开始，这个小破站有自己的顶级域名啦！</p>
-<div style="background-color: #f0f2f5; padding: 10px; margin: 10px 0; border-left: 5px solid #3498db;">
-    <h3>📊 站点数据清零</h3>
-    <p>随着域名的更换，之前的浏览数据将不再保留，这里作个记录：</p>
-    <ul>
-        <li><strong>访客量：</strong><span style="color: #e74c3c;">789</span></li>
-        <li><strong>浏览次数：</strong><span style="color: #e74c3c;">1562</span></li>
-    </ul>
-</div>
-
-<p>感谢大家支持，小破站继续努力！</p>
-]]></content>
-      <categories>
-        <category>随笔</category>
-      </categories>
-      <tags>
-        <tag>随笔</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>孟德尔随机化标准流程代码示例</title>
-    <url>/2024/02/05/%E5%AD%9F%E5%BE%B7%E5%B0%94%E9%9A%8F%E6%9C%BA%E5%8C%96%E6%A0%87%E5%87%86%E6%B5%81%E7%A8%8B%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B/</url>
-    <content><![CDATA[<p>在这篇博客中，我们将通过R代码来探索非酒精性脂肪肝（NAFLD）对COVID-19严重程度的可能影响。我们将利用两个R包：<code>TwoSampleMR</code>和<code>MRPRESSO</code>，来执行Mendelian Randomization (MR)分析，这是一种利用基因变异作为工具变量来估计暴露和结果之间因果关系的统计方法。</p>
-<h3 id="开始之前"><a href="#开始之前" class="headerlink" title="开始之前"></a>开始之前</h3><p>首先，我们需要安装并加载必要的R包：</p>
-<p>rCopy code</p>
-<p><code># 安装（如果尚未安装） install.packages(&quot;TwoSampleMR&quot;) install.packages(&quot;MRPRESSO&quot;)  # 加载包 library(TwoSampleMR) library(MRPRESSO)</code></p>
-<h3 id="数据准备"><a href="#数据准备" class="headerlink" title="数据准备"></a>数据准备</h3><p>我们的目标是研究NAFLD对COVID-19严重程度的影响。为此，我们首先需要准备关于NAFLD的暴露数据：</p>
-<p>rCopy code</p>
-<p><code># 读取暴露数据 exposure_dat &lt;- read_exposure_data(filename = &quot;./NAFLD.txt&quot;, sep=&quot;\t&quot;,                                    snp_col = &quot;rsids&quot;, effect_allele_col = &quot;alt&quot;, other_allele_col = &quot;ref&quot;,                                    beta_col = &quot;beta&quot;, se_col = &quot;sebeta&quot;, pval_col = &quot;pval&quot;, eaf_col = &quot;af_alt&quot;) # 对数据进行命名，便于后续处理 exposure_dat$phenotype &lt;- &quot;NAFLD&quot;</code></p>
-<h3 id="数据处理"><a href="#数据处理" class="headerlink" title="数据处理"></a>数据处理</h3><p>为了确保我们分析的基因变异之间没有连锁不平衡，我们将对数据进行clump处理：</p>
-<p>rCopy code</p>
-<p><code># 连锁不平衡去除 exposure_dat &lt;- clump_data(exposure_dat)</code></p>
-<h3 id="结果数据获取"><a href="#结果数据获取" class="headerlink" title="结果数据获取"></a>结果数据获取</h3><p>接下来，我们需要获取COVID-19作为结果的数据：</p>
-<p>rCopy code</p>
-<p><code># 在线读取COVID-19结果数据 outcome_dat &lt;- extract_outcome_data(outcomes = &quot;ebi-a-GCST011081&quot;, snps = exposure_dat$SNP)</code></p>
-<h3 id="数据协调"><a href="#数据协调" class="headerlink" title="数据协调"></a>数据协调</h3><p>为了进行MR分析，暴露和结果数据需要进行协调，确保基因变异的方向一致：</p>
-<p>rCopy code</p>
-<p><code># 数据协调 dat &lt;- harmonise_data(exposure_dat = exposure_dat, outcome_dat = outcome_dat, action = 2)</code></p>
-<h3 id="分析与敏感性测试"><a href="#分析与敏感性测试" class="headerlink" title="分析与敏感性测试"></a>分析与敏感性测试</h3><p>进行MR分析前，我们先计算F值，以评估使用的工具变量的有效性，并进行敏感性测试：</p>
-<p>rCopy code</p>
-<p><code># F值计算与筛选 dat$F &lt;- (dat$beta.exposure/dat$se.exposure)**2 dat &lt;- subset(dat, F&gt;10)  # MR分析 mr_result &lt;- mr(dat)  # 敏感性测试 het &lt;- mr_heterogeneity(dat) ple &lt;- mr_pleiotropy_test(dat) mr_presso(data = dat, BetaOutcome = &quot;beta.outcome&quot;, BetaExposure = &quot;beta.exposure&quot;, SdOutcome = &quot;se.outcome&quot;, SdExposure = &quot;se.exposure&quot;)</code></p>
-<h3 id="结果呈现"><a href="#结果呈现" class="headerlink" title="结果呈现"></a>结果呈现</h3><p>最后，我们通过几种图表直观展示MR分析结果：</p>
-<p>rCopy code</p>
-<p><code># 结果图表展示 mr_funnel_plot(singlesnp_results = mr_singlesnp(dat)) # 漏斗图 mr_forest_plot(mr_singlesnp(dat)) # 森林图 mr_scatter_plot(mr_results = mr_result, dat = dat) # 散点图</code></p>
-<p>通过这些步骤，我们可以评估非酒精性脂肪肝（NAFLD）对COVID-19严重程度的潜在影响，提供更深入的理解和新的研究方向。这种基于Mendelian Randomization的方法为我们提供了一种强有力的工具，来探讨各种生物标志物与疾病之间的因果关系。</p>
-]]></content>
-      <categories>
-        <category>流行病学</category>
-      </categories>
-      <tags>
-        <tag>GWAS</tag>
-        <tag>统计学</tag>
-        <tag>孟德尔随机化</tag>
-        <tag>流行病学</tag>
       </tags>
   </entry>
   <entry>
@@ -1293,6 +1256,43 @@
         <tag>医学</tag>
         <tag>医学生</tag>
         <tag>大四</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>孟德尔随机化标准流程代码示例</title>
+    <url>/2024/02/05/%E5%AD%9F%E5%BE%B7%E5%B0%94%E9%9A%8F%E6%9C%BA%E5%8C%96%E6%A0%87%E5%87%86%E6%B5%81%E7%A8%8B%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B/</url>
+    <content><![CDATA[<p>在这篇博客中，我们将通过R代码来探索非酒精性脂肪肝（NAFLD）对COVID-19严重程度的可能影响。我们将利用两个R包：<code>TwoSampleMR</code>和<code>MRPRESSO</code>，来执行Mendelian Randomization (MR)分析，这是一种利用基因变异作为工具变量来估计暴露和结果之间因果关系的统计方法。</p>
+<h3 id="开始之前"><a href="#开始之前" class="headerlink" title="开始之前"></a>开始之前</h3><p>首先，我们需要安装并加载必要的R包：</p>
+<p>rCopy code</p>
+<p><code># 安装（如果尚未安装） install.packages(&quot;TwoSampleMR&quot;) install.packages(&quot;MRPRESSO&quot;)  # 加载包 library(TwoSampleMR) library(MRPRESSO)</code></p>
+<h3 id="数据准备"><a href="#数据准备" class="headerlink" title="数据准备"></a>数据准备</h3><p>我们的目标是研究NAFLD对COVID-19严重程度的影响。为此，我们首先需要准备关于NAFLD的暴露数据：</p>
+<p>rCopy code</p>
+<p><code># 读取暴露数据 exposure_dat &lt;- read_exposure_data(filename = &quot;./NAFLD.txt&quot;, sep=&quot;\t&quot;,                                    snp_col = &quot;rsids&quot;, effect_allele_col = &quot;alt&quot;, other_allele_col = &quot;ref&quot;,                                    beta_col = &quot;beta&quot;, se_col = &quot;sebeta&quot;, pval_col = &quot;pval&quot;, eaf_col = &quot;af_alt&quot;) # 对数据进行命名，便于后续处理 exposure_dat$phenotype &lt;- &quot;NAFLD&quot;</code></p>
+<h3 id="数据处理"><a href="#数据处理" class="headerlink" title="数据处理"></a>数据处理</h3><p>为了确保我们分析的基因变异之间没有连锁不平衡，我们将对数据进行clump处理：</p>
+<p>rCopy code</p>
+<p><code># 连锁不平衡去除 exposure_dat &lt;- clump_data(exposure_dat)</code></p>
+<h3 id="结果数据获取"><a href="#结果数据获取" class="headerlink" title="结果数据获取"></a>结果数据获取</h3><p>接下来，我们需要获取COVID-19作为结果的数据：</p>
+<p>rCopy code</p>
+<p><code># 在线读取COVID-19结果数据 outcome_dat &lt;- extract_outcome_data(outcomes = &quot;ebi-a-GCST011081&quot;, snps = exposure_dat$SNP)</code></p>
+<h3 id="数据协调"><a href="#数据协调" class="headerlink" title="数据协调"></a>数据协调</h3><p>为了进行MR分析，暴露和结果数据需要进行协调，确保基因变异的方向一致：</p>
+<p>rCopy code</p>
+<p><code># 数据协调 dat &lt;- harmonise_data(exposure_dat = exposure_dat, outcome_dat = outcome_dat, action = 2)</code></p>
+<h3 id="分析与敏感性测试"><a href="#分析与敏感性测试" class="headerlink" title="分析与敏感性测试"></a>分析与敏感性测试</h3><p>进行MR分析前，我们先计算F值，以评估使用的工具变量的有效性，并进行敏感性测试：</p>
+<p>rCopy code</p>
+<p><code># F值计算与筛选 dat$F &lt;- (dat$beta.exposure/dat$se.exposure)**2 dat &lt;- subset(dat, F&gt;10)  # MR分析 mr_result &lt;- mr(dat)  # 敏感性测试 het &lt;- mr_heterogeneity(dat) ple &lt;- mr_pleiotropy_test(dat) mr_presso(data = dat, BetaOutcome = &quot;beta.outcome&quot;, BetaExposure = &quot;beta.exposure&quot;, SdOutcome = &quot;se.outcome&quot;, SdExposure = &quot;se.exposure&quot;)</code></p>
+<h3 id="结果呈现"><a href="#结果呈现" class="headerlink" title="结果呈现"></a>结果呈现</h3><p>最后，我们通过几种图表直观展示MR分析结果：</p>
+<p>rCopy code</p>
+<p><code># 结果图表展示 mr_funnel_plot(singlesnp_results = mr_singlesnp(dat)) # 漏斗图 mr_forest_plot(mr_singlesnp(dat)) # 森林图 mr_scatter_plot(mr_results = mr_result, dat = dat) # 散点图</code></p>
+<p>通过这些步骤，我们可以评估非酒精性脂肪肝（NAFLD）对COVID-19严重程度的潜在影响，提供更深入的理解和新的研究方向。这种基于Mendelian Randomization的方法为我们提供了一种强有力的工具，来探讨各种生物标志物与疾病之间的因果关系。</p>
+]]></content>
+      <categories>
+        <category>流行病学</category>
+      </categories>
+      <tags>
+        <tag>GWAS</tag>
+        <tag>统计学</tag>
+        <tag>孟德尔随机化</tag>
+        <tag>流行病学</tag>
       </tags>
   </entry>
   <entry>
