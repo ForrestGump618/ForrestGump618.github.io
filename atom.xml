@@ -6,7 +6,7 @@
   <link href="https://forrestgump618.github.io/atom.xml" rel="self"/>
   
   <link href="https://forrestgump618.github.io/"/>
-  <updated>2024-03-26T11:25:14.642Z</updated>
+  <updated>2024-03-26T11:30:32.350Z</updated>
   <id>https://forrestgump618.github.io/</id>
   
   <author>
@@ -21,19 +21,19 @@
     <link href="https://forrestgump618.github.io/2024/03/26/HEXO%E5%8D%9A%E5%AE%A2%E7%9A%84%E8%BD%AE%E6%92%AD%E6%A0%8F/"/>
     <id>https://forrestgump618.github.io/2024/03/26/HEXO%E5%8D%9A%E5%AE%A2%E7%9A%84%E8%BD%AE%E6%92%AD%E6%A0%8F/</id>
     <published>2024-03-26T11:18:57.000Z</published>
-    <updated>2024-03-26T11:25:14.642Z</updated>
+    <updated>2024-03-26T11:30:32.350Z</updated>
     
     
-      
-      
-        
-        
-    <summary type="html">&lt;h2 id=&quot;CSS样式设计&quot;&gt;&lt;a href=&quot;#CSS样式设计&quot; class=&quot;headerlink&quot;</summary>
-        
-      
+    <summary type="html">HEXO博客的轮播栏的CSS实现。</summary>
     
     
     
+    <category term="开源" scheme="https://forrestgump618.github.io/categories/%E5%BC%80%E6%BA%90/"/>
+    
+    
+    <category term="计算机" scheme="https://forrestgump618.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA/"/>
+    
+    <category term="HEXO" scheme="https://forrestgump618.github.io/tags/HEXO/"/>
     
   </entry>
   
@@ -249,9 +249,9 @@
     <category term="生物信息学" scheme="https://forrestgump618.github.io/categories/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
     
     
-    <category term="生物信息学" scheme="https://forrestgump618.github.io/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
-    
     <category term="单细胞测序" scheme="https://forrestgump618.github.io/tags/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F/"/>
+    
+    <category term="生物信息学" scheme="https://forrestgump618.github.io/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
     
   </entry>
   
@@ -335,9 +335,9 @@
     <category term="生物信息学" scheme="https://forrestgump618.github.io/categories/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
     
     
-    <category term="生物信息学" scheme="https://forrestgump618.github.io/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
-    
     <category term="统计学" scheme="https://forrestgump618.github.io/tags/%E7%BB%9F%E8%AE%A1%E5%AD%A6/"/>
+    
+    <category term="生物信息学" scheme="https://forrestgump618.github.io/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
     
     <category term="机器学习" scheme="https://forrestgump618.github.io/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
     
@@ -448,9 +448,9 @@
     
     <category term="GWAS" scheme="https://forrestgump618.github.io/tags/GWAS/"/>
     
-    <category term="生物信息学" scheme="https://forrestgump618.github.io/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
-    
     <category term="单细胞测序" scheme="https://forrestgump618.github.io/tags/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F/"/>
+    
+    <category term="生物信息学" scheme="https://forrestgump618.github.io/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
     
   </entry>
   
