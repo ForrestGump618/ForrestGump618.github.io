@@ -6,7 +6,7 @@
   <link href="https://forrestgump618.github.io/atom.xml" rel="self"/>
   
   <link href="https://forrestgump618.github.io/"/>
-  <updated>2024-03-26T05:10:35.773Z</updated>
+  <updated>2024-03-26T11:25:14.642Z</updated>
   <id>https://forrestgump618.github.io/</id>
   
   <author>
@@ -15,6 +15,27 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>HEXO博客的轮播栏</title>
+    <link href="https://forrestgump618.github.io/2024/03/26/HEXO%E5%8D%9A%E5%AE%A2%E7%9A%84%E8%BD%AE%E6%92%AD%E6%A0%8F/"/>
+    <id>https://forrestgump618.github.io/2024/03/26/HEXO%E5%8D%9A%E5%AE%A2%E7%9A%84%E8%BD%AE%E6%92%AD%E6%A0%8F/</id>
+    <published>2024-03-26T11:18:57.000Z</published>
+    <updated>2024-03-26T11:25:14.642Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h2 id=&quot;CSS样式设计&quot;&gt;&lt;a href=&quot;#CSS样式设计&quot; class=&quot;headerlink&quot;</summary>
+        
+      
+    
+    
+    
+    
+  </entry>
   
   <entry>
     <title>基于NLP的密钥解码工具：Ciphey</title>
@@ -430,27 +451,6 @@
     <category term="生物信息学" scheme="https://forrestgump618.github.io/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
     
     <category term="单细胞测序" scheme="https://forrestgump618.github.io/tags/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>celltogwas：细胞类型注释到基因组的工具包</title>
-    <link href="https://forrestgump618.github.io/2023/08/19/celltogwas%EF%BC%9A%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8B%E6%B3%A8%E9%87%8A%E5%88%B0%E5%9F%BA%E5%9B%A0%E7%BB%84%E7%9A%84%E5%B7%A5%E5%85%B7%E5%8C%85/"/>
-    <id>https://forrestgump618.github.io/2023/08/19/celltogwas%EF%BC%9A%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8B%E6%B3%A8%E9%87%8A%E5%88%B0%E5%9F%BA%E5%9B%A0%E7%BB%84%E7%9A%84%E5%B7%A5%E5%85%B7%E5%8C%85/</id>
-    <published>2023-08-19T00:00:00.000Z</published>
-    <updated>2024-03-23T06:50:47.373Z</updated>
-    
-    
-    <summary type="html">本工具包用于从基因组注释文件中提取基因信息，合并基因区间，基于细胞类型和窗口大小生成基因组范围，以及注释GWAS（全基因组关联研究）数据。</summary>
-    
-    
-    
-    <category term="生物信息学" scheme="https://forrestgump618.github.io/categories/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
-    
-    
-    <category term="GWAS" scheme="https://forrestgump618.github.io/tags/GWAS/"/>
-    
-    <category term="python" scheme="https://forrestgump618.github.io/tags/python/"/>
     
   </entry>
   
