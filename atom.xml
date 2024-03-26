@@ -6,7 +6,7 @@
   <link href="https://forrestgump618.github.io/atom.xml" rel="self"/>
   
   <link href="https://forrestgump618.github.io/"/>
-  <updated>2024-03-24T14:18:41.687Z</updated>
+  <updated>2024-03-26T05:10:35.773Z</updated>
   <id>https://forrestgump618.github.io/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>基于NLP的密钥解码工具：Ciphey</title>
+    <link href="https://forrestgump618.github.io/2024/03/26/%E5%9F%BA%E4%BA%8ENLP%E7%9A%84%E5%AF%86%E9%92%A5%E8%A7%A3%E7%A0%81%E5%B7%A5%E5%85%B7%EF%BC%9ACiphey/"/>
+    <id>https://forrestgump618.github.io/2024/03/26/%E5%9F%BA%E4%BA%8ENLP%E7%9A%84%E5%AF%86%E9%92%A5%E8%A7%A3%E7%A0%81%E5%B7%A5%E5%85%B7%EF%BC%9ACiphey/</id>
+    <published>2024-03-26T04:55:44.000Z</published>
+    <updated>2024-03-26T05:10:35.773Z</updated>
+    
+    
+    <summary type="html">Ciphey 旨在成为一种工具，用于自动执行许多解密和解码，例如多种基本编码，经典密码，哈希或更高级的加密技术。如果您对密码学不太了解，或者想在自己进行密文处理之前快速检查密文，那么 Ciphey 会是一个有用的工具。</summary>
+    
+    
+    
+    <category term="开源" scheme="https://forrestgump618.github.io/categories/%E5%BC%80%E6%BA%90/"/>
+    
+    
+    <category term="开源" scheme="https://forrestgump618.github.io/tags/%E5%BC%80%E6%BA%90/"/>
+    
+    <category term="密码学" scheme="https://forrestgump618.github.io/tags/%E5%AF%86%E7%A0%81%E5%AD%A6/"/>
+    
+    <category term="Docker" scheme="https://forrestgump618.github.io/tags/Docker/"/>
+    
+  </entry>
   
   <entry>
     <title>心脏听诊总结</title>
@@ -75,9 +98,9 @@
     
     <category term="python" scheme="https://forrestgump618.github.io/tags/python/"/>
     
-    <category term="计算机" scheme="https://forrestgump618.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA/"/>
-    
     <category term="随笔" scheme="https://forrestgump618.github.io/tags/%E9%9A%8F%E7%AC%94/"/>
+    
+    <category term="计算机" scheme="https://forrestgump618.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA/"/>
     
   </entry>
   
@@ -205,9 +228,9 @@
     <category term="生物信息学" scheme="https://forrestgump618.github.io/categories/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
     
     
-    <category term="生物信息学" scheme="https://forrestgump618.github.io/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
-    
     <category term="单细胞测序" scheme="https://forrestgump618.github.io/tags/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F/"/>
+    
+    <category term="生物信息学" scheme="https://forrestgump618.github.io/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
     
   </entry>
   
@@ -402,11 +425,11 @@
     <category term="生物信息学" scheme="https://forrestgump618.github.io/categories/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
     
     
-    <category term="GWAS" scheme="https://forrestgump618.github.io/tags/GWAS/"/>
+    <category term="单细胞测序" scheme="https://forrestgump618.github.io/tags/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F/"/>
     
     <category term="生物信息学" scheme="https://forrestgump618.github.io/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
     
-    <category term="单细胞测序" scheme="https://forrestgump618.github.io/tags/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F/"/>
+    <category term="GWAS" scheme="https://forrestgump618.github.io/tags/GWAS/"/>
     
   </entry>
   
@@ -428,27 +451,6 @@
     <category term="GWAS" scheme="https://forrestgump618.github.io/tags/GWAS/"/>
     
     <category term="python" scheme="https://forrestgump618.github.io/tags/python/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>单细胞测序教程资源聚合</title>
-    <link href="https://forrestgump618.github.io/2023/08/12/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E6%95%99%E7%A8%8B%E5%92%8C%E8%B5%84%E6%BA%90%E8%81%9A%E5%90%88/"/>
-    <id>https://forrestgump618.github.io/2023/08/12/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E6%95%99%E7%A8%8B%E5%92%8C%E8%B5%84%E6%BA%90%E8%81%9A%E5%90%88/</id>
-    <published>2023-08-12T00:00:00.000Z</published>
-    <updated>2024-03-23T06:56:05.557Z</updated>
-    
-    
-    <summary type="html">生物信息学教程和资源聚合</summary>
-    
-    
-    
-    <category term="生物信息学" scheme="https://forrestgump618.github.io/categories/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
-    
-    
-    <category term="生物信息学" scheme="https://forrestgump618.github.io/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
-    
-    <category term="单细胞测序" scheme="https://forrestgump618.github.io/tags/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F/"/>
     
   </entry>
   
