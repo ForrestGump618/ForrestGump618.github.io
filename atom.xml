@@ -117,9 +117,9 @@
     <category term="随笔" scheme="https://forrestgump618.github.io/categories/%E9%9A%8F%E7%AC%94/"/>
     
     
-    <category term="python" scheme="https://forrestgump618.github.io/tags/python/"/>
-    
     <category term="计算机" scheme="https://forrestgump618.github.io/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA/"/>
+    
+    <category term="python" scheme="https://forrestgump618.github.io/tags/python/"/>
     
     <category term="随笔" scheme="https://forrestgump618.github.io/tags/%E9%9A%8F%E7%AC%94/"/>
     
@@ -249,9 +249,9 @@
     <category term="生物信息学" scheme="https://forrestgump618.github.io/categories/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
     
     
-    <category term="单细胞测序" scheme="https://forrestgump618.github.io/tags/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F/"/>
-    
     <category term="生物信息学" scheme="https://forrestgump618.github.io/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
+    
+    <category term="单细胞测序" scheme="https://forrestgump618.github.io/tags/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F/"/>
     
   </entry>
   
@@ -335,9 +335,9 @@
     <category term="生物信息学" scheme="https://forrestgump618.github.io/categories/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
     
     
-    <category term="统计学" scheme="https://forrestgump618.github.io/tags/%E7%BB%9F%E8%AE%A1%E5%AD%A6/"/>
-    
     <category term="生物信息学" scheme="https://forrestgump618.github.io/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
+    
+    <category term="统计学" scheme="https://forrestgump618.github.io/tags/%E7%BB%9F%E8%AE%A1%E5%AD%A6/"/>
     
     <category term="机器学习" scheme="https://forrestgump618.github.io/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
     
@@ -448,9 +448,9 @@
     
     <category term="GWAS" scheme="https://forrestgump618.github.io/tags/GWAS/"/>
     
-    <category term="单细胞测序" scheme="https://forrestgump618.github.io/tags/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F/"/>
-    
     <category term="生物信息学" scheme="https://forrestgump618.github.io/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
+    
+    <category term="单细胞测序" scheme="https://forrestgump618.github.io/tags/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F/"/>
     
   </entry>
   
