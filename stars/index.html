@@ -32,8 +32,8 @@
 <meta property="og:site_name" content="一个夏天的年少">
 <meta property="og:description" content=".links-content {   margin-top:1rem; }  .link-navigation::after {   content:&quot; &quot;;   display:block;   clear:both }  .card {   position:relative;   width:25%;   padding:0;   border-radius:10px;   tran">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2024-03-26T10:38:53.022Z">
-<meta property="article:modified_time" content="2024-03-26T10:38:53.022Z">
+<meta property="article:published_time" content="2024-03-27T11:59:54.518Z">
+<meta property="article:modified_time" content="2024-03-27T11:59:54.518Z">
 <meta property="article:author" content="Qingyuan Zhuang&#39; Blog">
 <meta property="article:tag" content="生物信息学">
 <meta property="article:tag" content="医学">
@@ -371,6 +371,40 @@
   border:0;
   overflow:hidden
 }
+
+
+/* 继续暗黑模式样式 */
+.darkmode--activated {
+  .card, .card .card-header, .card .card-content, .card .card-header a, .card .card-content a {
+    color: #eaeaea; /* 调整文字颜色为更亮的色调以增加在暗背景下的可读性 */
+    background: #333; /* 暗模式下的卡片背景色 */
+    border-color: #444; /* 暗模式下的边框色 */
+  }
+
+  .card:before {
+    background-image: linear-gradient(to right, #555 0%, #555 1%, #666 100%);
+  }
+
+  /* 调整hover效果，以确保在暗模式下也能清晰看到 */
+  .card:hover:before, .card:focus:before, .card:active:before {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+  }
+
+  /* 针对小屏幕下的样式调整 */
+  @media(max-width:567px) {
+    .card{
+      margin-left: 0; /* 在暗模式下，为了更好地适应暗色主题，可能需要调整间距 */
+      width: calc(100% - 20px); /* 调整宽度以适配暗模式下的视觉效果 */
+    }
+  }
+
+  /* 在暗模式下，特别针对链接的样式做出调整 */
+  .card .card-header a:hover, .card .card-content a:hover {
+    color: #a8dadc; /* 暗模式下hover时的链接颜色，选择一种更明亮的颜色以提高对比度和可识别性 */
+  }
+}
+
 </style>
 
 <h2 id="我的常用"><a href="#我的常用" class="headerlink" title="我的常用"></a>我的常用</h2><div><div class="links-content"><div class="link-navigation mine"></div></div></div>
@@ -561,13 +595,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">74k</span>
+    <span title="站点总字数">34k</span>
 
     <span class="post-meta-item-icon">
       <span class="post-meta-divider"> </span>
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">1:08</span>
+    <span title="站点阅读时长">2:04</span>
   
   
     <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>

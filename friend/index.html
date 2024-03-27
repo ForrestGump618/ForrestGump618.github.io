@@ -25,16 +25,16 @@
   </script>
 
 
-  <meta name="description" content="&#x2F;* 使用网格系统进行布局优化 *&#x2F;          .links-content {             display: grid;             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));             gap: 20px; &#x2F;* 卡片间距 *&#x2F;">
+  <meta name="description" content="&#x2F;* 亮色模式样式 *&#x2F;    .links-content {       display: grid;       grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));       gap: 20px;       margin-top: 1rem;       background-color">
 <meta property="og:type" content="website">
 <meta property="og:title" content="友情链接">
 <meta property="og:url" content="https://www.zhuangqingyuan.site/friend/index.html">
 <meta property="og:site_name" content="一个夏天的年少">
-<meta property="og:description" content="&#x2F;* 使用网格系统进行布局优化 *&#x2F;          .links-content {             display: grid;             grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));             gap: 20px; &#x2F;* 卡片间距 *&#x2F;">
+<meta property="og:description" content="&#x2F;* 亮色模式样式 *&#x2F;    .links-content {       display: grid;       grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));       gap: 20px;       margin-top: 1rem;       background-color">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://www.zhuangqingyuan.site/images/avatar.gif">
 <meta property="article:published_time" content="2024-03-26T14:48:18.000Z">
-<meta property="article:modified_time" content="2024-03-27T00:45:08.777Z">
+<meta property="article:modified_time" content="2024-03-27T12:04:11.408Z">
 <meta property="article:author" content="Qingyuan Zhuang&#39; Blog">
 <meta property="article:tag" content="生物信息学">
 <meta property="article:tag" content="医学">
@@ -230,59 +230,88 @@
           <div class="post-body">
    <div id="links">
       <style>
-         /* 使用网格系统进行布局优化 */
-         .links-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px; /* 卡片间距 */
-            margin-top: 1rem;
-            background-color: #f9f9f9; /* 背景颜色 */
-            padding: 20px; /* 内边距 */
-         }
+   /* 亮色模式样式 */
+   .links-content {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 20px;
+      margin-top: 1rem;
+      background-color: #f9f9f9;
+      padding: 20px;
+   }
 
-         .card {
-            font-size: 1rem;
-            padding: 20px;
-            border-radius: 8px; /* 圆角 */
-            transition-duration: 0.3s; /* 过渡动画时间 */
-            display: flex;
-            align-items: center; /* 垂直居中 */
-            background-color: #ffffff; /* 卡片背景颜色 */
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* 阴影效果 */
-         }
+   .card {
+      font-size: 1rem;
+      padding: 20px;
+      border-radius: 8px;
+      transition-duration: 0.3s;
+      display: flex;
+      align-items: center;
+      background-color: #ffffff;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+   }
 
-         .card:hover {
-            transform: translateY(-5px); /* 悬停效果 */
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-         }
+   .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+   }
 
-         .card a {
-            border: none;
-            text-decoration: none; /* 去除下划线 */
-         }
+   .card a {
+      border: none;
+      text-decoration: none;
+   }
 
-         .ava {
-            width: 60px; /* 调整为实际需要的大小 */
-            height: 60px; /* 调整为实际需要的大小 */
-            margin-right: 20px; /* 右边距 */
-            border-radius: 50%; /* 圆形图片 */
-         }
+   .ava {
+      width: 60px;
+      height: 60px;
+      margin-right: 20px;
+      border-radius: 50%;
+   }
 
-         .card-header a {
-            color: #2bbc8a; /* 链接颜色 */
-            font-weight: bold;
-            text-decoration: none;
-         }
+   .card-header a {
+      color: #2bbc8a;
+      font-weight: bold;
+      text-decoration: none;
+   }
 
-         .card-header a:hover {
-            color: #d480aa; /* 链接悬停颜色 */
-         }
+   .card-header a:hover {
+      color: #d480aa;
+   }
 
-         .info {
-            color: #a3a3a3;
-            font-size: 14px;
-         }
-      </style>
+   .info {
+      color: #a3a3a3;
+      font-size: 14px;
+   }
+
+   /* 暗黑模式样式 */
+   .darkmode--activated  {
+      .links-content {
+         background-color: #333; /* 暗背景色 */
+      }
+
+      .card {
+         background-color: #424242; /* 暗卡片背景色 */
+         box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1); /* 亮色阴影 */
+      }
+
+      .card:hover {
+         box-shadow: 0 4px 8px rgba(255, 255, 255, 0.2);
+      }
+
+      .card-header a {
+         color: #4ad9b2; /* 暗模式链接颜色 */
+      }
+
+      .card-header a:hover {
+         color: #f492c2; /* 暗模式链接悬停颜色 */
+      }
+
+      .info {
+         color: #cccccc; /* 暗模式文本颜色 */
+      }
+   }
+</style>
+
       <div class="links-content">
          <!-- 卡片示例 -->
          <div class="card">
@@ -486,13 +515,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">74k</span>
+    <span title="站点总字数">34k</span>
 
     <span class="post-meta-item-icon">
       <span class="post-meta-divider"> </span>
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">1:08</span>
+    <span title="站点阅读时长">2:04</span>
   
   
     <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
