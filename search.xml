@@ -1,23 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>HEXO博客的轮播栏</title>
-    <url>/2024/03/26/HEXO%E5%8D%9A%E5%AE%A2%E7%9A%84%E8%BD%AE%E6%92%AD%E6%A0%8F/</url>
-    <content><![CDATA[<h2 id="CSS样式设计"><a href="#CSS样式设计" class="headerlink" title="CSS样式设计"></a>CSS样式设计</h2><p>在\\Blog\\themes\\next\\layout\\_marco下新建carousel.swig，填入这些代码：</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">&#123;% if theme<span class="selector-class">.carousel</span><span class="selector-class">.enable</span> %&#125;</span><br><span class="line"></span><br><span class="line">&lt;script <span class="attribute">src</span>=&quot;https://cdn.staticfile.org/jquery/<span class="number">2.1</span>.<span class="number">1</span>/jquery.min.js<span class="string">&quot;&gt;&lt;/script&gt;</span></span><br><span class="line"><span class="string">&lt;script src=&quot;</span>https://cdn.staticfile.org/twitter-bootstrap/<span class="number">3.3</span>.<span class="number">7</span>/js/bootstrap.min.js<span class="string">&quot;&gt;&lt;/script&gt;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">&lt;style type=&quot;</span>text/css<span class="string">&quot;&gt;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">.glyphicon-chevron-left:before&#123;</span></span><br><span class="line"><span class="string">    content: &quot;</span>《<span class="string">&quot;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">.glyphicon-chevron-right:before&#123;</span></span><br><span class="line"><span class="string">    content: &quot;</span>》<span class="string">&quot;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">@media (max-width: 767px)&#123;</span></span><br><span class="line"><span class="string">    .rights&#123;</span></span><br><span class="line"><span class="string">        display: none;</span></span><br><span class="line"><span class="string">    &#125;</span></span><br><span class="line"><span class="string">    .carousel&#123;</span></span><br><span class="line"><span class="string">        width: 100% ;</span></span><br><span class="line"><span class="string">        height: 100% ;</span></span><br><span class="line"><span class="string">    &#125;</span></span><br><span class="line"><span class="string">    .slide&#123;</span></span><br><span class="line"><span class="string">        width: 100% ;</span></span><br><span class="line"><span class="string">        height: 100% ;</span></span><br><span class="line"><span class="string">    &#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">.carousel&#123;</span></span><br><span class="line"><span class="string">    width: 100%;</span></span><br><span class="line"><span class="string">    height: 100%;</span></span><br><span class="line"><span class="string">    position: relative;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">.carousel-inner &#123;</span></span><br><span class="line"><span class="string">  position: relative;</span></span><br><span class="line"><span class="string">  overflow: hidden;</span></span><br><span class="line"><span class="string">  width: 100%;</span></span><br><span class="line"><span class="string">  margin: 0px 0px 12px 0px;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">.carousel-inner &gt; .item &#123;</span></span><br><span class="line"><span class="string">  display: none;</span></span><br><span class="line"><span class="string">  position: relative;</span></span><br><span class="line"><span class="string">  -webkit-transition: 0.6s ease-in-out left;</span></span><br><span class="line"><span class="string">  -o-transition: 0.6s ease-in-out left;</span></span><br><span class="line"><span class="string">  transition: 0.6s ease-in-out left;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">.carousel-inner &gt; .item &gt; img,</span></span><br><span class="line"><span class="string">.carousel-inner &gt; .item &gt; a &gt; img &#123;</span></span><br><span class="line"><span class="string">  line-height: 1;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">@media all and (transform-3d), (-webkit-transform-3d) &#123;</span></span><br><span class="line"><span class="string">  .carousel-inner &gt; .item &#123;</span></span><br><span class="line"><span class="string">    -webkit-transition: -webkit-transform 0.6s ease-in-out;</span></span><br><span class="line"><span class="string">    -moz-transition: -moz-transform 0.6s ease-in-out;</span></span><br><span class="line"><span class="string">    -o-transition: -o-transform 0.6s ease-in-out;</span></span><br><span class="line"><span class="string">    transition: transform 0.6s ease-in-out;</span></span><br><span class="line"><span class="string">    -webkit-backface-visibility: hidden;</span></span><br><span class="line"><span class="string">    -moz-backface-visibility: hidden;</span></span><br><span class="line"><span class="string">    backface-visibility: hidden;</span></span><br><span class="line"><span class="string">    -webkit-perspective: 1000px;</span></span><br><span class="line"><span class="string">    -moz-perspective: 1000px;</span></span><br><span class="line"><span class="string">    perspective: 1000px;</span></span><br><span class="line"><span class="string">  &#125;</span></span><br><span class="line"><span class="string">  .carousel-inner &gt; .item.next,</span></span><br><span class="line"><span class="string">  .carousel-inner &gt; .item.active.right &#123;</span></span><br><span class="line"><span class="string">    -webkit-transform: translate3d(100%, 0, 0);</span></span><br><span class="line"><span class="string">    transform: translate3d(100%, 0, 0);</span></span><br><span class="line"><span class="string">    left: 0;</span></span><br><span class="line"><span class="string">  &#125;</span></span><br><span class="line"><span class="string">  .carousel-inner &gt; .item.prev,</span></span><br><span class="line"><span class="string">  .carousel-inner &gt; .item.active.left &#123;</span></span><br><span class="line"><span class="string">    -webkit-transform: translate3d(-100%, 0, 0);</span></span><br><span class="line"><span class="string">    transform: translate3d(-100%, 0, 0);</span></span><br><span class="line"><span class="string">    left: 0;</span></span><br><span class="line"><span class="string">  &#125;</span></span><br><span class="line"><span class="string">  .carousel-inner &gt; .item.next.left,</span></span><br><span class="line"><span class="string">  .carousel-inner &gt; .item.prev.right,</span></span><br><span class="line"><span class="string">  .carousel-inner &gt; .item.active &#123;</span></span><br><span class="line"><span class="string">    -webkit-transform: translate3d(0, 0, 0);</span></span><br><span class="line"><span class="string">    transform: translate3d(0, 0, 0);</span></span><br><span class="line"><span class="string">    left: 0;</span></span><br><span class="line"><span class="string">  &#125;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">.carousel-inner &gt; .active,</span></span><br><span class="line"><span class="string">.carousel-inner &gt; .next,</span></span><br><span class="line"><span class="string">.carousel-inner &gt; .prev &#123;</span></span><br><span class="line"><span class="string">  display: block;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">.carousel-inner &gt; .active &#123;</span></span><br><span class="line"><span class="string">  left: 0;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">.carousel-inner &gt; .next,</span></span><br><span class="line"><span class="string">.carousel-inner &gt; .prev &#123;</span></span><br><span class="line"><span class="string">  position: absolute;</span></span><br><span class="line"><span class="string">  top: 0;</span></span><br><span class="line"><span class="string">  width: 100%;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">.carousel-inner &gt; .next &#123;</span></span><br><span class="line"><span class="string">  left: 100%;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">.carousel-inner &gt; .prev &#123;</span></span><br><span class="line"><span class="string">  left: -100%;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">.carousel-inner &gt; .next.left,</span></span><br><span class="line"><span class="string">.carousel-inner &gt; .prev.right &#123;</span></span><br><span class="line"><span class="string">  left: 0;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">.carousel-inner &gt; .active.left &#123;</span></span><br><span class="line"><span class="string">  left: -100%;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">.carousel-inner &gt; .active.right &#123;</span></span><br><span class="line"><span class="string">  left: 100%;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">.carousel-control &#123;</span></span><br><span class="line"><span class="string">  position: absolute;</span></span><br><span class="line"><span class="string">  top: 0;</span></span><br><span class="line"><span class="string">  left: 0;</span></span><br><span class="line"><span class="string">  bottom: 0;</span></span><br><span class="line"><span class="string">  width: 15%;</span></span><br><span class="line"><span class="string">  opacity: 0.5;</span></span><br><span class="line"><span class="string">  filter: alpha(opacity=50);</span></span><br><span class="line"><span class="string">  font-size: 20px;</span></span><br><span class="line"><span class="string">  color: #fff;</span></span><br><span class="line"><span class="string">  text-align: center;</span></span><br><span class="line"><span class="string">  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);</span></span><br><span class="line"><span class="string">  background-color: rgba(0, 0, 0, 0);</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">.carousel-control.left &#123;</span></span><br><span class="line"><span class="string">  background-image: -webkit-linear-gradient(left, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.0001) 100%);</span></span><br><span class="line"><span class="string">  background-image: -o-linear-gradient(left, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.0001) 100%);</span></span><br><span class="line"><span class="string">  background-image: linear-gradient(to right, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.0001) 100%);</span></span><br><span class="line"><span class="string">  background-repeat: repeat-x;</span></span><br><span class="line"><span class="string">  border-radius: 15px;</span></span><br><span class="line"><span class="string">  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=&#x27;#80000000&#x27;, endColorstr=&#x27;#00000000&#x27;, GradientType=1);</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">.carousel-control.right &#123;</span></span><br><span class="line"><span class="string">  left: auto;</span></span><br><span class="line"><span class="string">  right: 0;</span></span><br><span class="line"><span class="string">  background-image: -webkit-linear-gradient(left, rgba(0, 0, 0, 0.0001) 0%, rgba(0, 0, 0, 0.5) 100%);</span></span><br><span class="line"><span class="string">  background-image: -o-linear-gradient(left, rgba(0, 0, 0, 0.0001) 0%, rgba(0, 0, 0, 0.5) 100%);</span></span><br><span class="line"><span class="string">  background-image: linear-gradient(to right, rgba(0, 0, 0, 0.0001) 0%, rgba(0, 0, 0, 0.5) 100%);</span></span><br><span class="line"><span class="string">  background-repeat: repeat-x;</span></span><br><span class="line"><span class="string">  border-radius: 15px;</span></span><br><span class="line"><span class="string">  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=&#x27;#00000000&#x27;, endColorstr=&#x27;#80000000&#x27;, GradientType=1);</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">.carousel-control:hover,</span></span><br><span class="line"><span class="string">.carousel-control:focus &#123;</span></span><br><span class="line"><span class="string">  outline: 0;</span></span><br><span class="line"><span class="string">  color: #fff;</span></span><br><span class="line"><span class="string">  text-decoration: none;</span></span><br><span class="line"><span class="string">  opacity: 0.9;</span></span><br><span class="line"><span class="string">  filter: alpha(opacity=90);</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">.carousel-control .icon-prev,</span></span><br><span class="line"><span class="string">.carousel-control .icon-next,</span></span><br><span class="line"><span class="string">.carousel-control .glyphicon-chevron-left,</span></span><br><span class="line"><span class="string">.carousel-control .glyphicon-chevron-right &#123;</span></span><br><span class="line"><span class="string">  position: absolute;</span></span><br><span class="line"><span class="string">  top: 50%;</span></span><br><span class="line"><span class="string">  margin-top: -10px;</span></span><br><span class="line"><span class="string">  z-index: 5;</span></span><br><span class="line"><span class="string">  display: inline-block;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">.carousel-control .icon-prev,</span></span><br><span class="line"><span class="string">.carousel-control .glyphicon-chevron-left &#123;</span></span><br><span class="line"><span class="string">  left: 50%;</span></span><br><span class="line"><span class="string">  margin-left: -10px;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">.carousel-control .icon-next,</span></span><br><span class="line"><span class="string">.carousel-control .glyphicon-chevron-right &#123;</span></span><br><span class="line"><span class="string">  right: 50%;</span></span><br><span class="line"><span class="string">  margin-right: -10px;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">.carousel-control .icon-prev,</span></span><br><span class="line"><span class="string">.carousel-control .icon-next &#123;</span></span><br><span class="line"><span class="string">  width: 20px;</span></span><br><span class="line"><span class="string">  height: 20px;</span></span><br><span class="line"><span class="string">  line-height: 1;</span></span><br><span class="line"><span class="string">  font-family: serif;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">.carousel-control .icon-prev:before &#123;</span></span><br><span class="line"><span class="string">  content: &#x27;\2039&#x27;;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">.carousel-control .icon-next:before &#123;</span></span><br><span class="line"><span class="string">  content: &#x27;\203a&#x27;;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">.carousel-indicators &#123;</span></span><br><span class="line"><span class="string">  position: absolute;</span></span><br><span class="line"><span class="string">  bottom: 10px;</span></span><br><span class="line"><span class="string">  left: 50%;</span></span><br><span class="line"><span class="string">  z-index: 15;</span></span><br><span class="line"><span class="string">  width: 60%;</span></span><br><span class="line"><span class="string">  margin-left: -30%;</span></span><br><span class="line"><span class="string">  padding-left: 0;</span></span><br><span class="line"><span class="string">  list-style: none;</span></span><br><span class="line"><span class="string">  text-align: center;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">.carousel-indicators li &#123;</span></span><br><span class="line"><span class="string">  display: inline-block;</span></span><br><span class="line"><span class="string">  width: 10px;</span></span><br><span class="line"><span class="string">  height: 10px;</span></span><br><span class="line"><span class="string">  margin: 1px;</span></span><br><span class="line"><span class="string">  text-indent: -999px;</span></span><br><span class="line"><span class="string">  border: 1px solid #fff;</span></span><br><span class="line"><span class="string">  border-radius: 10px;</span></span><br><span class="line"><span class="string">  cursor: pointer;</span></span><br><span class="line"><span class="string">  background-color: #000 \9;</span></span><br><span class="line"><span class="string">  background-color: rgba(0, 0, 0, 0);</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">.carousel-indicators .active &#123;</span></span><br><span class="line"><span class="string">  margin: 0;</span></span><br><span class="line"><span class="string">  width: 12px;</span></span><br><span class="line"><span class="string">  height: 12px;</span></span><br><span class="line"><span class="string">  background-color: #fff;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">.carousel-caption &#123;</span></span><br><span class="line"><span class="string">  position: absolute;</span></span><br><span class="line"><span class="string">  left: 15%;</span></span><br><span class="line"><span class="string">  right: 15%;</span></span><br><span class="line"><span class="string">  bottom: 20px;</span></span><br><span class="line"><span class="string">  z-index: 10;</span></span><br><span class="line"><span class="string">  padding-top: 20px;</span></span><br><span class="line"><span class="string">  padding-bottom: 20px;</span></span><br><span class="line"><span class="string">  color: #fff;</span></span><br><span class="line"><span class="string">  text-align: center;</span></span><br><span class="line"><span class="string">  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">.carousel-caption .btn &#123;</span></span><br><span class="line"><span class="string">  text-shadow: none;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">@media screen and (min-width: 768px) &#123;</span></span><br><span class="line"><span class="string">  .carousel-control .glyphicon-chevron-left,</span></span><br><span class="line"><span class="string">  .carousel-control .glyphicon-chevron-right,</span></span><br><span class="line"><span class="string">  .carousel-control .icon-prev,</span></span><br><span class="line"><span class="string">  .carousel-control .icon-next &#123;</span></span><br><span class="line"><span class="string">    width: 30px;</span></span><br><span class="line"><span class="string">    height: 30px;</span></span><br><span class="line"><span class="string">    margin-top: -10px;</span></span><br><span class="line"><span class="string">    font-size: 30px;</span></span><br><span class="line"><span class="string">  &#125;</span></span><br><span class="line"><span class="string">  .carousel-control .glyphicon-chevron-left,</span></span><br><span class="line"><span class="string">  .carousel-control .icon-prev &#123;</span></span><br><span class="line"><span class="string">    margin-left: -10px;</span></span><br><span class="line"><span class="string">  &#125;</span></span><br><span class="line"><span class="string">  .carousel-control .glyphicon-chevron-right,</span></span><br><span class="line"><span class="string">  .carousel-control .icon-next &#123;</span></span><br><span class="line"><span class="string">    margin-right: -10px;</span></span><br><span class="line"><span class="string">  &#125;</span></span><br><span class="line"><span class="string">  .carousel-caption &#123;</span></span><br><span class="line"><span class="string">    left: 20%;</span></span><br><span class="line"><span class="string">    right: 20%;</span></span><br><span class="line"><span class="string">    padding-bottom: 30px;</span></span><br><span class="line"><span class="string">  &#125;</span></span><br><span class="line"><span class="string">  .carousel-indicators &#123;</span></span><br><span class="line"><span class="string">    bottom: 20px;</span></span><br><span class="line"><span class="string">  &#125;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">&lt;/style&gt;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">&lt;div width=&quot;</span><span class="number">100%</span><span class="string">&quot; style=&quot;</span>overflow: hidden; <span class="attribute">border-radius</span>: <span class="number">10px</span>;&quot;&gt;</span><br><span class="line"></span><br><span class="line">    &lt;<span class="selector-tag">div</span> id=&quot;myCarousel&quot; class=&quot;carousel slide&quot; data-ride=&quot;carousel&quot; data-interval=&quot;<span class="number">3500</span>&quot;&gt;</span><br><span class="line">        &lt;!-- 轮播（Carousel）指标 --&gt;</span><br><span class="line">        &lt;<span class="selector-tag">ol</span> class=&quot;carousel-indicators&quot;&gt;</span><br><span class="line">        &#123;% set index = <span class="number">0</span> %&#125;</span><br><span class="line">        &#123;% for item in theme<span class="selector-class">.carousel</span><span class="selector-class">.item</span> %&#125;</span><br><span class="line"></span><br><span class="line">            &lt;<span class="selector-tag">li</span> data-target=&quot;<span class="selector-id">#myCarousel</span>&quot; data-slide-<span class="selector-tag">to</span>=&quot;&#123;&#123;index&#125;&#125;&quot;&gt;&lt;/<span class="selector-tag">li</span>&gt;</span><br><span class="line">            &#123;% set index = index+<span class="number">1</span> %&#125;</span><br><span class="line"></span><br><span class="line">        &#123;% endfor %&#125;</span><br><span class="line">        &lt;/<span class="selector-tag">ol</span>&gt;</span><br><span class="line">        &lt;!-- 轮播（Carousel）项目 --&gt;</span><br><span class="line">        &lt;<span class="selector-tag">div</span> class=&quot;carousel-inner&quot;&gt;</span><br><span class="line"></span><br><span class="line">        &#123;% set act = <span class="number">0</span> %&#125;</span><br><span class="line">        &#123;% for item in theme<span class="selector-class">.carousel</span><span class="selector-class">.item</span> %&#125;</span><br><span class="line"></span><br><span class="line">            &#123;% if act === <span class="number">0</span> %&#125;</span><br><span class="line">                &lt;<span class="selector-tag">div</span> class=&quot;item active&quot;&gt;</span><br><span class="line">                    &lt;<span class="selector-tag">a</span> href=&quot;&#123;&#123; url_for(item<span class="selector-class">.link</span>) &#125;&#125;&quot; target=&quot;_blank&quot;&gt;</span><br><span class="line">                        &lt;<span class="selector-tag">div</span> style=&quot;<span class="attribute">padding</span>: <span class="number">20px</span>;&quot;&gt;</span><br><span class="line">                            &lt;<span class="selector-tag">h3</span>&gt;&#123;&#123; item<span class="selector-class">.title</span> &#125;&#125;&lt;/<span class="selector-tag">h3</span>&gt;</span><br><span class="line">                            &lt;<span class="selector-tag">p</span>&gt;&#123;&#123; item<span class="selector-class">.description</span> &#125;&#125;&lt;/<span class="selector-tag">p</span>&gt;</span><br><span class="line">                        &lt;/<span class="selector-tag">div</span>&gt;</span><br><span class="line">                    &lt;/<span class="selector-tag">a</span>&gt;</span><br><span class="line">                &lt;/<span class="selector-tag">div</span>&gt;</span><br><span class="line">                &#123;% set act = <span class="number">1</span> %&#125;</span><br><span class="line">            &#123;% else %&#125;</span><br><span class="line">                &lt;<span class="selector-tag">div</span> class=&quot;item&quot;&gt;</span><br><span class="line">                    &lt;<span class="selector-tag">a</span> href=&quot;&#123;&#123; url_for(item<span class="selector-class">.link</span>) &#125;&#125;&quot; target=&quot;_blank&quot;&gt;</span><br><span class="line">                        &lt;<span class="selector-tag">div</span> style=&quot;<span class="attribute">padding</span>: <span class="number">20px</span>;&quot;&gt;</span><br><span class="line">                            &lt;<span class="selector-tag">h3</span>&gt;&#123;&#123; item<span class="selector-class">.title</span> &#125;&#125;&lt;/<span class="selector-tag">h3</span>&gt;</span><br><span class="line">                            &lt;<span class="selector-tag">p</span>&gt;&#123;&#123; item<span class="selector-class">.description</span> &#125;&#125;&lt;/<span class="selector-tag">p</span>&gt;</span><br><span class="line">                        &lt;/<span class="selector-tag">div</span>&gt;</span><br><span class="line">                    &lt;/<span class="selector-tag">a</span>&gt;</span><br><span class="line">                &lt;/<span class="selector-tag">div</span>&gt;</span><br><span class="line">            &#123;% endif %&#125;</span><br><span class="line"></span><br><span class="line">        &#123;% endfor %&#125;</span><br><span class="line"></span><br><span class="line">        &lt;/<span class="selector-tag">div</span>&gt;</span><br><span class="line">        &lt;!-- 轮播（Carousel）导航 --&gt;</span><br><span class="line">        &lt;<span class="selector-tag">a</span> class=&quot;<span class="attribute">left</span> carousel-control&quot; href=&quot;<span class="selector-id">#myCarousel</span>&quot; role=&quot;<span class="selector-tag">button</span>&quot; data-slide=&quot;prev&quot;&gt;</span><br><span class="line">            &lt;<span class="selector-tag">span</span> class=&quot;glyphicon glyphicon-chevron-<span class="attribute">left</span>&quot; aria-hidden=&quot;true&quot;&gt;&lt;/<span class="selector-tag">span</span>&gt;</span><br><span class="line"></span><br><span class="line">        &lt;/<span class="selector-tag">a</span>&gt;</span><br><span class="line">        &lt;<span class="selector-tag">a</span> class=&quot;<span class="attribute">right</span> carousel-control&quot; href=&quot;<span class="selector-id">#myCarousel</span>&quot; role=&quot;<span class="selector-tag">button</span>&quot; data-slide=&quot;next&quot;&gt;</span><br><span class="line">            &lt;<span class="selector-tag">span</span> class=&quot;glyphicon glyphicon-chevron-<span class="attribute">right</span>&quot; aria-hidden=&quot;true&quot;&gt;&lt;/<span class="selector-tag">span</span>&gt;</span><br><span class="line"></span><br><span class="line">        &lt;/<span class="selector-tag">a</span>&gt;</span><br><span class="line">    &lt;/<span class="selector-tag">div</span>&gt;</span><br><span class="line"></span><br><span class="line">&lt;/<span class="selector-tag">div</span>&gt;</span><br><span class="line"></span><br><span class="line">&#123;% endif %&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="主页部署"><a href="#主页部署" class="headerlink" title="主页部署"></a>主页部署</h2><p>在\\Blog\\themes\\next\\layout下的index.swig，找到<code>&#123;% block content %&#125;</code> ;在下方填入：</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">&lt;!--轮播图--&gt;  </span><br><span class="line">&#123;% include &#x27;_macro/carousel<span class="selector-class">.swig</span>&#x27; %&#125;</span><br></pre></td></tr></table></figure>
-<h2 id="主题配置文件："><a href="#主题配置文件：" class="headerlink" title="主题配置文件："></a>主题配置文件：</h2><p>在主题配置文件末尾添加：</p>
-<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">carousel:</span><br><span class="line"></span><br><span class="line">  enable: true</span><br><span class="line"></span><br><span class="line">  item: [</span><br><span class="line"></span><br><span class="line">    &#123;</span><br><span class="line"></span><br><span class="line">      &#x27;title&#x27;: <span class="string">&#x27;留言板&#x27;</span>,</span><br><span class="line"></span><br><span class="line">      <span class="string">&#x27;description&#x27;</span>: <span class="string">&#x27;欢迎来留言哇！&#x27;</span>,</span><br><span class="line"></span><br><span class="line">      <span class="string">&#x27;link&#x27;</span>: <span class="string">&#x27;/guestbook/&#x27;</span></span><br><span class="line"></span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    &#123;</span><br><span class="line"></span><br><span class="line">      &#x27;title&#x27;: <span class="string">&#x27;我的收藏&#x27;</span>,</span><br><span class="line"></span><br><span class="line">      <span class="string">&#x27;description&#x27;</span>: <span class="string">&#x27;资源、工具、教程和文档的集合站&#x27;</span>,</span><br><span class="line"></span><br><span class="line">      <span class="string">&#x27;link&#x27;</span>: <span class="string">&#x27;/stars/&#x27;</span></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">  ]</span><br></pre></td></tr></table></figure>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://jrbcode.gitee.io/posts/4b12cb59.html">在Hexo+NexT博客中添加主页轮播图 | CodeHeap (gitee.io)</a></p>
+    <title>Hello World！</title>
+    <url>/2023/08/10/Hello%20World%EF%BC%81/</url>
+    <content><![CDATA[<h1 id="欢迎来到我的主页-🏡"><a href="#欢迎来到我的主页-🏡" class="headerlink" title="欢迎来到我的主页 🏡"></a>欢迎来到我的主页 🏡</h1><div style="color: #2c3e50; font-size: 18px;">
+    这里将记录我学习医学、统计和流行病学的一些收获，以及一些生活碎片。欢迎来踩！<br><br>
+    希望这些笔记对您的学习有帮助，最好的东西是免费的，最好的知识是开源的。
+</div>
+
+<p><time style="font-style: italic; color: #7f8c8d;">2023年8月11日</time></p>
 ]]></content>
-      <categories>
-        <category>开源</category>
-      </categories>
-      <tags>
-        <tag>计算机</tag>
-        <tag>HEXO</tag>
-      </tags>
   </entry>
   <entry>
     <title>celltogwas：细胞类型注释到基因组的工具包</title>
@@ -44,15 +36,23 @@
       </tags>
   </entry>
   <entry>
-    <title>Hello World！</title>
-    <url>/2023/08/10/Hello%20World%EF%BC%81/</url>
-    <content><![CDATA[<h1 id="欢迎来到我的主页-🏡"><a href="#欢迎来到我的主页-🏡" class="headerlink" title="欢迎来到我的主页 🏡"></a>欢迎来到我的主页 🏡</h1><div style="color: #2c3e50; font-size: 18px;">
-    这里将记录我学习医学、统计和流行病学的一些收获，以及一些生活碎片。欢迎来踩！<br><br>
-    希望这些笔记对您的学习有帮助，最好的东西是免费的，最好的知识是开源的。
-</div>
-
-<p><time style="font-style: italic; color: #7f8c8d;">2023年8月11日</time></p>
+    <title>HEXO博客的轮播栏</title>
+    <url>/2024/03/26/HEXO%E5%8D%9A%E5%AE%A2%E7%9A%84%E8%BD%AE%E6%92%AD%E6%A0%8F/</url>
+    <content><![CDATA[<h2 id="CSS样式设计"><a href="#CSS样式设计" class="headerlink" title="CSS样式设计"></a>CSS样式设计</h2><p>在\\Blog\\themes\\next\\layout\\_marco下新建carousel.swig，填入这些代码：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">&#123;% if theme<span class="selector-class">.carousel</span><span class="selector-class">.enable</span> %&#125;</span><br><span class="line"></span><br><span class="line">&lt;script <span class="attribute">src</span>=&quot;https://cdn.staticfile.org/jquery/<span class="number">2.1</span>.<span class="number">1</span>/jquery.min.js<span class="string">&quot;&gt;&lt;/script&gt;</span></span><br><span class="line"><span class="string">&lt;script src=&quot;</span>https://cdn.staticfile.org/twitter-bootstrap/<span class="number">3.3</span>.<span class="number">7</span>/js/bootstrap.min.js<span class="string">&quot;&gt;&lt;/script&gt;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">&lt;style type=&quot;</span>text/css<span class="string">&quot;&gt;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">.glyphicon-chevron-left:before&#123;</span></span><br><span class="line"><span class="string">    content: &quot;</span>《<span class="string">&quot;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">.glyphicon-chevron-right:before&#123;</span></span><br><span class="line"><span class="string">    content: &quot;</span>》<span class="string">&quot;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">@media (max-width: 767px)&#123;</span></span><br><span class="line"><span class="string">    .rights&#123;</span></span><br><span class="line"><span class="string">        display: none;</span></span><br><span class="line"><span class="string">    &#125;</span></span><br><span class="line"><span class="string">    .carousel&#123;</span></span><br><span class="line"><span class="string">        width: 100% ;</span></span><br><span class="line"><span class="string">        height: 100% ;</span></span><br><span class="line"><span class="string">    &#125;</span></span><br><span class="line"><span class="string">    .slide&#123;</span></span><br><span class="line"><span class="string">        width: 100% ;</span></span><br><span class="line"><span class="string">        height: 100% ;</span></span><br><span class="line"><span class="string">    &#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">.carousel&#123;</span></span><br><span class="line"><span class="string">    width: 100%;</span></span><br><span class="line"><span class="string">    height: 100%;</span></span><br><span class="line"><span class="string">    position: relative;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">.carousel-inner &#123;</span></span><br><span class="line"><span class="string">  position: relative;</span></span><br><span class="line"><span class="string">  overflow: hidden;</span></span><br><span class="line"><span class="string">  width: 100%;</span></span><br><span class="line"><span class="string">  margin: 0px 0px 12px 0px;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">.carousel-inner &gt; .item &#123;</span></span><br><span class="line"><span class="string">  display: none;</span></span><br><span class="line"><span class="string">  position: relative;</span></span><br><span class="line"><span class="string">  -webkit-transition: 0.6s ease-in-out left;</span></span><br><span class="line"><span class="string">  -o-transition: 0.6s ease-in-out left;</span></span><br><span class="line"><span class="string">  transition: 0.6s ease-in-out left;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">.carousel-inner &gt; .item &gt; img,</span></span><br><span class="line"><span class="string">.carousel-inner &gt; .item &gt; a &gt; img &#123;</span></span><br><span class="line"><span class="string">  line-height: 1;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">@media all and (transform-3d), (-webkit-transform-3d) &#123;</span></span><br><span class="line"><span class="string">  .carousel-inner &gt; .item &#123;</span></span><br><span class="line"><span class="string">    -webkit-transition: -webkit-transform 0.6s ease-in-out;</span></span><br><span class="line"><span class="string">    -moz-transition: -moz-transform 0.6s ease-in-out;</span></span><br><span class="line"><span class="string">    -o-transition: -o-transform 0.6s ease-in-out;</span></span><br><span class="line"><span class="string">    transition: transform 0.6s ease-in-out;</span></span><br><span class="line"><span class="string">    -webkit-backface-visibility: hidden;</span></span><br><span class="line"><span class="string">    -moz-backface-visibility: hidden;</span></span><br><span class="line"><span class="string">    backface-visibility: hidden;</span></span><br><span class="line"><span class="string">    -webkit-perspective: 1000px;</span></span><br><span class="line"><span class="string">    -moz-perspective: 1000px;</span></span><br><span class="line"><span class="string">    perspective: 1000px;</span></span><br><span class="line"><span class="string">  &#125;</span></span><br><span class="line"><span class="string">  .carousel-inner &gt; .item.next,</span></span><br><span class="line"><span class="string">  .carousel-inner &gt; .item.active.right &#123;</span></span><br><span class="line"><span class="string">    -webkit-transform: translate3d(100%, 0, 0);</span></span><br><span class="line"><span class="string">    transform: translate3d(100%, 0, 0);</span></span><br><span class="line"><span class="string">    left: 0;</span></span><br><span class="line"><span class="string">  &#125;</span></span><br><span class="line"><span class="string">  .carousel-inner &gt; .item.prev,</span></span><br><span class="line"><span class="string">  .carousel-inner &gt; .item.active.left &#123;</span></span><br><span class="line"><span class="string">    -webkit-transform: translate3d(-100%, 0, 0);</span></span><br><span class="line"><span class="string">    transform: translate3d(-100%, 0, 0);</span></span><br><span class="line"><span class="string">    left: 0;</span></span><br><span class="line"><span class="string">  &#125;</span></span><br><span class="line"><span class="string">  .carousel-inner &gt; .item.next.left,</span></span><br><span class="line"><span class="string">  .carousel-inner &gt; .item.prev.right,</span></span><br><span class="line"><span class="string">  .carousel-inner &gt; .item.active &#123;</span></span><br><span class="line"><span class="string">    -webkit-transform: translate3d(0, 0, 0);</span></span><br><span class="line"><span class="string">    transform: translate3d(0, 0, 0);</span></span><br><span class="line"><span class="string">    left: 0;</span></span><br><span class="line"><span class="string">  &#125;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">.carousel-inner &gt; .active,</span></span><br><span class="line"><span class="string">.carousel-inner &gt; .next,</span></span><br><span class="line"><span class="string">.carousel-inner &gt; .prev &#123;</span></span><br><span class="line"><span class="string">  display: block;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">.carousel-inner &gt; .active &#123;</span></span><br><span class="line"><span class="string">  left: 0;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">.carousel-inner &gt; .next,</span></span><br><span class="line"><span class="string">.carousel-inner &gt; .prev &#123;</span></span><br><span class="line"><span class="string">  position: absolute;</span></span><br><span class="line"><span class="string">  top: 0;</span></span><br><span class="line"><span class="string">  width: 100%;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">.carousel-inner &gt; .next &#123;</span></span><br><span class="line"><span class="string">  left: 100%;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">.carousel-inner &gt; .prev &#123;</span></span><br><span class="line"><span class="string">  left: -100%;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">.carousel-inner &gt; .next.left,</span></span><br><span class="line"><span class="string">.carousel-inner &gt; .prev.right &#123;</span></span><br><span class="line"><span class="string">  left: 0;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">.carousel-inner &gt; .active.left &#123;</span></span><br><span class="line"><span class="string">  left: -100%;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">.carousel-inner &gt; .active.right &#123;</span></span><br><span class="line"><span class="string">  left: 100%;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">.carousel-control &#123;</span></span><br><span class="line"><span class="string">  position: absolute;</span></span><br><span class="line"><span class="string">  top: 0;</span></span><br><span class="line"><span class="string">  left: 0;</span></span><br><span class="line"><span class="string">  bottom: 0;</span></span><br><span class="line"><span class="string">  width: 15%;</span></span><br><span class="line"><span class="string">  opacity: 0.5;</span></span><br><span class="line"><span class="string">  filter: alpha(opacity=50);</span></span><br><span class="line"><span class="string">  font-size: 20px;</span></span><br><span class="line"><span class="string">  color: #fff;</span></span><br><span class="line"><span class="string">  text-align: center;</span></span><br><span class="line"><span class="string">  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);</span></span><br><span class="line"><span class="string">  background-color: rgba(0, 0, 0, 0);</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">.carousel-control.left &#123;</span></span><br><span class="line"><span class="string">  background-image: -webkit-linear-gradient(left, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.0001) 100%);</span></span><br><span class="line"><span class="string">  background-image: -o-linear-gradient(left, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.0001) 100%);</span></span><br><span class="line"><span class="string">  background-image: linear-gradient(to right, rgba(0, 0, 0, 0.5) 0%, rgba(0, 0, 0, 0.0001) 100%);</span></span><br><span class="line"><span class="string">  background-repeat: repeat-x;</span></span><br><span class="line"><span class="string">  border-radius: 15px;</span></span><br><span class="line"><span class="string">  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=&#x27;#80000000&#x27;, endColorstr=&#x27;#00000000&#x27;, GradientType=1);</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">.carousel-control.right &#123;</span></span><br><span class="line"><span class="string">  left: auto;</span></span><br><span class="line"><span class="string">  right: 0;</span></span><br><span class="line"><span class="string">  background-image: -webkit-linear-gradient(left, rgba(0, 0, 0, 0.0001) 0%, rgba(0, 0, 0, 0.5) 100%);</span></span><br><span class="line"><span class="string">  background-image: -o-linear-gradient(left, rgba(0, 0, 0, 0.0001) 0%, rgba(0, 0, 0, 0.5) 100%);</span></span><br><span class="line"><span class="string">  background-image: linear-gradient(to right, rgba(0, 0, 0, 0.0001) 0%, rgba(0, 0, 0, 0.5) 100%);</span></span><br><span class="line"><span class="string">  background-repeat: repeat-x;</span></span><br><span class="line"><span class="string">  border-radius: 15px;</span></span><br><span class="line"><span class="string">  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr=&#x27;#00000000&#x27;, endColorstr=&#x27;#80000000&#x27;, GradientType=1);</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">.carousel-control:hover,</span></span><br><span class="line"><span class="string">.carousel-control:focus &#123;</span></span><br><span class="line"><span class="string">  outline: 0;</span></span><br><span class="line"><span class="string">  color: #fff;</span></span><br><span class="line"><span class="string">  text-decoration: none;</span></span><br><span class="line"><span class="string">  opacity: 0.9;</span></span><br><span class="line"><span class="string">  filter: alpha(opacity=90);</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">.carousel-control .icon-prev,</span></span><br><span class="line"><span class="string">.carousel-control .icon-next,</span></span><br><span class="line"><span class="string">.carousel-control .glyphicon-chevron-left,</span></span><br><span class="line"><span class="string">.carousel-control .glyphicon-chevron-right &#123;</span></span><br><span class="line"><span class="string">  position: absolute;</span></span><br><span class="line"><span class="string">  top: 50%;</span></span><br><span class="line"><span class="string">  margin-top: -10px;</span></span><br><span class="line"><span class="string">  z-index: 5;</span></span><br><span class="line"><span class="string">  display: inline-block;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">.carousel-control .icon-prev,</span></span><br><span class="line"><span class="string">.carousel-control .glyphicon-chevron-left &#123;</span></span><br><span class="line"><span class="string">  left: 50%;</span></span><br><span class="line"><span class="string">  margin-left: -10px;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">.carousel-control .icon-next,</span></span><br><span class="line"><span class="string">.carousel-control .glyphicon-chevron-right &#123;</span></span><br><span class="line"><span class="string">  right: 50%;</span></span><br><span class="line"><span class="string">  margin-right: -10px;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">.carousel-control .icon-prev,</span></span><br><span class="line"><span class="string">.carousel-control .icon-next &#123;</span></span><br><span class="line"><span class="string">  width: 20px;</span></span><br><span class="line"><span class="string">  height: 20px;</span></span><br><span class="line"><span class="string">  line-height: 1;</span></span><br><span class="line"><span class="string">  font-family: serif;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">.carousel-control .icon-prev:before &#123;</span></span><br><span class="line"><span class="string">  content: &#x27;\2039&#x27;;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">.carousel-control .icon-next:before &#123;</span></span><br><span class="line"><span class="string">  content: &#x27;\203a&#x27;;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">.carousel-indicators &#123;</span></span><br><span class="line"><span class="string">  position: absolute;</span></span><br><span class="line"><span class="string">  bottom: 10px;</span></span><br><span class="line"><span class="string">  left: 50%;</span></span><br><span class="line"><span class="string">  z-index: 15;</span></span><br><span class="line"><span class="string">  width: 60%;</span></span><br><span class="line"><span class="string">  margin-left: -30%;</span></span><br><span class="line"><span class="string">  padding-left: 0;</span></span><br><span class="line"><span class="string">  list-style: none;</span></span><br><span class="line"><span class="string">  text-align: center;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">.carousel-indicators li &#123;</span></span><br><span class="line"><span class="string">  display: inline-block;</span></span><br><span class="line"><span class="string">  width: 10px;</span></span><br><span class="line"><span class="string">  height: 10px;</span></span><br><span class="line"><span class="string">  margin: 1px;</span></span><br><span class="line"><span class="string">  text-indent: -999px;</span></span><br><span class="line"><span class="string">  border: 1px solid #fff;</span></span><br><span class="line"><span class="string">  border-radius: 10px;</span></span><br><span class="line"><span class="string">  cursor: pointer;</span></span><br><span class="line"><span class="string">  background-color: #000 \9;</span></span><br><span class="line"><span class="string">  background-color: rgba(0, 0, 0, 0);</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">.carousel-indicators .active &#123;</span></span><br><span class="line"><span class="string">  margin: 0;</span></span><br><span class="line"><span class="string">  width: 12px;</span></span><br><span class="line"><span class="string">  height: 12px;</span></span><br><span class="line"><span class="string">  background-color: #fff;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">.carousel-caption &#123;</span></span><br><span class="line"><span class="string">  position: absolute;</span></span><br><span class="line"><span class="string">  left: 15%;</span></span><br><span class="line"><span class="string">  right: 15%;</span></span><br><span class="line"><span class="string">  bottom: 20px;</span></span><br><span class="line"><span class="string">  z-index: 10;</span></span><br><span class="line"><span class="string">  padding-top: 20px;</span></span><br><span class="line"><span class="string">  padding-bottom: 20px;</span></span><br><span class="line"><span class="string">  color: #fff;</span></span><br><span class="line"><span class="string">  text-align: center;</span></span><br><span class="line"><span class="string">  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">.carousel-caption .btn &#123;</span></span><br><span class="line"><span class="string">  text-shadow: none;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">@media screen and (min-width: 768px) &#123;</span></span><br><span class="line"><span class="string">  .carousel-control .glyphicon-chevron-left,</span></span><br><span class="line"><span class="string">  .carousel-control .glyphicon-chevron-right,</span></span><br><span class="line"><span class="string">  .carousel-control .icon-prev,</span></span><br><span class="line"><span class="string">  .carousel-control .icon-next &#123;</span></span><br><span class="line"><span class="string">    width: 30px;</span></span><br><span class="line"><span class="string">    height: 30px;</span></span><br><span class="line"><span class="string">    margin-top: -10px;</span></span><br><span class="line"><span class="string">    font-size: 30px;</span></span><br><span class="line"><span class="string">  &#125;</span></span><br><span class="line"><span class="string">  .carousel-control .glyphicon-chevron-left,</span></span><br><span class="line"><span class="string">  .carousel-control .icon-prev &#123;</span></span><br><span class="line"><span class="string">    margin-left: -10px;</span></span><br><span class="line"><span class="string">  &#125;</span></span><br><span class="line"><span class="string">  .carousel-control .glyphicon-chevron-right,</span></span><br><span class="line"><span class="string">  .carousel-control .icon-next &#123;</span></span><br><span class="line"><span class="string">    margin-right: -10px;</span></span><br><span class="line"><span class="string">  &#125;</span></span><br><span class="line"><span class="string">  .carousel-caption &#123;</span></span><br><span class="line"><span class="string">    left: 20%;</span></span><br><span class="line"><span class="string">    right: 20%;</span></span><br><span class="line"><span class="string">    padding-bottom: 30px;</span></span><br><span class="line"><span class="string">  &#125;</span></span><br><span class="line"><span class="string">  .carousel-indicators &#123;</span></span><br><span class="line"><span class="string">    bottom: 20px;</span></span><br><span class="line"><span class="string">  &#125;</span></span><br><span class="line"><span class="string">&#125;</span></span><br><span class="line"><span class="string">&lt;/style&gt;</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">&lt;div width=&quot;</span><span class="number">100%</span><span class="string">&quot; style=&quot;</span>overflow: hidden; <span class="attribute">border-radius</span>: <span class="number">10px</span>;&quot;&gt;</span><br><span class="line"></span><br><span class="line">    &lt;<span class="selector-tag">div</span> id=&quot;myCarousel&quot; class=&quot;carousel slide&quot; data-ride=&quot;carousel&quot; data-interval=&quot;<span class="number">3500</span>&quot;&gt;</span><br><span class="line">        &lt;!-- 轮播（Carousel）指标 --&gt;</span><br><span class="line">        &lt;<span class="selector-tag">ol</span> class=&quot;carousel-indicators&quot;&gt;</span><br><span class="line">        &#123;% set index = <span class="number">0</span> %&#125;</span><br><span class="line">        &#123;% for item in theme<span class="selector-class">.carousel</span><span class="selector-class">.item</span> %&#125;</span><br><span class="line"></span><br><span class="line">            &lt;<span class="selector-tag">li</span> data-target=&quot;<span class="selector-id">#myCarousel</span>&quot; data-slide-<span class="selector-tag">to</span>=&quot;&#123;&#123;index&#125;&#125;&quot;&gt;&lt;/<span class="selector-tag">li</span>&gt;</span><br><span class="line">            &#123;% set index = index+<span class="number">1</span> %&#125;</span><br><span class="line"></span><br><span class="line">        &#123;% endfor %&#125;</span><br><span class="line">        &lt;/<span class="selector-tag">ol</span>&gt;</span><br><span class="line">        &lt;!-- 轮播（Carousel）项目 --&gt;</span><br><span class="line">        &lt;<span class="selector-tag">div</span> class=&quot;carousel-inner&quot;&gt;</span><br><span class="line"></span><br><span class="line">        &#123;% set act = <span class="number">0</span> %&#125;</span><br><span class="line">        &#123;% for item in theme<span class="selector-class">.carousel</span><span class="selector-class">.item</span> %&#125;</span><br><span class="line"></span><br><span class="line">            &#123;% if act === <span class="number">0</span> %&#125;</span><br><span class="line">                &lt;<span class="selector-tag">div</span> class=&quot;item active&quot;&gt;</span><br><span class="line">                    &lt;<span class="selector-tag">a</span> href=&quot;&#123;&#123; url_for(item<span class="selector-class">.link</span>) &#125;&#125;&quot; target=&quot;_blank&quot;&gt;</span><br><span class="line">                        &lt;<span class="selector-tag">div</span> style=&quot;<span class="attribute">padding</span>: <span class="number">20px</span>;&quot;&gt;</span><br><span class="line">                            &lt;<span class="selector-tag">h3</span>&gt;&#123;&#123; item<span class="selector-class">.title</span> &#125;&#125;&lt;/<span class="selector-tag">h3</span>&gt;</span><br><span class="line">                            &lt;<span class="selector-tag">p</span>&gt;&#123;&#123; item<span class="selector-class">.description</span> &#125;&#125;&lt;/<span class="selector-tag">p</span>&gt;</span><br><span class="line">                        &lt;/<span class="selector-tag">div</span>&gt;</span><br><span class="line">                    &lt;/<span class="selector-tag">a</span>&gt;</span><br><span class="line">                &lt;/<span class="selector-tag">div</span>&gt;</span><br><span class="line">                &#123;% set act = <span class="number">1</span> %&#125;</span><br><span class="line">            &#123;% else %&#125;</span><br><span class="line">                &lt;<span class="selector-tag">div</span> class=&quot;item&quot;&gt;</span><br><span class="line">                    &lt;<span class="selector-tag">a</span> href=&quot;&#123;&#123; url_for(item<span class="selector-class">.link</span>) &#125;&#125;&quot; target=&quot;_blank&quot;&gt;</span><br><span class="line">                        &lt;<span class="selector-tag">div</span> style=&quot;<span class="attribute">padding</span>: <span class="number">20px</span>;&quot;&gt;</span><br><span class="line">                            &lt;<span class="selector-tag">h3</span>&gt;&#123;&#123; item<span class="selector-class">.title</span> &#125;&#125;&lt;/<span class="selector-tag">h3</span>&gt;</span><br><span class="line">                            &lt;<span class="selector-tag">p</span>&gt;&#123;&#123; item<span class="selector-class">.description</span> &#125;&#125;&lt;/<span class="selector-tag">p</span>&gt;</span><br><span class="line">                        &lt;/<span class="selector-tag">div</span>&gt;</span><br><span class="line">                    &lt;/<span class="selector-tag">a</span>&gt;</span><br><span class="line">                &lt;/<span class="selector-tag">div</span>&gt;</span><br><span class="line">            &#123;% endif %&#125;</span><br><span class="line"></span><br><span class="line">        &#123;% endfor %&#125;</span><br><span class="line"></span><br><span class="line">        &lt;/<span class="selector-tag">div</span>&gt;</span><br><span class="line">        &lt;!-- 轮播（Carousel）导航 --&gt;</span><br><span class="line">        &lt;<span class="selector-tag">a</span> class=&quot;<span class="attribute">left</span> carousel-control&quot; href=&quot;<span class="selector-id">#myCarousel</span>&quot; role=&quot;<span class="selector-tag">button</span>&quot; data-slide=&quot;prev&quot;&gt;</span><br><span class="line">            &lt;<span class="selector-tag">span</span> class=&quot;glyphicon glyphicon-chevron-<span class="attribute">left</span>&quot; aria-hidden=&quot;true&quot;&gt;&lt;/<span class="selector-tag">span</span>&gt;</span><br><span class="line"></span><br><span class="line">        &lt;/<span class="selector-tag">a</span>&gt;</span><br><span class="line">        &lt;<span class="selector-tag">a</span> class=&quot;<span class="attribute">right</span> carousel-control&quot; href=&quot;<span class="selector-id">#myCarousel</span>&quot; role=&quot;<span class="selector-tag">button</span>&quot; data-slide=&quot;next&quot;&gt;</span><br><span class="line">            &lt;<span class="selector-tag">span</span> class=&quot;glyphicon glyphicon-chevron-<span class="attribute">right</span>&quot; aria-hidden=&quot;true&quot;&gt;&lt;/<span class="selector-tag">span</span>&gt;</span><br><span class="line"></span><br><span class="line">        &lt;/<span class="selector-tag">a</span>&gt;</span><br><span class="line">    &lt;/<span class="selector-tag">div</span>&gt;</span><br><span class="line"></span><br><span class="line">&lt;/<span class="selector-tag">div</span>&gt;</span><br><span class="line"></span><br><span class="line">&#123;% endif %&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="主页部署"><a href="#主页部署" class="headerlink" title="主页部署"></a>主页部署</h2><p>在\\Blog\\themes\\next\\layout下的index.swig，找到<code>&#123;% block content %&#125;</code> ;在下方填入：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">&lt;!--轮播图--&gt;  </span><br><span class="line">&#123;% include &#x27;_macro/carousel<span class="selector-class">.swig</span>&#x27; %&#125;</span><br></pre></td></tr></table></figure>
+<h2 id="主题配置文件："><a href="#主题配置文件：" class="headerlink" title="主题配置文件："></a>主题配置文件：</h2><p>在主题配置文件末尾添加：</p>
+<figure class="highlight css"><table><tr><td class="code"><pre><span class="line">carousel:</span><br><span class="line"></span><br><span class="line">  enable: true</span><br><span class="line"></span><br><span class="line">  item: [</span><br><span class="line"></span><br><span class="line">    &#123;</span><br><span class="line"></span><br><span class="line">      &#x27;title&#x27;: <span class="string">&#x27;留言板&#x27;</span>,</span><br><span class="line"></span><br><span class="line">      <span class="string">&#x27;description&#x27;</span>: <span class="string">&#x27;欢迎来留言哇！&#x27;</span>,</span><br><span class="line"></span><br><span class="line">      <span class="string">&#x27;link&#x27;</span>: <span class="string">&#x27;/guestbook/&#x27;</span></span><br><span class="line"></span><br><span class="line">    &#125;,</span><br><span class="line"></span><br><span class="line">    &#123;</span><br><span class="line"></span><br><span class="line">      &#x27;title&#x27;: <span class="string">&#x27;我的收藏&#x27;</span>,</span><br><span class="line"></span><br><span class="line">      <span class="string">&#x27;description&#x27;</span>: <span class="string">&#x27;资源、工具、教程和文档的集合站&#x27;</span>,</span><br><span class="line"></span><br><span class="line">      <span class="string">&#x27;link&#x27;</span>: <span class="string">&#x27;/stars/&#x27;</span></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">  ]</span><br></pre></td></tr></table></figure>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://jrbcode.gitee.io/posts/4b12cb59.html">在Hexo+NexT博客中添加主页轮播图 | CodeHeap (gitee.io)</a></p>
 ]]></content>
+      <categories>
+        <category>开源</category>
+      </categories>
+      <tags>
+        <tag>计算机</tag>
+        <tag>HEXO</tag>
+      </tags>
   </entry>
   <entry>
     <title>scPagwas——整合scRNA和GWAS识别疾病的驱动基因和关键细胞类型</title>
@@ -172,50 +172,6 @@
         <tag>GWAS</tag>
         <tag>单细胞测序</tag>
         <tag>生物信息学</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>单细胞转录组分析实战（一）：数据采集</title>
-    <url>/2024/02/17/%E5%8D%95%E7%BB%86%E8%83%9E%E8%BD%AC%E5%BD%95%E7%BB%84%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E6%95%B0%E6%8D%AE%E9%87%87%E9%9B%86/</url>
-    <content><![CDATA[<h2 id="写在前面的话"><a href="#写在前面的话" class="headerlink" title="写在前面的话"></a>写在前面的话</h2><p>&emsp;&emsp;本系列将基于张泽民团队发表的TNBC免疫图谱进行挖掘（<a href="https://www.cell.com/cancer-cell/fulltext/S1535-6108(21">Single-cell analyses reveal key immune cell subsets associated with response to PD-L1 blockade in triple-negative breast cancer: Cancer Cell</a>00499-2)），旨在探索原发灶和转移灶免疫微环境的差异及其原因。<br>&emsp;&emsp;准确严谨的采集和清洗数据是单细胞分析的开始，数据本身的质量和采集过程的规范程度决定了研究结果的可靠性。</p>
-<h2 id="样本信息"><a href="#样本信息" class="headerlink" title="样本信息"></a>样本信息</h2><h3 id="患者来源"><a href="#患者来源" class="headerlink" title="患者来源"></a>患者来源</h3><p>&emsp;&emsp;国家癌症中心开发的DTHealth TrakCare系统中记录了患者信息，纳入本研究的22名患者满足：（1）组织学确诊晚期TNBC；（2）既往没有化疗、靶向及免疫等全身治疗；（3）研究中接受紫杉醇单药治疗或紫杉醇加阿替利珠单抗治疗。</p>
-<h3 id="患者信息"><a href="#患者信息" class="headerlink" title="患者信息"></a>患者信息</h3><ol>
-<li>本研究所有患者均被诊断为晚期TNBC，大多数患者患有转移性疾病；</li>
-<li>事实上，一些患者是接受新辅助治疗的局部晚期患者；</li>
-<li>患者为女性，年龄在32-64岁之间，中位值为49岁；</li>
-</ol>
-<p><img data-src="./1.jpg" alt="临床信息"></p>
-<h3 id="样本收集、文库制备和测序"><a href="#样本收集、文库制备和测序" class="headerlink" title="样本收集、文库制备和测序"></a>样本收集、文库制备和测序</h3><p>&emsp;&emsp;研究使用16针吸穿刺取乳腺、胸壁肿瘤样本；18号针取淋巴结、肝转移灶样本。测序仪器是10x Genomics公司的HiSeq X Ten，平台为<a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GPL20795">GPL20795</a>。DNA片段被打碎为150bp，进行双端测序。</p>
-<h2 id="单细胞转录组数据处理"><a href="#单细胞转录组数据处理" class="headerlink" title="单细胞转录组数据处理"></a>单细胞转录组数据处理</h2><p>&emsp;&emsp;10x Genomics公司提供的Cell Ranger（V 3.0.1）用于汇总原始数据，过滤低质量读段，将reads与人类参考基因组（GRCh38）比对，分配细胞Barcode，并生成UMI矩阵。值得注意的是，对于10x Genomics公司的测序，由于UMI的存在，使用Raw Count即可反映真实的基因表达，不需要使用标准化方法进行基因定量（<a href="https://forrestgump618.github.io/2024/02/16/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89%EF%BC%9A%E5%9F%BA%E5%9B%A0%E5%AE%9A%E9%87%8F/">生物信息学笔记（三）：基因定量</a>）。但注意，这里所谓“真实的基因表达”反映的是测序过程中的真实值，即不必考虑测序深度和转录本长度的值；而单细胞测序中，由于转录本的低捕获率，我们假设合格细胞基因表达总量应该类似，所以还要进行标准化排除不同细胞测序质量的差异。<br>&emsp;&emsp;原文使用Scanpy进行下游分析，质控步骤包括：</p>
-<ol>
-<li>过滤在少于10个细胞中表达的基因；</li>
-<li>过滤少于200个基因的细胞中检测到的基因；</li>
-<li>保留了600-120,000个UMIs、400-8,000个基因和小于10%线粒体基因计数的高质量细胞；</li>
-<li>将Scrublet应用于每个测序文库，以去除预期的双峰率为6%的潜在双峰，并滤除doubletScore大于90%分位数的细胞；</li>
-</ol>
-<p>&emsp;&emsp;接着，我们进行标准化操作：</p>
-<ol>
-<li>标准化每个细胞的总计数（库大小）：这一步是为了消除不同细胞间样本量的差异。库大小通常是指一个细胞中检测到的总UMI数。通过将每个细胞的UMI计数除以该细胞的总UMI计数，可以确保数据在不同细胞间是可比的。</li>
-<li>乘以1e6：这一步是为了放大数据，使其更易于处理。通常在生物信息学中，进行这样的转换是为了避免处理极小的数字。</li>
-<li>对数据进行对数变换：最后，对标准化后的数据进行对数变换是为了减少数据中极端值的影响，使数据的分布更接近正态分布。这通常有助于后续的统计分析和可视化。</li>
-</ol>
-<p>&emsp;&emsp;前面的步骤完成了单细胞转录组数据的质控和标准化，下面进行矩阵降维，进一步排除无关变量的影响，同时压缩分析规模：</p>
-<ol>
-<li>选择前4000个可变基因，排除大部分背景基因的影响；</li>
-<li>从标准化表达矩阵中去除总计数、线粒体基因计数和热休克蛋白（HSP）相关基因计数的变异，以避免偏差；</li>
-<li>主成分分析，把4000个可变基因降为50个主成分；</li>
-<li>由此，我们得到了50×细胞数的矩阵，即对于每个细胞有50个变量，使用前2个或者3个主成分进行可视化，通过标注不同样本，发现潜在的批次效应，并通过相应的算法（在R中可以通过Harmony）去除；</li>
-<li>由此，我们尽可能避免了因非研究变量因素导致的系统误差，得到新的标准化矩阵。</li>
-</ol>
-<p>&emsp;&emsp;最后，Leiden算法寻找细胞簇和分群，UMAP和TSNE进行作图，推荐使用COSG确定Marker。</p>
-]]></content>
-      <categories>
-        <category>生物信息学</category>
-      </categories>
-      <tags>
-        <tag>单细胞测序</tag>
-        <tag>免疫</tag>
-        <tag>肿瘤</tag>
       </tags>
   </entry>
   <entry>
@@ -387,6 +343,200 @@
       </tags>
   </entry>
   <entry>
+    <title>单细胞转录组分析实战（一）：数据采集</title>
+    <url>/2024/02/17/%E5%8D%95%E7%BB%86%E8%83%9E%E8%BD%AC%E5%BD%95%E7%BB%84%E5%88%86%E6%9E%90%E5%AE%9E%E6%88%98%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E6%95%B0%E6%8D%AE%E9%87%87%E9%9B%86/</url>
+    <content><![CDATA[<h2 id="写在前面的话"><a href="#写在前面的话" class="headerlink" title="写在前面的话"></a>写在前面的话</h2><p>&emsp;&emsp;本系列将基于张泽民团队发表的TNBC免疫图谱进行挖掘（<a href="https://www.cell.com/cancer-cell/fulltext/S1535-6108(21">Single-cell analyses reveal key immune cell subsets associated with response to PD-L1 blockade in triple-negative breast cancer: Cancer Cell</a>00499-2)），旨在探索原发灶和转移灶免疫微环境的差异及其原因。<br>&emsp;&emsp;准确严谨的采集和清洗数据是单细胞分析的开始，数据本身的质量和采集过程的规范程度决定了研究结果的可靠性。</p>
+<h2 id="样本信息"><a href="#样本信息" class="headerlink" title="样本信息"></a>样本信息</h2><h3 id="患者来源"><a href="#患者来源" class="headerlink" title="患者来源"></a>患者来源</h3><p>&emsp;&emsp;国家癌症中心开发的DTHealth TrakCare系统中记录了患者信息，纳入本研究的22名患者满足：（1）组织学确诊晚期TNBC；（2）既往没有化疗、靶向及免疫等全身治疗；（3）研究中接受紫杉醇单药治疗或紫杉醇加阿替利珠单抗治疗。</p>
+<h3 id="患者信息"><a href="#患者信息" class="headerlink" title="患者信息"></a>患者信息</h3><ol>
+<li>本研究所有患者均被诊断为晚期TNBC，大多数患者患有转移性疾病；</li>
+<li>事实上，一些患者是接受新辅助治疗的局部晚期患者；</li>
+<li>患者为女性，年龄在32-64岁之间，中位值为49岁；</li>
+</ol>
+<p><img data-src="./1.jpg" alt="临床信息"></p>
+<h3 id="样本收集、文库制备和测序"><a href="#样本收集、文库制备和测序" class="headerlink" title="样本收集、文库制备和测序"></a>样本收集、文库制备和测序</h3><p>&emsp;&emsp;研究使用16针吸穿刺取乳腺、胸壁肿瘤样本；18号针取淋巴结、肝转移灶样本。测序仪器是10x Genomics公司的HiSeq X Ten，平台为<a href="https://www.ncbi.nlm.nih.gov/geo/query/acc.cgi?acc=GPL20795">GPL20795</a>。DNA片段被打碎为150bp，进行双端测序。</p>
+<h2 id="单细胞转录组数据处理"><a href="#单细胞转录组数据处理" class="headerlink" title="单细胞转录组数据处理"></a>单细胞转录组数据处理</h2><p>&emsp;&emsp;10x Genomics公司提供的Cell Ranger（V 3.0.1）用于汇总原始数据，过滤低质量读段，将reads与人类参考基因组（GRCh38）比对，分配细胞Barcode，并生成UMI矩阵。值得注意的是，对于10x Genomics公司的测序，由于UMI的存在，使用Raw Count即可反映真实的基因表达，不需要使用标准化方法进行基因定量（<a href="https://forrestgump618.github.io/2024/02/16/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89%EF%BC%9A%E5%9F%BA%E5%9B%A0%E5%AE%9A%E9%87%8F/">生物信息学笔记（三）：基因定量</a>）。但注意，这里所谓“真实的基因表达”反映的是测序过程中的真实值，即不必考虑测序深度和转录本长度的值；而单细胞测序中，由于转录本的低捕获率，我们假设合格细胞基因表达总量应该类似，所以还要进行标准化排除不同细胞测序质量的差异。<br>&emsp;&emsp;原文使用Scanpy进行下游分析，质控步骤包括：</p>
+<ol>
+<li>过滤在少于10个细胞中表达的基因；</li>
+<li>过滤少于200个基因的细胞中检测到的基因；</li>
+<li>保留了600-120,000个UMIs、400-8,000个基因和小于10%线粒体基因计数的高质量细胞；</li>
+<li>将Scrublet应用于每个测序文库，以去除预期的双峰率为6%的潜在双峰，并滤除doubletScore大于90%分位数的细胞；</li>
+</ol>
+<p>&emsp;&emsp;接着，我们进行标准化操作：</p>
+<ol>
+<li>标准化每个细胞的总计数（库大小）：这一步是为了消除不同细胞间样本量的差异。库大小通常是指一个细胞中检测到的总UMI数。通过将每个细胞的UMI计数除以该细胞的总UMI计数，可以确保数据在不同细胞间是可比的。</li>
+<li>乘以1e6：这一步是为了放大数据，使其更易于处理。通常在生物信息学中，进行这样的转换是为了避免处理极小的数字。</li>
+<li>对数据进行对数变换：最后，对标准化后的数据进行对数变换是为了减少数据中极端值的影响，使数据的分布更接近正态分布。这通常有助于后续的统计分析和可视化。</li>
+</ol>
+<p>&emsp;&emsp;前面的步骤完成了单细胞转录组数据的质控和标准化，下面进行矩阵降维，进一步排除无关变量的影响，同时压缩分析规模：</p>
+<ol>
+<li>选择前4000个可变基因，排除大部分背景基因的影响；</li>
+<li>从标准化表达矩阵中去除总计数、线粒体基因计数和热休克蛋白（HSP）相关基因计数的变异，以避免偏差；</li>
+<li>主成分分析，把4000个可变基因降为50个主成分；</li>
+<li>由此，我们得到了50×细胞数的矩阵，即对于每个细胞有50个变量，使用前2个或者3个主成分进行可视化，通过标注不同样本，发现潜在的批次效应，并通过相应的算法（在R中可以通过Harmony）去除；</li>
+<li>由此，我们尽可能避免了因非研究变量因素导致的系统误差，得到新的标准化矩阵。</li>
+</ol>
+<p>&emsp;&emsp;最后，Leiden算法寻找细胞簇和分群，UMAP和TSNE进行作图，推荐使用COSG确定Marker。</p>
+]]></content>
+      <categories>
+        <category>生物信息学</category>
+      </categories>
+      <tags>
+        <tag>单细胞测序</tag>
+        <tag>免疫</tag>
+        <tag>肿瘤</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>基于NLP的密钥解码工具：Ciphey</title>
+    <url>/2024/03/26/%E5%9F%BA%E4%BA%8ENLP%E7%9A%84%E5%AF%86%E9%92%A5%E8%A7%A3%E7%A0%81%E5%B7%A5%E5%85%B7%EF%BC%9ACiphey/</url>
+    <content><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>Ciphey是一款自动化的解密和解码工具，它可以帮助用户快速识别和解密被加密的数据。Ciphey 使用一个带有密文检测接口(_Cipher Detection Interface_)的定制 AI 模型(_AuSearch_)来估测一个东西是用什么方式加密的。以及一个定制过的自然语言处理接口(_Language Checker Interface_)来检测给定文本何时变为纯文本。</p>
+<p><img data-src="./index.gif" alt="使用示例"></p>
+<h1 id="Docker安装和使用"><a href="#Docker安装和使用" class="headerlink" title="Docker安装和使用"></a>Docker安装和使用</h1><h2 id="安装Docker-Engine"><a href="#安装Docker-Engine" class="headerlink" title="安装Docker Engine"></a>安装Docker Engine</h2><p>首先，需要安装Docker Engine。Docker Engine适用于Windows、macOS和Linux平台，通过Docker Desktop进行安装和管理。根据操作系统，选择相应的安装指南：</p>
+<ul>
+<li><a href="#">Docker Desktop for Linux</a></li>
+<li><a href="#">Docker Desktop for Mac (macOS)</a></li>
+<li><a href="#">Docker Desktop for Windows</a></li>
+</ul>
+<h3 id="支持的平台"><a href="#支持的平台" class="headerlink" title="支持的平台"></a>支持的平台</h3><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>平台</th>
+<th>x86_64 / amd64</th>
+<th>arm64 / aarch64</th>
+<th>arm (32-bit)</th>
+<th>ppc64le</th>
+<th>s390x</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CentOS</td>
+<td>✅</td>
+<td>✅</td>
+<td></td>
+<td>✅</td>
+<td></td>
+</tr>
+<tr>
+<td>Debian</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+<td></td>
+</tr>
+<tr>
+<td>Fedora</td>
+<td>✅</td>
+<td>✅</td>
+<td></td>
+<td>✅</td>
+<td></td>
+</tr>
+<tr>
+<td>Raspberry Pi OS</td>
+<td></td>
+<td></td>
+<td>✅</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>RHEL</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>✅</td>
+</tr>
+<tr>
+<td>SLES</td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td>✅</td>
+</tr>
+<tr>
+<td>Ubuntu</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>对于其他Linux发行版，Docker提供了二进制文件供手动安装。这些二进制文件是静态链接的，可以在任何Linux发行版上使用。</p>
+<h3 id="发布频道"><a href="#发布频道" class="headerlink" title="发布频道"></a>发布频道</h3><p>Docker Engine有两种更新频道：稳定和测试：</p>
+<ul>
+<li>稳定频道提供了已经发布的最新版本。</li>
+<li>测试频道提供了准备好进行测试的预发布版本。</li>
+</ul>
+<p>谨慎使用测试频道，预发布版本可能包括实验性的和早期访问的功能，这些功能可能会发生变化。</p>
+<h2 id="安装Ciphey"><a href="#安装Ciphey" class="headerlink" title="安装Ciphey"></a>安装Ciphey</h2><p>在安装了Docker Engine之后，可以使用Docker容器来安装和运行Ciphey。下面是创建和运行Ciphey Docker容器的步骤：</p>
+<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker pull remnux/ciphey</span><br></pre></td></tr></table></figure>
+<h2 id="使用Ciphey"><a href="#使用Ciphey" class="headerlink" title="使用Ciphey"></a>使用Ciphey</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker run -it --<span class="built_in">rm</span> remnux/ciphey <span class="string">&quot;=MXazlHbh5WQgUmchdHbh1EIy9mZgQXarx2bvRFI4VnbpxEIBBiO4VnbNVkU&quot;</span></span><br></pre></td></tr></table></figure>
+<h1 id="Docker的特性"><a href="#Docker的特性" class="headerlink" title="Docker的特性"></a>Docker的特性</h1><ul>
+<li><strong>支持 30+的加密方法</strong> 例如编码（二进制，base64）和常规加密（例如 Caesar 密码，重复密钥 XOR 等）。 <strong><a href="https://github.com/Ciphey/Ciphey/wiki/Supported-Ciphers">有关完整列表，请单击此处</a></strong></li>
+<li><strong>具有增强搜索功能的定制人工智能（AuSearch）可以回答“使用了哪种加密技术?”</strong> 解密时间不到 3 秒。</li>
+<li><strong>定制的自然语言处理系统</strong> Ciphey 可以确定某些东西是否是纯文本。无论该纯文本是 JSON，CTF 标志还是英语 Ciphey，都可以在几毫秒内获得它。</li>
+<li><strong>多国语言支持</strong> 目前，仅有德语和英语（带有 AU，UK，CAN，USA 变体）。</li>
+<li><strong>支持加密和哈希</strong> 诸如 CyberChef Magic 之类的替代品则没有。</li>
+<li><strong><a href="https://github.com/Ciphey/CipheyCore">C++ 核心</a></strong> 这会使整个过程变得非常快。</li>
+</ul>
+<h1 id="贡献者"><a href="#贡献者" class="headerlink" title="贡献者"></a>贡献者</h1><p>Ciphey 是由<a href="https://github.com/bee-san">Brandon</a>在 2008 年发明的，并在 2019 年重写。</p>
+<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="https://github.com/Ciphey/Ciphey/tree/master">Ciphey/Ciphey: ⚡ Automatically decrypt encryptions without knowing the key or cipher, decode encodings, and crack hashes ⚡ (github.com)</a></p>
+]]></content>
+      <categories>
+        <category>开源</category>
+      </categories>
+      <tags>
+        <tag>开源</tag>
+        <tag>密码学</tag>
+        <tag>Docker</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>孟德尔随机化标准流程代码示例</title>
+    <url>/2024/02/05/%E5%AD%9F%E5%BE%B7%E5%B0%94%E9%9A%8F%E6%9C%BA%E5%8C%96%E6%A0%87%E5%87%86%E6%B5%81%E7%A8%8B%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B/</url>
+    <content><![CDATA[<p>在这篇博客中，我们将通过R代码来探索非酒精性脂肪肝（NAFLD）对COVID-19严重程度的可能影响。我们将利用两个R包：<code>TwoSampleMR</code>和<code>MRPRESSO</code>，来执行Mendelian Randomization (MR)分析，这是一种利用基因变异作为工具变量来估计暴露和结果之间因果关系的统计方法。</p>
+<h3 id="开始之前"><a href="#开始之前" class="headerlink" title="开始之前"></a>开始之前</h3><p>首先，我们需要安装并加载必要的R包：</p>
+<p>rCopy code</p>
+<p><code># 安装（如果尚未安装） install.packages(&quot;TwoSampleMR&quot;) install.packages(&quot;MRPRESSO&quot;)  # 加载包 library(TwoSampleMR) library(MRPRESSO)</code></p>
+<h3 id="数据准备"><a href="#数据准备" class="headerlink" title="数据准备"></a>数据准备</h3><p>我们的目标是研究NAFLD对COVID-19严重程度的影响。为此，我们首先需要准备关于NAFLD的暴露数据：</p>
+<p>rCopy code</p>
+<p><code># 读取暴露数据 exposure_dat &lt;- read_exposure_data(filename = &quot;./NAFLD.txt&quot;, sep=&quot;\t&quot;,                                    snp_col = &quot;rsids&quot;, effect_allele_col = &quot;alt&quot;, other_allele_col = &quot;ref&quot;,                                    beta_col = &quot;beta&quot;, se_col = &quot;sebeta&quot;, pval_col = &quot;pval&quot;, eaf_col = &quot;af_alt&quot;) # 对数据进行命名，便于后续处理 exposure_dat$phenotype &lt;- &quot;NAFLD&quot;</code></p>
+<h3 id="数据处理"><a href="#数据处理" class="headerlink" title="数据处理"></a>数据处理</h3><p>为了确保我们分析的基因变异之间没有连锁不平衡，我们将对数据进行clump处理：</p>
+<p>rCopy code</p>
+<p><code># 连锁不平衡去除 exposure_dat &lt;- clump_data(exposure_dat)</code></p>
+<h3 id="结果数据获取"><a href="#结果数据获取" class="headerlink" title="结果数据获取"></a>结果数据获取</h3><p>接下来，我们需要获取COVID-19作为结果的数据：</p>
+<p>rCopy code</p>
+<p><code># 在线读取COVID-19结果数据 outcome_dat &lt;- extract_outcome_data(outcomes = &quot;ebi-a-GCST011081&quot;, snps = exposure_dat$SNP)</code></p>
+<h3 id="数据协调"><a href="#数据协调" class="headerlink" title="数据协调"></a>数据协调</h3><p>为了进行MR分析，暴露和结果数据需要进行协调，确保基因变异的方向一致：</p>
+<p>rCopy code</p>
+<p><code># 数据协调 dat &lt;- harmonise_data(exposure_dat = exposure_dat, outcome_dat = outcome_dat, action = 2)</code></p>
+<h3 id="分析与敏感性测试"><a href="#分析与敏感性测试" class="headerlink" title="分析与敏感性测试"></a>分析与敏感性测试</h3><p>进行MR分析前，我们先计算F值，以评估使用的工具变量的有效性，并进行敏感性测试：</p>
+<p>rCopy code</p>
+<p><code># F值计算与筛选 dat$F &lt;- (dat$beta.exposure/dat$se.exposure)**2 dat &lt;- subset(dat, F&gt;10)  # MR分析 mr_result &lt;- mr(dat)  # 敏感性测试 het &lt;- mr_heterogeneity(dat) ple &lt;- mr_pleiotropy_test(dat) mr_presso(data = dat, BetaOutcome = &quot;beta.outcome&quot;, BetaExposure = &quot;beta.exposure&quot;, SdOutcome = &quot;se.outcome&quot;, SdExposure = &quot;se.exposure&quot;)</code></p>
+<h3 id="结果呈现"><a href="#结果呈现" class="headerlink" title="结果呈现"></a>结果呈现</h3><p>最后，我们通过几种图表直观展示MR分析结果：</p>
+<p>rCopy code</p>
+<p><code># 结果图表展示 mr_funnel_plot(singlesnp_results = mr_singlesnp(dat)) # 漏斗图 mr_forest_plot(mr_singlesnp(dat)) # 森林图 mr_scatter_plot(mr_results = mr_result, dat = dat) # 散点图</code></p>
+<p>通过这些步骤，我们可以评估非酒精性脂肪肝（NAFLD）对COVID-19严重程度的潜在影响，提供更深入的理解和新的研究方向。这种基于Mendelian Randomization的方法为我们提供了一种强有力的工具，来探讨各种生物标志物与疾病之间的因果关系。</p>
+]]></content>
+      <categories>
+        <category>流行病学</category>
+      </categories>
+      <tags>
+        <tag>GWAS</tag>
+        <tag>统计学</tag>
+        <tag>孟德尔随机化</tag>
+        <tag>流行病学</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>域名更换</title>
     <url>/2024/03/23/%E5%9F%9F%E5%90%8D%E6%9B%B4%E6%8D%A2/</url>
     <content><![CDATA[<h1 id="🎉-新的域名"><a href="#🎉-新的域名" class="headerlink" title="🎉 新的域名"></a>🎉 <strong>新的域名</strong></h1><p>欢迎来到新域名：<a href="http://www.zhuangqingyuan.site" style="color: #3498db;">www.zhuangqingyuan.site</a><br>今天开始，这个小破站有自己的顶级域名啦！</p>
@@ -406,6 +556,40 @@
       </categories>
       <tags>
         <tag>随笔</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>单细胞测序教程资源聚合</title>
+    <url>/2023/08/12/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E6%95%99%E7%A8%8B%E5%92%8C%E8%B5%84%E6%BA%90%E8%81%9A%E5%90%88/</url>
+    <content><![CDATA[<h2 id="教程"><a href="#教程" class="headerlink" title="教程"></a>教程</h2><h4 id="转录组学"><a href="#转录组学" class="headerlink" title="转录组学"></a>转录组学</h4><ol>
+<li>单细胞测序-最佳的分析Pipeline <a href="https://single-cell-tutorial.readthedocs.io/zh/latest/">单细胞测序-最佳的分析Pipeline</a> ：Zehua Zeng等为主要作者，包括详细的原理和处理流程（Python）；其中重点介绍了Omicverse的使用； </li>
+<li>哈佛大学单细胞中文笔记：<a href="https://zhuanlan.zhihu.com/p/209018565">哈佛大学单细胞中文笔记</a> 陈同博士撰写。主要包括原理和Seurat的使用。<a href="https://hbctraining.github.io/main">原版教程</a>；</li>
+<li>RNA-SEQ BLOG：最新的RNA测序资讯：<a href="https://www.rna-seqblog.com/">RNA-Seq Blog</a></li>
+</ol>
+<h2 id="资源"><a href="#资源" class="headerlink" title="资源"></a>资源</h2><h4 id="肿瘤生信"><a href="#肿瘤生信" class="headerlink" title="肿瘤生信"></a>肿瘤生信</h4><ol>
+<li>GEPIA2：GEPIA2是一个无代码可视化平台，其数据来源于TCGA和GTEx数据库，用户可以自由探索指定基因的在肿瘤组织中的表达情况以及和预后的关系。<a href="http://gepia2.cancer-pku.cn/">GEPIA2</a></li>
+<li>Prognoscan：Prognoscan整合了2010年以前GEO上Microarray和相应临床信息，可以探索制定基因自不同数据集中和预后的关系。<a href="http://dna00.bio.kyutech.ac.jp/PrognoScan/">PrognoScan</a></li>
+<li>TIMER：TIMER用于分析不同癌症类型的免疫浸润（数据来自于TCGA）。<a href="http://timer.cistrome.org/">TIMER2.0</a></li>
+</ol>
+<h4 id="GWAS"><a href="#GWAS" class="headerlink" title="GWAS"></a>GWAS</h4><ol>
+<li>IEU OPEN GWAS：包含42,484 个GWAS摘要数据集的214,725,223,303 个遗传关联的数据库。<a href="https://gwas.mrcieu.ac.uk/">IEU OpenGWAS</a></li>
+<li>PheWeb：包含Biobank Japan，以及UKB等欧洲样本的GWAS结果。<a href="https://pheweb.jp/downloads">PheWeb</a></li>
+<li>GWAS catalog：内容较全，网页比较慢，建议使用特殊方式访问。<a href="https://www.ebi.ac.uk/gwas/downloads/summary-statistics">GWAS catalog</a>:</li>
+<li>EGG：早期生长联盟数据，包含出生体重，出生头围等。<a href="http://egg-consortium.org/index.html">EGG</a></li>
+<li>CKDGEN：包含慢性肾病、MA、eGFR等。<a href="http://ckdgen.imbi.uni-freiburg.de/?tdsourcetag=s_pctim_aiomsg">CKDGEN</a></li>
+<li>GLGC：血脂GWAS数据库。<a href="http://csg.sph.umich.edu/willer/public/glgc-lipids2021/">GLGC</a></li>
+<li>PGC：精神病学基因组学联盟。<a href="https://www.med.unc.edu/pgc/results-and-downloads/downloads">PGC</a></li>
+<li>GEFOS：骨质疏松联盟。<a href="http://www.gefos.org/">GEFOS</a></li>
+<li>DIAGRAM：二型糖尿病数据库。<a href="http://diagram-consortium.org/downloads.html">DIAGRAM</a>: </li>
+<li>代谢组学数据库：<a href="http://www.metabolomix.com/list-of-all-published-gwas-with-metabolomics/">A Table of all published GWAS with metabolomics</a></li>
+</ol>
+]]></content>
+      <categories>
+        <category>生物信息学</category>
+      </categories>
+      <tags>
+        <tag>单细胞测序</tag>
+        <tag>生物信息学</tag>
       </tags>
   </entry>
   <entry>
@@ -1146,119 +1330,6 @@
       </tags>
   </entry>
   <entry>
-    <title>基于NLP的密钥解码工具：Ciphey</title>
-    <url>/2024/03/26/%E5%9F%BA%E4%BA%8ENLP%E7%9A%84%E5%AF%86%E9%92%A5%E8%A7%A3%E7%A0%81%E5%B7%A5%E5%85%B7%EF%BC%9ACiphey/</url>
-    <content><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>Ciphey是一款自动化的解密和解码工具，它可以帮助用户快速识别和解密被加密的数据。Ciphey 使用一个带有密文检测接口(_Cipher Detection Interface_)的定制 AI 模型(_AuSearch_)来估测一个东西是用什么方式加密的。以及一个定制过的自然语言处理接口(_Language Checker Interface_)来检测给定文本何时变为纯文本。</p>
-<p><img data-src="./index.gif" alt="使用示例"></p>
-<h1 id="Docker安装和使用"><a href="#Docker安装和使用" class="headerlink" title="Docker安装和使用"></a>Docker安装和使用</h1><h2 id="安装Docker-Engine"><a href="#安装Docker-Engine" class="headerlink" title="安装Docker Engine"></a>安装Docker Engine</h2><p>首先，需要安装Docker Engine。Docker Engine适用于Windows、macOS和Linux平台，通过Docker Desktop进行安装和管理。根据操作系统，选择相应的安装指南：</p>
-<ul>
-<li><a href="#">Docker Desktop for Linux</a></li>
-<li><a href="#">Docker Desktop for Mac (macOS)</a></li>
-<li><a href="#">Docker Desktop for Windows</a></li>
-</ul>
-<h3 id="支持的平台"><a href="#支持的平台" class="headerlink" title="支持的平台"></a>支持的平台</h3><div class="table-container">
-<table>
-<thead>
-<tr>
-<th>平台</th>
-<th>x86_64 / amd64</th>
-<th>arm64 / aarch64</th>
-<th>arm (32-bit)</th>
-<th>ppc64le</th>
-<th>s390x</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>CentOS</td>
-<td>✅</td>
-<td>✅</td>
-<td></td>
-<td>✅</td>
-<td></td>
-</tr>
-<tr>
-<td>Debian</td>
-<td>✅</td>
-<td>✅</td>
-<td>✅</td>
-<td>✅</td>
-<td></td>
-</tr>
-<tr>
-<td>Fedora</td>
-<td>✅</td>
-<td>✅</td>
-<td></td>
-<td>✅</td>
-<td></td>
-</tr>
-<tr>
-<td>Raspberry Pi OS</td>
-<td></td>
-<td></td>
-<td>✅</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>RHEL</td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td>✅</td>
-</tr>
-<tr>
-<td>SLES</td>
-<td></td>
-<td></td>
-<td></td>
-<td></td>
-<td>✅</td>
-</tr>
-<tr>
-<td>Ubuntu</td>
-<td>✅</td>
-<td>✅</td>
-<td>✅</td>
-<td>✅</td>
-<td>✅</td>
-</tr>
-</tbody>
-</table>
-</div>
-<p>对于其他Linux发行版，Docker提供了二进制文件供手动安装。这些二进制文件是静态链接的，可以在任何Linux发行版上使用。</p>
-<h3 id="发布频道"><a href="#发布频道" class="headerlink" title="发布频道"></a>发布频道</h3><p>Docker Engine有两种更新频道：稳定和测试：</p>
-<ul>
-<li>稳定频道提供了已经发布的最新版本。</li>
-<li>测试频道提供了准备好进行测试的预发布版本。</li>
-</ul>
-<p>谨慎使用测试频道，预发布版本可能包括实验性的和早期访问的功能，这些功能可能会发生变化。</p>
-<h2 id="安装Ciphey"><a href="#安装Ciphey" class="headerlink" title="安装Ciphey"></a>安装Ciphey</h2><p>在安装了Docker Engine之后，可以使用Docker容器来安装和运行Ciphey。下面是创建和运行Ciphey Docker容器的步骤：</p>
-<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker pull remnux/ciphey</span><br></pre></td></tr></table></figure>
-<h2 id="使用Ciphey"><a href="#使用Ciphey" class="headerlink" title="使用Ciphey"></a>使用Ciphey</h2><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">docker run -it --<span class="built_in">rm</span> remnux/ciphey <span class="string">&quot;=MXazlHbh5WQgUmchdHbh1EIy9mZgQXarx2bvRFI4VnbpxEIBBiO4VnbNVkU&quot;</span></span><br></pre></td></tr></table></figure>
-<h1 id="Docker的特性"><a href="#Docker的特性" class="headerlink" title="Docker的特性"></a>Docker的特性</h1><ul>
-<li><strong>支持 30+的加密方法</strong> 例如编码（二进制，base64）和常规加密（例如 Caesar 密码，重复密钥 XOR 等）。 <strong><a href="https://github.com/Ciphey/Ciphey/wiki/Supported-Ciphers">有关完整列表，请单击此处</a></strong></li>
-<li><strong>具有增强搜索功能的定制人工智能（AuSearch）可以回答“使用了哪种加密技术?”</strong> 解密时间不到 3 秒。</li>
-<li><strong>定制的自然语言处理系统</strong> Ciphey 可以确定某些东西是否是纯文本。无论该纯文本是 JSON，CTF 标志还是英语 Ciphey，都可以在几毫秒内获得它。</li>
-<li><strong>多国语言支持</strong> 目前，仅有德语和英语（带有 AU，UK，CAN，USA 变体）。</li>
-<li><strong>支持加密和哈希</strong> 诸如 CyberChef Magic 之类的替代品则没有。</li>
-<li><strong><a href="https://github.com/Ciphey/CipheyCore">C++ 核心</a></strong> 这会使整个过程变得非常快。</li>
-</ul>
-<h1 id="贡献者"><a href="#贡献者" class="headerlink" title="贡献者"></a>贡献者</h1><p>Ciphey 是由<a href="https://github.com/bee-san">Brandon</a>在 2008 年发明的，并在 2019 年重写。</p>
-<h1 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h1><p><a href="https://github.com/Ciphey/Ciphey/tree/master">Ciphey/Ciphey: ⚡ Automatically decrypt encryptions without knowing the key or cipher, decode encodings, and crack hashes ⚡ (github.com)</a></p>
-]]></content>
-      <categories>
-        <category>开源</category>
-      </categories>
-      <tags>
-        <tag>开源</tag>
-        <tag>密码学</tag>
-        <tag>Docker</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>实操：把chatGPT接入智能音箱？</title>
     <url>/2024/03/18/%E5%AE%9E%E6%93%8D%EF%BC%9A%E6%8A%8AchatGPT%E6%8E%A5%E5%85%A5%E6%99%BA%E8%83%BD%E9%9F%B3%E7%AE%B1%EF%BC%9F/</url>
     <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>&emsp;&emsp;学院以前比赛发了个小米音箱，使用场景比较局限。突发奇想能否把大语言模型和小爱音响结合起来，于是就有了这番折腾。包的原理十分直接，就是通过TTS识别，发送给chatGPT，再返回结果进行朗读。</p>
@@ -1512,66 +1583,6 @@
         <tag>LLM</tag>
         <tag>AI</tag>
         <tag>智能音箱</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>孟德尔随机化标准流程代码示例</title>
-    <url>/2024/02/05/%E5%AD%9F%E5%BE%B7%E5%B0%94%E9%9A%8F%E6%9C%BA%E5%8C%96%E6%A0%87%E5%87%86%E6%B5%81%E7%A8%8B%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B/</url>
-    <content><![CDATA[<p>在这篇博客中，我们将通过R代码来探索非酒精性脂肪肝（NAFLD）对COVID-19严重程度的可能影响。我们将利用两个R包：<code>TwoSampleMR</code>和<code>MRPRESSO</code>，来执行Mendelian Randomization (MR)分析，这是一种利用基因变异作为工具变量来估计暴露和结果之间因果关系的统计方法。</p>
-<h3 id="开始之前"><a href="#开始之前" class="headerlink" title="开始之前"></a>开始之前</h3><p>首先，我们需要安装并加载必要的R包：</p>
-<p>rCopy code</p>
-<p><code># 安装（如果尚未安装） install.packages(&quot;TwoSampleMR&quot;) install.packages(&quot;MRPRESSO&quot;)  # 加载包 library(TwoSampleMR) library(MRPRESSO)</code></p>
-<h3 id="数据准备"><a href="#数据准备" class="headerlink" title="数据准备"></a>数据准备</h3><p>我们的目标是研究NAFLD对COVID-19严重程度的影响。为此，我们首先需要准备关于NAFLD的暴露数据：</p>
-<p>rCopy code</p>
-<p><code># 读取暴露数据 exposure_dat &lt;- read_exposure_data(filename = &quot;./NAFLD.txt&quot;, sep=&quot;\t&quot;,                                    snp_col = &quot;rsids&quot;, effect_allele_col = &quot;alt&quot;, other_allele_col = &quot;ref&quot;,                                    beta_col = &quot;beta&quot;, se_col = &quot;sebeta&quot;, pval_col = &quot;pval&quot;, eaf_col = &quot;af_alt&quot;) # 对数据进行命名，便于后续处理 exposure_dat$phenotype &lt;- &quot;NAFLD&quot;</code></p>
-<h3 id="数据处理"><a href="#数据处理" class="headerlink" title="数据处理"></a>数据处理</h3><p>为了确保我们分析的基因变异之间没有连锁不平衡，我们将对数据进行clump处理：</p>
-<p>rCopy code</p>
-<p><code># 连锁不平衡去除 exposure_dat &lt;- clump_data(exposure_dat)</code></p>
-<h3 id="结果数据获取"><a href="#结果数据获取" class="headerlink" title="结果数据获取"></a>结果数据获取</h3><p>接下来，我们需要获取COVID-19作为结果的数据：</p>
-<p>rCopy code</p>
-<p><code># 在线读取COVID-19结果数据 outcome_dat &lt;- extract_outcome_data(outcomes = &quot;ebi-a-GCST011081&quot;, snps = exposure_dat$SNP)</code></p>
-<h3 id="数据协调"><a href="#数据协调" class="headerlink" title="数据协调"></a>数据协调</h3><p>为了进行MR分析，暴露和结果数据需要进行协调，确保基因变异的方向一致：</p>
-<p>rCopy code</p>
-<p><code># 数据协调 dat &lt;- harmonise_data(exposure_dat = exposure_dat, outcome_dat = outcome_dat, action = 2)</code></p>
-<h3 id="分析与敏感性测试"><a href="#分析与敏感性测试" class="headerlink" title="分析与敏感性测试"></a>分析与敏感性测试</h3><p>进行MR分析前，我们先计算F值，以评估使用的工具变量的有效性，并进行敏感性测试：</p>
-<p>rCopy code</p>
-<p><code># F值计算与筛选 dat$F &lt;- (dat$beta.exposure/dat$se.exposure)**2 dat &lt;- subset(dat, F&gt;10)  # MR分析 mr_result &lt;- mr(dat)  # 敏感性测试 het &lt;- mr_heterogeneity(dat) ple &lt;- mr_pleiotropy_test(dat) mr_presso(data = dat, BetaOutcome = &quot;beta.outcome&quot;, BetaExposure = &quot;beta.exposure&quot;, SdOutcome = &quot;se.outcome&quot;, SdExposure = &quot;se.exposure&quot;)</code></p>
-<h3 id="结果呈现"><a href="#结果呈现" class="headerlink" title="结果呈现"></a>结果呈现</h3><p>最后，我们通过几种图表直观展示MR分析结果：</p>
-<p>rCopy code</p>
-<p><code># 结果图表展示 mr_funnel_plot(singlesnp_results = mr_singlesnp(dat)) # 漏斗图 mr_forest_plot(mr_singlesnp(dat)) # 森林图 mr_scatter_plot(mr_results = mr_result, dat = dat) # 散点图</code></p>
-<p>通过这些步骤，我们可以评估非酒精性脂肪肝（NAFLD）对COVID-19严重程度的潜在影响，提供更深入的理解和新的研究方向。这种基于Mendelian Randomization的方法为我们提供了一种强有力的工具，来探讨各种生物标志物与疾病之间的因果关系。</p>
-]]></content>
-      <categories>
-        <category>流行病学</category>
-      </categories>
-      <tags>
-        <tag>GWAS</tag>
-        <tag>统计学</tag>
-        <tag>孟德尔随机化</tag>
-        <tag>流行病学</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>心律失常治疗方式总结</title>
-    <url>/2024/03/14/%E5%BF%83%E5%BE%8B%E5%A4%B1%E5%B8%B8%E6%B2%BB%E7%96%97%E6%96%B9%E5%BC%8F%E6%80%BB%E7%BB%93/</url>
-    <content><![CDATA[<p>&emsp;&emsp;维持血流动力学处于稳定状态是心脏疾病的救治的落脚点，所以保障心室以适宜的频率进行协调的收缩舒张运动是心律失常救治的首要任务。其次，需要改善心脏内部的血流动力学紊乱，预防血栓形成；必要时需要考虑心房功能，避免前负荷不足。归根结底，心律失常的治疗是以心室为核心的。</p>
-<p>&emsp;&emsp;缓慢型心律失常由迷走神经张力过高导致，常常采用阿托品和异丙肾上腺素治疗，后者有潜在的致心律失常风险，所以临床多以弃用。药物治疗无效、症状明显或有严重血流动力学障碍应当及时安装起搏器。</p>
-<p>&emsp;&emsp;快速型心律失常发生机制常为自律细胞的自律性升高，非自律细胞产生异常自律性以及折返。自律细胞的自律性升高多见于窦性心动过速，其治疗只需降低交感神经或增加迷走神经张力，因而采用β受体阻断剂、非二氢吡啶类钙通道阻滞剂。新研药伊伐布雷定靶向P细胞自动复极的If电流，也可以用于治疗窦性心动过速。非自律细胞产生异常自律性包括期前收缩、心动过速、扑动和颤动，其发生原因多为缺氧、交感神经张力高、电解质紊乱。若成功解除细胞的应激状态，纠正细胞钙超载，降低交感神经张力或延长总体的不应期，则可消灭异常自律性产生的源头；其次，我们可以适当阻滞房室结，进行合适的导管消融，孤立异常自律点，避免影响心脏其他部位，尤其是心室的节律。举例而言，对房性期前收缩可采用β受体阻断剂（ICa）、非二氢吡啶类钙通道阻断剂（ICa）和胺碘酮（不应期），对室性期前收缩采用β受体阻断剂（ICa）、非二氢吡啶类钙通道阻滞剂（ICa）和普罗帕酮（（ICa）。值得注意的是，在室上性的心动过速（除了AVNRT）、扑动和颤动中，靶向ICa主要是为了降低心室率，转复律则依赖广谱抗心律失常药物。对于室性快速型心律失常，强调针对原因，并且在药物中添加了靶向快心肌细胞的IB类药物。非窦性快速型心律失常若伴随血流动力学紊乱采用电复律，若根治往往采用导管消融。</p>
-<p>&emsp;&emsp;AVNRT是一类特殊的心动过速，靶向房室结降低心室率的同时也是阻断径路传导，因此治疗中强调增加迷走神经张力和阻断钙离子通道。预激综合征中存在旁路和房室结的矛盾，治疗过程始终遵守压抑旁路但不祸害房室结的默契。</p>
-<ul>
-<li><strong>广谱抗心律失常药</strong>：IA、IC、III；</li>
-<li><strong>室性心律失常专用</strong>：IB</li>
-<li><strong>抑制交感神经、增加迷走神经张力、靶向钙通道</strong>：IV、III、IC、洋地黄、升压药、腺苷</li>
-<li><strong>缩短有效不应期</strong>：洋地黄</li>
-<li><strong>延长QT</strong>：IA、III</li>
-</ul>
-]]></content>
-      <categories>
-        <category>医学课程</category>
-      </categories>
-      <tags>
-        <tag>医学</tag>
-        <tag>医学生</tag>
       </tags>
   </entry>
   <entry>
@@ -1886,6 +1897,29 @@
       </tags>
   </entry>
   <entry>
+    <title>心律失常治疗方式总结</title>
+    <url>/2024/03/14/%E5%BF%83%E5%BE%8B%E5%A4%B1%E5%B8%B8%E6%B2%BB%E7%96%97%E6%96%B9%E5%BC%8F%E6%80%BB%E7%BB%93/</url>
+    <content><![CDATA[<p>&emsp;&emsp;维持血流动力学处于稳定状态是心脏疾病的救治的落脚点，所以保障心室以适宜的频率进行协调的收缩舒张运动是心律失常救治的首要任务。其次，需要改善心脏内部的血流动力学紊乱，预防血栓形成；必要时需要考虑心房功能，避免前负荷不足。归根结底，心律失常的治疗是以心室为核心的。</p>
+<p>&emsp;&emsp;缓慢型心律失常由迷走神经张力过高导致，常常采用阿托品和异丙肾上腺素治疗，后者有潜在的致心律失常风险，所以临床多以弃用。药物治疗无效、症状明显或有严重血流动力学障碍应当及时安装起搏器。</p>
+<p>&emsp;&emsp;快速型心律失常发生机制常为自律细胞的自律性升高，非自律细胞产生异常自律性以及折返。自律细胞的自律性升高多见于窦性心动过速，其治疗只需降低交感神经或增加迷走神经张力，因而采用β受体阻断剂、非二氢吡啶类钙通道阻滞剂。新研药伊伐布雷定靶向P细胞自动复极的If电流，也可以用于治疗窦性心动过速。非自律细胞产生异常自律性包括期前收缩、心动过速、扑动和颤动，其发生原因多为缺氧、交感神经张力高、电解质紊乱。若成功解除细胞的应激状态，纠正细胞钙超载，降低交感神经张力或延长总体的不应期，则可消灭异常自律性产生的源头；其次，我们可以适当阻滞房室结，进行合适的导管消融，孤立异常自律点，避免影响心脏其他部位，尤其是心室的节律。举例而言，对房性期前收缩可采用β受体阻断剂（ICa）、非二氢吡啶类钙通道阻断剂（ICa）和胺碘酮（不应期），对室性期前收缩采用β受体阻断剂（ICa）、非二氢吡啶类钙通道阻滞剂（ICa）和普罗帕酮（（ICa）。值得注意的是，在室上性的心动过速（除了AVNRT）、扑动和颤动中，靶向ICa主要是为了降低心室率，转复律则依赖广谱抗心律失常药物。对于室性快速型心律失常，强调针对原因，并且在药物中添加了靶向快心肌细胞的IB类药物。非窦性快速型心律失常若伴随血流动力学紊乱采用电复律，若根治往往采用导管消融。</p>
+<p>&emsp;&emsp;AVNRT是一类特殊的心动过速，靶向房室结降低心室率的同时也是阻断径路传导，因此治疗中强调增加迷走神经张力和阻断钙离子通道。预激综合征中存在旁路和房室结的矛盾，治疗过程始终遵守压抑旁路但不祸害房室结的默契。</p>
+<ul>
+<li><strong>广谱抗心律失常药</strong>：IA、IC、III；</li>
+<li><strong>室性心律失常专用</strong>：IB</li>
+<li><strong>抑制交感神经、增加迷走神经张力、靶向钙通道</strong>：IV、III、IC、洋地黄、升压药、腺苷</li>
+<li><strong>缩短有效不应期</strong>：洋地黄</li>
+<li><strong>延长QT</strong>：IA、III</li>
+</ul>
+]]></content>
+      <categories>
+        <category>医学课程</category>
+      </categories>
+      <tags>
+        <tag>医学</tag>
+        <tag>医学生</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>提升医学研究的严谨性：准确使用统计学</title>
     <url>/2024/02/18/%E6%8F%90%E5%8D%87%E5%8C%BB%E5%AD%A6%E7%A0%94%E7%A9%B6%E7%9A%84%E4%B8%A5%E8%B0%A8%E6%80%A7%EF%BC%9A%E5%87%86%E7%A1%AE%E4%BD%BF%E7%94%A8%E7%BB%9F%E8%AE%A1%E5%AD%A6/</url>
     <content><![CDATA[<h2 id="原文摘要"><a href="#原文摘要" class="headerlink" title="原文摘要"></a>原文摘要</h2><p>&emsp;&emsp;在不断进步的医学研究领域中，研究结果的可靠性不仅依赖于创新的思想，还依赖于严谨的方法论和统计学。然而，根据过去三年《柳叶刀》期刊集团对超过1000份手稿的统计审查经验，通讯发现许多医学研究者常常忽视这一点。</p>
@@ -1933,106 +1967,38 @@
       </tags>
   </entry>
   <entry>
-    <title>单细胞测序教程资源聚合</title>
-    <url>/2023/08/12/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E6%95%99%E7%A8%8B%E5%92%8C%E8%B5%84%E6%BA%90%E8%81%9A%E5%90%88/</url>
-    <content><![CDATA[<h2 id="教程"><a href="#教程" class="headerlink" title="教程"></a>教程</h2><h4 id="转录组学"><a href="#转录组学" class="headerlink" title="转录组学"></a>转录组学</h4><ol>
-<li>单细胞测序-最佳的分析Pipeline <a href="https://single-cell-tutorial.readthedocs.io/zh/latest/">单细胞测序-最佳的分析Pipeline</a> ：Zehua Zeng等为主要作者，包括详细的原理和处理流程（Python）；其中重点介绍了Omicverse的使用； </li>
-<li>哈佛大学单细胞中文笔记：<a href="https://zhuanlan.zhihu.com/p/209018565">哈佛大学单细胞中文笔记</a> 陈同博士撰写。主要包括原理和Seurat的使用。<a href="https://hbctraining.github.io/main">原版教程</a>；</li>
-<li>RNA-SEQ BLOG：最新的RNA测序资讯：<a href="https://www.rna-seqblog.com/">RNA-Seq Blog</a></li>
-</ol>
-<h2 id="资源"><a href="#资源" class="headerlink" title="资源"></a>资源</h2><h4 id="肿瘤生信"><a href="#肿瘤生信" class="headerlink" title="肿瘤生信"></a>肿瘤生信</h4><ol>
-<li>GEPIA2：GEPIA2是一个无代码可视化平台，其数据来源于TCGA和GTEx数据库，用户可以自由探索指定基因的在肿瘤组织中的表达情况以及和预后的关系。<a href="http://gepia2.cancer-pku.cn/">GEPIA2</a></li>
-<li>Prognoscan：Prognoscan整合了2010年以前GEO上Microarray和相应临床信息，可以探索制定基因自不同数据集中和预后的关系。<a href="http://dna00.bio.kyutech.ac.jp/PrognoScan/">PrognoScan</a></li>
-<li>TIMER：TIMER用于分析不同癌症类型的免疫浸润（数据来自于TCGA）。<a href="http://timer.cistrome.org/">TIMER2.0</a></li>
-</ol>
-<h4 id="GWAS"><a href="#GWAS" class="headerlink" title="GWAS"></a>GWAS</h4><ol>
-<li>IEU OPEN GWAS：包含42,484 个GWAS摘要数据集的214,725,223,303 个遗传关联的数据库。<a href="https://gwas.mrcieu.ac.uk/">IEU OpenGWAS</a></li>
-<li>PheWeb：包含Biobank Japan，以及UKB等欧洲样本的GWAS结果。<a href="https://pheweb.jp/downloads">PheWeb</a></li>
-<li>GWAS catalog：内容较全，网页比较慢，建议使用特殊方式访问。<a href="https://www.ebi.ac.uk/gwas/downloads/summary-statistics">GWAS catalog</a>:</li>
-<li>EGG：早期生长联盟数据，包含出生体重，出生头围等。<a href="http://egg-consortium.org/index.html">EGG</a></li>
-<li>CKDGEN：包含慢性肾病、MA、eGFR等。<a href="http://ckdgen.imbi.uni-freiburg.de/?tdsourcetag=s_pctim_aiomsg">CKDGEN</a></li>
-<li>GLGC：血脂GWAS数据库。<a href="http://csg.sph.umich.edu/willer/public/glgc-lipids2021/">GLGC</a></li>
-<li>PGC：精神病学基因组学联盟。<a href="https://www.med.unc.edu/pgc/results-and-downloads/downloads">PGC</a></li>
-<li>GEFOS：骨质疏松联盟。<a href="http://www.gefos.org/">GEFOS</a></li>
-<li>DIAGRAM：二型糖尿病数据库。<a href="http://diagram-consortium.org/downloads.html">DIAGRAM</a>: </li>
-<li>代谢组学数据库：<a href="http://www.metabolomix.com/list-of-all-published-gwas-with-metabolomics/">A Table of all published GWAS with metabolomics</a></li>
-</ol>
-]]></content>
-      <categories>
-        <category>生物信息学</category>
-      </categories>
-      <tags>
-        <tag>单细胞测序</tag>
-        <tag>生物信息学</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>生物信息学笔记（一）：转录组测序技术</title>
-    <url>/2024/02/05/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E8%BD%AC%E5%BD%95%E7%BB%84%E6%B5%8B%E5%BA%8F%E6%8A%80%E6%9C%AF/</url>
-    <content><![CDATA[<h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>&emsp;&emsp;<strong>转录组</strong>是特定组织或细胞在某一发育阶段或功能状态下转录出来的所有RNA的集合，包括编码蛋白质的mRNA和非编码RNA（non coding RNA, ncRNA）。<strong>转录组测序</strong>是指利用第二代高通量测序技术进行<strong>cDNA</strong>测序，全面快速地获取某一物种特定器官或组织在某一状态下的几乎所有转录本。</p>
-<p>&emsp;&emsp;转录组分析的主要目标是：</p>
+    <title>生物信息学笔记（三）：基因定量</title>
+    <url>/2024/02/16/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89%EF%BC%9A%E5%9F%BA%E5%9B%A0%E5%AE%9A%E9%87%8F/</url>
+    <content><![CDATA[<h2 id="为什么要对进行基因定量"><a href="#为什么要对进行基因定量" class="headerlink" title="为什么要对进行基因定量"></a>为什么要对进行基因定量</h2><p>&emsp;&emsp;转录组数据分析中，一个转录本反转录后的cDNA会被打碎成片段测序并和基因组比对，就会导致长转录本在给定的cDNA长度下可能会映射更多的cDNA，也就是说基因长度会影响Reads数。<br>&emsp;&emsp;测序深度是指测序过程中每个碱基被测序的平均次数，其计算公式为：$\frac{Reads数*Read长度}{参考序列长度}$：例如，对长100bp的目标区域进行捕获测序：采用单端测序，每个read长5bp；总共得到了200个reads；把所有的reads比对到目标区域后，100bp的目标区域中有98bp的位置至少有1个read覆盖到，换言之，剩余的2bp没有1个read覆盖。则测序深度为 200 x 5 / 100 = 10 我们说这此测序的深度为10X。显而易见，若测序越深，则对于相同长度的转录本，测序所得的Reads数更多。<br>&emsp;&emsp;综上所述，测序深度、基因长度和Reads数相关，所以需要在最终基因表达计数中去除相应的影响。注意，在基因定量的过程中，可能会由于样本本身的原因，如某个基因Reads数过高，导致基因定量后其他基因的表达量低于实际情况，这也是基因定量过程中需要去考虑的。</p>
+<h2 id="Raw-count"><a href="#Raw-count" class="headerlink" title="Raw count"></a>Raw count</h2><p>&emsp;&emsp;所谓Raw count，又称为count数，和上一部分所说的Reads数是同一概念，是指和参考序列比对上的序列数目。原始的读取计数矩阵使用Raw count作为基础，但由于不同基因的长度和测序深度存在差异，因此无法直接比较。为了消除技术偏差的影响并赋予后续差异分析以统计学意义，需要对这些基因计数矩阵进行标准化处理，将其转化为相对值。<br>&emsp;&emsp;但注意，我们进行基因定量时需要充分考虑测序技术和原理，如在 10x 基因组学基因表达检测中，每个转录本都标有作为唯一分子标识符 （unique molecular identifier，UMI） 的序列。这些 UMI 能够准确定量基因表达水平，因为我们可以分辨出哪些读段是从同一个 mRNA 分子中产生的。因此，Cell Ranger 和 Space Ranger 执行 UMI 计数（不是读取计数）以测量基因表达水平，并且所有二次分析步骤都基于 UMI 计数执行。在传统的RNA-seq数据中，完整的转录本被片段化，然后进行cDNA合成、末端修复和衔接连接。在此工作流程中，从长转录本中采样片段的概率高于从短转录本中采样的概率。因此，按转录本长度（例如，TPM、RPKM、FPKM）对读取计数进行归一化是有意义的。然而，在 10x 基因表达测定中，这种基因长度偏差并不存在。因此，不建议按基因长度对UMI计数进行归一化。</p>
+<h2 id="RPKM-FPKM"><a href="#RPKM-FPKM" class="headerlink" title="RPKM/FPKM"></a>RPKM/FPKM</h2><p>&emsp;&emsp;RPKM (Reads Per Kilobase of exon model per Million mapped reads)：每千个碱基的转录每百万映射读取的reads数，是针对单端测序的基因定量方法；FPKM (Fragment Per Kilobase of transcript, per Million mapped reads)：每千碱基片段每百万映射读取的 reads 数，是针对双端测序的基因定量方法。<br>&emsp;&emsp;以RPKM为例，其操作方法为：</p>
 <ol>
-<li>对所有的转录产物进行分类；</li>
-<li>确定基因的转录结构，如其起始位点，5′和3′末端，剪接模式和其他转录后修饰；</li>
-<li>量化各转录本在发育过程中和不同条件下(如生理/病理)表达水平的变化。</li>
+<li>计算样本中的总读数，然后将该数字除以 1,000,000——这是“每百万”比例因子；</li>
+<li>将读取计数除以“每百万”比例因子。这针对测序深度进行了归一化，得到每百万次读数（reads per million，RPM）；</li>
+<li>将 RPM 值除以基因的长度，以千碱基为单位，得到RPKM。</li>
 </ol>
-<p>&emsp;&emsp;在更早的科学研究中，人们主要利用芯片杂交平台，预先设计基因探针从而完成测序。下一代测序（Next generation sequencing, NGS）的发展变革了测序方法，实现了单核苷酸水平的精准识别，人们不必预先设计探针，并能探索基因精细、稀有的转录结构。</p>
-<h2 id="基因芯片"><a href="#基因芯片" class="headerlink" title="基因芯片"></a>基因芯片</h2><p>&emsp;&emsp;虽然本文主要介绍RNA-seq这一技术，但实际上RNA-seq的目的和最终获得的数据格式与基因芯片有着相似之处，即都是以数据矩阵的形式呈现。因此，在介绍RNA-seq之前，我们有必要先了解一下基因芯片。</p>
-<ul>
-<li><strong>原理</strong>：基于分子杂交技术，基因芯片主要依赖于印刷有荧光标记的探针来实现。例如，基因组芯片是一种常见的基因芯片类型，它集成了高密度的探针，具有高达几个碱基对到100个碱基对的分辨率。通过将样品与这些探针进行杂交，并使用荧光染料进行显色，可以揭示转录组的信息。这一原理与血浆cfDNA的测定方法非常相似（即使用<strong>分光光度仪</strong>）。</li>
-<li><strong>流程</strong>：<ol>
-<li>标记mRNA或cDNA文库；</li>
-<li>与设计好的探针相杂交；</li>
-<li>洗脱之后，只有与探针特异性结合的cDNA得以保留；</li>
-<li>成像系统拍照捕捉信息；</li>
+<p>&emsp;&emsp;在第二代测序过程中，常采用一种方法将DNA分子打碎成片段（fragment），然后进行测序。在单末端测序中，每个片段对应一个读取序列（Read），而在双末端测序中，每个片段将从两个端点分别进行测序。因此，这两个成对的读取序列对应于同一个片段（虽然偶尔会出现只有一个读取序列与某个片段相对应的情况，这是由于某些原因导致另一个读取序列被排除或丢失了）。在这一点上存在着区别，对于FPKM（每百万片段计数）这一测量指标而言，与同一片段相关联的两个读取序列只被计算为一个读取序列。换句话说，FPKM是基于片段计数，而不是基于读取序列数量计算的，其他计算方法完全相同。<br>&emsp;&emsp;两者计算公式如下：</p>
+<script type="math/tex; mode=display">FPKM = \frac{Read\quad counts}{Mapped\quad reads(Millions)\quad \times \quad Transcript\quad length(KB)}</script><script type="math/tex; mode=display">RPKM = \frac{Read\quad counts(Fragments)}{Mapped\quad reads(Millions)\quad \times \quad Transcript\quad length(KB)}</script><h2 id="TPM"><a href="#TPM" class="headerlink" title="TPM"></a>TPM</h2><p>&emsp;&emsp;TPM（Transcripts Per Million） 是一种常用的基因表达量归一化方法，它将基因的表达量调整为每百万条转录本的数量。TPM 值考虑了基因的长度和测序深度，通过将每个基因的 Counts 值除以其长度，并进行适当的归一化，将基因的表达量转换为每百万转录本数，以便进行样本间的比较和分析。TPM 值消除了样本间测序深度的差异和基因长度的影响，实质上，TPM相当于重新标准化的文库，保证每个样本中所有TPM的总和是相同的。TPM 与 RPKM 和 FPKM 非常相似。唯一的区别是操作顺序。以下是计算 TPM 的方法：</p>
+<ol>
+<li>将读取计数除以每个基因的长度（以千碱基为单位），得到每千碱基读数（reads per kilobase，RPK）；</li>
+<li>计算样本中的所有 RPK 值的和，并将此数字除以 1,000,000，得到如前的“每百万”比例因子；</li>
+<li>将 RPK 值除以“每百万”比例因子，得到TPM。</li>
 </ol>
-</li>
-<li><strong>原始数据</strong>：由仪器对杂交结果照像生成的图片，保存格式为CEL格式；</li>
-<li><strong>参考数据</strong>：基因芯片探针排布的信息，保存为CDF格式；</li>
-<li><strong>优点</strong>：高度集成，易于应用，成本低；</li>
-<li><strong>缺点</strong>：  <ol>
-<li>高度地依赖已知信息；  </li>
-<li>高背景噪音，非特异杂交会带来的<strong>无法分辨弱信号</strong>和<strong>信号过饱和</strong>的问题；  </li>
-<li>在不同样品的比较当中，甚至在同一芯片内部，都存在杂交不均匀带来的各种问题，需要<strong>标准化</strong>等统计学方法来对结果校正；  </li>
-<li>无法对可变剪接进行分析。<br>&emsp;&emsp;数据清洗和标准化我们会在后续章节进行阐述。</li>
+<p>&emsp;&emsp;综上，在计算TPM时，和前述指标唯一的区别是你首先对基因长度进行归一化，然后对测序深度进行归一化。然而，这种差异的影响是相当深远的。<br>&emsp;&emsp;使用 TPM 时，每个示例中所有 TPM 的总和是相同的。这样可以更容易地比较每个样品中映射到基因的reads比例。相比之下，使用RPKM和FPKM，每个样本中归一化读数的总和可能不同，这使得直接比较样本变得更加困难，在某种意义上，TPM降低了样本本身的影响，从而让样本具有可比性，即TPM实际上改进了RPKM/FPKM方法在跨样品间定量的不准确性。<br>&emsp;&emsp;其计算公式如下：</p>
+<script type="math/tex; mode=display">TPM = 10^6 \times \frac{\frac {Read\quad counts}{Transcript \quad length(KB)}}{\Sigma \frac {Read\quad counts}{Transcript \quad length(KB)}}</script><h2 id="适用范围"><a href="#适用范围" class="headerlink" title="适用范围"></a>适用范围</h2><ol>
+<li>如前所述，基于测序计数选择基因定量的方案，如对于10×测序，直接使用原始Count即可；</li>
+<li>对于传统的二代测序，应当进行标准化基因定量：<ol>
+<li>RPKM和FPKM已经不推荐使用（参考：<a href="https://pubmed.ncbi.nlm.nih.gov/22872506/">Measurement of mRNA abundance using RNA-seq data: RPKM measure is inconsistent among samples</a>；<a href="https://academic.oup.com/bib/article/14/6/671/189645">comprehensive evaluation of normalization methods for Illumina high-throughput RNA sequencing data analysis</a>）；</li>
+<li>TPM、DESeq适合组间比较，有研究更推荐DESeq进行组间比较（<a href="https://academic.oup.com/bib/article/14/6/671/189645#1808405">comprehensive evaluation of normalization methods for Illumina high-throughput RNA sequencing data analysis</a>；<a href="https://translational-medicine.biomedcentral.com/articles/10.1186/s12967-021-02936-w#Sec21">TPM, FPKM, or Normalized Counts? A Comparative Study of Quantification Measures for the Analysis of RNA-seq Data from the NCI Patient-Derived Models Repository</a>）。</li>
 </ol>
 </li>
-</ul>
-<h2 id="NGS"><a href="#NGS" class="headerlink" title="NGS"></a>NGS</h2><p>&emsp;&emsp;NGS是一种高通量、高效率的基因组测序技术，它在基因组学和生物学研究中具有广泛的应用。下一代测序相对于传统的Sanger测序方法，具有更快速、更经济、更高通量的特点。</p>
-<ul>
-<li><strong>原理</strong>：将待测DNA样本分离成小片段，并使用特定的方法进行扩增、捕获和测序。然后在高通量平台上进行并行测序，生成大量的序列片段。这些片段随后通过计算和分析，可以重构原始的DNA序列信息。</li>
-<li><strong>步骤</strong>：<ol>
-<li>分离样本中的RNA，反转录为DNA；</li>
-<li>样品制备：DNA样本需要被处理和准备成适合测序的库。这包括DNA提取、片段化和标记等步骤。</li>
-<li>文库构建：将片段化的DNA样本连接到适当的测序适配器上，形成文库。适配器中包含了特定的序列，用于后续的扩增和测序。</li>
-<li>扩增：将文库中的DNA片段进行扩增，通常采用PCR（聚合酶链式反应）方法。扩增后的文库可以包含成百上千万个DNA片段的复制。</li>
-<li>测序：将扩增的文库加载到下一代测序仪中，进行高通量的并行测序。不同的下一代测序技术会使用不同的原理和方法，如Illumina的测序-by-synthesis技术、Ion Torrent的测序-by-detection技术等。</li>
-<li>数据分析：通过计算和分析，将测序仪输出的原始数据转化为DNA序列信息。这包括图像处理、碱基识别、序列拼接、质量控制和变异检测等步骤。<img data-src="./1.png" alt></li>
 </ol>
-</li>
-<li><strong>步骤（细节）</strong> ：<ol>
-<li>目前很多PCR使用的高保真Pfu聚合酶产生的片段末端是平齐的（即没有不配对的碱基）；鸟枪法产生的片段则是随机断裂，其末端可能是平齐的也可能是不平的，那么我们首先可以使用Taq聚合酶补齐不平的末端，在DNA双链的末端（3‘ 端），我们添加突出的A碱基，以为连接接头做准备（Adaptor）；<img data-src="./2.png" alt></li>
-<li>接头有突出的T，上述操作的DNA双链末端有突出的A，恰能配对。通过连接酶将接头连接上到DNA上；</li>
-<li>NEBNext接头是一个U碱基在中间的环形接头，连接上DNA后将U碱基删除，从而形成“Y形“末端；</li>
-<li>接头添加的目的是作为引物实现这些序列的扩增：文库index（Barcode）、PCR引物Rd1 SP/Rd2 SP，以及和测序平台互补的寡核苷酸链扩增（P7、P5）【其中与P5端连接的Index称为Index 2，又称之为i5；与P7端连接的称为Index1，也称为i7】；</li>
-<li>Y形接头的设计，确保了DNA链两端是不配对的碱基序列引物，从而能够结合不同寡核苷酸序列，实现PCR中DNA链两端不会结合同一段序列（index、PCR引物以及和测序平台互补的寡核苷酸链），为后面的桥式扩增做准备；</li>
-<li>Illumina平台的测序技术为基于<strong>基因芯片的边合成边测序</strong>：在Illumina测序平台的流通池（Flow cell）表面（如下图），通过基因芯片技术交错固定了无数条分别文库接头中P5和P7互补的寡核苷酸链（即短核苷酸链），单链化的文库DNA片段进入流通池后，可以与表面的寡核苷酸结合，从而进入测序过程。<img data-src="./3.png" alt></li>
-<li>由于单链DNA的另一端具有不同的接头序列，因此它可以与相邻的另一种寡核苷酸互补配对，从而进行”桥”式扩增。假设第一次配对的接头是P7，一旦复制完成并洗脱模板后，DNA顶端可以与相邻的P5接头互补配对，形成一个”桥”结构。然后，以P5为引物进行复制。复制完成后，再次解链，并与相邻的不同种类接头结合，以进行下一轮复制。这个过程不断重复。25-28个循环完成后，原来散布在表面的核苷酸序列变成散布的DNA簇【何为散布的核苷酸序列？即一开始结合在P5或者P7上的序列】；<img data-src="./4.png" alt></li>
-<li>接着，再次解链线性化，切割并洗去连接在P5上的DNA链，只留下P7上的DNA单链【仅保留正向链，即一开始进入flowcell的模板链】；</li>
-<li>边合成边测序技术：合成过程发出碱基特异荧光信号被捕捉，合成循环数决定读取长度，对于某一特定的DNA簇，相同的DNA链会被同时读取【为什么要用簇？是为了增强信号】。</li>
-<li>接着测序index序列，从而提示样本来源；</li>
-<li>我们接着进行模板链的另一端开始的测序，这一次也能同时完成index2的测序，双端测序有利于纠正首尾错配：步骤是再次桥式扩增（但一次循环就够了），然后如前测序；</li>
-<li>测序完成，按照相同index进行分类，样本内具有相似base call的序列被聚类，正向和反向read被配为连续序列；</li>
-<li>连续序列和参考基因组进行比对，确定基因和突变。</li>
-</ol>
-</li>
-</ul>
-<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>&emsp;&emsp;对实验原理的透彻理解，是数据分析的基础。后续的归一化、标准化等数据清洗要求都是建立在实验原理上。</p>
 <h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
-<li><a href="https://zhuanlan.zhihu.com/p/282790878">第二章：NGS原理解析01：二代测序流程 - 知乎 (zhihu.com)</a></li>
-<li><a href="https://zhuanlan.zhihu.com/p/371040548#:~:text=Index%20%E5%8F%88%E7%A7%B0%20Barcode,%EF%BC%8C%E6%98%AF%E6%88%91%E4%BB%AC%E8%BF%9B%E8%A1%8C%20%E6%96%87%E5%BA%93%E6%B7%B7%E5%90%88%E6%B5%8B%E5%BA%8F%E6%97%B6%E7%94%A8%E4%BA%8E%E6%95%B0%E6%8D%AE%E6%8B%86%E5%88%86%E7%9A%84%E4%B8%80%E4%B8%AA%E6%A0%87%E7%AD%BE%20%EF%BC%8C%E5%85%B6%E4%B8%AD%E4%B8%8EP5%E7%AB%AF%E8%BF%9E%E6%8E%A5%E7%9A%84Index%E7%A7%B0%E4%B8%BAIndex%202%EF%BC%8C%E5%8F%88%E7%A7%B0%E4%B9%8B%E4%B8%BAi5%EF%BC%9B%E4%B8%8EP7%E7%AB%AF%E8%BF%9E%E6%8E%A5%E7%9A%84%E7%A7%B0%E4%B8%BAIndex1%EF%BC%8C%E4%B9%9F%E7%A7%B0%E4%B8%BAi7%E3%80%82">干货 | Index这件小事，你get了吗？ - 知乎 (zhihu.com)</a></li>
-<li><a href="https://microbeonline.com/next-generation-sequencing/">Next Generation Sequencing: Principle, Steps Involved, and Applications • Microbe Online</a></li>
-<li><a href="https://www.thermofisher.com/us/en/home/life-science/cloning/cloning-learning-center/invitrogen-school-of-molecular-biology/next-generation-sequencing/illumina-workflow.html">Next-Generation Sequencing Illumina Workflow–4 Key Steps | Thermo Fisher Scientific - US</a></li>
+<li><a href="https://pubmed.ncbi.nlm.nih.gov/22872506/">Measurement of mRNA abundance using RNA-seq data: RPKM measure is inconsistent among samples</a></li>
+<li><a href="https://academic.oup.com/bib/article/14/6/671/189645">comprehensive evaluation of normalization methods for Illumina high-throughput RNA sequencing data analysis</a></li>
+<li><a href="https://translational-medicine.biomedcentral.com/articles/10.1186/s12967-021-02936-w#Sec21">TPM, FPKM, or Normalized Counts? A Comparative Study of Quantification Measures for the Analysis of RNA-seq Data from the NCI Patient-Derived Models Repository</a></li>
+<li><a href="https://kb.10xgenomics.com/hc/en-us/articles/115003684783-Should-I-calculate-TPM-RPKM-or-FPKM-instead-of-counts-for-10x-Genomics-data">Should I calculate TPM, RPKM or FPKM, instead of counts for 10x Genomics data? – 10X Genomics</a></li>
+<li><a href="https://www.rna-seqblog.com/rpkm-fpkm-and-tpm-clearly-explained/">RPKM, FPKM and TPM, clearly explained | RNA-Seq Blog</a></li>
 </ol>
 ]]></content>
       <categories>
@@ -2041,6 +2007,7 @@
       <tags>
         <tag>生物信息学</tag>
         <tag>转录组学</tag>
+        <tag>计数</tag>
       </tags>
   </entry>
   <entry>
@@ -2124,6 +2091,83 @@
       </tags>
   </entry>
   <entry>
+    <title>生物信息学笔记（一）：转录组测序技术</title>
+    <url>/2024/02/05/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E8%BD%AC%E5%BD%95%E7%BB%84%E6%B5%8B%E5%BA%8F%E6%8A%80%E6%9C%AF/</url>
+    <content><![CDATA[<h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>&emsp;&emsp;<strong>转录组</strong>是特定组织或细胞在某一发育阶段或功能状态下转录出来的所有RNA的集合，包括编码蛋白质的mRNA和非编码RNA（non coding RNA, ncRNA）。<strong>转录组测序</strong>是指利用第二代高通量测序技术进行<strong>cDNA</strong>测序，全面快速地获取某一物种特定器官或组织在某一状态下的几乎所有转录本。</p>
+<p>&emsp;&emsp;转录组分析的主要目标是：</p>
+<ol>
+<li>对所有的转录产物进行分类；</li>
+<li>确定基因的转录结构，如其起始位点，5′和3′末端，剪接模式和其他转录后修饰；</li>
+<li>量化各转录本在发育过程中和不同条件下(如生理/病理)表达水平的变化。</li>
+</ol>
+<p>&emsp;&emsp;在更早的科学研究中，人们主要利用芯片杂交平台，预先设计基因探针从而完成测序。下一代测序（Next generation sequencing, NGS）的发展变革了测序方法，实现了单核苷酸水平的精准识别，人们不必预先设计探针，并能探索基因精细、稀有的转录结构。</p>
+<h2 id="基因芯片"><a href="#基因芯片" class="headerlink" title="基因芯片"></a>基因芯片</h2><p>&emsp;&emsp;虽然本文主要介绍RNA-seq这一技术，但实际上RNA-seq的目的和最终获得的数据格式与基因芯片有着相似之处，即都是以数据矩阵的形式呈现。因此，在介绍RNA-seq之前，我们有必要先了解一下基因芯片。</p>
+<ul>
+<li><strong>原理</strong>：基于分子杂交技术，基因芯片主要依赖于印刷有荧光标记的探针来实现。例如，基因组芯片是一种常见的基因芯片类型，它集成了高密度的探针，具有高达几个碱基对到100个碱基对的分辨率。通过将样品与这些探针进行杂交，并使用荧光染料进行显色，可以揭示转录组的信息。这一原理与血浆cfDNA的测定方法非常相似（即使用<strong>分光光度仪</strong>）。</li>
+<li><strong>流程</strong>：<ol>
+<li>标记mRNA或cDNA文库；</li>
+<li>与设计好的探针相杂交；</li>
+<li>洗脱之后，只有与探针特异性结合的cDNA得以保留；</li>
+<li>成像系统拍照捕捉信息；</li>
+</ol>
+</li>
+<li><strong>原始数据</strong>：由仪器对杂交结果照像生成的图片，保存格式为CEL格式；</li>
+<li><strong>参考数据</strong>：基因芯片探针排布的信息，保存为CDF格式；</li>
+<li><strong>优点</strong>：高度集成，易于应用，成本低；</li>
+<li><strong>缺点</strong>：  <ol>
+<li>高度地依赖已知信息；  </li>
+<li>高背景噪音，非特异杂交会带来的<strong>无法分辨弱信号</strong>和<strong>信号过饱和</strong>的问题；  </li>
+<li>在不同样品的比较当中，甚至在同一芯片内部，都存在杂交不均匀带来的各种问题，需要<strong>标准化</strong>等统计学方法来对结果校正；  </li>
+<li>无法对可变剪接进行分析。<br>&emsp;&emsp;数据清洗和标准化我们会在后续章节进行阐述。</li>
+</ol>
+</li>
+</ul>
+<h2 id="NGS"><a href="#NGS" class="headerlink" title="NGS"></a>NGS</h2><p>&emsp;&emsp;NGS是一种高通量、高效率的基因组测序技术，它在基因组学和生物学研究中具有广泛的应用。下一代测序相对于传统的Sanger测序方法，具有更快速、更经济、更高通量的特点。</p>
+<ul>
+<li><strong>原理</strong>：将待测DNA样本分离成小片段，并使用特定的方法进行扩增、捕获和测序。然后在高通量平台上进行并行测序，生成大量的序列片段。这些片段随后通过计算和分析，可以重构原始的DNA序列信息。</li>
+<li><strong>步骤</strong>：<ol>
+<li>分离样本中的RNA，反转录为DNA；</li>
+<li>样品制备：DNA样本需要被处理和准备成适合测序的库。这包括DNA提取、片段化和标记等步骤。</li>
+<li>文库构建：将片段化的DNA样本连接到适当的测序适配器上，形成文库。适配器中包含了特定的序列，用于后续的扩增和测序。</li>
+<li>扩增：将文库中的DNA片段进行扩增，通常采用PCR（聚合酶链式反应）方法。扩增后的文库可以包含成百上千万个DNA片段的复制。</li>
+<li>测序：将扩增的文库加载到下一代测序仪中，进行高通量的并行测序。不同的下一代测序技术会使用不同的原理和方法，如Illumina的测序-by-synthesis技术、Ion Torrent的测序-by-detection技术等。</li>
+<li>数据分析：通过计算和分析，将测序仪输出的原始数据转化为DNA序列信息。这包括图像处理、碱基识别、序列拼接、质量控制和变异检测等步骤。<img data-src="./1.png" alt></li>
+</ol>
+</li>
+<li><strong>步骤（细节）</strong> ：<ol>
+<li>目前很多PCR使用的高保真Pfu聚合酶产生的片段末端是平齐的（即没有不配对的碱基）；鸟枪法产生的片段则是随机断裂，其末端可能是平齐的也可能是不平的，那么我们首先可以使用Taq聚合酶补齐不平的末端，在DNA双链的末端（3‘ 端），我们添加突出的A碱基，以为连接接头做准备（Adaptor）；<img data-src="./2.png" alt></li>
+<li>接头有突出的T，上述操作的DNA双链末端有突出的A，恰能配对。通过连接酶将接头连接上到DNA上；</li>
+<li>NEBNext接头是一个U碱基在中间的环形接头，连接上DNA后将U碱基删除，从而形成“Y形“末端；</li>
+<li>接头添加的目的是作为引物实现这些序列的扩增：文库index（Barcode）、PCR引物Rd1 SP/Rd2 SP，以及和测序平台互补的寡核苷酸链扩增（P7、P5）【其中与P5端连接的Index称为Index 2，又称之为i5；与P7端连接的称为Index1，也称为i7】；</li>
+<li>Y形接头的设计，确保了DNA链两端是不配对的碱基序列引物，从而能够结合不同寡核苷酸序列，实现PCR中DNA链两端不会结合同一段序列（index、PCR引物以及和测序平台互补的寡核苷酸链），为后面的桥式扩增做准备；</li>
+<li>Illumina平台的测序技术为基于<strong>基因芯片的边合成边测序</strong>：在Illumina测序平台的流通池（Flow cell）表面（如下图），通过基因芯片技术交错固定了无数条分别文库接头中P5和P7互补的寡核苷酸链（即短核苷酸链），单链化的文库DNA片段进入流通池后，可以与表面的寡核苷酸结合，从而进入测序过程。<img data-src="./3.png" alt></li>
+<li>由于单链DNA的另一端具有不同的接头序列，因此它可以与相邻的另一种寡核苷酸互补配对，从而进行”桥”式扩增。假设第一次配对的接头是P7，一旦复制完成并洗脱模板后，DNA顶端可以与相邻的P5接头互补配对，形成一个”桥”结构。然后，以P5为引物进行复制。复制完成后，再次解链，并与相邻的不同种类接头结合，以进行下一轮复制。这个过程不断重复。25-28个循环完成后，原来散布在表面的核苷酸序列变成散布的DNA簇【何为散布的核苷酸序列？即一开始结合在P5或者P7上的序列】；<img data-src="./4.png" alt></li>
+<li>接着，再次解链线性化，切割并洗去连接在P5上的DNA链，只留下P7上的DNA单链【仅保留正向链，即一开始进入flowcell的模板链】；</li>
+<li>边合成边测序技术：合成过程发出碱基特异荧光信号被捕捉，合成循环数决定读取长度，对于某一特定的DNA簇，相同的DNA链会被同时读取【为什么要用簇？是为了增强信号】。</li>
+<li>接着测序index序列，从而提示样本来源；</li>
+<li>我们接着进行模板链的另一端开始的测序，这一次也能同时完成index2的测序，双端测序有利于纠正首尾错配：步骤是再次桥式扩增（但一次循环就够了），然后如前测序；</li>
+<li>测序完成，按照相同index进行分类，样本内具有相似base call的序列被聚类，正向和反向read被配为连续序列；</li>
+<li>连续序列和参考基因组进行比对，确定基因和突变。</li>
+</ol>
+</li>
+</ul>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>&emsp;&emsp;对实验原理的透彻理解，是数据分析的基础。后续的归一化、标准化等数据清洗要求都是建立在实验原理上。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a href="https://zhuanlan.zhihu.com/p/282790878">第二章：NGS原理解析01：二代测序流程 - 知乎 (zhihu.com)</a></li>
+<li><a href="https://zhuanlan.zhihu.com/p/371040548#:~:text=Index%20%E5%8F%88%E7%A7%B0%20Barcode,%EF%BC%8C%E6%98%AF%E6%88%91%E4%BB%AC%E8%BF%9B%E8%A1%8C%20%E6%96%87%E5%BA%93%E6%B7%B7%E5%90%88%E6%B5%8B%E5%BA%8F%E6%97%B6%E7%94%A8%E4%BA%8E%E6%95%B0%E6%8D%AE%E6%8B%86%E5%88%86%E7%9A%84%E4%B8%80%E4%B8%AA%E6%A0%87%E7%AD%BE%20%EF%BC%8C%E5%85%B6%E4%B8%AD%E4%B8%8EP5%E7%AB%AF%E8%BF%9E%E6%8E%A5%E7%9A%84Index%E7%A7%B0%E4%B8%BAIndex%202%EF%BC%8C%E5%8F%88%E7%A7%B0%E4%B9%8B%E4%B8%BAi5%EF%BC%9B%E4%B8%8EP7%E7%AB%AF%E8%BF%9E%E6%8E%A5%E7%9A%84%E7%A7%B0%E4%B8%BAIndex1%EF%BC%8C%E4%B9%9F%E7%A7%B0%E4%B8%BAi7%E3%80%82">干货 | Index这件小事，你get了吗？ - 知乎 (zhihu.com)</a></li>
+<li><a href="https://microbeonline.com/next-generation-sequencing/">Next Generation Sequencing: Principle, Steps Involved, and Applications • Microbe Online</a></li>
+<li><a href="https://www.thermofisher.com/us/en/home/life-science/cloning/cloning-learning-center/invitrogen-school-of-molecular-biology/next-generation-sequencing/illumina-workflow.html">Next-Generation Sequencing Illumina Workflow–4 Key Steps | Thermo Fisher Scientific - US</a></li>
+</ol>
+]]></content>
+      <categories>
+        <category>生物信息学</category>
+      </categories>
+      <tags>
+        <tag>生物信息学</tag>
+        <tag>转录组学</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>网络爬虫自动获取教务处最新通知</title>
     <url>/2024/03/19/%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB%E8%87%AA%E5%8A%A8%E8%8E%B7%E5%8F%96%E6%95%99%E5%8A%A1%E5%A4%84%E6%9C%80%E6%96%B0%E9%80%9A%E7%9F%A5/</url>
     <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>&emsp;&emsp;在日常学习和工作中，及时获取学校教务处的最新通知非常重要。本文介绍了如何使用Python编写一个自动化脚本，该脚本能够爬取教务处网站的最新通知公告，并通过邮件发送给指定的收件人。这样，我们就可以在第一时间内获取到重要信息，不错过任何关键的通知或更新。<br>&emsp;&emsp;欢迎来给俺个星星✨！<a href="https://github.com/ForrestGump618/Notification_NMU">ForrestGump618/Notification_NMU</a>。</p>
@@ -2155,83 +2199,8 @@
         <category>随笔</category>
       </categories>
       <tags>
-        <tag>计算机</tag>
         <tag>python</tag>
-        <tag>随笔</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>生物信息学笔记（三）：基因定量</title>
-    <url>/2024/02/16/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89%EF%BC%9A%E5%9F%BA%E5%9B%A0%E5%AE%9A%E9%87%8F/</url>
-    <content><![CDATA[<h2 id="为什么要对进行基因定量"><a href="#为什么要对进行基因定量" class="headerlink" title="为什么要对进行基因定量"></a>为什么要对进行基因定量</h2><p>&emsp;&emsp;转录组数据分析中，一个转录本反转录后的cDNA会被打碎成片段测序并和基因组比对，就会导致长转录本在给定的cDNA长度下可能会映射更多的cDNA，也就是说基因长度会影响Reads数。<br>&emsp;&emsp;测序深度是指测序过程中每个碱基被测序的平均次数，其计算公式为：$\frac{Reads数*Read长度}{参考序列长度}$：例如，对长100bp的目标区域进行捕获测序：采用单端测序，每个read长5bp；总共得到了200个reads；把所有的reads比对到目标区域后，100bp的目标区域中有98bp的位置至少有1个read覆盖到，换言之，剩余的2bp没有1个read覆盖。则测序深度为 200 x 5 / 100 = 10 我们说这此测序的深度为10X。显而易见，若测序越深，则对于相同长度的转录本，测序所得的Reads数更多。<br>&emsp;&emsp;综上所述，测序深度、基因长度和Reads数相关，所以需要在最终基因表达计数中去除相应的影响。注意，在基因定量的过程中，可能会由于样本本身的原因，如某个基因Reads数过高，导致基因定量后其他基因的表达量低于实际情况，这也是基因定量过程中需要去考虑的。</p>
-<h2 id="Raw-count"><a href="#Raw-count" class="headerlink" title="Raw count"></a>Raw count</h2><p>&emsp;&emsp;所谓Raw count，又称为count数，和上一部分所说的Reads数是同一概念，是指和参考序列比对上的序列数目。原始的读取计数矩阵使用Raw count作为基础，但由于不同基因的长度和测序深度存在差异，因此无法直接比较。为了消除技术偏差的影响并赋予后续差异分析以统计学意义，需要对这些基因计数矩阵进行标准化处理，将其转化为相对值。<br>&emsp;&emsp;但注意，我们进行基因定量时需要充分考虑测序技术和原理，如在 10x 基因组学基因表达检测中，每个转录本都标有作为唯一分子标识符 （unique molecular identifier，UMI） 的序列。这些 UMI 能够准确定量基因表达水平，因为我们可以分辨出哪些读段是从同一个 mRNA 分子中产生的。因此，Cell Ranger 和 Space Ranger 执行 UMI 计数（不是读取计数）以测量基因表达水平，并且所有二次分析步骤都基于 UMI 计数执行。在传统的RNA-seq数据中，完整的转录本被片段化，然后进行cDNA合成、末端修复和衔接连接。在此工作流程中，从长转录本中采样片段的概率高于从短转录本中采样的概率。因此，按转录本长度（例如，TPM、RPKM、FPKM）对读取计数进行归一化是有意义的。然而，在 10x 基因表达测定中，这种基因长度偏差并不存在。因此，不建议按基因长度对UMI计数进行归一化。</p>
-<h2 id="RPKM-FPKM"><a href="#RPKM-FPKM" class="headerlink" title="RPKM/FPKM"></a>RPKM/FPKM</h2><p>&emsp;&emsp;RPKM (Reads Per Kilobase of exon model per Million mapped reads)：每千个碱基的转录每百万映射读取的reads数，是针对单端测序的基因定量方法；FPKM (Fragment Per Kilobase of transcript, per Million mapped reads)：每千碱基片段每百万映射读取的 reads 数，是针对双端测序的基因定量方法。<br>&emsp;&emsp;以RPKM为例，其操作方法为：</p>
-<ol>
-<li>计算样本中的总读数，然后将该数字除以 1,000,000——这是“每百万”比例因子；</li>
-<li>将读取计数除以“每百万”比例因子。这针对测序深度进行了归一化，得到每百万次读数（reads per million，RPM）；</li>
-<li>将 RPM 值除以基因的长度，以千碱基为单位，得到RPKM。</li>
-</ol>
-<p>&emsp;&emsp;在第二代测序过程中，常采用一种方法将DNA分子打碎成片段（fragment），然后进行测序。在单末端测序中，每个片段对应一个读取序列（Read），而在双末端测序中，每个片段将从两个端点分别进行测序。因此，这两个成对的读取序列对应于同一个片段（虽然偶尔会出现只有一个读取序列与某个片段相对应的情况，这是由于某些原因导致另一个读取序列被排除或丢失了）。在这一点上存在着区别，对于FPKM（每百万片段计数）这一测量指标而言，与同一片段相关联的两个读取序列只被计算为一个读取序列。换句话说，FPKM是基于片段计数，而不是基于读取序列数量计算的，其他计算方法完全相同。<br>&emsp;&emsp;两者计算公式如下：</p>
-<script type="math/tex; mode=display">FPKM = \frac{Read\quad counts}{Mapped\quad reads(Millions)\quad \times \quad Transcript\quad length(KB)}</script><script type="math/tex; mode=display">RPKM = \frac{Read\quad counts(Fragments)}{Mapped\quad reads(Millions)\quad \times \quad Transcript\quad length(KB)}</script><h2 id="TPM"><a href="#TPM" class="headerlink" title="TPM"></a>TPM</h2><p>&emsp;&emsp;TPM（Transcripts Per Million） 是一种常用的基因表达量归一化方法，它将基因的表达量调整为每百万条转录本的数量。TPM 值考虑了基因的长度和测序深度，通过将每个基因的 Counts 值除以其长度，并进行适当的归一化，将基因的表达量转换为每百万转录本数，以便进行样本间的比较和分析。TPM 值消除了样本间测序深度的差异和基因长度的影响，实质上，TPM相当于重新标准化的文库，保证每个样本中所有TPM的总和是相同的。TPM 与 RPKM 和 FPKM 非常相似。唯一的区别是操作顺序。以下是计算 TPM 的方法：</p>
-<ol>
-<li>将读取计数除以每个基因的长度（以千碱基为单位），得到每千碱基读数（reads per kilobase，RPK）；</li>
-<li>计算样本中的所有 RPK 值的和，并将此数字除以 1,000,000，得到如前的“每百万”比例因子；</li>
-<li>将 RPK 值除以“每百万”比例因子，得到TPM。</li>
-</ol>
-<p>&emsp;&emsp;综上，在计算TPM时，和前述指标唯一的区别是你首先对基因长度进行归一化，然后对测序深度进行归一化。然而，这种差异的影响是相当深远的。<br>&emsp;&emsp;使用 TPM 时，每个示例中所有 TPM 的总和是相同的。这样可以更容易地比较每个样品中映射到基因的reads比例。相比之下，使用RPKM和FPKM，每个样本中归一化读数的总和可能不同，这使得直接比较样本变得更加困难，在某种意义上，TPM降低了样本本身的影响，从而让样本具有可比性，即TPM实际上改进了RPKM/FPKM方法在跨样品间定量的不准确性。<br>&emsp;&emsp;其计算公式如下：</p>
-<script type="math/tex; mode=display">TPM = 10^6 \times \frac{\frac {Read\quad counts}{Transcript \quad length(KB)}}{\Sigma \frac {Read\quad counts}{Transcript \quad length(KB)}}</script><h2 id="适用范围"><a href="#适用范围" class="headerlink" title="适用范围"></a>适用范围</h2><ol>
-<li>如前所述，基于测序计数选择基因定量的方案，如对于10×测序，直接使用原始Count即可；</li>
-<li>对于传统的二代测序，应当进行标准化基因定量：<ol>
-<li>RPKM和FPKM已经不推荐使用（参考：<a href="https://pubmed.ncbi.nlm.nih.gov/22872506/">Measurement of mRNA abundance using RNA-seq data: RPKM measure is inconsistent among samples</a>；<a href="https://academic.oup.com/bib/article/14/6/671/189645">comprehensive evaluation of normalization methods for Illumina high-throughput RNA sequencing data analysis</a>）；</li>
-<li>TPM、DESeq适合组间比较，有研究更推荐DESeq进行组间比较（<a href="https://academic.oup.com/bib/article/14/6/671/189645#1808405">comprehensive evaluation of normalization methods for Illumina high-throughput RNA sequencing data analysis</a>；<a href="https://translational-medicine.biomedcentral.com/articles/10.1186/s12967-021-02936-w#Sec21">TPM, FPKM, or Normalized Counts? A Comparative Study of Quantification Measures for the Analysis of RNA-seq Data from the NCI Patient-Derived Models Repository</a>）。</li>
-</ol>
-</li>
-</ol>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
-<li><a href="https://pubmed.ncbi.nlm.nih.gov/22872506/">Measurement of mRNA abundance using RNA-seq data: RPKM measure is inconsistent among samples</a></li>
-<li><a href="https://academic.oup.com/bib/article/14/6/671/189645">comprehensive evaluation of normalization methods for Illumina high-throughput RNA sequencing data analysis</a></li>
-<li><a href="https://translational-medicine.biomedcentral.com/articles/10.1186/s12967-021-02936-w#Sec21">TPM, FPKM, or Normalized Counts? A Comparative Study of Quantification Measures for the Analysis of RNA-seq Data from the NCI Patient-Derived Models Repository</a></li>
-<li><a href="https://kb.10xgenomics.com/hc/en-us/articles/115003684783-Should-I-calculate-TPM-RPKM-or-FPKM-instead-of-counts-for-10x-Genomics-data">Should I calculate TPM, RPKM or FPKM, instead of counts for 10x Genomics data? – 10X Genomics</a></li>
-<li><a href="https://www.rna-seqblog.com/rpkm-fpkm-and-tpm-clearly-explained/">RPKM, FPKM and TPM, clearly explained | RNA-Seq Blog</a></li>
-</ol>
-]]></content>
-      <categories>
-        <category>生物信息学</category>
-      </categories>
-      <tags>
-        <tag>生物信息学</tag>
-        <tag>转录组学</tag>
-        <tag>计数</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>能解答一切的答案</title>
-    <url>/2024/03/07/%E8%83%BD%E8%A7%A3%E7%AD%94%E4%B8%80%E5%88%87%E7%9A%84%E7%AD%94%E6%A1%88/</url>
-    <content><![CDATA[<p>&emsp;&emsp;医学所以成为医学，是因为什么？医学中能解答一切问题的答案又来自哪里？是技术还是人文？</p>
-<p>&emsp;&emsp;科技的迅速发展，带来了医学的巨大进步。从前我们将希波克拉底的“体液说”奉为圭臬，到今天有了从分子层面体系完备的生理科学；从感冒腹泻夺走人的生命，到今天疑难杂症的治愈变成可能；从前的医学不过经验，而今天的医学可以层层剖析病理。似乎只要有了技术，医学就可以解决所有的问题。 以至于今天的人们都把健康寄托于技术、生命寄托于未来。看着科学主义的日渐泛滥，我也不禁发问：医学的人文宗旨，在今天这个时代是不是已经过时了呢？</p>
-<p>&emsp;&emsp;本世纪初发表的《医师宣言》中明确指出：“将患者利益放在首位。这一原则是建立在为患者服务的基础上。信任是医患关系的核心，而利他主义是这种信任的基础。一切力量都不能影响这一原则。”古今中外的医学巨匠一再肯定这样的医学属性和人文精神。从药王孙思邈一篇《大医精诚》——“凡大医治病，必当安神定志，无欲无求，先发大慈恻隐之心，誓愿普救含灵之苦”，到特鲁多闻名遐迩的三句“有时去治愈，常常去帮助，总是去安慰”。这种医学传统，是医学长期发展形成的，是医学内在的，是医学的本性，不是外在强加于医学的，在任何时候也是不应当去改变的。如果用技术至上的思想远离对生命的关爱和对人的关怀，背离医学救人生命的人文宗旨，医学就不是医学，甚至走向医学的反面。</p>
-<p>&emsp;&emsp;所以说，医学的人文宗旨，不但没有过时，甚至是医学的灵魂所在。</p>
-<p>&emsp;&emsp;高三时读过一篇关乎“语言”的高考作文——《达芬奇密码》。这篇作文构建出一个依赖于人文而存在的科学殿堂，当时的我对此不以为然，甚至认为这篇作文不过是唯心主义。一年后在医学导论的课堂上，当我听到丁教授和王教授两位院长讲授医学的起源、目的和现代临床医疗的准则时，我又回想起这篇文章，才逐渐明白——失去了人文底色的科学不过是机械、冰冷的器物，作为客观世界真理的科学技术也不能无限制的扩张，不能代替人们的情感和信仰。撒尔顿说：“向科学注入人文精神，唤醒科学不要忘记人和爱，不要忘记自身存在的根本”，此言得之。回到医学这样一个具有极高道德属性的学科，医学人文宗旨的重要性不言而喻。</p>
-<p>&emsp;&emsp;科学意味求真；而人文意味求善。求真的目的是求善。理论物理学家杨振宁先生强调：“科学研究的最终价值不会取决与为了科学的科学，而是取决与科学是否对人类有益“。为了善念而去的医学才能真正做有益于人类的事，为了善念，一个医生才会真正地精诚于学术，博学至精。</p>
-<p>&emsp;&emsp;医学起源于祛除病痛的执着信仰，由此才有无数医家的探索。今天的医学依然适用这一亘古不变的准则。医学成为医学，是因为医学有温度。医学的魅力不是有多么先进的技术，而是从内心给出的真心、正义和同理，尤其对于今天这样一个时代。解决一切医学问题的答案也许有很多，但根本都在于明德至善。</p>
-<p>&emsp;&emsp;虽然，我依然坚信，这个美丽宇宙的唯一真理是科学，刘慈欣的《朝闻道》中写“没有科学的世界，我的心脏都懒得跳动”深得我心。但今天讨论的问题，是有时代和职业语境的。市场经济的发展，让技术的作用被神话了，拉大了医患之间的距离，恶化了医疗环境，在这个时候，犹需要在科学发展之外，多一份理想情怀。</p>
-<p>&emsp;&emsp;偶尔会去思考我会成为一个什么样的医生。不知道会不会像王娟院长一样会在医院关门的时候会心软给迟到的病人看病，也不知道会不会像王锦帆教授说的那样用自己一句加油的话就能把一个人从鬼门关拉回来，或者像丁义涛院长死马当活马医救回来一个现在天天一起打惯蛋的好友……嗯，我还不知道，但我希望我按照热力学第二定律回归大地之前，可以经历这些温暖而可爱的时刻，这些时刻，就是对问题最好的答案。</p>
-<p><strong>【医学导论课的感动瞬间】</strong></p>
-<p>怎么说，这是一门特殊的课，虽然有着让人一言难尽而又抓狂的考核标准，自己的笔记也日渐粗糙。但是在听大医们的开讲中，收获了很多新的想法，遇到了不少鼻头一酸的时刻，这也是一种独特的体验吧？</p>
-<ol>
-<li>王虹院长：“本来这个时候我应该下班了，但是你看到那个病人在那你是无法拒绝的，医者仁心啊……“（以后我会不会也有这样的想法？）</li>
-<li>王锦帆教授：“言语对于一名医生很重要，很多时候一个快死的病人，也许就是听见你的一声鼓励，潜意识中就有了活下去的勇气，这个病人就挺过来了。“（在这句话之前，科学主义一直占据着我的思想，这句话之后，我开始真正思考人文的作用。）</li>
-<li>丁义涛院长：“那个主任现在说我是他的救命恩人，天天找我约掼蛋。“（医生的幸福感和成就感大概就是这个时候吧？）</li>
-<li>王虹院长：“医生的群体都是向善的，医生的价值不是赚钱，金钱买不到我们得到行业精神，医生的价值就是救人。“（对这个职业充满了自豪感，突然想起高三班主任在班级前面贴的毛笔字”德业双馨、成名成家“，对医生而言适合不过。）</li>
-<li>王虹院长：“做医生，一辈子都要吃苦。“（愿苦中作乐）</li>
-</ol>
-<p>……</p>
-<p>2020年12月18日</p>
-]]></content>
-      <categories>
-        <category>随笔</category>
-      </categories>
-      <tags>
+        <tag>计算机</tag>
         <tag>随笔</tag>
       </tags>
   </entry>
@@ -2263,6 +2232,37 @@
       <tags>
         <tag>统计学</tag>
         <tag>交叉学科</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>能解答一切的答案</title>
+    <url>/2024/03/07/%E8%83%BD%E8%A7%A3%E7%AD%94%E4%B8%80%E5%88%87%E7%9A%84%E7%AD%94%E6%A1%88/</url>
+    <content><![CDATA[<p>&emsp;&emsp;医学所以成为医学，是因为什么？医学中能解答一切问题的答案又来自哪里？是技术还是人文？</p>
+<p>&emsp;&emsp;科技的迅速发展，带来了医学的巨大进步。从前我们将希波克拉底的“体液说”奉为圭臬，到今天有了从分子层面体系完备的生理科学；从感冒腹泻夺走人的生命，到今天疑难杂症的治愈变成可能；从前的医学不过经验，而今天的医学可以层层剖析病理。似乎只要有了技术，医学就可以解决所有的问题。 以至于今天的人们都把健康寄托于技术、生命寄托于未来。看着科学主义的日渐泛滥，我也不禁发问：医学的人文宗旨，在今天这个时代是不是已经过时了呢？</p>
+<p>&emsp;&emsp;本世纪初发表的《医师宣言》中明确指出：“将患者利益放在首位。这一原则是建立在为患者服务的基础上。信任是医患关系的核心，而利他主义是这种信任的基础。一切力量都不能影响这一原则。”古今中外的医学巨匠一再肯定这样的医学属性和人文精神。从药王孙思邈一篇《大医精诚》——“凡大医治病，必当安神定志，无欲无求，先发大慈恻隐之心，誓愿普救含灵之苦”，到特鲁多闻名遐迩的三句“有时去治愈，常常去帮助，总是去安慰”。这种医学传统，是医学长期发展形成的，是医学内在的，是医学的本性，不是外在强加于医学的，在任何时候也是不应当去改变的。如果用技术至上的思想远离对生命的关爱和对人的关怀，背离医学救人生命的人文宗旨，医学就不是医学，甚至走向医学的反面。</p>
+<p>&emsp;&emsp;所以说，医学的人文宗旨，不但没有过时，甚至是医学的灵魂所在。</p>
+<p>&emsp;&emsp;高三时读过一篇关乎“语言”的高考作文——《达芬奇密码》。这篇作文构建出一个依赖于人文而存在的科学殿堂，当时的我对此不以为然，甚至认为这篇作文不过是唯心主义。一年后在医学导论的课堂上，当我听到丁教授和王教授两位院长讲授医学的起源、目的和现代临床医疗的准则时，我又回想起这篇文章，才逐渐明白——失去了人文底色的科学不过是机械、冰冷的器物，作为客观世界真理的科学技术也不能无限制的扩张，不能代替人们的情感和信仰。撒尔顿说：“向科学注入人文精神，唤醒科学不要忘记人和爱，不要忘记自身存在的根本”，此言得之。回到医学这样一个具有极高道德属性的学科，医学人文宗旨的重要性不言而喻。</p>
+<p>&emsp;&emsp;科学意味求真；而人文意味求善。求真的目的是求善。理论物理学家杨振宁先生强调：“科学研究的最终价值不会取决与为了科学的科学，而是取决与科学是否对人类有益“。为了善念而去的医学才能真正做有益于人类的事，为了善念，一个医生才会真正地精诚于学术，博学至精。</p>
+<p>&emsp;&emsp;医学起源于祛除病痛的执着信仰，由此才有无数医家的探索。今天的医学依然适用这一亘古不变的准则。医学成为医学，是因为医学有温度。医学的魅力不是有多么先进的技术，而是从内心给出的真心、正义和同理，尤其对于今天这样一个时代。解决一切医学问题的答案也许有很多，但根本都在于明德至善。</p>
+<p>&emsp;&emsp;虽然，我依然坚信，这个美丽宇宙的唯一真理是科学，刘慈欣的《朝闻道》中写“没有科学的世界，我的心脏都懒得跳动”深得我心。但今天讨论的问题，是有时代和职业语境的。市场经济的发展，让技术的作用被神话了，拉大了医患之间的距离，恶化了医疗环境，在这个时候，犹需要在科学发展之外，多一份理想情怀。</p>
+<p>&emsp;&emsp;偶尔会去思考我会成为一个什么样的医生。不知道会不会像王娟院长一样会在医院关门的时候会心软给迟到的病人看病，也不知道会不会像王锦帆教授说的那样用自己一句加油的话就能把一个人从鬼门关拉回来，或者像丁义涛院长死马当活马医救回来一个现在天天一起打惯蛋的好友……嗯，我还不知道，但我希望我按照热力学第二定律回归大地之前，可以经历这些温暖而可爱的时刻，这些时刻，就是对问题最好的答案。</p>
+<p><strong>【医学导论课的感动瞬间】</strong></p>
+<p>怎么说，这是一门特殊的课，虽然有着让人一言难尽而又抓狂的考核标准，自己的笔记也日渐粗糙。但是在听大医们的开讲中，收获了很多新的想法，遇到了不少鼻头一酸的时刻，这也是一种独特的体验吧？</p>
+<ol>
+<li>王虹院长：“本来这个时候我应该下班了，但是你看到那个病人在那你是无法拒绝的，医者仁心啊……“（以后我会不会也有这样的想法？）</li>
+<li>王锦帆教授：“言语对于一名医生很重要，很多时候一个快死的病人，也许就是听见你的一声鼓励，潜意识中就有了活下去的勇气，这个病人就挺过来了。“（在这句话之前，科学主义一直占据着我的思想，这句话之后，我开始真正思考人文的作用。）</li>
+<li>丁义涛院长：“那个主任现在说我是他的救命恩人，天天找我约掼蛋。“（医生的幸福感和成就感大概就是这个时候吧？）</li>
+<li>王虹院长：“医生的群体都是向善的，医生的价值不是赚钱，金钱买不到我们得到行业精神，医生的价值就是救人。“（对这个职业充满了自豪感，突然想起高三班主任在班级前面贴的毛笔字”德业双馨、成名成家“，对医生而言适合不过。）</li>
+<li>王虹院长：“做医生，一辈子都要吃苦。“（愿苦中作乐）</li>
+</ol>
+<p>……</p>
+<p>2020年12月18日</p>
+]]></content>
+      <categories>
+        <category>随笔</category>
+      </categories>
+      <tags>
+        <tag>随笔</tag>
       </tags>
   </entry>
 </search>
