@@ -26,20 +26,22 @@
   </script>
 
 
-  <meta name="description" content="冰棒汽水的味道，一个夏天的年少。">
-<meta property="og:type" content="website">
-<meta property="og:title" content="一个夏天的年少">
-<meta property="og:url" content="https://www.zhuangqingyuan.site/categories/%E6%B5%81%E8%A1%8C%E7%97%85%E5%AD%A6/index.html">
+  <meta name="description" content="参考教材《动手学深度学习》">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深度学习笔记（一）：线性回归">
+<meta property="og:url" content="https://www.zhuangqingyuan.site/2024/03/30/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/index.html">
 <meta property="og:site_name" content="一个夏天的年少">
-<meta property="og:description" content="冰棒汽水的味道，一个夏天的年少。">
+<meta property="og:description" content="参考教材《动手学深度学习》">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-03-30T00:37:06.000Z">
+<meta property="article:modified_time" content="2024-03-31T01:58:34.244Z">
 <meta property="article:author" content="Qingyuan Zhuang&#39; Blog">
-<meta property="article:tag" content="生物信息学">
-<meta property="article:tag" content="医学">
-<meta property="article:tag" content="临床">
+<meta property="article:tag" content="统计学">
+<meta property="article:tag" content="机器学习">
+<meta property="article:tag" content="深度学习">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://www.zhuangqingyuan.site/categories/%E6%B5%81%E8%A1%8C%E7%97%85%E5%AD%A6/">
+<link rel="canonical" href="https://www.zhuangqingyuan.site/2024/03/30/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/">
 
 
 <script id="page-configurations">
@@ -47,12 +49,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>分类: 流行病学 | 一个夏天的年少</title>
+  <title>深度学习笔记（一）：线性回归 | 一个夏天的年少</title>
   
 
 
@@ -203,59 +205,203 @@
         <div class="content-wrap">
           
 
-          <div class="content category">
+          <div class="content post posts-expand">
             
 
+    
   
   
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.zhuangqingyuan.site/2024/03/30/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingyuan Zhuang' Blog">
+      <meta itemprop="description" content="冰棒汽水的味道，一个夏天的年少。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="一个夏天的年少">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          深度学习笔记（一）：线性回归
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表</span>
+
+              <time title="创建时间：2024-03-30 08:37:06" itemprop="dateCreated datePublished" datetime="2024-03-30T08:37:06+08:00">2024-03-30</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新</span>
+                <time title="修改时间：2024-03-31 09:58:34" itemprop="dateModified" datetime="2024-03-31T09:58:34+08:00">2024-03-31</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">深度学习</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2024/03/30/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/" class="post-meta-item leancloud_visitors" data-flag-title="深度学习笔记（一）：线性回归" title="热度">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">热度：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
   
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        <h2 class="collection-header">流行病学
-          <small>分类</small>
-        </h2>
-      </div>
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2024/03/30/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2024/03/30/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.7k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>6 分钟</span>
+            </span>
+            <div class="post-description">参考教材《动手学深度学习》</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <h1 class="collection-header">2024</h1>
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>因为没有深度学习的实践经历，很多理论的知识有些淡忘了，本系列旨在对深度学习过程中一些重难点知识再次梳理。</p>
+<h1 id="频率学派认知的线性回归问题——极大似然估计"><a href="#频率学派认知的线性回归问题——极大似然估计" class="headerlink" title="频率学派认知的线性回归问题——极大似然估计"></a>频率学派认知的线性回归问题——极大似然估计</h1><h2 id="极大似然估计"><a href="#极大似然估计" class="headerlink" title="极大似然估计"></a>极大似然估计</h2><p>极大似然估计（Maximum Likelihood Estimation，MLE）是一种基于频率学派的参数估计方法，其核心思想是在所有可能的参数值中，找到一个使得已观测到的样本数据出现概率最大的参数值。<br>考虑一个概率模型，其概率密度函数表示为 $f(x; \theta)$，其中 $\theta$ 是需要估计的参数，$x$ 是观测到的样本数据。<br>给定样本集 $X = \{x_1, x_2, …, x_n\}$，似然函数 $L(\theta)$ 定义为所有样本数据在参数 $\theta$ 下出现的联合概率：<script type="math/tex">L(\theta) = \prod_{i=1}^{n} f(x_i; \theta)</script><br>极大似然估计值 $\hat{\theta}$ 是使似然函数 $L(\theta)$ 最大化的 $\theta$ 值：$\hat{\theta} = \arg \max_\theta L(\theta)$。为了简化求解过程，通常使用<strong>对数似然函数</strong> $\ell(\theta) = \log L(\theta)$，即：<script type="math/tex">\ell(\theta) = \sum_{i=1}^{n} \log f(x_i; \theta)</script><br>因此，求极大似然估计值 $\hat{\theta}$ 也可以转化为最大化对数似然函数。<script type="math/tex">\hat{\theta} = \arg \max_\theta \ell(\theta)</script></p>
+<h2 id="最小二乘法和极大似然估计"><a href="#最小二乘法和极大似然估计" class="headerlink" title="最小二乘法和极大似然估计"></a>最小二乘法和极大似然估计</h2><p>最小二乘法（Least Sqaure Method, LSM）是线性回归中最常用的参数估计方法之一。它的目标是最小化预测值与实际观察值之间差异的平方和。对于模型 $y = Xw + \epsilon$，其中 $y$ 是因变量，$X$ 是设计矩阵，$w$ 是系数向量（为了简化问题，$b$ 可以合并到 $w$ 中），$\epsilon$ 是误差项，最小二乘法通过求解以下优化问题来估计 $w$：</p>
+<script type="math/tex; mode=display">\hat{w} = \arg\min_w \sum_{i=1}^{n}(y_i - x_i^Tw)^2</script><p>这可以通过求解正规方程（Normal Equation）$X^TX\hat{w} = X^Ty$ 来实现。最小二乘法的意义是不证自明的。<br>如前所述，极大似然估计是一种在给定观测数据的条件下，通过最大化似然函数来估计模型参数的方法。在线性回归模型中，如果假设误差项 $\epsilon$ 遵循正态分布 $\epsilon \sim N(0, \sigma^2I)$，那么对于给定的数据 $(x_i, y_i)$，似然函数为：</p>
+<script type="math/tex; mode=display">L(w) = \prod_{i=1}^{n}\frac{1}{\sqrt{2\pi}\sigma}exp\left(-\frac{(y_i - x_i^Tw)^2}{2\sigma^2}\right)</script><p>对数似然函数为：</p>
+<script type="math/tex; mode=display">\log L(w) = -\frac{n}{2}\log(2\pi) - n\log\sigma - \frac{1}{2\sigma^2}\sum_{i=1}^{n}(y_i - x_i^Tw)^2</script><p>最大化 $\log L(w)$ 相当于最小化 $\sum_{i=1}^{n}(y_i - x_i^Tw)^2$，这与最小二乘法的目标一致。<br>事实上，极大似然估计视角下线性回归更贴近一个传统认知上的优化问题。对于任何一个参数 $w$ ，任意的 $x$ 都会产生一个 $y$ 的分布。由此，线性回归问题就变成了，我期待给定的参数 $w$ 能让 $y$ 十分可能从上述分布中采集出来，即一个极大似然问题。单纯的认知误差项是不符合直觉的，但倘若从分布去思考，二者的联系便豁然开朗了。然而，必须指出的是：机器学习和统计学习问题都在假定样本误差的前提下进行，某种意义上：采样误差最小的优化过程和极大似然估计是一致的。</p>
+<h1 id="Softmax函数和多分类问题"><a href="#Softmax函数和多分类问题" class="headerlink" title="Softmax函数和多分类问题"></a>Softmax函数和多分类问题</h1><h2 id="Softmax函数"><a href="#Softmax函数" class="headerlink" title="Softmax函数"></a>Softmax函数</h2><p>线性回归通常用于预测连续值，但当我们想要处理分类问题时，可以利用Softmax函数将线性回归模型扩展到多分类问题。本文将介绍Softmax函数的基本概念、损失函数以及求导过程。Softmax函数是一个将任意实数向量转换为概率分布的函数。对于一个给定的实数向量$o$，Softmax函数定义为：</p>
+<script type="math/tex; mode=display">
+\text{Softmax}(o_i) = \frac{e^{o_i}}{\sum_{j} e^{o_j}}</script><p>其中，$o_i$是向量$o$中的第$i$个元素，分母是所有$e^{o_j}$的和，确保了所有输出值的和为1，从而构成一个概率分布。<br>在多类分类问题中，每个类别都有一个得分，这些得分通过Softmax函数转换为概率。模型的输出是一个概率分布，表示输入属于每个类别的概率。对于一个有$K$个类别的分类问题，模型输出为：</p>
+<script type="math/tex; mode=display">
+P(y=k|x) = \text{Softmax}(o_k) = \frac{e^{o_k}}{\sum_{j=1}^{K} e^{o_j}}</script><p>其中，$o_k = w_k^T x + b_k$是类别$k$的得分，$w_k$和$b_k$是模型参数。</p>
+<h2 id="损失函数"><a href="#损失函数" class="headerlink" title="损失函数"></a>损失函数</h2><p>Softmax回归通常使用交叉熵损失函数（Cross-Entropy Loss），为每个样本定义如下：</p>
+<script type="math/tex; mode=display">
+L_i = - \sum_{k=1}^{K} y_{ik} \log(P(y=k|x_i))</script><p>其中，$y_{ik}$是一个指示变量，如果样本$i$属于类别$k$，则$y_{ik}=1$，否则为$0$。$P(y=k|x_i)$是模型预测样本$i$属于类别$k$的概率。<br>对于所有样本，损失函数是每个样本损失$L_i$的平均值。<br>下面，我们使用极大似然估计推到损失函数：<br>假设我们有一个数据集，其中包含$n$个独立同分布的样本，每个样本$i$属于$K$个类别中的一个。模型预测的概率$P(y=k|x_i)$表示给定输入$x_i$时，样本属于类别$k$的概率。 对于所有样本，似然函数$L$是模型对所有观测数据分类正确的联合概率： <script type="math/tex">L = \prod_{i=1}^{n} P(y=y_i|x_i)</script> 在实践中，为了便于计算，通常对似然函数取对数得到对数似然函数： <script type="math/tex">\log L = \sum_{i=1}^{n} \log P(y=y_i|x_i)</script>在Softmax模型中，$P(y=k|x_i)$可以通过Softmax函数计算得到。因此，对数似然函数可以写为： <script type="math/tex">\log L = \sum_{i=1}^{n} \log \left( \frac{e^{o_{y_i}}}{\sum_{j=1}^{K} e^{o_j}} \right)</script> 其中$o_j = w_j^T x_i + b_j$是类别$j$的得分。<br>定义损失函数： <script type="math/tex">l = -\sum_{i=1}^{n} y_{i} \log P(y=y_i|x_i)</script></p>
+<h2 id="损失函数的求导"><a href="#损失函数的求导" class="headerlink" title="损失函数的求导"></a>损失函数的求导</h2><p>现在，我们要对交叉熵损失函数关于softmax函数的输出$o_j$求导。假设对于一个样本$i$，真实类别是$c$，则$y_i$是一个one-hot向量，其中$y_c = 1$，而对其他类别$j \neq c$，$y_j = 0$。 损失函数关于$o_j$的偏导数计算如下： <script type="math/tex">\frac{\partial l}{\partial o_j} = \frac{\partial}{\partial o_j} \left(-\sum_{i=1}^{n} y_i \log P(y=y_i|x_i)\right)</script> 由于$y_i$是one-hot编码，我们可以得到简化后的偏导数公式： <script type="math/tex">\frac{\partial l}{\partial o_j} = -y_j + softmax(o_{j})</script><br>事实上，就是softmax模型分配的概率和实际概率的差值。</p>
+<script type="math/tex; mode=display">TPM = 10^6 \times \frac{\frac {Read\quad counts}{Transcript \quad length(KB)}}{\Sigma \frac {Read\quad counts}{Transcript \quad length(KB)}}</script>
     </div>
 
-  <article class="my-post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="my-post-header">
+    
+    
+    
+        
 
-      <div class="my-post-meta">
-        <time class="my-post-time" itemprop="dateCreated"
-              datetime="2024-02-05T23:52:37+08:00"
-              content="2024-02-05">
-          02-05
-        </time>
-      </div>
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Qingyuan Zhuang' Blog
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://www.zhuangqingyuan.site/2024/03/30/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/" title="深度学习笔记（一）：线性回归">https://www.zhuangqingyuan.site/2024/03/30/深度学习笔记（一）：线性回归/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
 
-      <h2 class="my-post-title">
-          <a class="my-post-title-link" href="/2024/02/05/%E5%AD%9F%E5%BE%B7%E5%B0%94%E9%9A%8F%E6%9C%BA%E5%8C%96%E6%A0%87%E5%87%86%E6%B5%81%E7%A8%8B%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B/" itemprop="url">
-            
-              <span itemprop="name">孟德尔随机化标准流程代码示例</span>
-            
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
           </a>
-      </h2>
-
-    </header>
-  </article>
-
+        </div>
     </div>
   </div>
-  
-  
-  
 
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/%E7%BB%9F%E8%AE%A1%E5%AD%A6/" rel="tag"><i class="fa fa-tag"></i> 统计学</a>
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 机器学习</a>
+              <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 深度学习</a>
+          </div>
+
+        
+<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------　　　　本文结束　<i class="fa fa-flag"></i>　感谢阅读　　　　-------------</div>
+    
+</div>
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2024/03/26/HEXO%E5%8D%9A%E5%AE%A2%E7%9A%84%E8%BD%AE%E6%92%AD%E6%A0%8F/" rel="prev" title="HEXO博客的轮播栏">
+      <i class="fa fa-chevron-left"></i> HEXO博客的轮播栏
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+    
+    <div><center>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/css/share.min.css">
+    <div class="social-share" data-sites="weibo, qq, qzone,wechat"></div>
+    <script src="http://apps.bdimg.com/libs/jquery/1.8.2/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/js/social-share.min.js"></script>
+    </center></div>  
+  </article>
+  
+  
   
 
 
 
           </div>
           
+    <div class="comments" id="valine-comments"></div>
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -302,6 +448,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E9%A2%91%E7%8E%87%E5%AD%A6%E6%B4%BE%E8%AE%A4%E7%9F%A5%E7%9A%84%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92%E9%97%AE%E9%A2%98%E2%80%94%E2%80%94%E6%9E%81%E5%A4%A7%E4%BC%BC%E7%84%B6%E4%BC%B0%E8%AE%A1"><span class="nav-text">频率学派认知的线性回归问题——极大似然估计</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9E%81%E5%A4%A7%E4%BC%BC%E7%84%B6%E4%BC%B0%E8%AE%A1"><span class="nav-text">极大似然估计</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%9C%80%E5%B0%8F%E4%BA%8C%E4%B9%98%E6%B3%95%E5%92%8C%E6%9E%81%E5%A4%A7%E4%BC%BC%E7%84%B6%E4%BC%B0%E8%AE%A1"><span class="nav-text">最小二乘法和极大似然估计</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Softmax%E5%87%BD%E6%95%B0%E5%92%8C%E5%A4%9A%E5%88%86%E7%B1%BB%E9%97%AE%E9%A2%98"><span class="nav-text">Softmax函数和多分类问题</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#Softmax%E5%87%BD%E6%95%B0"><span class="nav-text">Softmax函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0"><span class="nav-text">损失函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0%E7%9A%84%E6%B1%82%E5%AF%BC"><span class="nav-text">损失函数的求导</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -644,6 +791,59 @@ window.addEventListener('pjax:success', () => {
   
 
   
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
 
   
 <script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.7/lib/darkmode-js.min.js"></script>
