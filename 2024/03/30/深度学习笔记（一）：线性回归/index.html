@@ -34,7 +34,7 @@
 <meta property="og:description" content="参考教材《动手学深度学习》">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-03-30T00:37:06.000Z">
-<meta property="article:modified_time" content="2024-03-31T01:58:34.244Z">
+<meta property="article:modified_time" content="2024-03-31T01:59:28.762Z">
 <meta property="article:author" content="Qingyuan Zhuang&#39; Blog">
 <meta property="article:tag" content="统计学">
 <meta property="article:tag" content="机器学习">
@@ -242,7 +242,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新</span>
-                <time title="修改时间：2024-03-31 09:58:34" itemprop="dateModified" datetime="2024-03-31T09:58:34+08:00">2024-03-31</time>
+                <time title="修改时间：2024-03-31 09:59:28" itemprop="dateModified" datetime="2024-03-31T09:59:28+08:00">2024-03-31</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -316,7 +316,7 @@ P(y=k|x) = \text{Softmax}(o_k) = \frac{e^{o_k}}{\sum_{j=1}^{K} e^{o_j}}</script>
 <script type="math/tex; mode=display">
 L_i = - \sum_{k=1}^{K} y_{ik} \log(P(y=k|x_i))</script><p>其中，$y_{ik}$是一个指示变量，如果样本$i$属于类别$k$，则$y_{ik}=1$，否则为$0$。$P(y=k|x_i)$是模型预测样本$i$属于类别$k$的概率。<br>对于所有样本，损失函数是每个样本损失$L_i$的平均值。<br>下面，我们使用极大似然估计推到损失函数：<br>假设我们有一个数据集，其中包含$n$个独立同分布的样本，每个样本$i$属于$K$个类别中的一个。模型预测的概率$P(y=k|x_i)$表示给定输入$x_i$时，样本属于类别$k$的概率。 对于所有样本，似然函数$L$是模型对所有观测数据分类正确的联合概率： <script type="math/tex">L = \prod_{i=1}^{n} P(y=y_i|x_i)</script> 在实践中，为了便于计算，通常对似然函数取对数得到对数似然函数： <script type="math/tex">\log L = \sum_{i=1}^{n} \log P(y=y_i|x_i)</script>在Softmax模型中，$P(y=k|x_i)$可以通过Softmax函数计算得到。因此，对数似然函数可以写为： <script type="math/tex">\log L = \sum_{i=1}^{n} \log \left( \frac{e^{o_{y_i}}}{\sum_{j=1}^{K} e^{o_j}} \right)</script> 其中$o_j = w_j^T x_i + b_j$是类别$j$的得分。<br>定义损失函数： <script type="math/tex">l = -\sum_{i=1}^{n} y_{i} \log P(y=y_i|x_i)</script></p>
 <h2 id="损失函数的求导"><a href="#损失函数的求导" class="headerlink" title="损失函数的求导"></a>损失函数的求导</h2><p>现在，我们要对交叉熵损失函数关于softmax函数的输出$o_j$求导。假设对于一个样本$i$，真实类别是$c$，则$y_i$是一个one-hot向量，其中$y_c = 1$，而对其他类别$j \neq c$，$y_j = 0$。 损失函数关于$o_j$的偏导数计算如下： <script type="math/tex">\frac{\partial l}{\partial o_j} = \frac{\partial}{\partial o_j} \left(-\sum_{i=1}^{n} y_i \log P(y=y_i|x_i)\right)</script> 由于$y_i$是one-hot编码，我们可以得到简化后的偏导数公式： <script type="math/tex">\frac{\partial l}{\partial o_j} = -y_j + softmax(o_{j})</script><br>事实上，就是softmax模型分配的概率和实际概率的差值。</p>
-<script type="math/tex; mode=display">TPM = 10^6 \times \frac{\frac {Read\quad counts}{Transcript \quad length(KB)}}{\Sigma \frac {Read\quad counts}{Transcript \quad length(KB)}}</script>
+
     </div>
 
     
