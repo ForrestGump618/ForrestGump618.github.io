@@ -28,19 +28,19 @@
 
   <meta name="description" content="在深度学习中，Softmax 回归是一种常见且简单的分类模型。本文将详细介绍如何使用 PyTorch 实现 Softmax 回归模型，并使用 Fashion-MNIST 数据集进行训练和测试。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="深度学习笔记（二）：PyTorch 实现 Softmax 回归">
-<meta property="og:url" content="https://www.zhuangqingyuan.site/2024/04/02/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9APyTorch%20%E5%AE%9E%E7%8E%B0%20Softmax%20%E5%9B%9E%E5%BD%92/index.html">
+<meta property="og:title" content="深度学习笔记（三）：PyTorch 实现 Softmax 回归">
+<meta property="og:url" content="https://www.zhuangqingyuan.site/2024/04/02/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89%EF%BC%9APyTorch%20%E5%AE%9E%E7%8E%B0%20Softmax%20%E5%9B%9E%E5%BD%92/index.html">
 <meta property="og:site_name" content="一个夏天的年少">
 <meta property="og:description" content="在深度学习中，Softmax 回归是一种常见且简单的分类模型。本文将详细介绍如何使用 PyTorch 实现 Softmax 回归模型，并使用 Fashion-MNIST 数据集进行训练和测试。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-04-02T00:00:00.000Z">
-<meta property="article:modified_time" content="2024-04-02T01:40:04.923Z">
+<meta property="article:modified_time" content="2024-04-02T03:55:12.626Z">
 <meta property="article:author" content="Qingyuan Zhuang&#39; Blog">
 <meta property="article:tag" content="机器学习">
 <meta property="article:tag" content="深度学习">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://www.zhuangqingyuan.site/2024/04/02/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9APyTorch%20%E5%AE%9E%E7%8E%B0%20Softmax%20%E5%9B%9E%E5%BD%92/">
+<link rel="canonical" href="https://www.zhuangqingyuan.site/2024/04/02/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89%EF%BC%9APyTorch%20%E5%AE%9E%E7%8E%B0%20Softmax%20%E5%9B%9E%E5%BD%92/">
 
 
 <script id="page-configurations">
@@ -53,7 +53,7 @@
   };
 </script>
 
-  <title>深度学习笔记（二）：PyTorch 实现 Softmax 回归 | 一个夏天的年少</title>
+  <title>深度学习笔记（三）：PyTorch 实现 Softmax 回归 | 一个夏天的年少</title>
   
 
 
@@ -211,7 +211,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://www.zhuangqingyuan.site/2024/04/02/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9APyTorch%20%E5%AE%9E%E7%8E%B0%20Softmax%20%E5%9B%9E%E5%BD%92/">
+    <link itemprop="mainEntityOfPage" href="https://www.zhuangqingyuan.site/2024/04/02/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89%EF%BC%9APyTorch%20%E5%AE%9E%E7%8E%B0%20Softmax%20%E5%9B%9E%E5%BD%92/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -224,7 +224,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          深度学习笔记（二）：PyTorch 实现 Softmax 回归
+          深度学习笔记（三）：PyTorch 实现 Softmax 回归
         </h1>
 
         <div class="post-meta">
@@ -235,7 +235,7 @@
               <span class="post-meta-item-text">发表</span>
               
 
-              <time title="创建时间：2024-04-02 08:00:00 / 修改时间：09:40:04" itemprop="dateCreated datePublished" datetime="2024-04-02T08:00:00+08:00">2024-04-02</time>
+              <time title="创建时间：2024-04-02 08:00:00 / 修改时间：11:55:12" itemprop="dateCreated datePublished" datetime="2024-04-02T08:00:00+08:00">2024-04-02</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -248,7 +248,7 @@
             </span>
 
           
-            <span id="/2024/04/02/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9APyTorch%20%E5%AE%9E%E7%8E%B0%20Softmax%20%E5%9B%9E%E5%BD%92/" class="post-meta-item leancloud_visitors" data-flag-title="深度学习笔记（二）：PyTorch 实现 Softmax 回归" title="热度">
+            <span id="/2024/04/02/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89%EF%BC%9APyTorch%20%E5%AE%9E%E7%8E%B0%20Softmax%20%E5%9B%9E%E5%BD%92/" class="post-meta-item leancloud_visitors" data-flag-title="深度学习笔记（三）：PyTorch 实现 Softmax 回归" title="热度">
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
               </span>
@@ -263,8 +263,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2024/04/02/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9APyTorch%20%E5%AE%9E%E7%8E%B0%20Softmax%20%E5%9B%9E%E5%BD%92/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2024/04/02/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9APyTorch%20%E5%AE%9E%E7%8E%B0%20Softmax%20%E5%9B%9E%E5%BD%92/" itemprop="commentCount"></span>
+    <a title="valine" href="/2024/04/02/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89%EF%BC%9APyTorch%20%E5%AE%9E%E7%8E%B0%20Softmax%20%E5%9B%9E%E5%BD%92/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2024/04/02/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89%EF%BC%9APyTorch%20%E5%AE%9E%E7%8E%B0%20Softmax%20%E5%9B%9E%E5%BD%92/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -319,7 +319,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://www.zhuangqingyuan.site/2024/04/02/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9APyTorch%20%E5%AE%9E%E7%8E%B0%20Softmax%20%E5%9B%9E%E5%BD%92/" title="深度学习笔记（二）：PyTorch 实现 Softmax 回归">https://www.zhuangqingyuan.site/2024/04/02/深度学习笔记（二）：PyTorch 实现 Softmax 回归/</a>
+    <a href="https://www.zhuangqingyuan.site/2024/04/02/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89%EF%BC%9APyTorch%20%E5%AE%9E%E7%8E%B0%20Softmax%20%E5%9B%9E%E5%BD%92/" title="深度学习笔记（三）：PyTorch 实现 Softmax 回归">https://www.zhuangqingyuan.site/2024/04/02/深度学习笔记（三）：PyTorch 实现 Softmax 回归/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！

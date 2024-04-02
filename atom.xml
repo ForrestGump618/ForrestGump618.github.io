@@ -6,7 +6,7 @@
   <link href="https://www.zhuangqingyuan.site/atom.xml" rel="self"/>
   
   <link href="https://www.zhuangqingyuan.site/"/>
-  <updated>2024-04-02T01:40:04.923Z</updated>
+  <updated>2024-04-02T03:55:12.626Z</updated>
   <id>https://www.zhuangqingyuan.site/</id>
   
   <author>
@@ -17,11 +17,11 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
-    <title>深度学习笔记（二）：PyTorch 实现 Softmax 回归</title>
-    <link href="https://www.zhuangqingyuan.site/2024/04/02/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9APyTorch%20%E5%AE%9E%E7%8E%B0%20Softmax%20%E5%9B%9E%E5%BD%92/"/>
-    <id>https://www.zhuangqingyuan.site/2024/04/02/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9APyTorch%20%E5%AE%9E%E7%8E%B0%20Softmax%20%E5%9B%9E%E5%BD%92/</id>
+    <title>深度学习笔记（三）：PyTorch 实现 Softmax 回归</title>
+    <link href="https://www.zhuangqingyuan.site/2024/04/02/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89%EF%BC%9APyTorch%20%E5%AE%9E%E7%8E%B0%20Softmax%20%E5%9B%9E%E5%BD%92/"/>
+    <id>https://www.zhuangqingyuan.site/2024/04/02/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89%EF%BC%9APyTorch%20%E5%AE%9E%E7%8E%B0%20Softmax%20%E5%9B%9E%E5%BD%92/</id>
     <published>2024-04-02T00:00:00.000Z</published>
-    <updated>2024-04-02T01:40:04.923Z</updated>
+    <updated>2024-04-02T03:55:12.626Z</updated>
     
     
     <summary type="html">在深度学习中，Softmax 回归是一种常见且简单的分类模型。本文将详细介绍如何使用 PyTorch 实现 Softmax 回归模型，并使用 Fashion-MNIST 数据集进行训练和测试。</summary>
@@ -42,7 +42,7 @@
     <link href="https://www.zhuangqingyuan.site/2024/04/01/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9APytorch%E5%AE%9E%E7%8E%B0%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/"/>
     <id>https://www.zhuangqingyuan.site/2024/04/01/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9APytorch%E5%AE%9E%E7%8E%B0%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/</id>
     <published>2024-04-01T15:27:01.000Z</published>
-    <updated>2024-04-02T01:25:54.954Z</updated>
+    <updated>2024-04-02T03:55:04.833Z</updated>
     
     
     <summary type="html">本篇博文将介绍如何使用Pytorch库实现线性回归模型，并对代码进行详细解释。</summary>
@@ -314,9 +314,9 @@
     <category term="生物信息学" scheme="https://www.zhuangqingyuan.site/categories/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
     
     
-    <category term="生物信息学" scheme="https://www.zhuangqingyuan.site/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
-    
     <category term="单细胞测序" scheme="https://www.zhuangqingyuan.site/tags/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F/"/>
+    
+    <category term="生物信息学" scheme="https://www.zhuangqingyuan.site/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
     
   </entry>
   
