@@ -26,21 +26,21 @@
   </script>
 
 
-  <meta name="description" content="本工具包用于从基因组注释文件中提取基因信息，合并基因区间，基于细胞类型和窗口大小生成基因组范围，以及注释GWAS（全基因组关联研究）数据。">
+  <meta name="description" content="在深度学习中，Softmax 回归是一种常见且简单的分类模型。本文将详细介绍如何使用 PyTorch 实现 Softmax 回归模型，并使用 Fashion-MNIST 数据集进行训练和测试。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="celltogwas：细胞类型注释到基因组的工具包">
-<meta property="og:url" content="https://www.zhuangqingyuan.site/2023/08/19/celltogwas%EF%BC%9A%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8B%E6%B3%A8%E9%87%8A%E5%88%B0%E5%9F%BA%E5%9B%A0%E7%BB%84%E7%9A%84%E5%B7%A5%E5%85%B7%E5%8C%85/index.html">
+<meta property="og:title" content="深度学习笔记（二）：PyTorch 实现 Softmax 回归">
+<meta property="og:url" content="https://www.zhuangqingyuan.site/2024/04/02/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9APyTorch%20%E5%AE%9E%E7%8E%B0%20Softmax%20%E5%9B%9E%E5%BD%92/index.html">
 <meta property="og:site_name" content="一个夏天的年少">
-<meta property="og:description" content="本工具包用于从基因组注释文件中提取基因信息，合并基因区间，基于细胞类型和窗口大小生成基因组范围，以及注释GWAS（全基因组关联研究）数据。">
+<meta property="og:description" content="在深度学习中，Softmax 回归是一种常见且简单的分类模型。本文将详细介绍如何使用 PyTorch 实现 Softmax 回归模型，并使用 Fashion-MNIST 数据集进行训练和测试。">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-08-19T00:00:00.000Z">
-<meta property="article:modified_time" content="2024-03-23T06:50:47.373Z">
+<meta property="article:published_time" content="2024-04-02T00:00:00.000Z">
+<meta property="article:modified_time" content="2024-04-02T01:40:04.923Z">
 <meta property="article:author" content="Qingyuan Zhuang&#39; Blog">
-<meta property="article:tag" content="GWAS">
-<meta property="article:tag" content="python">
+<meta property="article:tag" content="机器学习">
+<meta property="article:tag" content="深度学习">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://www.zhuangqingyuan.site/2023/08/19/celltogwas%EF%BC%9A%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8B%E6%B3%A8%E9%87%8A%E5%88%B0%E5%9F%BA%E5%9B%A0%E7%BB%84%E7%9A%84%E5%B7%A5%E5%85%B7%E5%8C%85/">
+<link rel="canonical" href="https://www.zhuangqingyuan.site/2024/04/02/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9APyTorch%20%E5%AE%9E%E7%8E%B0%20Softmax%20%E5%9B%9E%E5%BD%92/">
 
 
 <script id="page-configurations">
@@ -53,7 +53,7 @@
   };
 </script>
 
-  <title>celltogwas：细胞类型注释到基因组的工具包 | 一个夏天的年少</title>
+  <title>深度学习笔记（二）：PyTorch 实现 Softmax 回归 | 一个夏天的年少</title>
   
 
 
@@ -211,7 +211,7 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://www.zhuangqingyuan.site/2023/08/19/celltogwas%EF%BC%9A%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8B%E6%B3%A8%E9%87%8A%E5%88%B0%E5%9F%BA%E5%9B%A0%E7%BB%84%E7%9A%84%E5%B7%A5%E5%85%B7%E5%8C%85/">
+    <link itemprop="mainEntityOfPage" href="https://www.zhuangqingyuan.site/2024/04/02/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9APyTorch%20%E5%AE%9E%E7%8E%B0%20Softmax%20%E5%9B%9E%E5%BD%92/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -224,7 +224,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          celltogwas：细胞类型注释到基因组的工具包
+          深度学习笔记（二）：PyTorch 实现 Softmax 回归
         </h1>
 
         <div class="post-meta">
@@ -233,28 +233,22 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表</span>
+              
 
-              <time title="创建时间：2023-08-19 08:00:00" itemprop="dateCreated datePublished" datetime="2023-08-19T08:00:00+08:00">2023-08-19</time>
+              <time title="创建时间：2024-04-02 08:00:00 / 修改时间：09:40:04" itemprop="dateCreated datePublished" datetime="2024-04-02T08:00:00+08:00">2024-04-02</time>
             </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新</span>
-                <time title="修改时间：2024-03-23 14:50:47" itemprop="dateModified" datetime="2024-03-23T14:50:47+08:00">2024-03-23</time>
-              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
               </span>
               <span class="post-meta-item-text">分类于</span>
                 <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/" itemprop="url" rel="index"><span itemprop="name">生物信息学</span></a>
+                  <a href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">深度学习</span></a>
                 </span>
             </span>
 
           
-            <span id="/2023/08/19/celltogwas%EF%BC%9A%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8B%E6%B3%A8%E9%87%8A%E5%88%B0%E5%9F%BA%E5%9B%A0%E7%BB%84%E7%9A%84%E5%B7%A5%E5%85%B7%E5%8C%85/" class="post-meta-item leancloud_visitors" data-flag-title="celltogwas：细胞类型注释到基因组的工具包" title="热度">
+            <span id="/2024/04/02/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9APyTorch%20%E5%AE%9E%E7%8E%B0%20Softmax%20%E5%9B%9E%E5%BD%92/" class="post-meta-item leancloud_visitors" data-flag-title="深度学习笔记（二）：PyTorch 实现 Softmax 回归" title="热度">
               <span class="post-meta-item-icon">
                 <i class="fa fa-eye"></i>
               </span>
@@ -269,8 +263,8 @@
       </span>
       <span class="post-meta-item-text">Valine：</span>
     
-    <a title="valine" href="/2023/08/19/celltogwas%EF%BC%9A%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8B%E6%B3%A8%E9%87%8A%E5%88%B0%E5%9F%BA%E5%9B%A0%E7%BB%84%E7%9A%84%E5%B7%A5%E5%85%B7%E5%8C%85/#valine-comments" itemprop="discussionUrl">
-      <span class="post-comments-count valine-comment-count" data-xid="/2023/08/19/celltogwas%EF%BC%9A%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8B%E6%B3%A8%E9%87%8A%E5%88%B0%E5%9F%BA%E5%9B%A0%E7%BB%84%E7%9A%84%E5%B7%A5%E5%85%B7%E5%8C%85/" itemprop="commentCount"></span>
+    <a title="valine" href="/2024/04/02/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9APyTorch%20%E5%AE%9E%E7%8E%B0%20Softmax%20%E5%9B%9E%E5%BD%92/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2024/04/02/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9APyTorch%20%E5%AE%9E%E7%8E%B0%20Softmax%20%E5%9B%9E%E5%BD%92/" itemprop="commentCount"></span>
     </a>
   </span>
   
@@ -280,16 +274,16 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>580</span>
+              <span>981</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>2 分钟</span>
+              <span>4 分钟</span>
             </span>
-            <div class="post-description">本工具包用于从基因组注释文件中提取基因信息，合并基因区间，基于细胞类型和窗口大小生成基因组范围，以及注释GWAS（全基因组关联研究）数据。</div>
+            <div class="post-description">在深度学习中，Softmax 回归是一种常见且简单的分类模型。本文将详细介绍如何使用 PyTorch 实现 Softmax 回归模型，并使用 Fashion-MNIST 数据集进行训练和测试。</div>
 
         </div>
       </header>
@@ -300,19 +294,17 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="celltogwas"><a href="#celltogwas" class="headerlink" title="celltogwas"></a>celltogwas</h2><p>This code is a toolkit for genomic analysis. It includes several functions and helper functions to extract gene information from a genomic annotation file, merge gene intervals, generate genomic ranges based on cell types and window size, and annotate GWAS (Genome-Wide Association Study) data.</p>
-<h2 id="Explanation-of-each-function"><a href="#Explanation-of-each-function" class="headerlink" title="Explanation of each function"></a>Explanation of each function</h2><p><strong>extract_gene_info(gtf_file)</strong>: Extracts gene information from a genomic annotation file. It opens a gzip-compressed file, reads it line by line, and extracts gene name, chromosome, start position, and end position from each line. The extracted data is then stored in a Pandas DataFrame and returned.</p>
-<p><strong>merge_intervals(intervals)</strong>: Merges overlapping intervals. This function takes a list of intervals as input and merges overlapping intervals into larger intervals. It first sorts the intervals based on their start positions, then iterates through the intervals. If the current interval does not overlap with the merged interval, it adds the current interval to the merged list. Otherwise, it updates the end position of the merged interval. Finally, it returns the merged interval list.</p>
-<p><strong>celltype_genome_range(cell_gene_dict, gene_info, windowsize)</strong>: Generates genomic ranges based on cell types and window size. This function takes a dictionary mapping cell types to gene lists, a DataFrame of gene information, and a window size as input. It retrieves the gene list corresponding to each cell type from the dictionary and performs an inner join with the gene information to obtain the chromosome, start position, and end position of the corresponding genes. It then adjusts the start and end positions based on the window size and converts the data into a specific format of a list. Finally, it stores the genomic ranges for each cell type in a dictionary and returns it.</p>
-<p><strong>check_value_in_intervals(intervals, value)</strong>: Checks if a value is within the intervals. This function takes a list of intervals and a value as input. It uses binary search to determine if the value falls within the intervals. It first extracts the left boundaries of the intervals, then performs a binary search to find the position of the value in the left boundary list. If the position is less than the length of the interval list, it retrieves the corresponding interval and checks if the value falls within that interval. If the value is within the interval, it returns True; otherwise, it returns False.</p>
-<p><strong>gwas_annotaion(gwas, celltype_range)</strong>: Annotates GWAS data based on genomic ranges. This function takes a DataFrame of GWAS data and a dictionary of genomic ranges as input. It first retrieves the list of chromosomes from the GWAS data. Then, it iterates through the genomic ranges for each cell type. For each chromosome, it retrieves the subset of GWAS data corresponding to that chromosome and the annotation ranges from the genomic ranges. It then iterates through each data item in the subset and uses the check_value_in_intervals function to check if the position of the data item falls within the annotation ranges. If it does, the data item is marked as annotated. Finally, it stores the annotation results for all cell types in a dictionary and returns it.</p>
-<h2 id="File-format"><a href="#File-format" class="headerlink" title="File format"></a>File format</h2><p><strong>gtf_file</strong>: Include CHR, START, END, Other info(GENE Symbol);</p>
-<p><strong>cell_gene_dict</strong>: A dictionary:(1) key:celltype’s name;(2)value:a list of genes;</p>
-<p><strong>gene_info</strong>: Output file from <strong>extract_gene_info(gtf_file)</strong>: Include: GENE, CHR, START, END;</p>
-<p><strong>gwas</strong>: First teo columns: chr, pos;</p>
-<p><strong>celltype_range</strong>: A dictionary:(1) key:celltype’s name;(2)value:a list of genome position:[chr, start, end];</p>
-<p><strong>output_file</strong>: A dictionary:(1) key:celltype’s name;(2)value:[chr, pos ,…… , annotation] (annotation: 1 for anntation and 0 for null).</p>
-
+        <h1 id="导入必要的库"><a href="#导入必要的库" class="headerlink" title="导入必要的库"></a>导入必要的库</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> torchvision</span><br><span class="line"><span class="keyword">from</span> torchvision <span class="keyword">import</span> transforms</span><br><span class="line"><span class="keyword">from</span> torch.utils.data <span class="keyword">import</span> DataLoader</span><br><span class="line"><span class="keyword">from</span> d2l <span class="keyword">import</span> torch <span class="keyword">as</span> d2l</span><br></pre></td></tr></table></figure>
+<h1 id="定义一个函数，用于在一定布局下展示图像及其对应的标签"><a href="#定义一个函数，用于在一定布局下展示图像及其对应的标签" class="headerlink" title="定义一个函数，用于在一定布局下展示图像及其对应的标签"></a>定义一个函数，用于在一定布局下展示图像及其对应的标签</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">show_images</span>(<span class="params">imgs, num_rows, num_cols, titles=<span class="literal">None</span>, scale=<span class="number">1.5</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;展示图像及其标签&quot;&quot;&quot;</span></span><br><span class="line">    figsize = (num_cols * scale, num_rows * scale)</span><br><span class="line">    _, axes = d2l.plt.subplots(num_rows, num_cols, figsize=figsize)</span><br><span class="line">    axes = axes.flatten()</span><br><span class="line">    <span class="keyword">for</span> i, (ax, img) <span class="keyword">in</span> <span class="built_in">enumerate</span>(<span class="built_in">zip</span>(axes, imgs)):</span><br><span class="line">        <span class="keyword">if</span> torch.is_tensor(img):</span><br><span class="line">            ax.imshow(img.numpy())</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            ax.imshow(img)</span><br><span class="line">        ax.axes.get_xaxis().set_visible(<span class="literal">False</span>)</span><br><span class="line">        ax.axes.get_yaxis().set_visible(<span class="literal">False</span>)  <span class="comment"># 修复了原代码中的错误</span></span><br><span class="line">        <span class="keyword">if</span> titles:</span><br><span class="line">            ax.set_title(titles[i])</span><br><span class="line">    <span class="keyword">return</span> axes</span><br></pre></td></tr></table></figure>
+<h1 id="定义一个函数，用于获取数据加载时使用的工作线程数"><a href="#定义一个函数，用于获取数据加载时使用的工作线程数" class="headerlink" title="定义一个函数，用于获取数据加载时使用的工作线程数"></a>定义一个函数，用于获取数据加载时使用的工作线程数</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">get_dataloader_workers</span>():</span><br><span class="line">    <span class="string">&quot;&quot;&quot;获取数据加载时使用的工作线程数&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">4</span></span><br></pre></td></tr></table></figure>
+<h1 id="定义一个函数，用于加载-Fashion-MNIST-数据集"><a href="#定义一个函数，用于加载-Fashion-MNIST-数据集" class="headerlink" title="定义一个函数，用于加载 Fashion-MNIST 数据集"></a>定义一个函数，用于加载 Fashion-MNIST 数据集</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">load_data_fashion_mnist</span>(<span class="params">batch_size, resize=<span class="literal">None</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;加载Fashion-MNIST数据集，并可选择性地调整图像大小&quot;&quot;&quot;</span></span><br><span class="line">    trans = [transforms.ToTensor()]</span><br><span class="line">    <span class="keyword">if</span> resize:</span><br><span class="line">        trans.insert(<span class="number">0</span>, transforms.Resize(resize))</span><br><span class="line">    trans = transforms.Compose(trans)</span><br><span class="line">    mnist_train = torchvision.datasets.FashionMNIST(root=<span class="string">&quot;./data&quot;</span>, train=<span class="literal">True</span>, transform=trans, download=<span class="literal">True</span>)</span><br><span class="line">    mnist_test = torchvision.datasets.FashionMNIST(root=<span class="string">&quot;./data&quot;</span>, train=<span class="literal">False</span>, transform=trans, download=<span class="literal">True</span>)</span><br><span class="line">    <span class="keyword">return</span> (DataLoader(mnist_train, batch_size, shuffle=<span class="literal">True</span>, num_workers=get_dataloader_workers()),</span><br><span class="line">            DataLoader(mnist_test, batch_size, shuffle=<span class="literal">False</span>, num_workers=get_dataloader_workers()))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置批量大小</span></span><br><span class="line">batch_size = <span class="number">256</span></span><br><span class="line"><span class="comment"># 加载数据集</span></span><br><span class="line">train_iter, test_iter = load_data_fashion_mnist(batch_size=batch_size)</span><br></pre></td></tr></table></figure>
+<h1 id="定义模型"><a href="#定义模型" class="headerlink" title="定义模型"></a>定义模型</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 网络的输入和输出维度</span></span><br><span class="line">num_inputs = <span class="number">28</span> * <span class="number">28</span></span><br><span class="line">num_outputs = <span class="number">10</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 初始化模型参数</span></span><br><span class="line">w = torch.normal(<span class="number">0</span>, <span class="number">0.01</span>, size=(num_inputs, num_outputs), requires_grad=<span class="literal">True</span>)</span><br><span class="line">b = torch.zeros(num_outputs, requires_grad=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义softmax函数</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">softmax</span>(<span class="params">X</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;计算softmax概率值&quot;&quot;&quot;</span></span><br><span class="line">    X_exp = torch.exp(X)</span><br><span class="line">    partition = X_exp.<span class="built_in">sum</span>(<span class="number">1</span>, keepdim=<span class="literal">True</span>)</span><br><span class="line">    <span class="keyword">return</span> X_exp / partition</span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义模型</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">net</span>(<span class="params">X</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;定义softmax回归模型&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">return</span> softmax(torch.matmul(X.reshape((-<span class="number">1</span>, w.shape[<span class="number">0</span>])), w) + b)</span><br></pre></td></tr></table></figure>
+<h1 id="定义交叉熵损失函数"><a href="#定义交叉熵损失函数" class="headerlink" title="定义交叉熵损失函数"></a>定义交叉熵损失函数</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">cross_entropy</span>(<span class="params">y_hat, y</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;计算预测值和真实值之间的交叉熵损失&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">return</span> -torch.log(y_hat[<span class="built_in">range</span>(<span class="built_in">len</span>(y_hat)), y])</span><br></pre></td></tr></table></figure>
+<h1 id="模型评价指标计算"><a href="#模型评价指标计算" class="headerlink" title="模型评价指标计算"></a>模型评价指标计算</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">accuracy</span>(<span class="params">y_hat, y</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;计算预测准确率&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">len</span>(y_hat.shape) &gt; <span class="number">1</span> <span class="keyword">and</span> y_hat.shape[<span class="number">1</span>] &gt; <span class="number">1</span>:</span><br><span class="line">        y_hat = y_hat.argmax(axis=<span class="number">1</span>)</span><br><span class="line">    cmp = y_hat.<span class="built_in">type</span>(y.dtype) == y</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">float</span>(cmp.<span class="built_in">type</span>(y.dtype).<span class="built_in">sum</span>())</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Accumulator</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;在n个变量上累加&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, n</span>):</span><br><span class="line">        self.data = [<span class="number">0.0</span>] * n</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">add</span>(<span class="params">self, *args</span>):</span><br><span class="line">        self.data = [a + <span class="built_in">float</span>(b) <span class="keyword">for</span> a, b <span class="keyword">in</span> <span class="built_in">zip</span>(self.data, args)]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">reset</span>(<span class="params">self</span>):</span><br><span class="line">        self.data = [<span class="number">0.0</span>] * <span class="built_in">len</span>(self.data)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__getitem__</span>(<span class="params">self, idx</span>):</span><br><span class="line">        <span class="keyword">return</span> self.data[idx]</span><br></pre></td></tr></table></figure>
+<h1 id="定义训练一个-epoch-的函数"><a href="#定义训练一个-epoch-的函数" class="headerlink" title="定义训练一个 epoch 的函数"></a>定义训练一个 epoch 的函数</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">train_epoch</span>(<span class="params">net, train_iter, loss, updater</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;训练模型一个epoch&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">isinstance</span>(net, torch.nn.Module):</span><br><span class="line">        net.train()  <span class="comment"># 设置为训练模式</span></span><br><span class="line">    metric = Accumulator(<span class="number">3</span>)  <span class="comment"># 损失总和，正确预测数，样本总数</span></span><br><span class="line">    <span class="keyword">for</span> X, y <span class="keyword">in</span> train_iter:</span><br><span class="line">        y_hat = net(X)</span><br><span class="line">        l = loss(y_hat, y)</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">isinstance</span>(updater, torch.optim.Optimizer):</span><br><span class="line">            updater.zero_grad()</span><br><span class="line">            l.mean().backward()</span><br><span class="line">            updater.step()</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            l.<span class="built_in">sum</span>().backward()</span><br><span class="line">            updater(X.shape[<span class="number">0</span>])</span><br><span class="line">        metric.add(<span class="built_in">float</span>(l.<span class="built_in">sum</span>()), accuracy(y_hat, y), y.numel())</span><br><span class="line">    <span class="comment"># 返回训练损失和训练准确率</span></span><br><span class="line">    <span class="keyword">return</span> metric[<span class="number">0</span>] / metric[<span class="number">2</span>], metric[<span class="number">1</span>] / metric[<span class="number">2</span>]</span><br></pre></td></tr></table></figure>
+<h1 id="定义训练函数"><a href="#定义训练函数" class="headerlink" title="定义训练函数"></a>定义训练函数</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">train</span>(<span class="params">net, train_iter, test_iter, loss, num_epochs, updater</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;训练模型&quot;&quot;&quot;</span></span><br><span class="line">    all_epoch = []</span><br><span class="line">    <span class="keyword">for</span> epoch <span class="keyword">in</span> <span class="built_in">range</span>(num_epochs):</span><br><span class="line">        train_metrics = train_epoch(net, train_iter, loss, updater)</span><br><span class="line">        all_epoch.append(train_metrics)</span><br><span class="line">    <span class="keyword">return</span> all_epoch</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置学习率和更新器</span></span><br><span class="line">lr = <span class="number">0.1</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">updater</span>(<span class="params">batch_size</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;使用小批量随机梯度下降进行参数更新&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">return</span> d2l.sgd([w, b], lr, batch_size)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置训练轮数并开始训练</span></span><br><span class="line">num_epochs = <span class="number">10</span></span><br><span class="line">train(net, train_iter, test_iter, cross_entropy, num_epochs, updater)</span><br></pre></td></tr></table></figure>
+<p>通过以上步骤，我们成功实现了使用 PyTorch 进行 Softmax 回归模型的训练和测试。 Softmax 回归是深度学习中的重要组成部分，能够有效地处理分类问题。</p>
+<h1 id="softmax的高级API实现"><a href="#softmax的高级API实现" class="headerlink" title="softmax的高级API实现"></a>softmax的高级API实现</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch  <span class="comment"># 导入PyTorch库  </span></span><br><span class="line"><span class="keyword">from</span> torch <span class="keyword">import</span> nn  <span class="comment"># 从PyTorch库中导入神经网络模块  </span></span><br><span class="line"><span class="keyword">from</span> d2l <span class="keyword">import</span> torch <span class="keyword">as</span> d2l </span><br><span class="line">  </span><br><span class="line"><span class="comment"># 设置批量大小为256  </span></span><br><span class="line">batch_size = <span class="number">256</span>  </span><br><span class="line">  </span><br><span class="line"><span class="comment"># 加载Fashion-MNIST数据集，并划分为训练集和测试集  </span></span><br><span class="line">train_iter, test_iter = d2l.load_data_fashion_mnist(batch_size)  </span><br><span class="line">  </span><br><span class="line"><span class="comment"># 定义一个简单的神经网络模型，包含一个Flatten层（用于将图像展平）和一个全连接层（784个输入节点，10个输出节点）  </span></span><br><span class="line">net = nn.Sequential(nn.Flatten(), nn.Linear(<span class="number">784</span>, <span class="number">10</span>))  </span><br><span class="line">  </span><br><span class="line"><span class="comment"># 定义一个权重初始化函数  </span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">init_weights</span>(<span class="params">m</span>):  </span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">type</span>(m) == nn.Linear:  <span class="comment"># 如果模块是线性层  </span></span><br><span class="line">        nn.init.normal_(m.weight, std=<span class="number">0.01</span>)  <span class="comment"># 使用标准差为0.01的正态分布初始化权重  </span></span><br><span class="line">  </span><br><span class="line"><span class="comment"># 应用初始化函数到模型的所有模块  </span></span><br><span class="line">net.apply(init_weights)  </span><br><span class="line">  </span><br><span class="line"><span class="comment"># 定义交叉熵损失函数，reduction设置为&quot;None&quot;，表示不进行任何约简，返回每个样本的损失值  </span></span><br><span class="line">loss = nn.CrossEntropyLoss(reduction=<span class="string">&quot;None&quot;</span>)  </span><br><span class="line">  </span><br><span class="line"><span class="comment"># 定义优化器，使用随机梯度下降算法，学习率为0.1  </span></span><br><span class="line">trainer = torch.optim.SGD(net.parameters(), lr=<span class="number">0.1</span>)</span><br></pre></td></tr></table></figure>
     </div>
 
     
@@ -327,7 +319,7 @@
   </li>
   <li class="post-copyright-link">
     <strong>本文链接：</strong>
-    <a href="https://www.zhuangqingyuan.site/2023/08/19/celltogwas%EF%BC%9A%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8B%E6%B3%A8%E9%87%8A%E5%88%B0%E5%9F%BA%E5%9B%A0%E7%BB%84%E7%9A%84%E5%B7%A5%E5%85%B7%E5%8C%85/" title="celltogwas：细胞类型注释到基因组的工具包">https://www.zhuangqingyuan.site/2023/08/19/celltogwas：细胞类型注释到基因组的工具包/</a>
+    <a href="https://www.zhuangqingyuan.site/2024/04/02/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9APyTorch%20%E5%AE%9E%E7%8E%B0%20Softmax%20%E5%9B%9E%E5%BD%92/" title="深度学习笔记（二）：PyTorch 实现 Softmax 回归">https://www.zhuangqingyuan.site/2024/04/02/深度学习笔记（二）：PyTorch 实现 Softmax 回归/</a>
   </li>
   <li class="post-copyright-license">
     <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
@@ -358,8 +350,8 @@
       <footer class="post-footer">
           
           <div class="post-tags">
-              <a href="/tags/GWAS/" rel="tag"><i class="fa fa-tag"></i> GWAS</a>
-              <a href="/tags/python/" rel="tag"><i class="fa fa-tag"></i> python</a>
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 机器学习</a>
+              <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 深度学习</a>
           </div>
 
         
@@ -373,13 +365,10 @@
         
     <div class="post-nav">
       <div class="post-nav-item">
-    <a href="/2023/08/12/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E6%95%99%E7%A8%8B%E5%92%8C%E8%B5%84%E6%BA%90%E8%81%9A%E5%90%88/" rel="prev" title="单细胞测序教程资源聚合">
-      <i class="fa fa-chevron-left"></i> 单细胞测序教程资源聚合
+    <a href="/2024/04/01/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9APytorch%E5%AE%9E%E7%8E%B0%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/" rel="prev" title="深度学习笔记（二）：Pytorch实现线性回归">
+      <i class="fa fa-chevron-left"></i> 深度学习笔记（二）：Pytorch实现线性回归
     </a></div>
-      <div class="post-nav-item">
-    <a href="/2023/08/25/scPagwas%E2%80%94%E2%80%94%E6%95%B4%E5%90%88scRNA%E5%92%8CGWAS%E8%AF%86%E5%88%AB%E7%96%BE%E7%97%85%E7%9A%84%E9%A9%B1%E5%8A%A8%E5%9F%BA%E5%9B%A0%E5%92%8C%E5%85%B3%E9%94%AE%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8B/" rel="next" title="scPagwas——整合scRNA和GWAS识别疾病的驱动基因和关键细胞类型">
-      scPagwas——整合scRNA和GWAS识别疾病的驱动基因和关键细胞类型 <i class="fa fa-chevron-right"></i>
-    </a></div>
+      <div class="post-nav-item"></div>
     </div>
       </footer>
     
@@ -446,7 +435,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#celltogwas"><span class="nav-text">celltogwas</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Explanation-of-each-function"><span class="nav-text">Explanation of each function</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#File-format"><span class="nav-text">File format</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AF%BC%E5%85%A5%E5%BF%85%E8%A6%81%E7%9A%84%E5%BA%93"><span class="nav-text">导入必要的库</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89%E4%B8%80%E4%B8%AA%E5%87%BD%E6%95%B0%EF%BC%8C%E7%94%A8%E4%BA%8E%E5%9C%A8%E4%B8%80%E5%AE%9A%E5%B8%83%E5%B1%80%E4%B8%8B%E5%B1%95%E7%A4%BA%E5%9B%BE%E5%83%8F%E5%8F%8A%E5%85%B6%E5%AF%B9%E5%BA%94%E7%9A%84%E6%A0%87%E7%AD%BE"><span class="nav-text">定义一个函数，用于在一定布局下展示图像及其对应的标签</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89%E4%B8%80%E4%B8%AA%E5%87%BD%E6%95%B0%EF%BC%8C%E7%94%A8%E4%BA%8E%E8%8E%B7%E5%8F%96%E6%95%B0%E6%8D%AE%E5%8A%A0%E8%BD%BD%E6%97%B6%E4%BD%BF%E7%94%A8%E7%9A%84%E5%B7%A5%E4%BD%9C%E7%BA%BF%E7%A8%8B%E6%95%B0"><span class="nav-text">定义一个函数，用于获取数据加载时使用的工作线程数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89%E4%B8%80%E4%B8%AA%E5%87%BD%E6%95%B0%EF%BC%8C%E7%94%A8%E4%BA%8E%E5%8A%A0%E8%BD%BD-Fashion-MNIST-%E6%95%B0%E6%8D%AE%E9%9B%86"><span class="nav-text">定义一个函数，用于加载 Fashion-MNIST 数据集</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89%E6%A8%A1%E5%9E%8B"><span class="nav-text">定义模型</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89%E4%BA%A4%E5%8F%89%E7%86%B5%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0"><span class="nav-text">定义交叉熵损失函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E8%AF%84%E4%BB%B7%E6%8C%87%E6%A0%87%E8%AE%A1%E7%AE%97"><span class="nav-text">模型评价指标计算</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89%E8%AE%AD%E7%BB%83%E4%B8%80%E4%B8%AA-epoch-%E7%9A%84%E5%87%BD%E6%95%B0"><span class="nav-text">定义训练一个 epoch 的函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89%E8%AE%AD%E7%BB%83%E5%87%BD%E6%95%B0"><span class="nav-text">定义训练函数</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#softmax%E7%9A%84%E9%AB%98%E7%BA%A7API%E5%AE%9E%E7%8E%B0"><span class="nav-text">softmax的高级API实现</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
