@@ -31,6 +31,57 @@
 ]]></content>
   </entry>
   <entry>
+    <title>scDRS：基于GWAS和scRNA评估细胞类型和生物学过程的疾病相关性</title>
+    <url>/2023/08/11/scDRS%EF%BC%9A%E5%9F%BA%E4%BA%8EGWAS%E5%92%8CscRNA%E8%AF%84%E4%BC%B0%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8B%E5%92%8C%E7%94%9F%E7%89%A9%E5%AD%A6%E8%BF%87%E7%A8%8B%E7%9A%84%E7%96%BE%E7%97%85%E7%9B%B8%E5%85%B3%E6%80%A7/</url>
+    <content><![CDATA[<h2 id="方法学概述"><a href="#方法学概述" class="headerlink" title="方法学概述"></a>方法学概述</h2><p>&emsp;&emsp;scDRS的核心思想是建立合适的权重从而根据基因的表达对基因程序进行评分，即加权基因表达量。其算法可概述为：首先将基因根据MAGMA得到的gene-level z-scores从大到小排列（也可以自定义基因程序）, 选择潜在的致病基因。基于致病基因的表达量和权重接着计算致病基因程序加权表达量。从而评估该细胞的基因程序和疾病的相关度。<br>&emsp;&emsp;算法对z-score采用算数加权，对技术噪声指标采用逆加权。也就是说，在GWAS中鉴定出的越相关的，且测序过程中技术原因造成误差较小的基因。根据输入数据集的基因表达，在蒙特卡洛随机模拟生成的B个对照组中，从而推断分布，进而对研究的疾病进行统计检验。利用这样的方法，我们可以计算单个细胞和疾病的相关性，以及鉴定相应的驱动基因，并基于此进行下游分析。</p>
+<h2 id="使用scdrs包在Python中进行分析"><a href="#使用scdrs包在Python中进行分析" class="headerlink" title="使用scdrs包在Python中进行分析"></a>使用scdrs包在Python中进行分析</h2><h3 id="载入程序包"><a href="#载入程序包" class="headerlink" title="载入程序包"></a>载入程序包</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> scanpy <span class="keyword">as</span> sc</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> scdrs</span><br></pre></td></tr></table></figure>
+<h3 id="基础参数设置"><a href="#基础参数设置" class="headerlink" title="基础参数设置"></a>基础参数设置</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">sc.settings.verbosity = <span class="number">3</span> <span class="comment"># 设置日志等级:errors(0),warnings(1),info(2),hints(3)  </span></span><br><span class="line">sc.logging.print_header() <span class="comment"># 输出版本号</span></span><br><span class="line">sc.settings.set_figure_params(dpi=<span class="number">300</span>, facecolor=<span class="string">&#x27;white&#x27;</span>) <span class="comment"># 设置图片的分辨率300dpi</span></span><br></pre></td></tr></table></figure>
+<h3 id="读取计数矩阵和预处理"><a href="#读取计数矩阵和预处理" class="headerlink" title="读取计数矩阵和预处理"></a>读取计数矩阵和预处理</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">adata = sc.read_csv(<span class="string">&quot;heart.csv&quot;</span>) <span class="comment"># 注意，这里的heart.csv列为细胞，行为基因，这一点和seurat框架是不同的。</span></span><br><span class="line"><span class="comment"># 其他的读取方法可参考scanpy的文档。</span></span><br><span class="line">adata.var_names_make_unique()</span><br><span class="line">adata.obs_names_make_unique()</span><br><span class="line">adata.var.head() <span class="comment"># 基因特征的摘要</span></span><br><span class="line">adata.obs.head() <span class="comment"># 细胞特征的摘要</span></span><br><span class="line">adata <span class="comment"># 返回矩阵大小，基因相关的变量以及细胞相关的变量数据  </span></span><br><span class="line">sc.pl.highest_expr_genes(adata, n_top=<span class="number">20</span>) <span class="comment"># 显示在全部单个细胞中基因读数占总读数的百分比排名前20的基因</span></span><br></pre></td></tr></table></figure>
+<h3 id="质量控制"><a href="#质量控制" class="headerlink" title="质量控制"></a>质量控制</h3><p>&emsp;&emsp;质量控制，大部分都是针对细胞（obs）的质量控制。<br>&emsp;&emsp;细胞质控通常对以下三个质控协变量进行：  </p>
+<ol>
+<li>每个条形码的计数数量（计数深度）  </li>
+<li>每个条形码的基因数量  </li>
+<li>每个条形码的线粒体基因计数比例<br>&emsp;&emsp;如果一个细胞正在死亡，其mRNA被释放到内环境，导致线粒体基因的比例较高，所以我们可以通过线粒体基因的比例来过滤掉低质量的单细胞测序数据。但是如果仅考虑一个变量可能会造成生物学误差，共同考虑三个 QC 协变量至关重要。例如，线粒体计数相对较高的细胞可能参与呼吸过程，不应被过滤掉。然而，计数低或高的细胞可能对应于静止细胞群或尺寸较大的细胞。故我们在过滤低质量细胞的时候，要同时考虑不同的QC协变量之间的关系。</li>
+</ol>
+<h3 id="质控指标的计算"><a href="#质控指标的计算" class="headerlink" title="质控指标的计算"></a>质控指标的计算</h3><p>&emsp;&emsp;首先采用正则表达式识别线粒体；接着，我们将根据识别的结果进行比例的计算。<br><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">adata.var[<span class="string">&quot;mt&quot;</span>] = adata.var_names.<span class="built_in">str</span>.startswith(<span class="string">&quot;MT-&quot;</span>)  </span><br><span class="line">sc.pp.calculate_qc_metrics(adata, qc_vars=[<span class="string">&quot;mt&quot;</span>], inplace=<span class="literal">True</span>, percent_top=[<span class="number">20</span>], log1p=<span class="literal">True</span>) <span class="comment"># 此处可以计算其他给定基因；该步骤之后，才可以得到n_counts等数据。</span></span><br></pre></td></tr></table></figure><br>&emsp;&emsp;通过上面的计算和adata.obs固有的数据，我们可以得到三个质控协变量：  </p>
+<ol>
+<li>n_genes_by_counts/detected_genes: 一个细胞中发现的有效基因数量（即表达量不为0）  </li>
+<li>total_counts/nUMIs: 一个细胞中发现的分子数量（UMI），通常也可以被认为是这个细胞的文库大小  </li>
+<li>pct_counts_mt/mito_perc: 一个细胞中线粒体基因的表达计数占比<br>&emsp;&emsp;可以绘制三个协变量的分布图。</li>
+</ol>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line">mito_filter = <span class="number">25</span> <span class="comment"># 根据数据集合设定，注意，心室肌等组织富含线粒体，需要根据情况进行更改。</span></span><br><span class="line">n_counts_filter = <span class="number">4300</span> <span class="comment"># 根据上述的MAD方法进行设定，官方教程认为counts数过多可能是双细胞，但是下面采用scrublet方法进行双细胞识别。</span></span><br><span class="line">fig, axs = plt.subplots(ncols = <span class="number">2</span>, figsize = (<span class="number">8</span>,<span class="number">4</span>))</span><br><span class="line">sc.pl.scatter(adata, x=<span class="string">&#x27;total_counts&#x27;</span>, y=<span class="string">&#x27;pct_counts_mt&#x27;</span>,ax = axs[<span class="number">0</span>], show=<span class="literal">False</span>)  </span><br><span class="line">sc.pl.scatter(adata, x=<span class="string">&#x27;total_counts&#x27;</span>, y=<span class="string">&#x27;n_genes_by_counts&#x27;</span>,ax = axs[<span class="number">1</span>], show = <span class="literal">False</span>) </span><br><span class="line"><span class="comment"># draw horizontal red lines indicating thresholds.</span></span><br><span class="line">axs[<span class="number">0</span>].hlines(y = mito_filter, xmin = <span class="number">0</span>, xmax = <span class="built_in">max</span>(adata.obs[<span class="string">&#x27;total_counts&#x27;</span>]), color = <span class="string">&#x27;red&#x27;</span>, ls = <span class="string">&#x27;dashed&#x27;</span>) </span><br><span class="line">axs[<span class="number">1</span>].hlines(y = n_counts_filter, xmin = <span class="number">0</span>, xmax = <span class="built_in">max</span>(adata.obs[<span class="string">&#x27;total_counts&#x27;</span>]), color = <span class="string">&#x27;red&#x27;</span>, ls = <span class="string">&#x27;dashed&#x27;</span>)</span><br><span class="line">fig.tight_layout()  </span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;也可以采用小提琴图。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">sc.pl.violin(adata, [<span class="string">&#x27;n_genes_by_counts&#x27;</span>, <span class="string">&#x27;total_counts&#x27;</span>, <span class="string">&#x27;pct_counts_mt&#x27;</span>],jitter=<span class="number">0.4</span>, multi_panel=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;还可以采用直方图。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> seaborn <span class="keyword">as</span> sns  </span><br><span class="line">sns.histplot(adata.obs[<span class="string">&quot;n_genes_by_counts&quot;</span>], bins=<span class="number">100</span>, kde=<span class="literal">False</span>)  </span><br><span class="line">sns.histplot(adata.obs[<span class="string">&quot;total_counts&quot;</span>], bins=<span class="number">100</span>, kde=<span class="literal">False</span>) </span><br></pre></td></tr></table></figure>
+<h3 id="双细胞过滤"><a href="#双细胞过滤" class="headerlink" title="双细胞过滤"></a>双细胞过滤</h3><p>&emsp;&emsp;双细胞被定义为在相同的细胞条形码（barcode）下进行测序的两个细胞，例如，如果它们被捕获在同一个液滴（droplet）中。双细胞由同型（homotypic）与异型（heterotypic）所构成 ：</p>
+<ol>
+<li>同型：同型通常被认为是不影响下游分析的，因为其是由一类相同的细胞中的两个所构成，所以这部分细胞不是我们所需要过滤的对象；  </li>
+<li>异型：异型通常是由来自两类不同的细胞所构成的，异型的存在会使得我们后续的细胞分类出现错误，因为其独特的数据分布特征。<br>&emsp;&emsp;我们可以通过人工构建双细胞进行模拟识别，以排除异型的存在。我们将使用scrublet来完成双细胞的识别。<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">sc.external.pp.scrublet(adata, random_state=<span class="number">112</span>) </span><br><span class="line">adata = adata[adata.obs[<span class="string">&#x27;predicted_doublet&#x27;</span>]==<span class="literal">False</span>, :]</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="低质量细胞过滤"><a href="#低质量细胞过滤" class="headerlink" title="低质量细胞过滤"></a>低质量细胞过滤</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">adata = adata[adata.obs.pct_counts_mt &lt; <span class="number">25</span>, :]  </span><br><span class="line">adata = adata[adata.obs.n_genes_by_counts &gt; <span class="number">200</span>, :]  </span><br><span class="line">adata = adata[adata.obs.total_counts &gt; <span class="number">300</span>, :]  </span><br><span class="line">sc.pp.filter_cells(adata, min_genes=<span class="number">200</span>)  </span><br><span class="line">sc.pp.filter_genes(adata, min_cells=<span class="number">3</span>)  </span><br><span class="line">  </span><br><span class="line"><span class="comment"># 小提琴图可视化  </span></span><br><span class="line">sc.pl.violin(adata, [<span class="string">&#x27;n_genes_by_counts&#x27;</span>, <span class="string">&#x27;total_counts&#x27;</span>, <span class="string">&#x27;pct_counts_mt&#x27;</span>],jitter=<span class="number">0.4</span>, multi_panel=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="保存结果用于scDRS的分析"><a href="#保存结果用于scDRS的分析" class="headerlink" title="保存结果用于scDRS的分析"></a>保存结果用于scDRS的分析</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">adata_raw = adata.copy()  </span><br><span class="line">adata_raw.write_h5ad(<span class="string">f&quot;./output/<span class="subst">&#123;sample&#125;</span>/expr.h5ad&quot;</span>)  </span><br><span class="line">  </span><br><span class="line">df_cov = pd.DataFrame(index=adata_raw.obs.index)  </span><br><span class="line">df_cov[<span class="string">&quot;const&quot;</span>] = <span class="number">1</span>  </span><br><span class="line">df_cov[<span class="string">&quot;n_genes&quot;</span>] = adata_raw.obs[<span class="string">&quot;n_genes&quot;</span>]  </span><br><span class="line">df_cov.to_csv(<span class="string">f&quot;./output/<span class="subst">&#123;sample&#125;</span>/cov.tsv&quot;</span>, sep=<span class="string">&quot;\t&quot;</span>)  </span><br><span class="line">  </span><br><span class="line">summary = pd.DataFrame(adata_raw.obs)  </span><br><span class="line">summary.to_csv(<span class="string">f&quot;./output/<span class="subst">&#123;sample&#125;</span>/summary.tsv&quot;</span>, sep=<span class="string">&quot;\t&quot;</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="scDRS分析"><a href="#scDRS分析" class="headerlink" title="scDRS分析"></a>scDRS分析</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">adata = scdrs.util.load_h5ad(h5ad_file=<span class="string">f&quot;./output/<span class="subst">&#123;sample&#125;</span>/expr.h5ad&quot;</span>, flag_filter_data=<span class="literal">False</span>, flag_raw_count=<span class="literal">True</span>)  </span><br><span class="line">dict_gs = scdrs.util.load_gs(<span class="string">&quot;./output/CHD.gs&quot;</span>, src_species=<span class="string">&quot;human&quot;</span>, dst_species=<span class="string">&quot;human&quot;</span>,to_intersect=adata.var_names)  </span><br><span class="line">df_cov = pd.read_csv(<span class="string">f&quot;./output/<span class="subst">&#123;sample&#125;</span>/cov.tsv&quot;</span>, sep=<span class="string">&quot;\t&quot;</span>, index_col=<span class="number">0</span>)  </span><br><span class="line">adata_analysis = scdrs.preprocess(adata, cov=df_cov, n_mean_bin=<span class="number">20</span>, n_var_bin=<span class="number">20</span>, copy=<span class="literal">True</span>)  </span><br><span class="line">dict_df_score = <span class="built_in">dict</span>()  </span><br><span class="line"><span class="keyword">for</span> trait <span class="keyword">in</span> dict_gs:  </span><br><span class="line">	gene_list, gene_weights = dict_gs[trait]  </span><br><span class="line">	dict_df_score[trait] = scdrs.score_cell(  </span><br><span class="line">		data=adata_analysis,  </span><br><span class="line">		gene_list=gene_list,  </span><br><span class="line">		gene_weight=gene_weights,  </span><br><span class="line">		ctrl_match_key=<span class="string">&quot;mean_var&quot;</span>,  </span><br><span class="line">		n_ctrl=<span class="number">1000</span>,  </span><br><span class="line">		weight_opt=<span class="string">&quot;vs&quot;</span>,  </span><br><span class="line">		return_ctrl_raw_score=<span class="literal">False</span>,  </span><br><span class="line">		return_ctrl_norm_score=<span class="literal">True</span>,  </span><br><span class="line">		verbose=<span class="literal">False</span>,  </span><br><span class="line">	)  </span><br><span class="line">chd = dict_df_score[<span class="string">&quot;CHD&quot;</span>]  </span><br><span class="line">chd.to_csv(<span class="string">f&quot;./output/<span class="subst">&#123;sample&#125;</span>/CHD.csv&quot;</span>)</span><br></pre></td></tr></table></figure>
+<h3 id="可视化"><a href="#可视化" class="headerlink" title="可视化"></a>可视化</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">sc.pp.highly_variable_genes(adata, n_top_genes=<span class="number">2000</span>)  </span><br><span class="line">adata = adata[:, adata.var.highly_variable]  </span><br><span class="line">sc.pp.regress_out(adata, [<span class="string">&#x27;total_counts&#x27;</span>, <span class="string">&#x27;pct_counts_mt&#x27;</span>])  </span><br><span class="line"><span class="comment">#归一化 (事实上，只有PCA才采用归一化数据，使得不同PC的数据规模接近。)  </span></span><br><span class="line">sc.pp.scale(adata, max_value=<span class="number">10</span>)  </span><br><span class="line"><span class="comment">#主成分分析  </span></span><br><span class="line">sc.tl.pca(adata, svd_solver=<span class="string">&quot;arpack&quot;</span>)  </span><br><span class="line">  </span><br><span class="line">sc.pp.neighbors(adata, n_neighbors=<span class="number">10</span>, n_pcs=<span class="number">40</span>) <span class="comment">#KNN算法，此处参数：n_neighbours更大，则聚类可能会变少；n_pcs一般为40，可参考碎石图。  </span></span><br><span class="line">sc.tl.umap(adata)  </span><br><span class="line">sc.tl.leiden(adata)  </span><br><span class="line">sc.pl.umap(adata, color=[<span class="string">&#x27;leiden&#x27;</span>],save=<span class="string">f&quot;<span class="subst">&#123;sample&#125;</span>_original.png&quot;</span>)  </span><br><span class="line"><span class="comment">#非参数检验方法  </span></span><br><span class="line">sc.tl.rank_genes_groups(adata, <span class="string">&#x27;leiden&#x27;</span>, method=<span class="string">&#x27;wilcoxon&#x27;</span>)  </span><br><span class="line">sc.pl.rank_genes_groups(adata, n_genes=<span class="number">25</span>, sharey=<span class="literal">False</span>)  </span><br><span class="line">  </span><br><span class="line"><span class="comment"># 结果写入，方便后续可视化  </span></span><br><span class="line">pd.DataFrame(adata.uns[<span class="string">&#x27;rank_genes_groups&#x27;</span>][<span class="string">&#x27;names&#x27;</span>]).head(<span class="number">5</span>)  </span><br><span class="line">result = adata.uns[<span class="string">&#x27;rank_genes_groups&#x27;</span>]  </span><br><span class="line">groups = result[<span class="string">&#x27;names&#x27;</span>].dtype.names  </span><br><span class="line">pd.DataFrame(adata.uns[<span class="string">&#x27;rank_genes_groups&#x27;</span>][<span class="string">&#x27;names&#x27;</span>]).to_csv(<span class="string">f&quot;./output/<span class="subst">&#123;sample&#125;</span>/marker.csv&quot;</span>)  </span><br><span class="line"><span class="keyword">for</span> trait <span class="keyword">in</span> dict_df_score:  </span><br><span class="line">	adata.obs[trait] = dict_df_score[trait][<span class="string">&quot;raw_score&quot;</span>]  </span><br><span class="line"><span class="keyword">for</span> trait <span class="keyword">in</span> dict_df_score:  </span><br><span class="line">	adata.obs[<span class="string">f&quot;<span class="subst">&#123;trait&#125;</span>_norm&quot;</span>] = dict_df_score[trait][<span class="string">&quot;norm_score&quot;</span>]  </span><br><span class="line">sc.pl.umap(adata,color=dict_df_score.keys(),ncols=<span class="number">1</span>,color_map=<span class="string">&quot;RdBu_r&quot;</span>,save=<span class="string">f&quot;<span class="subst">&#123;sample&#125;</span>_disease.png&quot;</span>)  </span><br><span class="line">df_group = adata.obs  </span><br><span class="line">l = [<span class="string">&quot;a&quot;</span>,<span class="string">&quot;b&quot;</span>,<span class="string">&quot;c&quot;</span>,<span class="string">&quot;d&quot;</span>,<span class="string">&quot;e&quot;</span>,<span class="string">&quot;f&quot;</span>,<span class="string">&quot;g&quot;</span>,<span class="string">&quot;h&quot;</span>,<span class="string">&quot;i&quot;</span>,<span class="string">&quot;j&quot;</span>,<span class="string">&quot;k&quot;</span>,<span class="string">&quot;l&quot;</span>,<span class="string">&quot;m&quot;</span>,<span class="string">&quot;n&quot;</span>,<span class="string">&quot;o&quot;</span>,<span class="string">&quot;p&quot;</span>,<span class="string">&quot;q&quot;</span>,<span class="string">&quot;r&quot;</span>,<span class="string">&quot;s&quot;</span>,<span class="string">&quot;t&quot;</span>,<span class="string">&quot;u&quot;</span>,<span class="string">&quot;v&quot;</span>,<span class="string">&quot;w&quot;</span>,<span class="string">&quot;x&quot;</span>,<span class="string">&quot;y&quot;</span>,<span class="string">&quot;z&quot;</span>]  </span><br><span class="line">map_list = &#123;&#125;  </span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(l)):  </span><br><span class="line">	map_list[<span class="built_in">str</span>(i)] = l[i]  </span><br><span class="line">df_group[<span class="string">&quot;group&quot;</span>] = df_group[<span class="string">&quot;leiden&quot;</span>].<span class="built_in">map</span>(map_list)  </span><br><span class="line">df_group.to_csv(<span class="string">f&quot;./output/<span class="subst">&#123;sample&#125;</span>/leiden score.csv&quot;</span>)  </span><br><span class="line">df_gene = scdrs.method.downstream_gene_analysis(adata=adata, df_full_score=dict_df_score[<span class="string">&quot;CHD&quot;</span>])  </span><br><span class="line">df_gene.to_csv(<span class="string">f&quot;./output/<span class="subst">&#123;sample&#125;</span>/key gene.csv&quot;</span>)  </span><br><span class="line">df_group_analysis = scdrs.method.downstream_group_analysis(adata=adata, df_full_score=dict_df_score[<span class="string">&quot;CHD&quot;</span>], group_cols=[<span class="string">&quot;group&quot;</span>])</span><br></pre></td></tr></table></figure>
+<h2 id="在命令行中使用scdrs"><a href="#在命令行中使用scdrs" class="headerlink" title="在命令行中使用scdrs"></a>在命令行中使用scdrs</h2><h3 id="计算每个细胞的疾病富集分数"><a href="#计算每个细胞的疾病富集分数" class="headerlink" title="计算每个细胞的疾病富集分数"></a>计算每个细胞的疾病富集分数</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Shell</span></span><br><span class="line">scdrs compute-score \  </span><br><span class="line">    --h5ad-file data/expr.h5ad \  </span><br><span class="line">    --h5ad-species human \  </span><br><span class="line">    --gs-file data/processed_geneset.gs \  </span><br><span class="line">    --gs-species human \  </span><br><span class="line">    --cov-file data/cov.tsv \  </span><br><span class="line">    --flag-filter-data True \  </span><br><span class="line">    --flag-raw-count True \  </span><br><span class="line">    --flag-return-ctrl-raw-score False \  </span><br><span class="line">    --flag-return-ctrl-norm-score True \  </span><br><span class="line">    --out-folder data/  </span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line"><span class="comment"># 可视化 python  </span></span><br><span class="line">df_gs.index = [<span class="string">&#x27;CHD&#x27;</span>,<span class="string">&#x27;Height&#x27;</span>]  </span><br><span class="line">dict_score = &#123;  </span><br><span class="line">    trait: pd.read_csv(f<span class="string">&quot;data/&#123;trait&#125;.full_score.gz&quot;</span>, sep=<span class="string">&quot;\t&quot;</span>, index_col=0)  </span><br><span class="line">    <span class="keyword">for</span> trait <span class="keyword">in</span> df_gs.index  </span><br><span class="line">&#125;  </span><br><span class="line">  </span><br><span class="line"><span class="keyword">for</span> trait <span class="keyword">in</span> dict_score:  </span><br><span class="line">    adata.obs[trait] = dict_score[trait][<span class="string">&quot;norm_score&quot;</span>]  </span><br><span class="line">  </span><br><span class="line">sc.set_figure_params(figsize=[2.5, 2.5], dpi=150)  </span><br><span class="line">sc.pl.umap(  </span><br><span class="line">    adata,  </span><br><span class="line">    color=dict_score.keys(),  </span><br><span class="line">    ncols=1,  </span><br><span class="line">    color_map=<span class="string">&quot;RdBu_r&quot;</span>,  </span><br><span class="line">    vmin=-5,  </span><br><span class="line">    vmax=5,  </span><br><span class="line">)  </span><br><span class="line">  </span><br><span class="line">sc.pl.umap(  </span><br><span class="line">    adata,  </span><br><span class="line">    color=dict_score.keys(),  </span><br><span class="line">    color_map=<span class="string">&quot;RdBu_r&quot;</span>,  </span><br><span class="line">    vmin=-5,  </span><br><span class="line">    vmax=5,  </span><br><span class="line">    s=20,  </span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;基于单个细胞的疾病富集分数，我们可以充分探索下游分析的方式。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li>Zhang, M.J., Hou, K., Dey, K.K. et al. Polygenic enrichment distinguishes disease associations of individual cells in single-cell RNA-seq data. Nat Genet 54, 1572–1580 (2022).<a href="https://doi.org/10.1038/s41588-022-01167-z">DOI</a>.</li>
+<li>scDRS的Github项目：<a href="https://github.com/martinjzhang/scDRS">martinjzhang/scDRS</a>。</li>
+<li>scDRS的官方文档：<a href="https://martinjzhang.github.io/scDRS/">scDRS</a>。</li>
+</ol>
+]]></content>
+      <categories>
+        <category>生物信息学</category>
+      </categories>
+      <tags>
+        <tag>生物信息学</tag>
+        <tag>GWAS</tag>
+        <tag>单细胞测序</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>celltogwas：细胞类型注释到基因组的工具包</title>
     <url>/2023/08/19/celltogwas%EF%BC%9A%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8B%E6%B3%A8%E9%87%8A%E5%88%B0%E5%9F%BA%E5%9B%A0%E7%BB%84%E7%9A%84%E5%B7%A5%E5%85%B7%E5%8C%85/</url>
     <content><![CDATA[<h2 id="celltogwas"><a href="#celltogwas" class="headerlink" title="celltogwas"></a>celltogwas</h2><p>This code is a toolkit for genomic analysis. It includes several functions and helper functions to extract gene information from a genomic annotation file, merge gene intervals, generate genomic ranges based on cell types and window size, and annotate GWAS (Genome-Wide Association Study) data.</p>
@@ -85,9 +136,9 @@
         <category>生物信息学</category>
       </categories>
       <tags>
+        <tag>生物信息学</tag>
         <tag>GWAS</tag>
         <tag>单细胞测序</tag>
-        <tag>生物信息学</tag>
       </tags>
   </entry>
   <entry>
@@ -118,57 +169,6 @@
         <tag>计算机</tag>
         <tag>爬虫</tag>
         <tag>研究生</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>scDRS：基于GWAS和scRNA评估细胞类型和生物学过程的疾病相关性</title>
-    <url>/2023/08/11/scDRS%EF%BC%9A%E5%9F%BA%E4%BA%8EGWAS%E5%92%8CscRNA%E8%AF%84%E4%BC%B0%E7%BB%86%E8%83%9E%E7%B1%BB%E5%9E%8B%E5%92%8C%E7%94%9F%E7%89%A9%E5%AD%A6%E8%BF%87%E7%A8%8B%E7%9A%84%E7%96%BE%E7%97%85%E7%9B%B8%E5%85%B3%E6%80%A7/</url>
-    <content><![CDATA[<h2 id="方法学概述"><a href="#方法学概述" class="headerlink" title="方法学概述"></a>方法学概述</h2><p>&emsp;&emsp;scDRS的核心思想是建立合适的权重从而根据基因的表达对基因程序进行评分，即加权基因表达量。其算法可概述为：首先将基因根据MAGMA得到的gene-level z-scores从大到小排列（也可以自定义基因程序）, 选择潜在的致病基因。基于致病基因的表达量和权重接着计算致病基因程序加权表达量。从而评估该细胞的基因程序和疾病的相关度。<br>&emsp;&emsp;算法对z-score采用算数加权，对技术噪声指标采用逆加权。也就是说，在GWAS中鉴定出的越相关的，且测序过程中技术原因造成误差较小的基因。根据输入数据集的基因表达，在蒙特卡洛随机模拟生成的B个对照组中，从而推断分布，进而对研究的疾病进行统计检验。利用这样的方法，我们可以计算单个细胞和疾病的相关性，以及鉴定相应的驱动基因，并基于此进行下游分析。</p>
-<h2 id="使用scdrs包在Python中进行分析"><a href="#使用scdrs包在Python中进行分析" class="headerlink" title="使用scdrs包在Python中进行分析"></a>使用scdrs包在Python中进行分析</h2><h3 id="载入程序包"><a href="#载入程序包" class="headerlink" title="载入程序包"></a>载入程序包</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> scanpy <span class="keyword">as</span> sc</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> scdrs</span><br></pre></td></tr></table></figure>
-<h3 id="基础参数设置"><a href="#基础参数设置" class="headerlink" title="基础参数设置"></a>基础参数设置</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">sc.settings.verbosity = <span class="number">3</span> <span class="comment"># 设置日志等级:errors(0),warnings(1),info(2),hints(3)  </span></span><br><span class="line">sc.logging.print_header() <span class="comment"># 输出版本号</span></span><br><span class="line">sc.settings.set_figure_params(dpi=<span class="number">300</span>, facecolor=<span class="string">&#x27;white&#x27;</span>) <span class="comment"># 设置图片的分辨率300dpi</span></span><br></pre></td></tr></table></figure>
-<h3 id="读取计数矩阵和预处理"><a href="#读取计数矩阵和预处理" class="headerlink" title="读取计数矩阵和预处理"></a>读取计数矩阵和预处理</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">adata = sc.read_csv(<span class="string">&quot;heart.csv&quot;</span>) <span class="comment"># 注意，这里的heart.csv列为细胞，行为基因，这一点和seurat框架是不同的。</span></span><br><span class="line"><span class="comment"># 其他的读取方法可参考scanpy的文档。</span></span><br><span class="line">adata.var_names_make_unique()</span><br><span class="line">adata.obs_names_make_unique()</span><br><span class="line">adata.var.head() <span class="comment"># 基因特征的摘要</span></span><br><span class="line">adata.obs.head() <span class="comment"># 细胞特征的摘要</span></span><br><span class="line">adata <span class="comment"># 返回矩阵大小，基因相关的变量以及细胞相关的变量数据  </span></span><br><span class="line">sc.pl.highest_expr_genes(adata, n_top=<span class="number">20</span>) <span class="comment"># 显示在全部单个细胞中基因读数占总读数的百分比排名前20的基因</span></span><br></pre></td></tr></table></figure>
-<h3 id="质量控制"><a href="#质量控制" class="headerlink" title="质量控制"></a>质量控制</h3><p>&emsp;&emsp;质量控制，大部分都是针对细胞（obs）的质量控制。<br>&emsp;&emsp;细胞质控通常对以下三个质控协变量进行：  </p>
-<ol>
-<li>每个条形码的计数数量（计数深度）  </li>
-<li>每个条形码的基因数量  </li>
-<li>每个条形码的线粒体基因计数比例<br>&emsp;&emsp;如果一个细胞正在死亡，其mRNA被释放到内环境，导致线粒体基因的比例较高，所以我们可以通过线粒体基因的比例来过滤掉低质量的单细胞测序数据。但是如果仅考虑一个变量可能会造成生物学误差，共同考虑三个 QC 协变量至关重要。例如，线粒体计数相对较高的细胞可能参与呼吸过程，不应被过滤掉。然而，计数低或高的细胞可能对应于静止细胞群或尺寸较大的细胞。故我们在过滤低质量细胞的时候，要同时考虑不同的QC协变量之间的关系。</li>
-</ol>
-<h3 id="质控指标的计算"><a href="#质控指标的计算" class="headerlink" title="质控指标的计算"></a>质控指标的计算</h3><p>&emsp;&emsp;首先采用正则表达式识别线粒体；接着，我们将根据识别的结果进行比例的计算。<br><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">adata.var[<span class="string">&quot;mt&quot;</span>] = adata.var_names.<span class="built_in">str</span>.startswith(<span class="string">&quot;MT-&quot;</span>)  </span><br><span class="line">sc.pp.calculate_qc_metrics(adata, qc_vars=[<span class="string">&quot;mt&quot;</span>], inplace=<span class="literal">True</span>, percent_top=[<span class="number">20</span>], log1p=<span class="literal">True</span>) <span class="comment"># 此处可以计算其他给定基因；该步骤之后，才可以得到n_counts等数据。</span></span><br></pre></td></tr></table></figure><br>&emsp;&emsp;通过上面的计算和adata.obs固有的数据，我们可以得到三个质控协变量：  </p>
-<ol>
-<li>n_genes_by_counts/detected_genes: 一个细胞中发现的有效基因数量（即表达量不为0）  </li>
-<li>total_counts/nUMIs: 一个细胞中发现的分子数量（UMI），通常也可以被认为是这个细胞的文库大小  </li>
-<li>pct_counts_mt/mito_perc: 一个细胞中线粒体基因的表达计数占比<br>&emsp;&emsp;可以绘制三个协变量的分布图。</li>
-</ol>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line">mito_filter = <span class="number">25</span> <span class="comment"># 根据数据集合设定，注意，心室肌等组织富含线粒体，需要根据情况进行更改。</span></span><br><span class="line">n_counts_filter = <span class="number">4300</span> <span class="comment"># 根据上述的MAD方法进行设定，官方教程认为counts数过多可能是双细胞，但是下面采用scrublet方法进行双细胞识别。</span></span><br><span class="line">fig, axs = plt.subplots(ncols = <span class="number">2</span>, figsize = (<span class="number">8</span>,<span class="number">4</span>))</span><br><span class="line">sc.pl.scatter(adata, x=<span class="string">&#x27;total_counts&#x27;</span>, y=<span class="string">&#x27;pct_counts_mt&#x27;</span>,ax = axs[<span class="number">0</span>], show=<span class="literal">False</span>)  </span><br><span class="line">sc.pl.scatter(adata, x=<span class="string">&#x27;total_counts&#x27;</span>, y=<span class="string">&#x27;n_genes_by_counts&#x27;</span>,ax = axs[<span class="number">1</span>], show = <span class="literal">False</span>) </span><br><span class="line"><span class="comment"># draw horizontal red lines indicating thresholds.</span></span><br><span class="line">axs[<span class="number">0</span>].hlines(y = mito_filter, xmin = <span class="number">0</span>, xmax = <span class="built_in">max</span>(adata.obs[<span class="string">&#x27;total_counts&#x27;</span>]), color = <span class="string">&#x27;red&#x27;</span>, ls = <span class="string">&#x27;dashed&#x27;</span>) </span><br><span class="line">axs[<span class="number">1</span>].hlines(y = n_counts_filter, xmin = <span class="number">0</span>, xmax = <span class="built_in">max</span>(adata.obs[<span class="string">&#x27;total_counts&#x27;</span>]), color = <span class="string">&#x27;red&#x27;</span>, ls = <span class="string">&#x27;dashed&#x27;</span>)</span><br><span class="line">fig.tight_layout()  </span><br><span class="line">plt.show()</span><br></pre></td></tr></table></figure>
-<p>&emsp;&emsp;也可以采用小提琴图。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">sc.pl.violin(adata, [<span class="string">&#x27;n_genes_by_counts&#x27;</span>, <span class="string">&#x27;total_counts&#x27;</span>, <span class="string">&#x27;pct_counts_mt&#x27;</span>],jitter=<span class="number">0.4</span>, multi_panel=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
-<p>&emsp;&emsp;还可以采用直方图。</p>
-<figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> seaborn <span class="keyword">as</span> sns  </span><br><span class="line">sns.histplot(adata.obs[<span class="string">&quot;n_genes_by_counts&quot;</span>], bins=<span class="number">100</span>, kde=<span class="literal">False</span>)  </span><br><span class="line">sns.histplot(adata.obs[<span class="string">&quot;total_counts&quot;</span>], bins=<span class="number">100</span>, kde=<span class="literal">False</span>) </span><br></pre></td></tr></table></figure>
-<h3 id="双细胞过滤"><a href="#双细胞过滤" class="headerlink" title="双细胞过滤"></a>双细胞过滤</h3><p>&emsp;&emsp;双细胞被定义为在相同的细胞条形码（barcode）下进行测序的两个细胞，例如，如果它们被捕获在同一个液滴（droplet）中。双细胞由同型（homotypic）与异型（heterotypic）所构成 ：</p>
-<ol>
-<li>同型：同型通常被认为是不影响下游分析的，因为其是由一类相同的细胞中的两个所构成，所以这部分细胞不是我们所需要过滤的对象；  </li>
-<li>异型：异型通常是由来自两类不同的细胞所构成的，异型的存在会使得我们后续的细胞分类出现错误，因为其独特的数据分布特征。<br>&emsp;&emsp;我们可以通过人工构建双细胞进行模拟识别，以排除异型的存在。我们将使用scrublet来完成双细胞的识别。<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">sc.external.pp.scrublet(adata, random_state=<span class="number">112</span>) </span><br><span class="line">adata = adata[adata.obs[<span class="string">&#x27;predicted_doublet&#x27;</span>]==<span class="literal">False</span>, :]</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<h3 id="低质量细胞过滤"><a href="#低质量细胞过滤" class="headerlink" title="低质量细胞过滤"></a>低质量细胞过滤</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">adata = adata[adata.obs.pct_counts_mt &lt; <span class="number">25</span>, :]  </span><br><span class="line">adata = adata[adata.obs.n_genes_by_counts &gt; <span class="number">200</span>, :]  </span><br><span class="line">adata = adata[adata.obs.total_counts &gt; <span class="number">300</span>, :]  </span><br><span class="line">sc.pp.filter_cells(adata, min_genes=<span class="number">200</span>)  </span><br><span class="line">sc.pp.filter_genes(adata, min_cells=<span class="number">3</span>)  </span><br><span class="line">  </span><br><span class="line"><span class="comment"># 小提琴图可视化  </span></span><br><span class="line">sc.pl.violin(adata, [<span class="string">&#x27;n_genes_by_counts&#x27;</span>, <span class="string">&#x27;total_counts&#x27;</span>, <span class="string">&#x27;pct_counts_mt&#x27;</span>],jitter=<span class="number">0.4</span>, multi_panel=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
-<h3 id="保存结果用于scDRS的分析"><a href="#保存结果用于scDRS的分析" class="headerlink" title="保存结果用于scDRS的分析"></a>保存结果用于scDRS的分析</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">adata_raw = adata.copy()  </span><br><span class="line">adata_raw.write_h5ad(<span class="string">f&quot;./output/<span class="subst">&#123;sample&#125;</span>/expr.h5ad&quot;</span>)  </span><br><span class="line">  </span><br><span class="line">df_cov = pd.DataFrame(index=adata_raw.obs.index)  </span><br><span class="line">df_cov[<span class="string">&quot;const&quot;</span>] = <span class="number">1</span>  </span><br><span class="line">df_cov[<span class="string">&quot;n_genes&quot;</span>] = adata_raw.obs[<span class="string">&quot;n_genes&quot;</span>]  </span><br><span class="line">df_cov.to_csv(<span class="string">f&quot;./output/<span class="subst">&#123;sample&#125;</span>/cov.tsv&quot;</span>, sep=<span class="string">&quot;\t&quot;</span>)  </span><br><span class="line">  </span><br><span class="line">summary = pd.DataFrame(adata_raw.obs)  </span><br><span class="line">summary.to_csv(<span class="string">f&quot;./output/<span class="subst">&#123;sample&#125;</span>/summary.tsv&quot;</span>, sep=<span class="string">&quot;\t&quot;</span>)</span><br></pre></td></tr></table></figure>
-<h3 id="scDRS分析"><a href="#scDRS分析" class="headerlink" title="scDRS分析"></a>scDRS分析</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">adata = scdrs.util.load_h5ad(h5ad_file=<span class="string">f&quot;./output/<span class="subst">&#123;sample&#125;</span>/expr.h5ad&quot;</span>, flag_filter_data=<span class="literal">False</span>, flag_raw_count=<span class="literal">True</span>)  </span><br><span class="line">dict_gs = scdrs.util.load_gs(<span class="string">&quot;./output/CHD.gs&quot;</span>, src_species=<span class="string">&quot;human&quot;</span>, dst_species=<span class="string">&quot;human&quot;</span>,to_intersect=adata.var_names)  </span><br><span class="line">df_cov = pd.read_csv(<span class="string">f&quot;./output/<span class="subst">&#123;sample&#125;</span>/cov.tsv&quot;</span>, sep=<span class="string">&quot;\t&quot;</span>, index_col=<span class="number">0</span>)  </span><br><span class="line">adata_analysis = scdrs.preprocess(adata, cov=df_cov, n_mean_bin=<span class="number">20</span>, n_var_bin=<span class="number">20</span>, copy=<span class="literal">True</span>)  </span><br><span class="line">dict_df_score = <span class="built_in">dict</span>()  </span><br><span class="line"><span class="keyword">for</span> trait <span class="keyword">in</span> dict_gs:  </span><br><span class="line">	gene_list, gene_weights = dict_gs[trait]  </span><br><span class="line">	dict_df_score[trait] = scdrs.score_cell(  </span><br><span class="line">		data=adata_analysis,  </span><br><span class="line">		gene_list=gene_list,  </span><br><span class="line">		gene_weight=gene_weights,  </span><br><span class="line">		ctrl_match_key=<span class="string">&quot;mean_var&quot;</span>,  </span><br><span class="line">		n_ctrl=<span class="number">1000</span>,  </span><br><span class="line">		weight_opt=<span class="string">&quot;vs&quot;</span>,  </span><br><span class="line">		return_ctrl_raw_score=<span class="literal">False</span>,  </span><br><span class="line">		return_ctrl_norm_score=<span class="literal">True</span>,  </span><br><span class="line">		verbose=<span class="literal">False</span>,  </span><br><span class="line">	)  </span><br><span class="line">chd = dict_df_score[<span class="string">&quot;CHD&quot;</span>]  </span><br><span class="line">chd.to_csv(<span class="string">f&quot;./output/<span class="subst">&#123;sample&#125;</span>/CHD.csv&quot;</span>)</span><br></pre></td></tr></table></figure>
-<h3 id="可视化"><a href="#可视化" class="headerlink" title="可视化"></a>可视化</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">sc.pp.highly_variable_genes(adata, n_top_genes=<span class="number">2000</span>)  </span><br><span class="line">adata = adata[:, adata.var.highly_variable]  </span><br><span class="line">sc.pp.regress_out(adata, [<span class="string">&#x27;total_counts&#x27;</span>, <span class="string">&#x27;pct_counts_mt&#x27;</span>])  </span><br><span class="line"><span class="comment">#归一化 (事实上，只有PCA才采用归一化数据，使得不同PC的数据规模接近。)  </span></span><br><span class="line">sc.pp.scale(adata, max_value=<span class="number">10</span>)  </span><br><span class="line"><span class="comment">#主成分分析  </span></span><br><span class="line">sc.tl.pca(adata, svd_solver=<span class="string">&quot;arpack&quot;</span>)  </span><br><span class="line">  </span><br><span class="line">sc.pp.neighbors(adata, n_neighbors=<span class="number">10</span>, n_pcs=<span class="number">40</span>) <span class="comment">#KNN算法，此处参数：n_neighbours更大，则聚类可能会变少；n_pcs一般为40，可参考碎石图。  </span></span><br><span class="line">sc.tl.umap(adata)  </span><br><span class="line">sc.tl.leiden(adata)  </span><br><span class="line">sc.pl.umap(adata, color=[<span class="string">&#x27;leiden&#x27;</span>],save=<span class="string">f&quot;<span class="subst">&#123;sample&#125;</span>_original.png&quot;</span>)  </span><br><span class="line"><span class="comment">#非参数检验方法  </span></span><br><span class="line">sc.tl.rank_genes_groups(adata, <span class="string">&#x27;leiden&#x27;</span>, method=<span class="string">&#x27;wilcoxon&#x27;</span>)  </span><br><span class="line">sc.pl.rank_genes_groups(adata, n_genes=<span class="number">25</span>, sharey=<span class="literal">False</span>)  </span><br><span class="line">  </span><br><span class="line"><span class="comment"># 结果写入，方便后续可视化  </span></span><br><span class="line">pd.DataFrame(adata.uns[<span class="string">&#x27;rank_genes_groups&#x27;</span>][<span class="string">&#x27;names&#x27;</span>]).head(<span class="number">5</span>)  </span><br><span class="line">result = adata.uns[<span class="string">&#x27;rank_genes_groups&#x27;</span>]  </span><br><span class="line">groups = result[<span class="string">&#x27;names&#x27;</span>].dtype.names  </span><br><span class="line">pd.DataFrame(adata.uns[<span class="string">&#x27;rank_genes_groups&#x27;</span>][<span class="string">&#x27;names&#x27;</span>]).to_csv(<span class="string">f&quot;./output/<span class="subst">&#123;sample&#125;</span>/marker.csv&quot;</span>)  </span><br><span class="line"><span class="keyword">for</span> trait <span class="keyword">in</span> dict_df_score:  </span><br><span class="line">	adata.obs[trait] = dict_df_score[trait][<span class="string">&quot;raw_score&quot;</span>]  </span><br><span class="line"><span class="keyword">for</span> trait <span class="keyword">in</span> dict_df_score:  </span><br><span class="line">	adata.obs[<span class="string">f&quot;<span class="subst">&#123;trait&#125;</span>_norm&quot;</span>] = dict_df_score[trait][<span class="string">&quot;norm_score&quot;</span>]  </span><br><span class="line">sc.pl.umap(adata,color=dict_df_score.keys(),ncols=<span class="number">1</span>,color_map=<span class="string">&quot;RdBu_r&quot;</span>,save=<span class="string">f&quot;<span class="subst">&#123;sample&#125;</span>_disease.png&quot;</span>)  </span><br><span class="line">df_group = adata.obs  </span><br><span class="line">l = [<span class="string">&quot;a&quot;</span>,<span class="string">&quot;b&quot;</span>,<span class="string">&quot;c&quot;</span>,<span class="string">&quot;d&quot;</span>,<span class="string">&quot;e&quot;</span>,<span class="string">&quot;f&quot;</span>,<span class="string">&quot;g&quot;</span>,<span class="string">&quot;h&quot;</span>,<span class="string">&quot;i&quot;</span>,<span class="string">&quot;j&quot;</span>,<span class="string">&quot;k&quot;</span>,<span class="string">&quot;l&quot;</span>,<span class="string">&quot;m&quot;</span>,<span class="string">&quot;n&quot;</span>,<span class="string">&quot;o&quot;</span>,<span class="string">&quot;p&quot;</span>,<span class="string">&quot;q&quot;</span>,<span class="string">&quot;r&quot;</span>,<span class="string">&quot;s&quot;</span>,<span class="string">&quot;t&quot;</span>,<span class="string">&quot;u&quot;</span>,<span class="string">&quot;v&quot;</span>,<span class="string">&quot;w&quot;</span>,<span class="string">&quot;x&quot;</span>,<span class="string">&quot;y&quot;</span>,<span class="string">&quot;z&quot;</span>]  </span><br><span class="line">map_list = &#123;&#125;  </span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="built_in">len</span>(l)):  </span><br><span class="line">	map_list[<span class="built_in">str</span>(i)] = l[i]  </span><br><span class="line">df_group[<span class="string">&quot;group&quot;</span>] = df_group[<span class="string">&quot;leiden&quot;</span>].<span class="built_in">map</span>(map_list)  </span><br><span class="line">df_group.to_csv(<span class="string">f&quot;./output/<span class="subst">&#123;sample&#125;</span>/leiden score.csv&quot;</span>)  </span><br><span class="line">df_gene = scdrs.method.downstream_gene_analysis(adata=adata, df_full_score=dict_df_score[<span class="string">&quot;CHD&quot;</span>])  </span><br><span class="line">df_gene.to_csv(<span class="string">f&quot;./output/<span class="subst">&#123;sample&#125;</span>/key gene.csv&quot;</span>)  </span><br><span class="line">df_group_analysis = scdrs.method.downstream_group_analysis(adata=adata, df_full_score=dict_df_score[<span class="string">&quot;CHD&quot;</span>], group_cols=[<span class="string">&quot;group&quot;</span>])</span><br></pre></td></tr></table></figure>
-<h2 id="在命令行中使用scdrs"><a href="#在命令行中使用scdrs" class="headerlink" title="在命令行中使用scdrs"></a>在命令行中使用scdrs</h2><h3 id="计算每个细胞的疾病富集分数"><a href="#计算每个细胞的疾病富集分数" class="headerlink" title="计算每个细胞的疾病富集分数"></a>计算每个细胞的疾病富集分数</h3><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># Shell</span></span><br><span class="line">scdrs compute-score \  </span><br><span class="line">    --h5ad-file data/expr.h5ad \  </span><br><span class="line">    --h5ad-species human \  </span><br><span class="line">    --gs-file data/processed_geneset.gs \  </span><br><span class="line">    --gs-species human \  </span><br><span class="line">    --cov-file data/cov.tsv \  </span><br><span class="line">    --flag-filter-data True \  </span><br><span class="line">    --flag-raw-count True \  </span><br><span class="line">    --flag-return-ctrl-raw-score False \  </span><br><span class="line">    --flag-return-ctrl-norm-score True \  </span><br><span class="line">    --out-folder data/  </span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line"><span class="comment"># 可视化 python  </span></span><br><span class="line">df_gs.index = [<span class="string">&#x27;CHD&#x27;</span>,<span class="string">&#x27;Height&#x27;</span>]  </span><br><span class="line">dict_score = &#123;  </span><br><span class="line">    trait: pd.read_csv(f<span class="string">&quot;data/&#123;trait&#125;.full_score.gz&quot;</span>, sep=<span class="string">&quot;\t&quot;</span>, index_col=0)  </span><br><span class="line">    <span class="keyword">for</span> trait <span class="keyword">in</span> df_gs.index  </span><br><span class="line">&#125;  </span><br><span class="line">  </span><br><span class="line"><span class="keyword">for</span> trait <span class="keyword">in</span> dict_score:  </span><br><span class="line">    adata.obs[trait] = dict_score[trait][<span class="string">&quot;norm_score&quot;</span>]  </span><br><span class="line">  </span><br><span class="line">sc.set_figure_params(figsize=[2.5, 2.5], dpi=150)  </span><br><span class="line">sc.pl.umap(  </span><br><span class="line">    adata,  </span><br><span class="line">    color=dict_score.keys(),  </span><br><span class="line">    ncols=1,  </span><br><span class="line">    color_map=<span class="string">&quot;RdBu_r&quot;</span>,  </span><br><span class="line">    vmin=-5,  </span><br><span class="line">    vmax=5,  </span><br><span class="line">)  </span><br><span class="line">  </span><br><span class="line">sc.pl.umap(  </span><br><span class="line">    adata,  </span><br><span class="line">    color=dict_score.keys(),  </span><br><span class="line">    color_map=<span class="string">&quot;RdBu_r&quot;</span>,  </span><br><span class="line">    vmin=-5,  </span><br><span class="line">    vmax=5,  </span><br><span class="line">    s=20,  </span><br><span class="line">)</span><br></pre></td></tr></table></figure>
-<p>&emsp;&emsp;基于单个细胞的疾病富集分数，我们可以充分探索下游分析的方式。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
-<li>Zhang, M.J., Hou, K., Dey, K.K. et al. Polygenic enrichment distinguishes disease associations of individual cells in single-cell RNA-seq data. Nat Genet 54, 1572–1580 (2022).<a href="https://doi.org/10.1038/s41588-022-01167-z">DOI</a>.</li>
-<li>scDRS的Github项目：<a href="https://github.com/martinjzhang/scDRS">martinjzhang/scDRS</a>。</li>
-<li>scDRS的官方文档：<a href="https://martinjzhang.github.io/scDRS/">scDRS</a>。</li>
-</ol>
-]]></content>
-      <categories>
-        <category>生物信息学</category>
-      </categories>
-      <tags>
-        <tag>GWAS</tag>
-        <tag>单细胞测序</tag>
-        <tag>生物信息学</tag>
       </tags>
   </entry>
   <entry>
@@ -338,8 +338,8 @@
         <category>生物信息学</category>
       </categories>
       <tags>
-        <tag>单细胞测序</tag>
         <tag>生物信息学</tag>
+        <tag>单细胞测序</tag>
       </tags>
   </entry>
   <entry>
@@ -1259,6 +1259,262 @@
       </tags>
   </entry>
   <entry>
+    <title>实操：把chatGPT接入智能音箱？</title>
+    <url>/2024/03/18/%E5%AE%9E%E6%93%8D%EF%BC%9A%E6%8A%8AchatGPT%E6%8E%A5%E5%85%A5%E6%99%BA%E8%83%BD%E9%9F%B3%E7%AE%B1%EF%BC%9F/</url>
+    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>&emsp;&emsp;学院以前比赛发了个小米音箱，使用场景比较局限。突发奇想能否把大语言模型和小爱音响结合起来，于是就有了这番折腾。包的原理十分直接，就是通过TTS识别，发送给chatGPT，再返回结果进行朗读。</p>
+<h2 id="储存库"><a href="#储存库" class="headerlink" title="储存库"></a>储存库</h2><p>&emsp;&emsp;<a href="https://github.com/yihong0618/xiaogpt">yihong0618/xiaogpt: Play ChatGPT and other LLM with Xiaomi AI Speaker (github.com)</a><br>&emsp;&emsp;感谢大佬！</p>
+<h2 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h2><h3 id="软件环境"><a href="#软件环境" class="headerlink" title="软件环境"></a>软件环境</h3><p>&emsp;&emsp;实操过程中，发现Windows11系统无法兼容相关依赖包，所以建议通过Mac或者Linux系统的命令行运行如下指令。大家一般使用Windows系统，可以安装带有图形界面的Ubuntu双系统，或者在Windows下安装WSL-ubuntu子系统，相关教程可以bing！这里简述一下WSL-ubuntu的安装方法：</p>
+<ol>
+<li>首先，按下Win+R键打开运行对话框，然后输入”cmd”并按下回车键，这将打开CMD界面。</li>
+<li>在CMD界面中，输入以下命令以安装WSL-ubuntu子系统： <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">wsl --install</span><br></pre></td></tr></table></figure>
+ 这个命令将自动下载并安装WSL-ubuntu子系统。</li>
+<li>安装完成后，重新启动计算机。</li>
+<li>在重新启动后的计算机上，点击Windows开始菜单，并搜索”WSL”。选择”WSL”或”WSL-ubuntu”来打开WSL-ubuntu子系统。</li>
+<li>第一次打开WSL-ubuntu子系统时，系统会提示你创建一个新的用户名和密码。按照提示进行操作，并记住你设置的用户名和密码。</li>
+<li>完成设置后，将进入WSL-ubuntu子系统的命令行界面。在这里，可以像在Linux系统中一样使用各种命令和工具。</li>
+</ol>
+<p>&emsp;&emsp;下面我们以WSL-ubuntu为例进行演示！<br>&emsp;&emsp;打开CMD界面（Win+R打开运行，输入cmd），输入指令进入linux操作界面：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">wsl</span><br><span class="line"><span class="comment">#or</span></span><br><span class="line">ubuntu</span><br></pre></td></tr></table></figure><br>&emsp;&emsp;为了避免每次进入系统都需要输入账号和密码，我们可以配置如下项目：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo visudo</span><br><span class="line">mancuoj ALL=(ALL) NOPASSWD: ALL</span><br></pre></td></tr></table></figure></p>
+<h3 id="网络环境"><a href="#网络环境" class="headerlink" title="网络环境"></a>网络环境</h3><p>&emsp;&emsp;安装python之前呢，我们可以建立特殊访问，不需要配置镜像源，但是注意，即便电脑挂载了相关软件，wsl是不能通过我们的电脑访问特殊站点的。<br>&emsp;&emsp;WSL-buntu系统是作为局域网内主机存在的，那么就有了解决方案。首先在windows的代理软件中，打开允许局域网访问，并记录电脑相关软件的端口号，一般为7890。接着进入WSL系统中，配置网络项目：<br>&emsp;&emsp;首先需要查看IP地址，然后设置环境变量。完成如下设置后即可让WSL访问特殊站点：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cat</span> /etc/resolv.conf</span><br><span class="line"><span class="built_in">export</span> ALL_PROXY=<span class="string">&quot;http://&#123;ip&#125;:&#123;端口号，查看代理软件&#125;&quot;</span></span><br></pre></td></tr></table></figure><br>&emsp;&emsp;<strong>免责声明：这里的代理设置不指代任何国家法律禁止的访问方法。以上资料是完全的技术分享。</strong><br>&emsp;&emsp;若配置国内镜像源，可按照如下方法：</p>
+<ol>
+<li>备份配置文件：<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cp</span> /etc/apt/sources.list /etc/apt/sources.list.bak</span><br></pre></td></tr></table></figure></li>
+<li>使用修改源的内容：<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo vim sources.list</span><br></pre></td></tr></table></figure></li>
+<li>全部删除后修改为阿里云的镜像：<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">deb http://mirrors.aliyun.com/ubuntu/ focal main restricted universe multiverse</span><br><span class="line">deb-src http://mirrors.aliyun.com/ubuntu/ focal main restricted universe multiverse</span><br><span class="line">deb http://mirrors.aliyun.com/ubuntu/ focal-security main restricted universe multiverse</span><br><span class="line">deb-src http://mirrors.aliyun.com/ubuntu/ focal-security main restricted universe multiverse</span><br><span class="line">deb http://mirrors.aliyun.com/ubuntu/ focal-updates main restricted universe multiverse</span><br><span class="line">deb-src http://mirrors.aliyun.com/ubuntu/ focal-updates main restricted universe multiverse</span><br><span class="line">deb http://mirrors.aliyun.com/ubuntu/ focal-proposed main restricted universe multiverse</span><br><span class="line">deb-src http://mirrors.aliyun.com/ubuntu/ focal-proposed main restricted universe multiverse</span><br><span class="line">deb http://mirrors.aliyun.com/ubuntu/ focal-backports main restricted universe multiverse</span><br><span class="line">deb-src http://mirrors.aliyun.com/ubuntu/ focal-backports main restricted universe multiverse</span><br></pre></td></tr></table></figure></li>
+<li>更新软件列表：<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt update </span><br><span class="line">sudo apt upgrade</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h3 id="安装Python"><a href="#安装Python" class="headerlink" title="安装Python"></a>安装Python</h3><p>&emsp;&emsp;接下来，我们愉快的安装python！</p>
+<h4 id="安装："><a href="#安装：" class="headerlink" title="安装："></a>安装：</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt install python3</span><br><span class="line">sudo apt install python3-pip</span><br></pre></td></tr></table></figure>
+<h4 id="配置清华镜像源"><a href="#配置清华镜像源" class="headerlink" title="# 配置清华镜像源"></a># 配置清华镜像源</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~ </span><br><span class="line"><span class="built_in">mkdir</span> .pip</span><br><span class="line">sudo vim ~/.pip/pip.conf</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;修改为：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[global]</span><br><span class="line">index-url = https://pypi.tuna.tsinghua.edu.cn/simple/ </span><br><span class="line">[install]</span><br><span class="line">trusted-host = pypi.tuna.tsinghua.edu.cn</span><br></pre></td></tr></table></figure></p>
+<h4 id="默认进入Python3"><a href="#默认进入Python3" class="headerlink" title="默认进入Python3"></a>默认进入Python3</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 删掉原来软链接，如果没有直接新建</span></span><br><span class="line">sudo <span class="built_in">rm</span> /usr/bin/python</span><br><span class="line">sudo <span class="built_in">rm</span> /usr/bin/pip</span><br><span class="line"></span><br><span class="line"><span class="comment"># 新建软链接</span></span><br><span class="line">sudo <span class="built_in">ln</span> -s /usr/bin/python3 /usr/bin/python</span><br><span class="line">sudo <span class="built_in">ln</span> -s /usr/bin/pip3 /usr/bin/pip</span><br></pre></td></tr></table></figure>
+<p>&emsp;&emsp;可以输入python，测试是否安装成功。</p>
+<h3 id="xiaogpt包的使用"><a href="#xiaogpt包的使用" class="headerlink" title="xiaogpt包的使用"></a>xiaogpt包的使用</h3><h4 id="安装软件和依赖包"><a href="#安装软件和依赖包" class="headerlink" title="安装软件和依赖包"></a>安装软件和依赖包</h4><ol>
+<li>首先安装米家的开发者包：<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">pip install miservice_fork</span><br></pre></td></tr></table></figure></li>
+<li>设置米家的账号和密码（注意，不需要加引号）：<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">export</span> MI_USER=xxxx</span><br><span class="line"><span class="built_in">export</span> MI_PASS=xxx</span><br></pre></td></tr></table></figure></li>
+<li>查询设备ID（DID），设置米家开发者的操纵设备：<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">micli list</span><br><span class="line"><span class="built_in">set</span> MI_DID=xxxx</span><br></pre></td></tr></table></figure></li>
+<li>这里可以试验一些米家开发者包的常用函数<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">micli 5-3 你好</span><br></pre></td></tr></table></figure></li>
+<li>安装xiaogpt包<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pip install -U --force-reinstall xiaogpt</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h4 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h4><ol>
+<li>设置chatgpt的api：<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">export</span> OPENAI_API_KEY=&#123;your_api_key&#125;</span><br></pre></td></tr></table></figure>
+&emsp;&emsp;注意，如果是官方API或者是非直接访问的第三方API，就需要如之前一般设置代理环境；否则，不需要设置。</li>
+<li>运行：这里的型号，可以从小爱的屁股上寻找，也可以用micli list的命令查看：<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">xiaogpt --hardware &#123;型号&#125; --use_chatgpt_api</span><br></pre></td></tr></table></figure></li>
+<li>对于部分机型，可能需要—use_comand指令，否则chatGPT会返回结果，但是不会通过TTS朗读；此外，mute_xiaoai命令可以剔除小爱自己的回答：<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">xiaogpt --hardware &#123;型号&#125; --use_chatgpt_api --use_command</span><br></pre></td></tr></table></figure></li>
+<li>如果chatGPT的API非官方，可以使用—api_base {api link}指定API服务提供商，有一个第三方站点实操是可以的（不是广告！）：<a href="https://one.aiskt.com/">AISKT API聚合</a>。</li>
+<li>使用阿里的通义千问，在网络环境上不需要特殊配置：<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">xiaogpt --hardware &#123;型号&#125;  --mute_xiaoai --use_qwen --qen_key &#123;qwen_key&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h4 id="参数介绍"><a href="#参数介绍" class="headerlink" title="参数介绍"></a>参数介绍</h4><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>说明</th>
+<th>默认值</th>
+<th>可选值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>hardware</td>
+<td>设备型号</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>account</td>
+<td>小爱账户</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>password</td>
+<td>小爱账户密码</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>openai_key</td>
+<td>openai的apikey</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>serpapi_api_key</td>
+<td>serpapi的key 参考 <a href="https://serpapi.com/">SerpAPI</a></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>glm_key</td>
+<td>chatglm 的 apikey</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>gemini_key</td>
+<td>gemini 的 apikey <a href="https://makersuite.google.com/app/apikey">参考</a></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>qwen_key</td>
+<td>qwen 的 apikey <a href="https://help.aliyun.com/zh/dashscope/developer-reference/api-details">参考</a></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>bard_token</td>
+<td>bard 的 token 参考 <a href="https://github.com/dsdanielpark/Bard-API">Bard-API</a></td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>cookie</td>
+<td>小爱账户cookie （如果用上面密码登录可以不填）</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>mi_did</td>
+<td>设备did</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>use_command</td>
+<td>使用 MI command 与小爱交互</td>
+<td><code>false</code></td>
+<td></td>
+</tr>
+<tr>
+<td>mute_xiaoai</td>
+<td>快速停掉小爱自己的回答</td>
+<td><code>true</code></td>
+<td></td>
+</tr>
+<tr>
+<td>verbose</td>
+<td>是否打印详细日志</td>
+<td><code>false</code></td>
+<td></td>
+</tr>
+<tr>
+<td>bot</td>
+<td>使用的 bot 类型，目前支持gpt3,chatgptapi和newbing</td>
+<td><code>chatgptapi</code></td>
+<td></td>
+</tr>
+<tr>
+<td>tts</td>
+<td>使用的 TTS 类型</td>
+<td><code>mi</code></td>
+<td><code>edge</code>、 <code>openai</code></td>
+</tr>
+<tr>
+<td>tts_voice</td>
+<td>TTS 的嗓音</td>
+<td><code>zh-CN-XiaoxiaoNeural</code>(edge), <code>alloy</code>(openai)</td>
+<td></td>
+</tr>
+<tr>
+<td>prompt</td>
+<td>自定义prompt</td>
+<td><code>请用100字以内回答</code></td>
+<td></td>
+</tr>
+<tr>
+<td>keyword</td>
+<td>自定义请求词列表</td>
+<td><code>[&quot;请&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>change_prompt_keyword</td>
+<td>更改提示词触发列表</td>
+<td><code>[&quot;更改提示词&quot;]</code></td>
+<td></td>
+</tr>
+<tr>
+<td>start_conversation</td>
+<td>开始持续对话关键词</td>
+<td><code>开始持续对话</code></td>
+<td></td>
+</tr>
+<tr>
+<td>end_conversation</td>
+<td>结束持续对话关键词</td>
+<td><code>结束持续对话</code></td>
+<td></td>
+</tr>
+<tr>
+<td>stream</td>
+<td>使用流式响应，获得更快的响应</td>
+<td><code>false</code></td>
+<td></td>
+</tr>
+<tr>
+<td>proxy</td>
+<td>支持 HTTP 代理，传入 http proxy URL</td>
+<td>“”</td>
+<td></td>
+</tr>
+<tr>
+<td>gpt_options</td>
+<td>OpenAI API 的参数字典</td>
+<td><code>&#123;&#125;</code></td>
+<td></td>
+</tr>
+<tr>
+<td>bing_cookie_path</td>
+<td>NewBing使用的cookie路径，参考<a href="https://github.com/acheong08/EdgeGPT#getting-authentication-required">这里</a>获取</td>
+<td>也可通过环境变量 <code>COOKIE_FILE</code> 设置</td>
+<td></td>
+</tr>
+<tr>
+<td>bing_cookies</td>
+<td>NewBing使用的cookie字典，参考<a href="https://github.com/acheong08/EdgeGPT#getting-authentication-required">这里</a>获取</td>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td>deployment_id</td>
+<td>Azure OpenAI 服务的 deployment ID</td>
+<td>参考这个<a href="https://github.com/yihong0618/xiaogpt/issues/347#issuecomment-1784410784">如何找到deployment_id</a></td>
+<td></td>
+</tr>
+<tr>
+<td>api_base</td>
+<td>如果需要替换默认的api,或者使用Azure OpenAI 服务</td>
+<td>例如：<code>https://abc-def.openai.azure.com/</code></td>
+</tr>
+</tbody>
+</table>
+</div>
+<h4 id="个性化代码"><a href="#个性化代码" class="headerlink" title="个性化代码"></a>个性化代码</h4><p>&emsp;&emsp;程序默认使用“请、帮我”两个开头进行提问，而根据源代码来看，命令行输入无法更改此参数。此外默认Prompt也必须要源代码进行修改，有如下两个方法：</p>
+<ol>
+<li>可以在Linux系统中找到源码，使用vim进行修改；</li>
+<li>打开Windows系统读写WSL文件的权限，用图形界面修改：<br>&emsp;&emsp;首先在cmd中修改权限：<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ubuntu config --default-user root</span><br></pre></td></tr></table></figure>
+&emsp;&emsp;接着打开Ubuntu的网络位置，进行寻找和修改。</li>
+<li>源代码的config.py可以修改prompt和唤醒词，xiaogpt.py还能更改小爱其他回复。</li>
+</ol>
+<h2 id="结束语"><a href="#结束语" class="headerlink" title="结束语"></a>结束语</h2><p>&emsp;&emsp;这个项目，实际上应用场景也很有限，花了很大的精力去整理技术文档和debug，最后听到小爱同学的一句“正在询问ChatGPT”，感觉很好玩！<br>&emsp;&emsp;现在，利用HomeAssistant和智能家居的开发者环境，俺们宿舍实现了灯具、空调、电脑和音箱的互联。通过语音或一些终端即可控制电器的开关；可以远程提醒睡觉的室友去签到……说效率嘛，也没提高不少，但对于一个医学生而言，很少能体会到技术进步的新奇，这也算一种满足叭！<br>&emsp;&emsp;在Github上还有很多其他的“联名”项目，比如最常见的微信接入Chatgpt。（<a href="https://github.com/cheungchazz/WeChat-AIChatbot-WinOnly">cheungchazz/WeChat-AIChatbot-WinOnly: 基于chatgpt-on-wechat框架，只能运行在Win平台的项目，通过本项目可以将微信或者企业微信个人号接入ChatGpt、文心一言、FastGpt、LinkAI，可以文字对话、语音对话、图片交互、文件交互等。 (github.com)</a>）</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li><a href="https://blog.csdn.net/Mancuojie/article/details/120411171#_31">手把手教你在Ubuntu中愉快地使用Python_ubuntu使用python-CSDN博客</a></li>
+<li><a href="https://github.com/yihong0618/xiaogpt">yihong0618/xiaogpt: Play ChatGPT and other LLM with Xiaomi AI Speaker (github.com)</a></li>
+</ol>
+]]></content>
+      <categories>
+        <category>随笔</category>
+      </categories>
+      <tags>
+        <tag>LLM</tag>
+        <tag>AI</tag>
+        <tag>智能音箱</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>孟德尔随机化标准流程代码示例</title>
     <url>/2024/02/05/%E5%AD%9F%E5%BE%B7%E5%B0%94%E9%9A%8F%E6%9C%BA%E5%8C%96%E6%A0%87%E5%87%86%E6%B5%81%E7%A8%8B%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B/</url>
     <content><![CDATA[<p>在这篇博客中，我们将通过R代码来探索非酒精性脂肪肝（NAFLD）对COVID-19严重程度的可能影响。我们将利用两个R包：<code>TwoSampleMR</code>和<code>MRPRESSO</code>，来执行Mendelian Randomization (MR)分析，这是一种利用基因变异作为工具变量来估计暴露和结果之间因果关系的统计方法。</p>
@@ -1316,6 +1572,53 @@
       <tags>
         <tag>医学</tag>
         <tag>医学生</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>提升医学研究的严谨性：准确使用统计学</title>
+    <url>/2024/02/18/%E6%8F%90%E5%8D%87%E5%8C%BB%E5%AD%A6%E7%A0%94%E7%A9%B6%E7%9A%84%E4%B8%A5%E8%B0%A8%E6%80%A7%EF%BC%9A%E5%87%86%E7%A1%AE%E4%BD%BF%E7%94%A8%E7%BB%9F%E8%AE%A1%E5%AD%A6/</url>
+    <content><![CDATA[<h2 id="原文摘要"><a href="#原文摘要" class="headerlink" title="原文摘要"></a>原文摘要</h2><p>&emsp;&emsp;在不断进步的医学研究领域中，研究结果的可靠性不仅依赖于创新的思想，还依赖于严谨的方法论和统计学。然而，根据过去三年《柳叶刀》期刊集团对超过1000份手稿的统计审查经验，通讯发现许多医学研究者常常忽视这一点。</p>
+<p>&emsp;&emsp;这篇通讯旨在提供一些基本建议，帮助研究者准确地报告统计数据，避免常见的统计缺陷。以下是一些关键要点：</p>
+<ol>
+<li><strong>数据描述的准确性</strong>：根据数据分布，报告均值和标准差或中位数和四分位数范围。并提供显示分析中使用的变量的直方图或表格的补充材料。</li>
+<li><strong>模型假设的检验</strong>：尽可能使用可视化检查所有模型假设。</li>
+<li><strong>P值的处理</strong>：不要将P值简化为“大于或等于0.0001”，而应报告确切的P值（例如，0.032的P值应报告为P=0.032，而非P&lt;0.05）。</li>
+<li><strong>结果的解读</strong>：基于临床重要性解读结果，并提供适当的关联估计和95%置信区间。</li>
+<li><strong>混杂因素的识别</strong>：基于背景信息识别混杂因素，例如在因果定向无环图中描绘，而非仅依赖显著性检验。</li>
+<li><strong>处理缺失数据</strong>：如果缺失数据的比例足够高，可能影响结果，应使用超越简单丢弃不完整记录的方法，例如反概率缺失加权或多重插补。</li>
+<li><strong>稀疏数据偏差的处理</strong>：使用为此目的开发的方法评估并处理比率估计中的稀疏数据偏差，如逻辑或Cox回归中应使用惩罚或贝叶斯方法减少稀疏数据偏差。</li>
+<li><strong>选择适当的风险指标</strong>：如果结局发生率较高，应报告危险比（risk  ratio，RR）或危险差（risk difference，RD），而不是比值比（odds ratio，OR）。</li>
+<li><strong>统计推断</strong>：避免过度依赖统计测试，P值不应在0.05或0.01等水平上二分化。特别是，大的P值不应被解释为没有关联或没有效应。</li>
+<li><strong>评估加性相互作用，即使模型是乘法的</strong>。</li>
+</ol>
+<h2 id="原文翻译"><a href="#原文翻译" class="headerlink" title="原文翻译"></a>原文翻译</h2><p>&emsp;&emsp;医学研究有效性的一个重要要求是可靠的方法和统计数据，但这仍然经常被医学研究人员忽视。基于过去 3 年提交给《柳叶刀》集团期刊的 1000 多份手稿的统计数据审查经验，本通信为报告中常见的统计缺陷以及如何避免这些缺陷提供了指导</p>
+<p><strong>准确报告统计结果的基本建议</strong></p>
+<ul>
+<li>根据分布情况，报告均值和标准差或中位数和 IQR 以描述定量变量。提供补充材料，显示分析中使用的变量的直方图或表格。</li>
+<li>检查所有模型假设，最好在可行的情况下使用图表。</li>
+<li>不要将 p 值 ≥0·0001；相反，显示精确的 p 值（例如，p 值 0·032 应显示为 p=0·032，而不是 p&lt;0·05）。但是，不等式 p&lt;0·0001 可用于报告非常小的 p 值。</li>
+<li>不要将结果报告为无效果，除非区间估计内的所有效果在临床上都不重要。</li>
+<li>根据临床重要性解释结果，并适当估计与 95% CI 的相关性。</li>
+<li>根据背景信息识别混杂因素，如因果有向无环图中所述，而不是显著性检验。</li>
+<li>如果缺失数据的比例高到足以潜在地影响结果，请使用除简单地丢弃不完整记录之外的方法，例如，缺失的反概率加权或多重插补。</li>
+<li>使用为此目的开发的方法评估和处理比率估计中的稀疏数据偏差。</li>
+<li>如果结果频率较高，则报告风险比或风险差异，而不是比值比。</li>
+<li>评估加性相互作用，即使您的模型是乘法的。</li>
+</ul>
+<p>&emsp;&emsp;数据描述对于理解数据至关重要。平均值和标准差通常用于描述定量变量。尽管如此，对于高度偏斜的变量（例如，典型的环境暴露），应使用中位数和IQR；对于仅取正值的变量，$\frac {mean}{SD}$表示严重偏斜。完整的统计描述还需要给出连续性变量的直方图、分类变量的计数表、以及缺失数据的百分比，由于这部分内容较多，可在<strong>补充材料</strong>中给出。</p>
+<p>&emsp;&emsp;所有统计分析都建立在基础假设之上，比如选择性或治疗分配的随机性。统计模型的有效性依赖于对这些进一步假设的评估。为了达到这一目的，仅仅依赖统计检验是不够的，还需要运用图形方法。例如，大多数回归模型都假设定量预测变量是线性的（至少在某种程度上），这一假设需要通过分段多项式或回归样条等方法进行验证。尤其是对于定量变量的分类，这通常意味着一个不切实际的阶跃函数假设，可能会导致效能损失或不可控的混杂。</p>
+<p>&emsp;&emsp;在统计推断领域，我们仍主要依赖于假设检验和估计。然而，p 值可以提供有关数据与统计假设或模型兼容性的重要信息，应当准确报告，而不是简单地用是否显著的定性描述来代替。兼容性可以通过将 p 值转换为基于抛硬币实验的 s 值来衡量。我们应避免过度依赖统计检验，不应将 p 值简单地划分为 0.05 或 0.01 这样的固定水平。特别是，较大的 p 值不应解释为无关联或无影响，因为“没有证据”并不等同于“没有证据”。除非区间估计接近零值，且区间非常窄，才可以推断为研究没有发现重要的关联或影响。一般情况下，还应根据合适指标的区间估计（如均数差或危险差）来判断结果的临床重要性。</p>
+<p>&emsp;&emsp;许多研究关注的是因果关系，这就使得混杂因素的调整变得至关重要。混杂因素的选择应基于因果背景信息，例如通过有向无环图进行。基于显著性的方法，比如逐步选择算法，可能具有误导性，因为它们可能忽略了重要的混杂因素。</p>
+<p>&emsp;&emsp;数据缺失在研究中非常常见。简单处理缺失数据的方法，如完整案例分析（即逐列表删除）、缺失指标或最后观察结转，可能会导致显著偏差。如果缺失数据的比例较高（例如超过 5%），则应避免使用这些方法。更好的方法包括逆概率加权和多重插补，尽管这些方法也依赖于条件随机缺失的假设。</p>
+<p>&emsp;&emsp;在逻辑回归或 Cox 回归中，稀疏数据是一个重要的偏差来源，即在某些变量水平组合中事件数量较少。OR较大和置信区间较宽（例如，OR&gt;10，区间为2-50）提示存在数据稀疏偏倚，可以通过惩罚函数或贝叶斯方法减少偏倚。当因变量是一个常见结局的指标时，调整后的危险比（RR）在评估临床相关性方面优于OR，因前者更容易合理解释。在队列研究和随机对照试验中可使用改良的泊松回归或标准化回归系数来估计危险比（RR）和危险差（RD）。</p>
+<p>&emsp;&emsp;许多研究试图检查两种治疗对结局的相互作用，或者想要估计另一种变量（即效果-测量修改）对治疗效果的改变程度。建模者通常会在回归模型中添加乘积项，例如逻辑项或Cox项，这些项对应于赔率或比率量表上的乘法交互作用。然而，风险的加性相互作用与临床决策和公共卫生更相关，因此也应进行评估。无论哪种情况，研究通常都无法确定交互作用的方向，如果它们通过统计检验筛选交互作用，则有可能产生误导性的估计。</p>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(24">Recommendations for accurate reporting in medical research statistics - The Lancet</a>00139-9/fulltext)</p>
+]]></content>
+      <categories>
+        <category>统计学</category>
+      </categories>
+      <tags>
+        <tag>统计学</tag>
       </tags>
   </entry>
   <entry>
@@ -1630,401 +1933,6 @@
       </tags>
   </entry>
   <entry>
-    <title>提升医学研究的严谨性：准确使用统计学</title>
-    <url>/2024/02/18/%E6%8F%90%E5%8D%87%E5%8C%BB%E5%AD%A6%E7%A0%94%E7%A9%B6%E7%9A%84%E4%B8%A5%E8%B0%A8%E6%80%A7%EF%BC%9A%E5%87%86%E7%A1%AE%E4%BD%BF%E7%94%A8%E7%BB%9F%E8%AE%A1%E5%AD%A6/</url>
-    <content><![CDATA[<h2 id="原文摘要"><a href="#原文摘要" class="headerlink" title="原文摘要"></a>原文摘要</h2><p>&emsp;&emsp;在不断进步的医学研究领域中，研究结果的可靠性不仅依赖于创新的思想，还依赖于严谨的方法论和统计学。然而，根据过去三年《柳叶刀》期刊集团对超过1000份手稿的统计审查经验，通讯发现许多医学研究者常常忽视这一点。</p>
-<p>&emsp;&emsp;这篇通讯旨在提供一些基本建议，帮助研究者准确地报告统计数据，避免常见的统计缺陷。以下是一些关键要点：</p>
-<ol>
-<li><strong>数据描述的准确性</strong>：根据数据分布，报告均值和标准差或中位数和四分位数范围。并提供显示分析中使用的变量的直方图或表格的补充材料。</li>
-<li><strong>模型假设的检验</strong>：尽可能使用可视化检查所有模型假设。</li>
-<li><strong>P值的处理</strong>：不要将P值简化为“大于或等于0.0001”，而应报告确切的P值（例如，0.032的P值应报告为P=0.032，而非P&lt;0.05）。</li>
-<li><strong>结果的解读</strong>：基于临床重要性解读结果，并提供适当的关联估计和95%置信区间。</li>
-<li><strong>混杂因素的识别</strong>：基于背景信息识别混杂因素，例如在因果定向无环图中描绘，而非仅依赖显著性检验。</li>
-<li><strong>处理缺失数据</strong>：如果缺失数据的比例足够高，可能影响结果，应使用超越简单丢弃不完整记录的方法，例如反概率缺失加权或多重插补。</li>
-<li><strong>稀疏数据偏差的处理</strong>：使用为此目的开发的方法评估并处理比率估计中的稀疏数据偏差，如逻辑或Cox回归中应使用惩罚或贝叶斯方法减少稀疏数据偏差。</li>
-<li><strong>选择适当的风险指标</strong>：如果结局发生率较高，应报告危险比（risk  ratio，RR）或危险差（risk difference，RD），而不是比值比（odds ratio，OR）。</li>
-<li><strong>统计推断</strong>：避免过度依赖统计测试，P值不应在0.05或0.01等水平上二分化。特别是，大的P值不应被解释为没有关联或没有效应。</li>
-<li><strong>评估加性相互作用，即使模型是乘法的</strong>。</li>
-</ol>
-<h2 id="原文翻译"><a href="#原文翻译" class="headerlink" title="原文翻译"></a>原文翻译</h2><p>&emsp;&emsp;医学研究有效性的一个重要要求是可靠的方法和统计数据，但这仍然经常被医学研究人员忽视。基于过去 3 年提交给《柳叶刀》集团期刊的 1000 多份手稿的统计数据审查经验，本通信为报告中常见的统计缺陷以及如何避免这些缺陷提供了指导</p>
-<p><strong>准确报告统计结果的基本建议</strong></p>
-<ul>
-<li>根据分布情况，报告均值和标准差或中位数和 IQR 以描述定量变量。提供补充材料，显示分析中使用的变量的直方图或表格。</li>
-<li>检查所有模型假设，最好在可行的情况下使用图表。</li>
-<li>不要将 p 值 ≥0·0001；相反，显示精确的 p 值（例如，p 值 0·032 应显示为 p=0·032，而不是 p&lt;0·05）。但是，不等式 p&lt;0·0001 可用于报告非常小的 p 值。</li>
-<li>不要将结果报告为无效果，除非区间估计内的所有效果在临床上都不重要。</li>
-<li>根据临床重要性解释结果，并适当估计与 95% CI 的相关性。</li>
-<li>根据背景信息识别混杂因素，如因果有向无环图中所述，而不是显著性检验。</li>
-<li>如果缺失数据的比例高到足以潜在地影响结果，请使用除简单地丢弃不完整记录之外的方法，例如，缺失的反概率加权或多重插补。</li>
-<li>使用为此目的开发的方法评估和处理比率估计中的稀疏数据偏差。</li>
-<li>如果结果频率较高，则报告风险比或风险差异，而不是比值比。</li>
-<li>评估加性相互作用，即使您的模型是乘法的。</li>
-</ul>
-<p>&emsp;&emsp;数据描述对于理解数据至关重要。平均值和标准差通常用于描述定量变量。尽管如此，对于高度偏斜的变量（例如，典型的环境暴露），应使用中位数和IQR；对于仅取正值的变量，$\frac {mean}{SD}$表示严重偏斜。完整的统计描述还需要给出连续性变量的直方图、分类变量的计数表、以及缺失数据的百分比，由于这部分内容较多，可在<strong>补充材料</strong>中给出。</p>
-<p>&emsp;&emsp;所有统计分析都建立在基础假设之上，比如选择性或治疗分配的随机性。统计模型的有效性依赖于对这些进一步假设的评估。为了达到这一目的，仅仅依赖统计检验是不够的，还需要运用图形方法。例如，大多数回归模型都假设定量预测变量是线性的（至少在某种程度上），这一假设需要通过分段多项式或回归样条等方法进行验证。尤其是对于定量变量的分类，这通常意味着一个不切实际的阶跃函数假设，可能会导致效能损失或不可控的混杂。</p>
-<p>&emsp;&emsp;在统计推断领域，我们仍主要依赖于假设检验和估计。然而，p 值可以提供有关数据与统计假设或模型兼容性的重要信息，应当准确报告，而不是简单地用是否显著的定性描述来代替。兼容性可以通过将 p 值转换为基于抛硬币实验的 s 值来衡量。我们应避免过度依赖统计检验，不应将 p 值简单地划分为 0.05 或 0.01 这样的固定水平。特别是，较大的 p 值不应解释为无关联或无影响，因为“没有证据”并不等同于“没有证据”。除非区间估计接近零值，且区间非常窄，才可以推断为研究没有发现重要的关联或影响。一般情况下，还应根据合适指标的区间估计（如均数差或危险差）来判断结果的临床重要性。</p>
-<p>&emsp;&emsp;许多研究关注的是因果关系，这就使得混杂因素的调整变得至关重要。混杂因素的选择应基于因果背景信息，例如通过有向无环图进行。基于显著性的方法，比如逐步选择算法，可能具有误导性，因为它们可能忽略了重要的混杂因素。</p>
-<p>&emsp;&emsp;数据缺失在研究中非常常见。简单处理缺失数据的方法，如完整案例分析（即逐列表删除）、缺失指标或最后观察结转，可能会导致显著偏差。如果缺失数据的比例较高（例如超过 5%），则应避免使用这些方法。更好的方法包括逆概率加权和多重插补，尽管这些方法也依赖于条件随机缺失的假设。</p>
-<p>&emsp;&emsp;在逻辑回归或 Cox 回归中，稀疏数据是一个重要的偏差来源，即在某些变量水平组合中事件数量较少。OR较大和置信区间较宽（例如，OR&gt;10，区间为2-50）提示存在数据稀疏偏倚，可以通过惩罚函数或贝叶斯方法减少偏倚。当因变量是一个常见结局的指标时，调整后的危险比（RR）在评估临床相关性方面优于OR，因前者更容易合理解释。在队列研究和随机对照试验中可使用改良的泊松回归或标准化回归系数来估计危险比（RR）和危险差（RD）。</p>
-<p>&emsp;&emsp;许多研究试图检查两种治疗对结局的相互作用，或者想要估计另一种变量（即效果-测量修改）对治疗效果的改变程度。建模者通常会在回归模型中添加乘积项，例如逻辑项或Cox项，这些项对应于赔率或比率量表上的乘法交互作用。然而，风险的加性相互作用与临床决策和公共卫生更相关，因此也应进行评估。无论哪种情况，研究通常都无法确定交互作用的方向，如果它们通过统计检验筛选交互作用，则有可能产生误导性的估计。</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://www.thelancet.com/journals/lancet/article/PIIS0140-6736(24">Recommendations for accurate reporting in medical research statistics - The Lancet</a>00139-9/fulltext)</p>
-]]></content>
-      <categories>
-        <category>统计学</category>
-      </categories>
-      <tags>
-        <tag>统计学</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>深度学习笔记（三）：PyTorch 实现 Softmax 回归</title>
-    <url>/2024/04/02/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89%EF%BC%9APyTorch%20%E5%AE%9E%E7%8E%B0%20Softmax%20%E5%9B%9E%E5%BD%92/</url>
-    <content><![CDATA[<h1 id="导入必要的库"><a href="#导入必要的库" class="headerlink" title="导入必要的库"></a>导入必要的库</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> torchvision</span><br><span class="line"><span class="keyword">from</span> torchvision <span class="keyword">import</span> transforms</span><br><span class="line"><span class="keyword">from</span> torch.utils.data <span class="keyword">import</span> DataLoader</span><br><span class="line"><span class="keyword">from</span> d2l <span class="keyword">import</span> torch <span class="keyword">as</span> d2l</span><br></pre></td></tr></table></figure>
-<h1 id="定义一个函数，用于在一定布局下展示图像及其对应的标签"><a href="#定义一个函数，用于在一定布局下展示图像及其对应的标签" class="headerlink" title="定义一个函数，用于在一定布局下展示图像及其对应的标签"></a>定义一个函数，用于在一定布局下展示图像及其对应的标签</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">show_images</span>(<span class="params">imgs, num_rows, num_cols, titles=<span class="literal">None</span>, scale=<span class="number">1.5</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;展示图像及其标签&quot;&quot;&quot;</span></span><br><span class="line">    figsize = (num_cols * scale, num_rows * scale)</span><br><span class="line">    _, axes = d2l.plt.subplots(num_rows, num_cols, figsize=figsize)</span><br><span class="line">    axes = axes.flatten()</span><br><span class="line">    <span class="keyword">for</span> i, (ax, img) <span class="keyword">in</span> <span class="built_in">enumerate</span>(<span class="built_in">zip</span>(axes, imgs)):</span><br><span class="line">        <span class="keyword">if</span> torch.is_tensor(img):</span><br><span class="line">            ax.imshow(img.numpy())</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            ax.imshow(img)</span><br><span class="line">        ax.axes.get_xaxis().set_visible(<span class="literal">False</span>)</span><br><span class="line">        ax.axes.get_yaxis().set_visible(<span class="literal">False</span>)  <span class="comment"># 修复了原代码中的错误</span></span><br><span class="line">        <span class="keyword">if</span> titles:</span><br><span class="line">            ax.set_title(titles[i])</span><br><span class="line">    <span class="keyword">return</span> axes</span><br></pre></td></tr></table></figure>
-<h1 id="定义一个函数，用于获取数据加载时使用的工作线程数"><a href="#定义一个函数，用于获取数据加载时使用的工作线程数" class="headerlink" title="定义一个函数，用于获取数据加载时使用的工作线程数"></a>定义一个函数，用于获取数据加载时使用的工作线程数</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">get_dataloader_workers</span>():</span><br><span class="line">    <span class="string">&quot;&quot;&quot;获取数据加载时使用的工作线程数&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">4</span></span><br></pre></td></tr></table></figure>
-<h1 id="定义一个函数，用于加载-Fashion-MNIST-数据集"><a href="#定义一个函数，用于加载-Fashion-MNIST-数据集" class="headerlink" title="定义一个函数，用于加载 Fashion-MNIST 数据集"></a>定义一个函数，用于加载 Fashion-MNIST 数据集</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">load_data_fashion_mnist</span>(<span class="params">batch_size, resize=<span class="literal">None</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;加载Fashion-MNIST数据集，并可选择性地调整图像大小&quot;&quot;&quot;</span></span><br><span class="line">    trans = [transforms.ToTensor()]</span><br><span class="line">    <span class="keyword">if</span> resize:</span><br><span class="line">        trans.insert(<span class="number">0</span>, transforms.Resize(resize))</span><br><span class="line">    trans = transforms.Compose(trans)</span><br><span class="line">    mnist_train = torchvision.datasets.FashionMNIST(root=<span class="string">&quot;./data&quot;</span>, train=<span class="literal">True</span>, transform=trans, download=<span class="literal">True</span>)</span><br><span class="line">    mnist_test = torchvision.datasets.FashionMNIST(root=<span class="string">&quot;./data&quot;</span>, train=<span class="literal">False</span>, transform=trans, download=<span class="literal">True</span>)</span><br><span class="line">    <span class="keyword">return</span> (DataLoader(mnist_train, batch_size, shuffle=<span class="literal">True</span>, num_workers=get_dataloader_workers()),</span><br><span class="line">            DataLoader(mnist_test, batch_size, shuffle=<span class="literal">False</span>, num_workers=get_dataloader_workers()))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置批量大小</span></span><br><span class="line">batch_size = <span class="number">256</span></span><br><span class="line"><span class="comment"># 加载数据集</span></span><br><span class="line">train_iter, test_iter = load_data_fashion_mnist(batch_size=batch_size)</span><br></pre></td></tr></table></figure>
-<h1 id="定义模型"><a href="#定义模型" class="headerlink" title="定义模型"></a>定义模型</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 网络的输入和输出维度</span></span><br><span class="line">num_inputs = <span class="number">28</span> * <span class="number">28</span></span><br><span class="line">num_outputs = <span class="number">10</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 初始化模型参数</span></span><br><span class="line">w = torch.normal(<span class="number">0</span>, <span class="number">0.01</span>, size=(num_inputs, num_outputs), requires_grad=<span class="literal">True</span>)</span><br><span class="line">b = torch.zeros(num_outputs, requires_grad=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义softmax函数</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">softmax</span>(<span class="params">X</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;计算softmax概率值&quot;&quot;&quot;</span></span><br><span class="line">    X_exp = torch.exp(X)</span><br><span class="line">    partition = X_exp.<span class="built_in">sum</span>(<span class="number">1</span>, keepdim=<span class="literal">True</span>)</span><br><span class="line">    <span class="keyword">return</span> X_exp / partition</span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义模型</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">net</span>(<span class="params">X</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;定义softmax回归模型&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">return</span> softmax(torch.matmul(X.reshape((-<span class="number">1</span>, w.shape[<span class="number">0</span>])), w) + b)</span><br></pre></td></tr></table></figure>
-<h1 id="定义交叉熵损失函数"><a href="#定义交叉熵损失函数" class="headerlink" title="定义交叉熵损失函数"></a>定义交叉熵损失函数</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">cross_entropy</span>(<span class="params">y_hat, y</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;计算预测值和真实值之间的交叉熵损失&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">return</span> -torch.log(y_hat[<span class="built_in">range</span>(<span class="built_in">len</span>(y_hat)), y])</span><br></pre></td></tr></table></figure>
-<h1 id="模型评价指标计算"><a href="#模型评价指标计算" class="headerlink" title="模型评价指标计算"></a>模型评价指标计算</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">accuracy</span>(<span class="params">y_hat, y</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;计算预测准确率&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">len</span>(y_hat.shape) &gt; <span class="number">1</span> <span class="keyword">and</span> y_hat.shape[<span class="number">1</span>] &gt; <span class="number">1</span>:</span><br><span class="line">        y_hat = y_hat.argmax(axis=<span class="number">1</span>)</span><br><span class="line">    cmp = y_hat.<span class="built_in">type</span>(y.dtype) == y</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">float</span>(cmp.<span class="built_in">type</span>(y.dtype).<span class="built_in">sum</span>())</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Accumulator</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;在n个变量上累加&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, n</span>):</span><br><span class="line">        self.data = [<span class="number">0.0</span>] * n</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">add</span>(<span class="params">self, *args</span>):</span><br><span class="line">        self.data = [a + <span class="built_in">float</span>(b) <span class="keyword">for</span> a, b <span class="keyword">in</span> <span class="built_in">zip</span>(self.data, args)]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">reset</span>(<span class="params">self</span>):</span><br><span class="line">        self.data = [<span class="number">0.0</span>] * <span class="built_in">len</span>(self.data)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__getitem__</span>(<span class="params">self, idx</span>):</span><br><span class="line">        <span class="keyword">return</span> self.data[idx]</span><br></pre></td></tr></table></figure>
-<h1 id="定义训练一个-epoch-的函数"><a href="#定义训练一个-epoch-的函数" class="headerlink" title="定义训练一个 epoch 的函数"></a>定义训练一个 epoch 的函数</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">train_epoch</span>(<span class="params">net, train_iter, loss, updater</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;训练模型一个epoch&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">isinstance</span>(net, torch.nn.Module):</span><br><span class="line">        net.train()  <span class="comment"># 设置为训练模式</span></span><br><span class="line">    metric = Accumulator(<span class="number">3</span>)  <span class="comment"># 损失总和，正确预测数，样本总数</span></span><br><span class="line">    <span class="keyword">for</span> X, y <span class="keyword">in</span> train_iter:</span><br><span class="line">        y_hat = net(X)</span><br><span class="line">        l = loss(y_hat, y)</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">isinstance</span>(updater, torch.optim.Optimizer):</span><br><span class="line">            updater.zero_grad()</span><br><span class="line">            l.mean().backward()</span><br><span class="line">            updater.step()</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            l.<span class="built_in">sum</span>().backward()</span><br><span class="line">            updater(X.shape[<span class="number">0</span>])</span><br><span class="line">        metric.add(<span class="built_in">float</span>(l.<span class="built_in">sum</span>()), accuracy(y_hat, y), y.numel())</span><br><span class="line">    <span class="comment"># 返回训练损失和训练准确率</span></span><br><span class="line">    <span class="keyword">return</span> metric[<span class="number">0</span>] / metric[<span class="number">2</span>], metric[<span class="number">1</span>] / metric[<span class="number">2</span>]</span><br></pre></td></tr></table></figure>
-<h1 id="定义训练函数"><a href="#定义训练函数" class="headerlink" title="定义训练函数"></a>定义训练函数</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">train</span>(<span class="params">net, train_iter, test_iter, loss, num_epochs, updater</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;训练模型&quot;&quot;&quot;</span></span><br><span class="line">    all_epoch = []</span><br><span class="line">    <span class="keyword">for</span> epoch <span class="keyword">in</span> <span class="built_in">range</span>(num_epochs):</span><br><span class="line">        train_metrics = train_epoch(net, train_iter, loss, updater)</span><br><span class="line">        all_epoch.append(train_metrics)</span><br><span class="line">    <span class="keyword">return</span> all_epoch</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置学习率和更新器</span></span><br><span class="line">lr = <span class="number">0.1</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">updater</span>(<span class="params">batch_size</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;使用小批量随机梯度下降进行参数更新&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">return</span> d2l.sgd([w, b], lr, batch_size)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置训练轮数并开始训练</span></span><br><span class="line">num_epochs = <span class="number">10</span></span><br><span class="line">train(net, train_iter, test_iter, cross_entropy, num_epochs, updater)</span><br></pre></td></tr></table></figure>
-<p>通过以上步骤，我们成功实现了使用 PyTorch 进行 Softmax 回归模型的训练和测试。 Softmax 回归是深度学习中的重要组成部分，能够有效地处理分类问题。</p>
-<h1 id="softmax的高级API实现"><a href="#softmax的高级API实现" class="headerlink" title="softmax的高级API实现"></a>softmax的高级API实现</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> torch  <span class="comment"># 导入PyTorch库  </span></span><br><span class="line"><span class="keyword">from</span> torch <span class="keyword">import</span> nn  <span class="comment"># 从PyTorch库中导入神经网络模块  </span></span><br><span class="line"><span class="keyword">from</span> d2l <span class="keyword">import</span> torch <span class="keyword">as</span> d2l </span><br><span class="line">  </span><br><span class="line"><span class="comment"># 设置批量大小为256  </span></span><br><span class="line">batch_size = <span class="number">256</span>  </span><br><span class="line">  </span><br><span class="line"><span class="comment"># 加载Fashion-MNIST数据集，并划分为训练集和测试集  </span></span><br><span class="line">train_iter, test_iter = d2l.load_data_fashion_mnist(batch_size)  </span><br><span class="line">  </span><br><span class="line"><span class="comment"># 定义一个简单的神经网络模型，包含一个Flatten层（用于将图像展平）和一个全连接层（784个输入节点，10个输出节点）  </span></span><br><span class="line">net = nn.Sequential(nn.Flatten(), nn.Linear(<span class="number">784</span>, <span class="number">10</span>))  </span><br><span class="line">  </span><br><span class="line"><span class="comment"># 定义一个权重初始化函数  </span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">init_weights</span>(<span class="params">m</span>):  </span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">type</span>(m) == nn.Linear:  <span class="comment"># 如果模块是线性层  </span></span><br><span class="line">        nn.init.normal_(m.weight, std=<span class="number">0.01</span>)  <span class="comment"># 使用标准差为0.01的正态分布初始化权重  </span></span><br><span class="line">  </span><br><span class="line"><span class="comment"># 应用初始化函数到模型的所有模块  </span></span><br><span class="line">net.apply(init_weights)  </span><br><span class="line">  </span><br><span class="line"><span class="comment"># 定义交叉熵损失函数，reduction设置为&quot;None&quot;，表示不进行任何约简，返回每个样本的损失值  </span></span><br><span class="line">loss = nn.CrossEntropyLoss(reduction=<span class="string">&quot;None&quot;</span>)  </span><br><span class="line">  </span><br><span class="line"><span class="comment"># 定义优化器，使用随机梯度下降算法，学习率为0.1  </span></span><br><span class="line">trainer = torch.optim.SGD(net.parameters(), lr=<span class="number">0.1</span>)</span><br></pre></td></tr></table></figure>]]></content>
-      <categories>
-        <category>深度学习</category>
-      </categories>
-      <tags>
-        <tag>机器学习</tag>
-        <tag>深度学习</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>实操：把chatGPT接入智能音箱？</title>
-    <url>/2024/03/18/%E5%AE%9E%E6%93%8D%EF%BC%9A%E6%8A%8AchatGPT%E6%8E%A5%E5%85%A5%E6%99%BA%E8%83%BD%E9%9F%B3%E7%AE%B1%EF%BC%9F/</url>
-    <content><![CDATA[<h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>&emsp;&emsp;学院以前比赛发了个小米音箱，使用场景比较局限。突发奇想能否把大语言模型和小爱音响结合起来，于是就有了这番折腾。包的原理十分直接，就是通过TTS识别，发送给chatGPT，再返回结果进行朗读。</p>
-<h2 id="储存库"><a href="#储存库" class="headerlink" title="储存库"></a>储存库</h2><p>&emsp;&emsp;<a href="https://github.com/yihong0618/xiaogpt">yihong0618/xiaogpt: Play ChatGPT and other LLM with Xiaomi AI Speaker (github.com)</a><br>&emsp;&emsp;感谢大佬！</p>
-<h2 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h2><h3 id="软件环境"><a href="#软件环境" class="headerlink" title="软件环境"></a>软件环境</h3><p>&emsp;&emsp;实操过程中，发现Windows11系统无法兼容相关依赖包，所以建议通过Mac或者Linux系统的命令行运行如下指令。大家一般使用Windows系统，可以安装带有图形界面的Ubuntu双系统，或者在Windows下安装WSL-ubuntu子系统，相关教程可以bing！这里简述一下WSL-ubuntu的安装方法：</p>
-<ol>
-<li>首先，按下Win+R键打开运行对话框，然后输入”cmd”并按下回车键，这将打开CMD界面。</li>
-<li>在CMD界面中，输入以下命令以安装WSL-ubuntu子系统： <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">wsl --install</span><br></pre></td></tr></table></figure>
- 这个命令将自动下载并安装WSL-ubuntu子系统。</li>
-<li>安装完成后，重新启动计算机。</li>
-<li>在重新启动后的计算机上，点击Windows开始菜单，并搜索”WSL”。选择”WSL”或”WSL-ubuntu”来打开WSL-ubuntu子系统。</li>
-<li>第一次打开WSL-ubuntu子系统时，系统会提示你创建一个新的用户名和密码。按照提示进行操作，并记住你设置的用户名和密码。</li>
-<li>完成设置后，将进入WSL-ubuntu子系统的命令行界面。在这里，可以像在Linux系统中一样使用各种命令和工具。</li>
-</ol>
-<p>&emsp;&emsp;下面我们以WSL-ubuntu为例进行演示！<br>&emsp;&emsp;打开CMD界面（Win+R打开运行，输入cmd），输入指令进入linux操作界面：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">wsl</span><br><span class="line"><span class="comment">#or</span></span><br><span class="line">ubuntu</span><br></pre></td></tr></table></figure><br>&emsp;&emsp;为了避免每次进入系统都需要输入账号和密码，我们可以配置如下项目：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo visudo</span><br><span class="line">mancuoj ALL=(ALL) NOPASSWD: ALL</span><br></pre></td></tr></table></figure></p>
-<h3 id="网络环境"><a href="#网络环境" class="headerlink" title="网络环境"></a>网络环境</h3><p>&emsp;&emsp;安装python之前呢，我们可以建立特殊访问，不需要配置镜像源，但是注意，即便电脑挂载了相关软件，wsl是不能通过我们的电脑访问特殊站点的。<br>&emsp;&emsp;WSL-buntu系统是作为局域网内主机存在的，那么就有了解决方案。首先在windows的代理软件中，打开允许局域网访问，并记录电脑相关软件的端口号，一般为7890。接着进入WSL系统中，配置网络项目：<br>&emsp;&emsp;首先需要查看IP地址，然后设置环境变量。完成如下设置后即可让WSL访问特殊站点：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cat</span> /etc/resolv.conf</span><br><span class="line"><span class="built_in">export</span> ALL_PROXY=<span class="string">&quot;http://&#123;ip&#125;:&#123;端口号，查看代理软件&#125;&quot;</span></span><br></pre></td></tr></table></figure><br>&emsp;&emsp;<strong>免责声明：这里的代理设置不指代任何国家法律禁止的访问方法。以上资料是完全的技术分享。</strong><br>&emsp;&emsp;若配置国内镜像源，可按照如下方法：</p>
-<ol>
-<li>备份配置文件：<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cp</span> /etc/apt/sources.list /etc/apt/sources.list.bak</span><br></pre></td></tr></table></figure></li>
-<li>使用修改源的内容：<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo vim sources.list</span><br></pre></td></tr></table></figure></li>
-<li>全部删除后修改为阿里云的镜像：<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">deb http://mirrors.aliyun.com/ubuntu/ focal main restricted universe multiverse</span><br><span class="line">deb-src http://mirrors.aliyun.com/ubuntu/ focal main restricted universe multiverse</span><br><span class="line">deb http://mirrors.aliyun.com/ubuntu/ focal-security main restricted universe multiverse</span><br><span class="line">deb-src http://mirrors.aliyun.com/ubuntu/ focal-security main restricted universe multiverse</span><br><span class="line">deb http://mirrors.aliyun.com/ubuntu/ focal-updates main restricted universe multiverse</span><br><span class="line">deb-src http://mirrors.aliyun.com/ubuntu/ focal-updates main restricted universe multiverse</span><br><span class="line">deb http://mirrors.aliyun.com/ubuntu/ focal-proposed main restricted universe multiverse</span><br><span class="line">deb-src http://mirrors.aliyun.com/ubuntu/ focal-proposed main restricted universe multiverse</span><br><span class="line">deb http://mirrors.aliyun.com/ubuntu/ focal-backports main restricted universe multiverse</span><br><span class="line">deb-src http://mirrors.aliyun.com/ubuntu/ focal-backports main restricted universe multiverse</span><br></pre></td></tr></table></figure></li>
-<li>更新软件列表：<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt update </span><br><span class="line">sudo apt upgrade</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<h3 id="安装Python"><a href="#安装Python" class="headerlink" title="安装Python"></a>安装Python</h3><p>&emsp;&emsp;接下来，我们愉快的安装python！</p>
-<h4 id="安装："><a href="#安装：" class="headerlink" title="安装："></a>安装：</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">sudo apt install python3</span><br><span class="line">sudo apt install python3-pip</span><br></pre></td></tr></table></figure>
-<h4 id="配置清华镜像源"><a href="#配置清华镜像源" class="headerlink" title="# 配置清华镜像源"></a># 配置清华镜像源</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">cd</span> ~ </span><br><span class="line"><span class="built_in">mkdir</span> .pip</span><br><span class="line">sudo vim ~/.pip/pip.conf</span><br></pre></td></tr></table></figure>
-<p>&emsp;&emsp;修改为：<br><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">[global]</span><br><span class="line">index-url = https://pypi.tuna.tsinghua.edu.cn/simple/ </span><br><span class="line">[install]</span><br><span class="line">trusted-host = pypi.tuna.tsinghua.edu.cn</span><br></pre></td></tr></table></figure></p>
-<h4 id="默认进入Python3"><a href="#默认进入Python3" class="headerlink" title="默认进入Python3"></a>默认进入Python3</h4><figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 删掉原来软链接，如果没有直接新建</span></span><br><span class="line">sudo <span class="built_in">rm</span> /usr/bin/python</span><br><span class="line">sudo <span class="built_in">rm</span> /usr/bin/pip</span><br><span class="line"></span><br><span class="line"><span class="comment"># 新建软链接</span></span><br><span class="line">sudo <span class="built_in">ln</span> -s /usr/bin/python3 /usr/bin/python</span><br><span class="line">sudo <span class="built_in">ln</span> -s /usr/bin/pip3 /usr/bin/pip</span><br></pre></td></tr></table></figure>
-<p>&emsp;&emsp;可以输入python，测试是否安装成功。</p>
-<h3 id="xiaogpt包的使用"><a href="#xiaogpt包的使用" class="headerlink" title="xiaogpt包的使用"></a>xiaogpt包的使用</h3><h4 id="安装软件和依赖包"><a href="#安装软件和依赖包" class="headerlink" title="安装软件和依赖包"></a>安装软件和依赖包</h4><ol>
-<li>首先安装米家的开发者包：<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">pip install miservice_fork</span><br></pre></td></tr></table></figure></li>
-<li>设置米家的账号和密码（注意，不需要加引号）：<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">export</span> MI_USER=xxxx</span><br><span class="line"><span class="built_in">export</span> MI_PASS=xxx</span><br></pre></td></tr></table></figure></li>
-<li>查询设备ID（DID），设置米家开发者的操纵设备：<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">micli list</span><br><span class="line"><span class="built_in">set</span> MI_DID=xxxx</span><br></pre></td></tr></table></figure></li>
-<li>这里可以试验一些米家开发者包的常用函数<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">micli 5-3 你好</span><br></pre></td></tr></table></figure></li>
-<li>安装xiaogpt包<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">pip install -U --force-reinstall xiaogpt</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<h4 id="实现"><a href="#实现" class="headerlink" title="实现"></a>实现</h4><ol>
-<li>设置chatgpt的api：<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line"><span class="built_in">export</span> OPENAI_API_KEY=&#123;your_api_key&#125;</span><br></pre></td></tr></table></figure>
-&emsp;&emsp;注意，如果是官方API或者是非直接访问的第三方API，就需要如之前一般设置代理环境；否则，不需要设置。</li>
-<li>运行：这里的型号，可以从小爱的屁股上寻找，也可以用micli list的命令查看：<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">xiaogpt --hardware &#123;型号&#125; --use_chatgpt_api</span><br></pre></td></tr></table></figure></li>
-<li>对于部分机型，可能需要—use_comand指令，否则chatGPT会返回结果，但是不会通过TTS朗读；此外，mute_xiaoai命令可以剔除小爱自己的回答：<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">xiaogpt --hardware &#123;型号&#125; --use_chatgpt_api --use_command</span><br></pre></td></tr></table></figure></li>
-<li>如果chatGPT的API非官方，可以使用—api_base {api link}指定API服务提供商，有一个第三方站点实操是可以的（不是广告！）：<a href="https://one.aiskt.com/">AISKT API聚合</a>。</li>
-<li>使用阿里的通义千问，在网络环境上不需要特殊配置：<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">xiaogpt --hardware &#123;型号&#125;  --mute_xiaoai --use_qwen --qen_key &#123;qwen_key&#125;</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<h4 id="参数介绍"><a href="#参数介绍" class="headerlink" title="参数介绍"></a>参数介绍</h4><div class="table-container">
-<table>
-<thead>
-<tr>
-<th>参数</th>
-<th>说明</th>
-<th>默认值</th>
-<th>可选值</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>hardware</td>
-<td>设备型号</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>account</td>
-<td>小爱账户</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>password</td>
-<td>小爱账户密码</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>openai_key</td>
-<td>openai的apikey</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>serpapi_api_key</td>
-<td>serpapi的key 参考 <a href="https://serpapi.com/">SerpAPI</a></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>glm_key</td>
-<td>chatglm 的 apikey</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>gemini_key</td>
-<td>gemini 的 apikey <a href="https://makersuite.google.com/app/apikey">参考</a></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>qwen_key</td>
-<td>qwen 的 apikey <a href="https://help.aliyun.com/zh/dashscope/developer-reference/api-details">参考</a></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>bard_token</td>
-<td>bard 的 token 参考 <a href="https://github.com/dsdanielpark/Bard-API">Bard-API</a></td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>cookie</td>
-<td>小爱账户cookie （如果用上面密码登录可以不填）</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>mi_did</td>
-<td>设备did</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>use_command</td>
-<td>使用 MI command 与小爱交互</td>
-<td><code>false</code></td>
-<td></td>
-</tr>
-<tr>
-<td>mute_xiaoai</td>
-<td>快速停掉小爱自己的回答</td>
-<td><code>true</code></td>
-<td></td>
-</tr>
-<tr>
-<td>verbose</td>
-<td>是否打印详细日志</td>
-<td><code>false</code></td>
-<td></td>
-</tr>
-<tr>
-<td>bot</td>
-<td>使用的 bot 类型，目前支持gpt3,chatgptapi和newbing</td>
-<td><code>chatgptapi</code></td>
-<td></td>
-</tr>
-<tr>
-<td>tts</td>
-<td>使用的 TTS 类型</td>
-<td><code>mi</code></td>
-<td><code>edge</code>、 <code>openai</code></td>
-</tr>
-<tr>
-<td>tts_voice</td>
-<td>TTS 的嗓音</td>
-<td><code>zh-CN-XiaoxiaoNeural</code>(edge), <code>alloy</code>(openai)</td>
-<td></td>
-</tr>
-<tr>
-<td>prompt</td>
-<td>自定义prompt</td>
-<td><code>请用100字以内回答</code></td>
-<td></td>
-</tr>
-<tr>
-<td>keyword</td>
-<td>自定义请求词列表</td>
-<td><code>[&quot;请&quot;]</code></td>
-<td></td>
-</tr>
-<tr>
-<td>change_prompt_keyword</td>
-<td>更改提示词触发列表</td>
-<td><code>[&quot;更改提示词&quot;]</code></td>
-<td></td>
-</tr>
-<tr>
-<td>start_conversation</td>
-<td>开始持续对话关键词</td>
-<td><code>开始持续对话</code></td>
-<td></td>
-</tr>
-<tr>
-<td>end_conversation</td>
-<td>结束持续对话关键词</td>
-<td><code>结束持续对话</code></td>
-<td></td>
-</tr>
-<tr>
-<td>stream</td>
-<td>使用流式响应，获得更快的响应</td>
-<td><code>false</code></td>
-<td></td>
-</tr>
-<tr>
-<td>proxy</td>
-<td>支持 HTTP 代理，传入 http proxy URL</td>
-<td>“”</td>
-<td></td>
-</tr>
-<tr>
-<td>gpt_options</td>
-<td>OpenAI API 的参数字典</td>
-<td><code>&#123;&#125;</code></td>
-<td></td>
-</tr>
-<tr>
-<td>bing_cookie_path</td>
-<td>NewBing使用的cookie路径，参考<a href="https://github.com/acheong08/EdgeGPT#getting-authentication-required">这里</a>获取</td>
-<td>也可通过环境变量 <code>COOKIE_FILE</code> 设置</td>
-<td></td>
-</tr>
-<tr>
-<td>bing_cookies</td>
-<td>NewBing使用的cookie字典，参考<a href="https://github.com/acheong08/EdgeGPT#getting-authentication-required">这里</a>获取</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td>deployment_id</td>
-<td>Azure OpenAI 服务的 deployment ID</td>
-<td>参考这个<a href="https://github.com/yihong0618/xiaogpt/issues/347#issuecomment-1784410784">如何找到deployment_id</a></td>
-<td></td>
-</tr>
-<tr>
-<td>api_base</td>
-<td>如果需要替换默认的api,或者使用Azure OpenAI 服务</td>
-<td>例如：<code>https://abc-def.openai.azure.com/</code></td>
-</tr>
-</tbody>
-</table>
-</div>
-<h4 id="个性化代码"><a href="#个性化代码" class="headerlink" title="个性化代码"></a>个性化代码</h4><p>&emsp;&emsp;程序默认使用“请、帮我”两个开头进行提问，而根据源代码来看，命令行输入无法更改此参数。此外默认Prompt也必须要源代码进行修改，有如下两个方法：</p>
-<ol>
-<li>可以在Linux系统中找到源码，使用vim进行修改；</li>
-<li>打开Windows系统读写WSL文件的权限，用图形界面修改：<br>&emsp;&emsp;首先在cmd中修改权限：<figure class="highlight bash"><table><tr><td class="code"><pre><span class="line">ubuntu config --default-user root</span><br></pre></td></tr></table></figure>
-&emsp;&emsp;接着打开Ubuntu的网络位置，进行寻找和修改。</li>
-<li>源代码的config.py可以修改prompt和唤醒词，xiaogpt.py还能更改小爱其他回复。</li>
-</ol>
-<h2 id="结束语"><a href="#结束语" class="headerlink" title="结束语"></a>结束语</h2><p>&emsp;&emsp;这个项目，实际上应用场景也很有限，花了很大的精力去整理技术文档和debug，最后听到小爱同学的一句“正在询问ChatGPT”，感觉很好玩！<br>&emsp;&emsp;现在，利用HomeAssistant和智能家居的开发者环境，俺们宿舍实现了灯具、空调、电脑和音箱的互联。通过语音或一些终端即可控制电器的开关；可以远程提醒睡觉的室友去签到……说效率嘛，也没提高不少，但对于一个医学生而言，很少能体会到技术进步的新奇，这也算一种满足叭！<br>&emsp;&emsp;在Github上还有很多其他的“联名”项目，比如最常见的微信接入Chatgpt。（<a href="https://github.com/cheungchazz/WeChat-AIChatbot-WinOnly">cheungchazz/WeChat-AIChatbot-WinOnly: 基于chatgpt-on-wechat框架，只能运行在Win平台的项目，通过本项目可以将微信或者企业微信个人号接入ChatGpt、文心一言、FastGpt、LinkAI，可以文字对话、语音对话、图片交互、文件交互等。 (github.com)</a>）</p>
-<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
-<li><a href="https://blog.csdn.net/Mancuojie/article/details/120411171#_31">手把手教你在Ubuntu中愉快地使用Python_ubuntu使用python-CSDN博客</a></li>
-<li><a href="https://github.com/yihong0618/xiaogpt">yihong0618/xiaogpt: Play ChatGPT and other LLM with Xiaomi AI Speaker (github.com)</a></li>
-</ol>
-]]></content>
-      <categories>
-        <category>随笔</category>
-      </categories>
-      <tags>
-        <tag>LLM</tag>
-        <tag>AI</tag>
-        <tag>智能音箱</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>深度学习笔记（二）：Pytorch实现线性回归</title>
-    <url>/2024/04/01/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9APytorch%E5%AE%9E%E7%8E%B0%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/</url>
-    <content><![CDATA[<h2 id="导入所需的库"><a href="#导入所需的库" class="headerlink" title="导入所需的库"></a>导入所需的库</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="keyword">from</span> d2l <span class="keyword">import</span> torch <span class="keyword">as</span> d2l</span><br></pre></td></tr></table></figure>
-<p>在这一部分，我们导入了实现线性回归所需的库。<code>torch</code> 是 PyTorch 库的主要接口，<code>random</code> 用于生成随机数，<code>d2l</code> 是对应的深度学习库。</p>
-<h2 id="生成数据集"><a href="#生成数据集" class="headerlink" title="生成数据集"></a>生成数据集</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">X = torch.normal(<span class="number">0</span>, <span class="number">1</span>, (<span class="number">1000</span>, <span class="number">2</span>))  <span class="comment"># 生成1000个样本，每个样本有两个特征</span></span><br><span class="line">true_w = torch.tensor([<span class="number">5.0</span>, -<span class="number">2</span>])    <span class="comment"># 真实的权重参数</span></span><br><span class="line">true_b = <span class="number">2.0</span>                         <span class="comment"># 真实的偏置参数</span></span><br><span class="line">y = torch.matmul(X, true_w) + true_b  <span class="comment"># 生成标签</span></span><br><span class="line">features = X</span><br><span class="line">labels = y.reshape((-<span class="number">1</span>, <span class="number">1</span>))</span><br></pre></td></tr></table></figure>
-<p>这一部分生成了一个线性回归模型的数据集。我们首先使用 <code>torch.normal</code> 生成一个具有标准正态分布的特征矩阵 <code>X</code>，包含 1000 个样本和 2 个特征。然后，定义了真实的权重参数 <code>true_w</code> 和偏置参数 <code>true_b</code>，并根据线性模型生成标签 <code>y</code>。最后将特征和标签存储在 <code>features</code> 和 <code>labels</code> 中。</p>
-<h2 id="数据集可视化"><a href="#数据集可视化" class="headerlink" title="数据集可视化"></a>数据集可视化</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">d2l.set_figsize()</span><br><span class="line">d2l.plt.scatter(features[:, (<span class="number">1</span>)].detach().numpy(), labels.detach().numpy(), <span class="number">1</span>)</span><br><span class="line">d2l.plt.scatter(features[:, (<span class="number">0</span>)].detach().numpy(), labels.detach().numpy(), <span class="number">1</span>)</span><br></pre></td></tr></table></figure>
-<p>这部分代码将数据集可视化，使用 <code>d2l.set_figsize()</code> 设置图形大小，然后使用 <code>d2l.plt.scatter</code> 绘制散点图，展示特征与标签之间的关系。</p>
-<h2 id="定义数据迭代器"><a href="#定义数据迭代器" class="headerlink" title="定义数据迭代器"></a>定义数据迭代器</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">data_iter</span>(<span class="params">batch_size, features, labels</span>):</span><br><span class="line">    num_examples = <span class="built_in">len</span>(features)</span><br><span class="line">    indices = <span class="built_in">list</span>(<span class="built_in">range</span>(num_examples))</span><br><span class="line">    random.shuffle(indices)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, num_examples, batch_size):</span><br><span class="line">        batch_indices = torch.tensor(</span><br><span class="line">            indices[i:<span class="built_in">min</span>(i + batch_size, num_examples)])</span><br><span class="line">        <span class="keyword">yield</span> features[batch_indices], labels[batch_indices]</span><br></pre></td></tr></table></figure>
-<p>这段代码定义了一个数据迭代器，用于在训练过程中迭代数据集。首先计算数据集的样本数量 <code>num_examples</code>，然后生成样本索引 <code>indices</code> 并打乱顺序。接下来，使用 <code>yield</code> 关键字生成批量数据，并返回对应的特征和标签。</p>
-<h2 id="定义批量大小"><a href="#定义批量大小" class="headerlink" title="定义批量大小"></a>定义批量大小</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">batch_size = <span class="number">10</span></span><br></pre></td></tr></table></figure>
-<p>这部分定义了批量大小，即每次训练时用于计算梯度的样本数。</p>
-<h2 id="打印第一个批次的样本和标签"><a href="#打印第一个批次的样本和标签" class="headerlink" title="打印第一个批次的样本和标签"></a>打印第一个批次的样本和标签</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> X, y <span class="keyword">in</span> data_iter(batch_size, features, labels):</span><br><span class="line">    <span class="built_in">print</span>(X, <span class="string">&quot;\n&quot;</span>, y)</span><br><span class="line">    <span class="keyword">break</span></span><br></pre></td></tr></table></figure>
-<p>这段代码打印了第一个批次的样本特征 <code>X</code> 和对应的标签 <code>y</code>。</p>
-<h2 id="初始化模型参数"><a href="#初始化模型参数" class="headerlink" title="初始化模型参数"></a>初始化模型参数</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">w = torch.normal(<span class="number">0</span>, <span class="number">0.01</span>, size=(<span class="number">2</span>, <span class="number">1</span>), requires_grad=<span class="literal">True</span>)</span><br><span class="line">b = torch.zeros(<span class="number">1</span>, requires_grad=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
-<p>在这里，我们初始化模型参数 <code>w</code> 和 <code>b</code>。其中 <code>w</code> 是一个服从均值为 0，标准差为 0.01 的正态分布的张量，形状为 (2, 1)，表示权重参数；<code>b</code> 是一个零张量，表示偏置参数。</p>
-<h2 id="定义线性回归模型"><a href="#定义线性回归模型" class="headerlink" title="定义线性回归模型"></a>定义线性回归模型</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">linreg</span>(<span class="params">X, w, b</span>):</span><br><span class="line">    <span class="keyword">return</span> torch.matmul(X, w) + b</span><br></pre></td></tr></table></figure>
-<p>这部分定义了线性回归模型。给定输入特征 <code>X</code>、权重参数 <code>w</code> 和偏置参数 <code>b</code>，该函数返回预测结果。</p>
-<h2 id="定义平方损失函数"><a href="#定义平方损失函数" class="headerlink" title="定义平方损失函数"></a>定义平方损失函数</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">squared_loss</span>(<span class="params">y_hat, y</span>):</span><br><span class="line">    <span class="keyword">return</span> (y_hat - y.reshape(y_hat.shape)) ** <span class="number">2</span> / <span class="number">2</span></span><br></pre></td></tr></table></figure>
-<p>这段代码定义了平方损失函数，用于衡量预测值 <code>y_hat</code> 与真实值 <code>y</code> 之间的差异。</p>
-<h2 id="定义随机梯度下降优化算法"><a href="#定义随机梯度下降优化算法" class="headerlink" title="定义随机梯度下降优化算法"></a>定义随机梯度下降优化算法</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">sgd</span>(<span class="params">params, lr, batch_size</span>):</span><br><span class="line">    <span class="keyword">with</span> torch.no_grad():</span><br><span class="line">        <span class="keyword">for</span> param <span class="keyword">in</span> params:</span><br><span class="line">            param -= lr * param.grad / batch_size</span><br><span class="line">            param.grad.zero_()</span><br></pre></td></tr></table></figure>
-<p>这部分定义了随机梯度下降（SGD）优化算法，用于更新模型参数。其中 <code>params</code> 是需要更新的参数列表，<code>lr</code> 是学习率，<code>batch_size</code> 是批量大小。在函数中，首先通过 <code>torch.no_grad()</code> 禁用梯度计算，然后对参数进行更新，更新规则为参数减去学习率乘以梯度除以批量大小，并清零梯度。</p>
-<h2 id="设置学习率和训练轮数"><a href="#设置学习率和训练轮数" class="headerlink" title="设置学习率和训练轮数"></a>设置学习率和训练轮数</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">lr = <span class="number">0.001</span></span><br><span class="line">num_epochs = <span class="number">100</span></span><br></pre></td></tr></table></figure>
-<p>这里设置了学习率 <code>lr</code> 和训练轮数 <code>num_epochs</code>。</p>
-<h2 id="训练模型"><a href="#训练模型" class="headerlink" title="训练模型"></a>训练模型</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">net = linreg</span><br><span class="line">loss = squared_loss</span><br><span class="line"><span class="keyword">for</span> epoch <span class="keyword">in</span> <span class="built_in">range</span>(num_epochs):</span><br><span class="line">    <span class="keyword">for</span> X, y <span class="keyword">in</span> data_iter(batch_size, features, labels):</span><br><span class="line">        l = loss(net(X, w, b), y)</span><br><span class="line">        l.<span class="built_in">sum</span>().backward()</span><br><span class="line">        sgd([w, b], lr, batch_size)</span><br><span class="line">    <span class="keyword">with</span> torch.no_grad():</span><br><span class="line">        train_l = loss(net(features, w, b), labels)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;epoch:&#123;&#125;;loss:&#123;&#125;&quot;</span>.<span class="built_in">format</span>(epoch, train_l.mean()))</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;w:&#123;&#125;;b:&#123;&#125;&quot;</span>.<span class="built_in">format</span>(w, b))</span><br></pre></td></tr></table></figure>
-<p>这部分代码是模型的训练过程。首先定义了模型 <code>net</code> 和损失函数 <code>loss</code>，然后进行多轮训练。在每一轮中，通过 <code>data_iter</code> 函数迭代获取批量样本，计算模型预测值与真实值的损失，并进行反向传播更新模型参数。最后，输出每轮训练的损失值以及更新后的模型参数。</p>
-<h2 id="高级API的简洁实现"><a href="#高级API的简洁实现" class="headerlink" title="高级API的简洁实现"></a>高级API的简洁实现</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> torch.utils <span class="keyword">import</span> data</span><br><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">from</span> d2l <span class="keyword">import</span> torch <span class="keyword">as</span> d2l</span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义真实的权重和偏置以生成合成数据</span></span><br><span class="line">true_w = torch.tensor([<span class="number">2</span>, -<span class="number">3.4</span>])  <span class="comment"># 真实权重</span></span><br><span class="line">true_b = torch.tensor(<span class="number">2.0</span>)        <span class="comment"># 真实偏置</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用真实的权重和偏置生成合成数据</span></span><br><span class="line">features, labels = d2l.synthetic_data(true_w, true_b, <span class="number">10000</span>) </span><br><span class="line"></span><br><span class="line"><span class="comment"># 加载数据到DataLoader的函数</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">load_array</span>(<span class="params">data_arrays, batch_size, is_train=<span class="literal">True</span></span>):</span><br><span class="line">    <span class="comment"># 创建一个TensorDataset，使用输入的数据数组</span></span><br><span class="line">    dataset = data.TensorDataset(*data_arrays)</span><br><span class="line">    <span class="comment"># 根据是否训练，创建一个DataLoader，并指定批次大小</span></span><br><span class="line">    <span class="keyword">return</span> data.DataLoader(dataset, batch_size, shuffle=is_train)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置批次大小</span></span><br><span class="line">batch_size = <span class="number">100</span></span><br><span class="line"><span class="comment"># 将合成数据加载到DataLoader中</span></span><br><span class="line">data_iter = load_array((features, labels), batch_size)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 从torch中导入必要的模块</span></span><br><span class="line"><span class="keyword">from</span> torch <span class="keyword">import</span> nn</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用Sequential容器定义一个神经网络模型</span></span><br><span class="line">net = nn.Sequential(nn.Linear(<span class="number">2</span>, <span class="number">1</span>))  <span class="comment"># 使用输入大小为2和输出大小为1的线性层</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 初始化线性层的权重</span></span><br><span class="line">net[<span class="number">0</span>].weight.data.normal_(<span class="number">0</span>, <span class="number">0.01</span>)  <span class="comment"># 从均值为0、标准差为0.01的正态分布中初始化权重</span></span><br><span class="line">net[<span class="number">0</span>].weight.data.fill_(<span class="number">0</span>)          <span class="comment"># 将偏置填充为0</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义损失函数</span></span><br><span class="line">loss = nn.MSELoss()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义优化器</span></span><br><span class="line">trainer = torch.optim.SGD(net.parameters(), lr=<span class="number">0.03</span>)  <span class="comment"># 学习率为0.03的随机梯度下降</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置训练的轮数</span></span><br><span class="line">num_epochs = <span class="number">10</span></span><br><span class="line"><span class="comment"># 训练循环</span></span><br><span class="line"><span class="keyword">for</span> epoch <span class="keyword">in</span> <span class="built_in">range</span>(num_epochs):</span><br><span class="line">    <span class="comment"># 遍历数据的批次</span></span><br><span class="line">    <span class="keyword">for</span> X, y <span class="keyword">in</span> data_iter:</span><br><span class="line">        <span class="comment"># 前向传播：通过将X传递给模型来计算预测的y</span></span><br><span class="line">        l = loss(X, y)  <span class="comment"># 计算预测和真实标签之间的损失</span></span><br><span class="line">        <span class="comment"># 反向传播：计算损失相对于模型参数的梯度</span></span><br><span class="line">        trainer.zero_grad()  <span class="comment"># 在反向传播之前将梯度置零</span></span><br><span class="line">        l.backward()         <span class="comment"># 反向传播以计算梯度</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>]]></content>
-      <categories>
-        <category>深度学习</category>
-      </categories>
-      <tags>
-        <tag>机器学习</tag>
-        <tag>深度学习</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>单细胞测序教程资源聚合</title>
-    <url>/2023/08/12/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E6%95%99%E7%A8%8B%E5%92%8C%E8%B5%84%E6%BA%90%E8%81%9A%E5%90%88/</url>
-    <content><![CDATA[<h2 id="教程"><a href="#教程" class="headerlink" title="教程"></a>教程</h2><h4 id="转录组学"><a href="#转录组学" class="headerlink" title="转录组学"></a>转录组学</h4><ol>
-<li>单细胞测序-最佳的分析Pipeline <a href="https://single-cell-tutorial.readthedocs.io/zh/latest/">单细胞测序-最佳的分析Pipeline</a> ：Zehua Zeng等为主要作者，包括详细的原理和处理流程（Python）；其中重点介绍了Omicverse的使用； </li>
-<li>哈佛大学单细胞中文笔记：<a href="https://zhuanlan.zhihu.com/p/209018565">哈佛大学单细胞中文笔记</a> 陈同博士撰写。主要包括原理和Seurat的使用。<a href="https://hbctraining.github.io/main">原版教程</a>；</li>
-<li>RNA-SEQ BLOG：最新的RNA测序资讯：<a href="https://www.rna-seqblog.com/">RNA-Seq Blog</a></li>
-</ol>
-<h2 id="资源"><a href="#资源" class="headerlink" title="资源"></a>资源</h2><h4 id="肿瘤生信"><a href="#肿瘤生信" class="headerlink" title="肿瘤生信"></a>肿瘤生信</h4><ol>
-<li>GEPIA2：GEPIA2是一个无代码可视化平台，其数据来源于TCGA和GTEx数据库，用户可以自由探索指定基因的在肿瘤组织中的表达情况以及和预后的关系。<a href="http://gepia2.cancer-pku.cn/">GEPIA2</a></li>
-<li>Prognoscan：Prognoscan整合了2010年以前GEO上Microarray和相应临床信息，可以探索制定基因自不同数据集中和预后的关系。<a href="http://dna00.bio.kyutech.ac.jp/PrognoScan/">PrognoScan</a></li>
-<li>TIMER：TIMER用于分析不同癌症类型的免疫浸润（数据来自于TCGA）。<a href="http://timer.cistrome.org/">TIMER2.0</a></li>
-</ol>
-<h4 id="GWAS"><a href="#GWAS" class="headerlink" title="GWAS"></a>GWAS</h4><ol>
-<li>IEU OPEN GWAS：包含42,484 个GWAS摘要数据集的214,725,223,303 个遗传关联的数据库。<a href="https://gwas.mrcieu.ac.uk/">IEU OpenGWAS</a></li>
-<li>PheWeb：包含Biobank Japan，以及UKB等欧洲样本的GWAS结果。<a href="https://pheweb.jp/downloads">PheWeb</a></li>
-<li>GWAS catalog：内容较全，网页比较慢，建议使用特殊方式访问。<a href="https://www.ebi.ac.uk/gwas/downloads/summary-statistics">GWAS catalog</a>:</li>
-<li>EGG：早期生长联盟数据，包含出生体重，出生头围等。<a href="http://egg-consortium.org/index.html">EGG</a></li>
-<li>CKDGEN：包含慢性肾病、MA、eGFR等。<a href="http://ckdgen.imbi.uni-freiburg.de/?tdsourcetag=s_pctim_aiomsg">CKDGEN</a></li>
-<li>GLGC：血脂GWAS数据库。<a href="http://csg.sph.umich.edu/willer/public/glgc-lipids2021/">GLGC</a></li>
-<li>PGC：精神病学基因组学联盟。<a href="https://www.med.unc.edu/pgc/results-and-downloads/downloads">PGC</a></li>
-<li>GEFOS：骨质疏松联盟。<a href="http://www.gefos.org/">GEFOS</a></li>
-<li>DIAGRAM：二型糖尿病数据库。<a href="http://diagram-consortium.org/downloads.html">DIAGRAM</a>: </li>
-<li>代谢组学数据库：<a href="http://www.metabolomix.com/list-of-all-published-gwas-with-metabolomics/">A Table of all published GWAS with metabolomics</a></li>
-</ol>
-]]></content>
-      <categories>
-        <category>生物信息学</category>
-      </categories>
-      <tags>
-        <tag>单细胞测序</tag>
-        <tag>生物信息学</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>深度学习笔记（一）：线性回归</title>
     <url>/2024/03/30/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/</url>
     <content><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>因为没有深度学习的实践经历，很多理论的知识有些淡忘了，本系列旨在对深度学习过程中一些重难点知识再次梳理。</p>
@@ -2069,6 +1977,185 @@ l = -\sum_{i=1}^{n} y_{i} \log P(y=y_i|x_i)</script><h2 id="损失函数的求�
         <tag>统计学</tag>
         <tag>机器学习</tag>
         <tag>深度学习</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>深度学习笔记（三）：PyTorch 实现 Softmax 回归</title>
+    <url>/2024/04/02/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89%EF%BC%9APyTorch%20%E5%AE%9E%E7%8E%B0%20Softmax%20%E5%9B%9E%E5%BD%92/</url>
+    <content><![CDATA[<h1 id="导入必要的库"><a href="#导入必要的库" class="headerlink" title="导入必要的库"></a>导入必要的库</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> torchvision</span><br><span class="line"><span class="keyword">from</span> torchvision <span class="keyword">import</span> transforms</span><br><span class="line"><span class="keyword">from</span> torch.utils.data <span class="keyword">import</span> DataLoader</span><br><span class="line"><span class="keyword">from</span> d2l <span class="keyword">import</span> torch <span class="keyword">as</span> d2l</span><br></pre></td></tr></table></figure>
+<h1 id="定义一个函数，用于在一定布局下展示图像及其对应的标签"><a href="#定义一个函数，用于在一定布局下展示图像及其对应的标签" class="headerlink" title="定义一个函数，用于在一定布局下展示图像及其对应的标签"></a>定义一个函数，用于在一定布局下展示图像及其对应的标签</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">show_images</span>(<span class="params">imgs, num_rows, num_cols, titles=<span class="literal">None</span>, scale=<span class="number">1.5</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;展示图像及其标签&quot;&quot;&quot;</span></span><br><span class="line">    figsize = (num_cols * scale, num_rows * scale)</span><br><span class="line">    _, axes = d2l.plt.subplots(num_rows, num_cols, figsize=figsize)</span><br><span class="line">    axes = axes.flatten()</span><br><span class="line">    <span class="keyword">for</span> i, (ax, img) <span class="keyword">in</span> <span class="built_in">enumerate</span>(<span class="built_in">zip</span>(axes, imgs)):</span><br><span class="line">        <span class="keyword">if</span> torch.is_tensor(img):</span><br><span class="line">            ax.imshow(img.numpy())</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            ax.imshow(img)</span><br><span class="line">        ax.axes.get_xaxis().set_visible(<span class="literal">False</span>)</span><br><span class="line">        ax.axes.get_yaxis().set_visible(<span class="literal">False</span>)  <span class="comment"># 修复了原代码中的错误</span></span><br><span class="line">        <span class="keyword">if</span> titles:</span><br><span class="line">            ax.set_title(titles[i])</span><br><span class="line">    <span class="keyword">return</span> axes</span><br></pre></td></tr></table></figure>
+<h1 id="定义一个函数，用于获取数据加载时使用的工作线程数"><a href="#定义一个函数，用于获取数据加载时使用的工作线程数" class="headerlink" title="定义一个函数，用于获取数据加载时使用的工作线程数"></a>定义一个函数，用于获取数据加载时使用的工作线程数</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">get_dataloader_workers</span>():</span><br><span class="line">    <span class="string">&quot;&quot;&quot;获取数据加载时使用的工作线程数&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">4</span></span><br></pre></td></tr></table></figure>
+<h1 id="定义一个函数，用于加载-Fashion-MNIST-数据集"><a href="#定义一个函数，用于加载-Fashion-MNIST-数据集" class="headerlink" title="定义一个函数，用于加载 Fashion-MNIST 数据集"></a>定义一个函数，用于加载 Fashion-MNIST 数据集</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">load_data_fashion_mnist</span>(<span class="params">batch_size, resize=<span class="literal">None</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;加载Fashion-MNIST数据集，并可选择性地调整图像大小&quot;&quot;&quot;</span></span><br><span class="line">    trans = [transforms.ToTensor()]</span><br><span class="line">    <span class="keyword">if</span> resize:</span><br><span class="line">        trans.insert(<span class="number">0</span>, transforms.Resize(resize))</span><br><span class="line">    trans = transforms.Compose(trans)</span><br><span class="line">    mnist_train = torchvision.datasets.FashionMNIST(root=<span class="string">&quot;./data&quot;</span>, train=<span class="literal">True</span>, transform=trans, download=<span class="literal">True</span>)</span><br><span class="line">    mnist_test = torchvision.datasets.FashionMNIST(root=<span class="string">&quot;./data&quot;</span>, train=<span class="literal">False</span>, transform=trans, download=<span class="literal">True</span>)</span><br><span class="line">    <span class="keyword">return</span> (DataLoader(mnist_train, batch_size, shuffle=<span class="literal">True</span>, num_workers=get_dataloader_workers()),</span><br><span class="line">            DataLoader(mnist_test, batch_size, shuffle=<span class="literal">False</span>, num_workers=get_dataloader_workers()))</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置批量大小</span></span><br><span class="line">batch_size = <span class="number">256</span></span><br><span class="line"><span class="comment"># 加载数据集</span></span><br><span class="line">train_iter, test_iter = load_data_fashion_mnist(batch_size=batch_size)</span><br></pre></td></tr></table></figure>
+<h1 id="定义模型"><a href="#定义模型" class="headerlink" title="定义模型"></a>定义模型</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="comment"># 网络的输入和输出维度</span></span><br><span class="line">num_inputs = <span class="number">28</span> * <span class="number">28</span></span><br><span class="line">num_outputs = <span class="number">10</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 初始化模型参数</span></span><br><span class="line">w = torch.normal(<span class="number">0</span>, <span class="number">0.01</span>, size=(num_inputs, num_outputs), requires_grad=<span class="literal">True</span>)</span><br><span class="line">b = torch.zeros(num_outputs, requires_grad=<span class="literal">True</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义softmax函数</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">softmax</span>(<span class="params">X</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;计算softmax概率值&quot;&quot;&quot;</span></span><br><span class="line">    X_exp = torch.exp(X)</span><br><span class="line">    partition = X_exp.<span class="built_in">sum</span>(<span class="number">1</span>, keepdim=<span class="literal">True</span>)</span><br><span class="line">    <span class="keyword">return</span> X_exp / partition</span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义模型</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">net</span>(<span class="params">X</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;定义softmax回归模型&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">return</span> softmax(torch.matmul(X.reshape((-<span class="number">1</span>, w.shape[<span class="number">0</span>])), w) + b)</span><br></pre></td></tr></table></figure>
+<h1 id="定义交叉熵损失函数"><a href="#定义交叉熵损失函数" class="headerlink" title="定义交叉熵损失函数"></a>定义交叉熵损失函数</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">cross_entropy</span>(<span class="params">y_hat, y</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;计算预测值和真实值之间的交叉熵损失&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">return</span> -torch.log(y_hat[<span class="built_in">range</span>(<span class="built_in">len</span>(y_hat)), y])</span><br></pre></td></tr></table></figure>
+<h1 id="模型评价指标计算"><a href="#模型评价指标计算" class="headerlink" title="模型评价指标计算"></a>模型评价指标计算</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">accuracy</span>(<span class="params">y_hat, y</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;计算预测准确率&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">len</span>(y_hat.shape) &gt; <span class="number">1</span> <span class="keyword">and</span> y_hat.shape[<span class="number">1</span>] &gt; <span class="number">1</span>:</span><br><span class="line">        y_hat = y_hat.argmax(axis=<span class="number">1</span>)</span><br><span class="line">    cmp = y_hat.<span class="built_in">type</span>(y.dtype) == y</span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">float</span>(cmp.<span class="built_in">type</span>(y.dtype).<span class="built_in">sum</span>())</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Accumulator</span>:</span><br><span class="line">    <span class="string">&quot;&quot;&quot;在n个变量上累加&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, n</span>):</span><br><span class="line">        self.data = [<span class="number">0.0</span>] * n</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">add</span>(<span class="params">self, *args</span>):</span><br><span class="line">        self.data = [a + <span class="built_in">float</span>(b) <span class="keyword">for</span> a, b <span class="keyword">in</span> <span class="built_in">zip</span>(self.data, args)]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">reset</span>(<span class="params">self</span>):</span><br><span class="line">        self.data = [<span class="number">0.0</span>] * <span class="built_in">len</span>(self.data)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__getitem__</span>(<span class="params">self, idx</span>):</span><br><span class="line">        <span class="keyword">return</span> self.data[idx]</span><br></pre></td></tr></table></figure>
+<h1 id="定义训练一个-epoch-的函数"><a href="#定义训练一个-epoch-的函数" class="headerlink" title="定义训练一个 epoch 的函数"></a>定义训练一个 epoch 的函数</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">train_epoch</span>(<span class="params">net, train_iter, loss, updater</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;训练模型一个epoch&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">isinstance</span>(net, torch.nn.Module):</span><br><span class="line">        net.train()  <span class="comment"># 设置为训练模式</span></span><br><span class="line">    metric = Accumulator(<span class="number">3</span>)  <span class="comment"># 损失总和，正确预测数，样本总数</span></span><br><span class="line">    <span class="keyword">for</span> X, y <span class="keyword">in</span> train_iter:</span><br><span class="line">        y_hat = net(X)</span><br><span class="line">        l = loss(y_hat, y)</span><br><span class="line">        <span class="keyword">if</span> <span class="built_in">isinstance</span>(updater, torch.optim.Optimizer):</span><br><span class="line">            updater.zero_grad()</span><br><span class="line">            l.mean().backward()</span><br><span class="line">            updater.step()</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            l.<span class="built_in">sum</span>().backward()</span><br><span class="line">            updater(X.shape[<span class="number">0</span>])</span><br><span class="line">        metric.add(<span class="built_in">float</span>(l.<span class="built_in">sum</span>()), accuracy(y_hat, y), y.numel())</span><br><span class="line">    <span class="comment"># 返回训练损失和训练准确率</span></span><br><span class="line">    <span class="keyword">return</span> metric[<span class="number">0</span>] / metric[<span class="number">2</span>], metric[<span class="number">1</span>] / metric[<span class="number">2</span>]</span><br></pre></td></tr></table></figure>
+<h1 id="定义训练函数"><a href="#定义训练函数" class="headerlink" title="定义训练函数"></a>定义训练函数</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">train</span>(<span class="params">net, train_iter, test_iter, loss, num_epochs, updater</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;训练模型&quot;&quot;&quot;</span></span><br><span class="line">    all_epoch = []</span><br><span class="line">    <span class="keyword">for</span> epoch <span class="keyword">in</span> <span class="built_in">range</span>(num_epochs):</span><br><span class="line">        train_metrics = train_epoch(net, train_iter, loss, updater)</span><br><span class="line">        all_epoch.append(train_metrics)</span><br><span class="line">    <span class="keyword">return</span> all_epoch</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置学习率和更新器</span></span><br><span class="line">lr = <span class="number">0.1</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">updater</span>(<span class="params">batch_size</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;使用小批量随机梯度下降进行参数更新&quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">return</span> d2l.sgd([w, b], lr, batch_size)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置训练轮数并开始训练</span></span><br><span class="line">num_epochs = <span class="number">10</span></span><br><span class="line">train(net, train_iter, test_iter, cross_entropy, num_epochs, updater)</span><br></pre></td></tr></table></figure>
+<p>通过以上步骤，我们成功实现了使用 PyTorch 进行 Softmax 回归模型的训练和测试。 Softmax 回归是深度学习中的重要组成部分，能够有效地处理分类问题。</p>
+<h1 id="softmax的高级API实现"><a href="#softmax的高级API实现" class="headerlink" title="softmax的高级API实现"></a>softmax的高级API实现</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> torch  <span class="comment"># 导入PyTorch库  </span></span><br><span class="line"><span class="keyword">from</span> torch <span class="keyword">import</span> nn  <span class="comment"># 从PyTorch库中导入神经网络模块  </span></span><br><span class="line"><span class="keyword">from</span> d2l <span class="keyword">import</span> torch <span class="keyword">as</span> d2l </span><br><span class="line">  </span><br><span class="line"><span class="comment"># 设置批量大小为256  </span></span><br><span class="line">batch_size = <span class="number">256</span>  </span><br><span class="line">  </span><br><span class="line"><span class="comment"># 加载Fashion-MNIST数据集，并划分为训练集和测试集  </span></span><br><span class="line">train_iter, test_iter = d2l.load_data_fashion_mnist(batch_size)  </span><br><span class="line">  </span><br><span class="line"><span class="comment"># 定义一个简单的神经网络模型，包含一个Flatten层（用于将图像展平）和一个全连接层（784个输入节点，10个输出节点）  </span></span><br><span class="line">net = nn.Sequential(nn.Flatten(), nn.Linear(<span class="number">784</span>, <span class="number">10</span>))  </span><br><span class="line">  </span><br><span class="line"><span class="comment"># 定义一个权重初始化函数  </span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">init_weights</span>(<span class="params">m</span>):  </span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">type</span>(m) == nn.Linear:  <span class="comment"># 如果模块是线性层  </span></span><br><span class="line">        nn.init.normal_(m.weight, std=<span class="number">0.01</span>)  <span class="comment"># 使用标准差为0.01的正态分布初始化权重  </span></span><br><span class="line">  </span><br><span class="line"><span class="comment"># 应用初始化函数到模型的所有模块  </span></span><br><span class="line">net.apply(init_weights)  </span><br><span class="line">  </span><br><span class="line"><span class="comment"># 定义交叉熵损失函数，reduction设置为&quot;None&quot;，表示不进行任何约简，返回每个样本的损失值  </span></span><br><span class="line">loss = nn.CrossEntropyLoss(reduction=<span class="string">&quot;None&quot;</span>)  </span><br><span class="line">  </span><br><span class="line"><span class="comment"># 定义优化器，使用随机梯度下降算法，学习率为0.1  </span></span><br><span class="line">trainer = torch.optim.SGD(net.parameters(), lr=<span class="number">0.1</span>)</span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>深度学习</category>
+      </categories>
+      <tags>
+        <tag>机器学习</tag>
+        <tag>深度学习</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>深度学习笔记（五）：权重衰减</title>
+    <url>/2024/04/02/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E6%9D%83%E9%87%8D%E8%A1%B0%E5%87%8F/</url>
+    <content><![CDATA[<blockquote><p>我们所知的一切定理和理论都只能作为假想和猜测。</p>
+<footer><strong>卡尔 波普尔</strong></footer></blockquote>
+<h1 id="权重衰减"><a href="#权重衰减" class="headerlink" title="权重衰减"></a>权重衰减</h1><p>权重衰减是机器学习中常用的正则化方法之一，它通过在模型的损失函数中添加一个与权重平方成正比的正则项来工作。这种方法也被称为L2正则化。其基本思想是在模型训练的过程中，除了最小化原始的损失函数（例如均方误差损失），还要最小化权重向量的L2范数的平方，从而防止权重过大，减少过拟合的风险。</p>
+<h2 id="L2范数"><a href="#L2范数" class="headerlink" title="L2范数"></a>L2范数</h2><p>在介绍权重衰减之前，首先明确L2范数的定义。对于一个向量$\mathbf{w} = [w_1, w_2, …, w_n]^\top$，其L2范数定义为：</p>
+<script type="math/tex; mode=display">
+\| \mathbf{w} \|_2 = \sqrt{\sum_{i=1}^{n} w_i^2}</script><p>L2范数的平方（即L2范数的平方），则为：</p>
+<script type="math/tex; mode=display">
+\| \mathbf{w} \|_2^2 = \sum_{i=1}^{n} w_i^2</script><h2 id="损失函数及权重衰减项"><a href="#损失函数及权重衰减项" class="headerlink" title="损失函数及权重衰减项"></a>损失函数及权重衰减项</h2><p>在机器学习模型中，假设原始的损失函数为$L(\mathbf{w})$，其中$\mathbf{w}$表示模型参数。加入权重衰减后的损失函数$L_{\text{new}}(\mathbf{w})$可以表示为：</p>
+<script type="math/tex; mode=display">
+L_{\text{new}}(\mathbf{w}) = L(\mathbf{w}) + \frac{\lambda}{2} \| \mathbf{w} \|_2^2</script><p>其中，$\lambda$是一个正的超参数，用于控制正则项的影响程度。第二项$\frac{\lambda}{2} | \mathbf{w} |_2^2$就是权重衰减项，即L2正则化项。</p>
+<h2 id="权重衰减的效果"><a href="#权重衰减的效果" class="headerlink" title="权重衰减的效果"></a>权重衰减的效果</h2><p>权重衰减对模型的主要影响是限制了权重的大小。通过在损失函数中添加权重的L2范数的平方，模型在训练过程中会倾向于选择较小的权重。较小的权重可以减少模型的复杂度，从而降低过拟合的风险。此外，L2正则化还有利于提高模型的泛化能力。</p>
+<h2 id="梯度下降中的权重更新规则"><a href="#梯度下降中的权重更新规则" class="headerlink" title="梯度下降中的权重更新规则"></a>梯度下降中的权重更新规则</h2><p>在使用梯度下降法进行优化时，权重的更新规则需要考虑权重衰减项的影响。对于权重$\mathbf{w}$的每个元素$w_i$，其更新规则为：</p>
+<script type="math/tex; mode=display">
+w_i \leftarrow w_i - \eta \left( \frac{\partial L(\mathbf{w})}{\partial w_i} + \lambda w_i \right)</script><p>其中，$\eta$是学习率，$\frac{\partial L(\mathbf{w})}{\partial w_i}$是原始损失函数对$w_i$的偏导数。可以看出，权重衰减实际上在每次更新权重时引入了权重本身的一个比例，这有助于防止权重增长过快。</p>
+<p>通过这种方式，权重衰减（L2正则化）有效地减轻了过拟合问题，使模型能够在未见数据上表现得更好。</p>
+<h1 id="权重衰减的从头实现"><a href="#权重衰减的从头实现" class="headerlink" title="权重衰减的从头实现"></a>权重衰减的从头实现</h1><h2 id="数据生成"><a href="#数据生成" class="headerlink" title="数据生成"></a>数据生成</h2><p>本例中，我们按照如下公式实现一个高维线性的数据采集：</p>
+<script type="math/tex; mode=display">
+y = \sum_{i=1}^{200} 0.01 \cdot X_i + 0.05 + \epsilon</script><p>其中，$\epsilon \sim N(0, 0.01^2)$ 。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">n_train, n_test, num_inputs, batch_size = <span class="number">20</span>, <span class="number">100</span>, <span class="number">200</span>, <span class="number">5</span></span><br><span class="line">true_w, true_b = torch.ones(num_inputs, <span class="number">1</span>)*<span class="number">0.01</span>, <span class="number">0.05</span></span><br><span class="line">train_data = d2l.synthetic_data(true_w,true_b,n_train)</span><br><span class="line">train_iter = d2l.load_array(train_data, batch_size)</span><br><span class="line">test_data = d2l.synthetic_data(true_w,true_b,n_test)</span><br><span class="line">test_iter = d2l.load_array(test_data,batch_size,is_train=<span class="literal">False</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="初始化模型参数"><a href="#初始化模型参数" class="headerlink" title="初始化模型参数"></a>初始化模型参数</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">init_params</span>():</span><br><span class="line">    w = torch.normal(<span class="number">0</span>, <span class="number">1</span>, size =(num_inputs, <span class="number">1</span>), requires_grad = <span class="literal">True</span>)</span><br><span class="line">    b = torch.zeros(<span class="number">1</span>,requires_grad = <span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="定义惩罚项"><a href="#定义惩罚项" class="headerlink" title="定义惩罚项"></a>定义惩罚项</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">l2_penalty</span>(<span class="params">w</span>):</span><br><span class="line">    <span class="keyword">return</span>  torch.<span class="built_in">sum</span>(w.<span class="built_in">pow</span>(<span class="number">2</span>))/<span class="number">2</span></span><br></pre></td></tr></table></figure>
+<h2 id="训练"><a href="#训练" class="headerlink" title="训练"></a>训练</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">train</span>(<span class="params">lambd</span>):</span><br><span class="line">    w, b = init_params()</span><br><span class="line">    net = <span class="keyword">lambda</span> X: d2l.linreg(X, w, b)</span><br><span class="line">    loss = d2l.squared_loss</span><br><span class="line">    <span class="comment">#从这里我们可以知道，net和loss只需要导入抽象的方法即可，不需要具体的参数。</span></span><br><span class="line">    num_epochs = <span class="number">100</span></span><br><span class="line">    lr = <span class="number">0.003</span></span><br><span class="line">    animator = d2l.Animator(xlim = [<span class="number">5</span>,num_epochs],legend=[<span class="string">&#x27;train&#x27;</span>,<span class="string">&#x27;test&#x27;</span>])</span><br><span class="line">    <span class="keyword">for</span> epoch <span class="keyword">in</span> <span class="built_in">range</span>(num_epochs):</span><br><span class="line">        <span class="keyword">for</span> X, y <span class="keyword">in</span> train_iter:</span><br><span class="line">            l = loss(net(X), y) + lambd * l2_penalty(w)</span><br><span class="line">            l.<span class="built_in">sum</span>().backward()</span><br><span class="line">            d2l.sgd([w, b], lr, batch_size)</span><br><span class="line">        <span class="keyword">if</span> epoch%<span class="number">5</span> == <span class="number">1</span>:</span><br><span class="line">            animator.add(epoch+<span class="number">1</span>, (d2l.evaluate_loss(net,train_iter,loss),</span><br><span class="line">                                  d2l.evaluate_loss(net,test_iter,loss)))</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;w2的范数是：&#123;&#125;&quot;</span>,torch.norm(w).item())</span><br><span class="line">    <span class="comment">#torch.norm(w) 用于计算范数</span></span><br></pre></td></tr></table></figure>
+<h1 id="权重衰减的高级API实现"><a href="#权重衰减的高级API实现" class="headerlink" title="权重衰减的高级API实现"></a>权重衰减的高级API实现</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">train_concise</span>(<span class="params">wd</span>):</span><br><span class="line">    net = nn.Sequential(nn.Linear(num_inputs, <span class="number">1</span>))</span><br><span class="line">    <span class="keyword">for</span> param <span class="keyword">in</span> net.parameters():</span><br><span class="line">        param.data.normal_()</span><br><span class="line">    loss = nn.MSELoss(reduction=<span class="string">&#x27;none&#x27;</span>)</span><br><span class="line">    num_epochs = <span class="number">100</span></span><br><span class="line">    lr = <span class="number">0.003</span></span><br><span class="line">    trainer = torch.optim.SGD([</span><br><span class="line">    &#123;<span class="string">&quot;params&quot;</span>:net[<span class="number">0</span>].weight,<span class="string">&quot;weight_decay&quot;</span>:wd&#125;,</span><br><span class="line">    &#123;<span class="string">&quot;params&quot;</span>:net[<span class="number">0</span>].bias&#125;</span><br><span class="line">    ],lr = lr)</span><br><span class="line">    <span class="comment">#trainer中放的是优化参数和学习率</span></span><br><span class="line">    animator = d2l.Animator(xlim = [<span class="number">5</span>,num_epochs],legend=[<span class="string">&#x27;train&#x27;</span>,<span class="string">&#x27;test&#x27;</span>])</span><br><span class="line">    <span class="keyword">for</span> epoch <span class="keyword">in</span> <span class="built_in">range</span>(num_epochs):</span><br><span class="line">        <span class="keyword">for</span> X, y <span class="keyword">in</span> train_iter:</span><br><span class="line">            trainer.zero_grad()</span><br><span class="line">            l = loss(net(X),y)</span><br><span class="line">            l.mean().backward()</span><br><span class="line">            trainer.step()</span><br><span class="line">        <span class="keyword">if</span> epoch%<span class="number">5</span> == <span class="number">1</span>:</span><br><span class="line">            animator.add(epoch+<span class="number">1</span>, (d2l.evaluate_loss(net,train_iter,loss),</span><br><span class="line">                                  d2l.evaluate_loss(net,test_iter,loss)))</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;w2的范数是：&#123;&#125;&quot;</span>,net[<span class="number">0</span>].weight.norm().item())   </span><br></pre></td></tr></table></figure>
+<p><code>trainer.zero_grad()</code></p>
+<ul>
+<li>在训练循环的每一次迭代开始前，必须清除（归零）旧的梯度，因为默认情况下，梯度是累加的。这意味着如果不手动清零，每次调用 <code>.backward()</code> 方法时计算出的梯度会加到已有的梯度上，这会导致错误的梯度值。</li>
+<li><code>trainer.zero_grad()</code> 函数就是用来做这个的，它将模型参数的梯度全部设置为0。这里的 <code>trainer</code> 通常指的是优化器对象，它负责更新模型的权重。</li>
+</ul>
+<p><code>l = loss(net(X), y)</code></p>
+<ul>
+<li>这一行计算当前模型 <code>net</code> 对输入 <code>X</code> 的预测和真实标签 <code>y</code> 之间的损失（loss）。</li>
+<li><code>net(X)</code> 表示将输入数据 <code>X</code> 传递给模型 <code>net</code>，得到预测输出。</li>
+<li><code>loss(net(X), y)</code> 计算预测输出和真实标签之间的差异。这个差异由一个损失函数来衡量，损失函数的选择取决于特定的任务（例如回归或分类）。</li>
+</ul>
+<p><code>l.mean().backward()</code></p>
+<ul>
+<li>由于损失 <code>l</code> 可能是一个向量（例如，如果使用了一个批次（batch）的数据进行计算），因此首先使用 <code>.mean()</code> 函数计算所有损失值的平均值，从而得到一个标量损失。</li>
+<li>然后，调用 <code>.backward()</code> 在这个标量损失上执行反向传播，自动计算模型参数相对于这个平均损失的梯度。这是利用链式法则进行的，是深度学习中参数更新的核心。</li>
+</ul>
+<p><code>trainer.step()</code></p>
+<ul>
+<li>最后一步是调用优化器的 <code>.step()</code> 方法，这会根据计算出的梯度更新模型的权重。优化器根据其内部定义的规则（如 SGD、Adam 等）来决定如何更新模型的参数。</li>
+<li>梯度告诉我们损失函数在当前参数位置的斜率方向，优化器利用这些信息来调整权重，目的是减少损失。</li>
+</ul>
+]]></content>
+      <categories>
+        <category>深度学习</category>
+      </categories>
+      <tags>
+        <tag>机器学习</tag>
+        <tag>深度学习</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>深度学习笔记（二）：PyTorch实现线性回归</title>
+    <url>/2024/04/01/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9APyTorch%E5%AE%9E%E7%8E%B0%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/</url>
+    <content><![CDATA[<h2 id="导入所需的库"><a href="#导入所需的库" class="headerlink" title="导入所需的库"></a>导入所需的库</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> random</span><br><span class="line"><span class="keyword">from</span> d2l <span class="keyword">import</span> torch <span class="keyword">as</span> d2l</span><br></pre></td></tr></table></figure>
+<p>在这一部分，我们导入了实现线性回归所需的库。<code>torch</code> 是 PyTorch 库的主要接口，<code>random</code> 用于生成随机数，<code>d2l</code> 是对应的深度学习库。</p>
+<h2 id="生成数据集"><a href="#生成数据集" class="headerlink" title="生成数据集"></a>生成数据集</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">X = torch.normal(<span class="number">0</span>, <span class="number">1</span>, (<span class="number">1000</span>, <span class="number">2</span>))  <span class="comment"># 生成1000个样本，每个样本有两个特征</span></span><br><span class="line">true_w = torch.tensor([<span class="number">5.0</span>, -<span class="number">2</span>])    <span class="comment"># 真实的权重参数</span></span><br><span class="line">true_b = <span class="number">2.0</span>                         <span class="comment"># 真实的偏置参数</span></span><br><span class="line">y = torch.matmul(X, true_w) + true_b  <span class="comment"># 生成标签</span></span><br><span class="line">features = X</span><br><span class="line">labels = y.reshape((-<span class="number">1</span>, <span class="number">1</span>))</span><br></pre></td></tr></table></figure>
+<p>这一部分生成了一个线性回归模型的数据集。我们首先使用 <code>torch.normal</code> 生成一个具有标准正态分布的特征矩阵 <code>X</code>，包含 1000 个样本和 2 个特征。然后，定义了真实的权重参数 <code>true_w</code> 和偏置参数 <code>true_b</code>，并根据线性模型生成标签 <code>y</code>。最后将特征和标签存储在 <code>features</code> 和 <code>labels</code> 中。</p>
+<h2 id="数据集可视化"><a href="#数据集可视化" class="headerlink" title="数据集可视化"></a>数据集可视化</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">d2l.set_figsize()</span><br><span class="line">d2l.plt.scatter(features[:, (<span class="number">1</span>)].detach().numpy(), labels.detach().numpy(), <span class="number">1</span>)</span><br><span class="line">d2l.plt.scatter(features[:, (<span class="number">0</span>)].detach().numpy(), labels.detach().numpy(), <span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+<p>这部分代码将数据集可视化，使用 <code>d2l.set_figsize()</code> 设置图形大小，然后使用 <code>d2l.plt.scatter</code> 绘制散点图，展示特征与标签之间的关系。</p>
+<h2 id="定义数据迭代器"><a href="#定义数据迭代器" class="headerlink" title="定义数据迭代器"></a>定义数据迭代器</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">data_iter</span>(<span class="params">batch_size, features, labels</span>):</span><br><span class="line">    num_examples = <span class="built_in">len</span>(features)</span><br><span class="line">    indices = <span class="built_in">list</span>(<span class="built_in">range</span>(num_examples))</span><br><span class="line">    random.shuffle(indices)</span><br><span class="line">    <span class="keyword">for</span> i <span class="keyword">in</span> <span class="built_in">range</span>(<span class="number">0</span>, num_examples, batch_size):</span><br><span class="line">        batch_indices = torch.tensor(</span><br><span class="line">            indices[i:<span class="built_in">min</span>(i + batch_size, num_examples)])</span><br><span class="line">        <span class="keyword">yield</span> features[batch_indices], labels[batch_indices]</span><br></pre></td></tr></table></figure>
+<p>这段代码定义了一个数据迭代器，用于在训练过程中迭代数据集。首先计算数据集的样本数量 <code>num_examples</code>，然后生成样本索引 <code>indices</code> 并打乱顺序。接下来，使用 <code>yield</code> 关键字生成批量数据，并返回对应的特征和标签。</p>
+<h2 id="定义批量大小"><a href="#定义批量大小" class="headerlink" title="定义批量大小"></a>定义批量大小</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">batch_size = <span class="number">10</span></span><br></pre></td></tr></table></figure>
+<p>这部分定义了批量大小，即每次训练时用于计算梯度的样本数。</p>
+<h2 id="打印第一个批次的样本和标签"><a href="#打印第一个批次的样本和标签" class="headerlink" title="打印第一个批次的样本和标签"></a>打印第一个批次的样本和标签</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">for</span> X, y <span class="keyword">in</span> data_iter(batch_size, features, labels):</span><br><span class="line">    <span class="built_in">print</span>(X, <span class="string">&quot;\n&quot;</span>, y)</span><br><span class="line">    <span class="keyword">break</span></span><br></pre></td></tr></table></figure>
+<p>这段代码打印了第一个批次的样本特征 <code>X</code> 和对应的标签 <code>y</code>。</p>
+<h2 id="初始化模型参数"><a href="#初始化模型参数" class="headerlink" title="初始化模型参数"></a>初始化模型参数</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">w = torch.normal(<span class="number">0</span>, <span class="number">0.01</span>, size=(<span class="number">2</span>, <span class="number">1</span>), requires_grad=<span class="literal">True</span>)</span><br><span class="line">b = torch.zeros(<span class="number">1</span>, requires_grad=<span class="literal">True</span>)</span><br></pre></td></tr></table></figure>
+<p>在这里，我们初始化模型参数 <code>w</code> 和 <code>b</code>。其中 <code>w</code> 是一个服从均值为 0，标准差为 0.01 的正态分布的张量，形状为 (2, 1)，表示权重参数；<code>b</code> 是一个零张量，表示偏置参数。</p>
+<h2 id="定义线性回归模型"><a href="#定义线性回归模型" class="headerlink" title="定义线性回归模型"></a>定义线性回归模型</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">linreg</span>(<span class="params">X, w, b</span>):</span><br><span class="line">    <span class="keyword">return</span> torch.matmul(X, w) + b</span><br></pre></td></tr></table></figure>
+<p>这部分定义了线性回归模型。给定输入特征 <code>X</code>、权重参数 <code>w</code> 和偏置参数 <code>b</code>，该函数返回预测结果。</p>
+<h2 id="定义平方损失函数"><a href="#定义平方损失函数" class="headerlink" title="定义平方损失函数"></a>定义平方损失函数</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">squared_loss</span>(<span class="params">y_hat, y</span>):</span><br><span class="line">    <span class="keyword">return</span> (y_hat - y.reshape(y_hat.shape)) ** <span class="number">2</span> / <span class="number">2</span></span><br></pre></td></tr></table></figure>
+<p>这段代码定义了平方损失函数，用于衡量预测值 <code>y_hat</code> 与真实值 <code>y</code> 之间的差异。</p>
+<h2 id="定义随机梯度下降优化算法"><a href="#定义随机梯度下降优化算法" class="headerlink" title="定义随机梯度下降优化算法"></a>定义随机梯度下降优化算法</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">sgd</span>(<span class="params">params, lr, batch_size</span>):</span><br><span class="line">    <span class="keyword">with</span> torch.no_grad():</span><br><span class="line">        <span class="keyword">for</span> param <span class="keyword">in</span> params:</span><br><span class="line">            param -= lr * param.grad / batch_size</span><br><span class="line">            param.grad.zero_()</span><br></pre></td></tr></table></figure>
+<p>这部分定义了随机梯度下降（SGD）优化算法，用于更新模型参数。其中 <code>params</code> 是需要更新的参数列表，<code>lr</code> 是学习率，<code>batch_size</code> 是批量大小。在函数中，首先通过 <code>torch.no_grad()</code> 禁用梯度计算，然后对参数进行更新，更新规则为参数减去学习率乘以梯度除以批量大小，并清零梯度。</p>
+<h2 id="设置学习率和训练轮数"><a href="#设置学习率和训练轮数" class="headerlink" title="设置学习率和训练轮数"></a>设置学习率和训练轮数</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">lr = <span class="number">0.001</span></span><br><span class="line">num_epochs = <span class="number">100</span></span><br></pre></td></tr></table></figure>
+<p>这里设置了学习率 <code>lr</code> 和训练轮数 <code>num_epochs</code>。</p>
+<h2 id="训练模型"><a href="#训练模型" class="headerlink" title="训练模型"></a>训练模型</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">net = linreg</span><br><span class="line">loss = squared_loss</span><br><span class="line"><span class="keyword">for</span> epoch <span class="keyword">in</span> <span class="built_in">range</span>(num_epochs):</span><br><span class="line">    <span class="keyword">for</span> X, y <span class="keyword">in</span> data_iter(batch_size, features, labels):</span><br><span class="line">        l = loss(net(X, w, b), y)</span><br><span class="line">        l.<span class="built_in">sum</span>().backward()</span><br><span class="line">        sgd([w, b], lr, batch_size)</span><br><span class="line">    <span class="keyword">with</span> torch.no_grad():</span><br><span class="line">        train_l = loss(net(features, w, b), labels)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;epoch:&#123;&#125;;loss:&#123;&#125;&quot;</span>.<span class="built_in">format</span>(epoch, train_l.mean()))</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;w:&#123;&#125;;b:&#123;&#125;&quot;</span>.<span class="built_in">format</span>(w, b))</span><br></pre></td></tr></table></figure>
+<p>这部分代码是模型的训练过程。首先定义了模型 <code>net</code> 和损失函数 <code>loss</code>，然后进行多轮训练。在每一轮中，通过 <code>data_iter</code> 函数迭代获取批量样本，计算模型预测值与真实值的损失，并进行反向传播更新模型参数。最后，输出每轮训练的损失值以及更新后的模型参数。</p>
+<h2 id="高级API的简洁实现"><a href="#高级API的简洁实现" class="headerlink" title="高级API的简洁实现"></a>高级API的简洁实现</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">from</span> torch.utils <span class="keyword">import</span> data</span><br><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">from</span> d2l <span class="keyword">import</span> torch <span class="keyword">as</span> d2l</span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义真实的权重和偏置以生成合成数据</span></span><br><span class="line">true_w = torch.tensor([<span class="number">2</span>, -<span class="number">3.4</span>])  <span class="comment"># 真实权重</span></span><br><span class="line">true_b = torch.tensor(<span class="number">2.0</span>)        <span class="comment"># 真实偏置</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用真实的权重和偏置生成合成数据</span></span><br><span class="line">features, labels = d2l.synthetic_data(true_w, true_b, <span class="number">10000</span>) </span><br><span class="line"></span><br><span class="line"><span class="comment"># 加载数据到DataLoader的函数</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">load_array</span>(<span class="params">data_arrays, batch_size, is_train=<span class="literal">True</span></span>):</span><br><span class="line">    <span class="comment"># 创建一个TensorDataset，使用输入的数据数组</span></span><br><span class="line">    dataset = data.TensorDataset(*data_arrays)</span><br><span class="line">    <span class="comment"># 根据是否训练，创建一个DataLoader，并指定批次大小</span></span><br><span class="line">    <span class="keyword">return</span> data.DataLoader(dataset, batch_size, shuffle=is_train)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置批次大小</span></span><br><span class="line">batch_size = <span class="number">100</span></span><br><span class="line"><span class="comment"># 将合成数据加载到DataLoader中</span></span><br><span class="line">data_iter = load_array((features, labels), batch_size)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 从torch中导入必要的模块</span></span><br><span class="line"><span class="keyword">from</span> torch <span class="keyword">import</span> nn</span><br><span class="line"></span><br><span class="line"><span class="comment"># 使用Sequential容器定义一个神经网络模型</span></span><br><span class="line">net = nn.Sequential(nn.Linear(<span class="number">2</span>, <span class="number">1</span>))  <span class="comment"># 使用输入大小为2和输出大小为1的线性层</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 初始化线性层的权重</span></span><br><span class="line">net[<span class="number">0</span>].weight.data.normal_(<span class="number">0</span>, <span class="number">0.01</span>)  <span class="comment"># 从均值为0、标准差为0.01的正态分布中初始化权重</span></span><br><span class="line">net[<span class="number">0</span>].weight.data.fill_(<span class="number">0</span>)          <span class="comment"># 将偏置填充为0</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义损失函数</span></span><br><span class="line">loss = nn.MSELoss()</span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义优化器</span></span><br><span class="line">trainer = torch.optim.SGD(net.parameters(), lr=<span class="number">0.03</span>)  <span class="comment"># 学习率为0.03的随机梯度下降</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 设置训练的轮数</span></span><br><span class="line">num_epochs = <span class="number">10</span></span><br><span class="line"><span class="comment"># 训练循环</span></span><br><span class="line"><span class="keyword">for</span> epoch <span class="keyword">in</span> <span class="built_in">range</span>(num_epochs):</span><br><span class="line">    <span class="comment"># 遍历数据的批次</span></span><br><span class="line">    <span class="keyword">for</span> X, y <span class="keyword">in</span> data_iter:</span><br><span class="line">        <span class="comment"># 前向传播：通过将X传递给模型来计算预测的y</span></span><br><span class="line">        l = loss(X, y)  <span class="comment"># 计算预测和真实标签之间的损失</span></span><br><span class="line">        <span class="comment"># 反向传播：计算损失相对于模型参数的梯度</span></span><br><span class="line">        trainer.zero_grad()  <span class="comment"># 在反向传播之前将梯度置零</span></span><br><span class="line">        l.backward()         <span class="comment"># 反向传播以计算梯度</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>]]></content>
+      <categories>
+        <category>深度学习</category>
+      </categories>
+      <tags>
+        <tag>机器学习</tag>
+        <tag>深度学习</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>深度学习笔记（四）：多层感知机</title>
+    <url>/2024/04/02/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E5%9B%9B%EF%BC%89%EF%BC%9A%E5%A4%9A%E5%B1%82%E6%84%9F%E7%9F%A5%E6%9C%BA/</url>
+    <content><![CDATA[<h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>本文将基于MINIST数据集，建立一个多层感知机完成图像分类任务。和本系列之前的博文一样，首先采用“造轮子”的方法从头开始实现，最后用pytorch的高级API封装实现。值得注意的是，训练过程和模型评价的函数由d2l包给出，d2l包并不具有普适性。本文采用的代码如下：<br><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">d2l.train_ch3(net, train_iter, test_iter, loss, num_epochs,trainer)</span><br></pre></td></tr></table></figure><br>事实上，我们从该函数的参数可以窥见完成深度学习的基本要素：</p>
+<div class="box">
+<strong>深度学习的基本要素</strong>
+<p></p>
+    <li><strong>数据采集（train_iter, test_iter）：</strong>获取和规范数据，划分为训练集、验证集和测试集。</li>
+    <li><strong>模型定义（net）：</strong>包括模型的层数和每层进行的运算（激活函数），神经元和神经元之间的联系；最重要的是输入层和输出层的定义（一般使用nn.Sequential()进行连续定义）。</li>
+    <li><strong>损失函数（loss）：</strong>描述输出层数据（或进一步变换）和真实数据的误差。</li>
+    <li><strong>优化方法（trainer, num_epochs）：</strong>包括降低损失的手段（如梯度下降法）、需要优化的参数、以及参数变化幅度（学习率）。num_epochs则定义了重复训练的次数。</li>
+</div>
+
+<h1 id="多层感知机的从头实现"><a href="#多层感知机的从头实现" class="headerlink" title="多层感知机的从头实现"></a>多层感知机的从头实现</h1><h2 id="导包"><a href="#导包" class="headerlink" title="导包"></a>导包</h2><p>我们使用torch实现多层感知机。从torch包中导入nn模块。<br><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">from</span> torch <span class="keyword">import</span> nn</span><br><span class="line"><span class="keyword">from</span> d2l <span class="keyword">import</span> torch <span class="keyword">as</span> d2l</span><br></pre></td></tr></table></figure></p>
+<h2 id="数据采集"><a href="#数据采集" class="headerlink" title="数据采集"></a>数据采集</h2><p>使用d2l已经封装好的数据采集函数，定义每个batch的大小为256。<br>这里还需要记录一下：深度学习对训练集划分为不同的batch，batch的获得是随机的，初始化的参数经过batch优化后得到新的参数，继而进入下一个batch运算。通过所有batch运算完最后得到本轮epoch训练的参数。本轮epoch训练的参数继续进入下一个epoch。<br>epoch 的概念是为了让模型在整个训练数据集上得到充分的学习，以便提高模型的性能和泛化能力。增加 epoch 的数量可以使模型更好地适应训练数据，但过多的 Epoch 可能会导致过拟合，即模型在训练数据上表现很好，但在新数据上表现不佳。</p>
+<figure class="highlight python"><table><tr><td class="code"><pre><span class="line">batch_size = <span class="number">256</span></span><br><span class="line">train_iter, test_iter = d2l.load_data_fashion_mnist(batch_size)</span><br></pre></td></tr></table></figure>
+<h2 id="定义待优化参数和初始化参数"><a href="#定义待优化参数和初始化参数" class="headerlink" title="定义待优化参数和初始化参数"></a>定义待优化参数和初始化参数</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">num_inputs, num_outputs, num_hiddens = <span class="number">784</span>, <span class="number">10</span>, <span class="number">256</span></span><br><span class="line">W1 = nn.Parameter(torch.randn(num_inputs, num_hiddens, requires_grad = <span class="literal">True</span>))</span><br><span class="line">b1 = nn.Parameter(torch.zeros(num_hiddens, requires_grad = <span class="literal">True</span>))</span><br><span class="line">W2 = nn.Parameter(torch.randn(num_hiddens, num_outputs, requires_grad = <span class="literal">True</span>))</span><br><span class="line">b2 = nn.Parameter(torch.zeros(num_outputs,requires_grad = <span class="literal">True</span>))</span><br><span class="line">params = [W1, b1, W2, b2]</span><br></pre></td></tr></table></figure>
+<h2 id="定义模型"><a href="#定义模型" class="headerlink" title="定义模型"></a>定义模型</h2><h3 id="定义激活函数"><a href="#定义激活函数" class="headerlink" title="定义激活函数"></a>定义激活函数</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">relu</span>(<span class="params">x</span>):</span><br><span class="line">    <span class="keyword">return</span> torch.<span class="built_in">max</span>(x,torch.zeros_like(x))</span><br></pre></td></tr></table></figure>
+<h3 id="定义学习模型"><a href="#定义学习模型" class="headerlink" title="定义学习模型"></a>定义学习模型</h3><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">net</span>(<span class="params">x</span>):</span><br><span class="line">    x = x.reshape(-<span class="number">1</span>, num_inputs)</span><br><span class="line">    h = relu(x@W1 + b1)</span><br><span class="line">    <span class="keyword">return</span> (h@W2 + b2)</span><br></pre></td></tr></table></figure>
+<h2 id="定义损失函数"><a href="#定义损失函数" class="headerlink" title="定义损失函数"></a>定义损失函数</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">loss = nn.CrossEntropyLoss(reduction = <span class="string">&#x27;none&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="定义优化手段"><a href="#定义优化手段" class="headerlink" title="定义优化手段"></a>定义优化手段</h2><figure class="highlight python"><table><tr><td class="code"><pre><span class="line">num_epochs = <span class="number">10</span></span><br><span class="line">lr = <span class="number">0.1</span></span><br><span class="line">updater = torch.optim.SGD(params, lr = lr)</span><br><span class="line">d2l.train_ch3(net, train_iter, test_iter,loss, num_epochs, updater)</span><br></pre></td></tr></table></figure>
+<h1 id="基于PyTorch高级API的简洁实现"><a href="#基于PyTorch高级API的简洁实现" class="headerlink" title="基于PyTorch高级API的简洁实现"></a>基于PyTorch高级API的简洁实现</h1><figure class="highlight python"><table><tr><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">from</span> torch <span class="keyword">import</span> nn</span><br><span class="line"><span class="keyword">from</span> d2l <span class="keyword">import</span> torch <span class="keyword">as</span> d2l</span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义神经网络模型</span></span><br><span class="line">net = nn.Sequential(</span><br><span class="line">    nn.Flatten(),           <span class="comment"># 将输入的图像展平为向量</span></span><br><span class="line">    nn.Linear(<span class="number">784</span>, <span class="number">256</span>),    <span class="comment"># 全连接层，输入维度为784，输出维度为256</span></span><br><span class="line">    nn.ReLU(),              <span class="comment"># 激活函数ReLU</span></span><br><span class="line">    nn.Linear(<span class="number">256</span>, <span class="number">10</span>)      <span class="comment"># 全连接层，输入维度为256，输出维度为10（输出类别数）</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 初始化模型权重</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">init_weights</span>(<span class="params">m</span>):</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">type</span>(m) == nn.Linear:                    <span class="comment"># 判断是否为线性层</span></span><br><span class="line">        nn.init.normal_(m.weight, std=<span class="number">0.01</span>)     <span class="comment"># 使用正态分布初始化权重</span></span><br><span class="line">net.apply(init_weights)                         <span class="comment"># 应用初始化函数</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义超参数</span></span><br><span class="line">batch_size = <span class="number">256</span>    <span class="comment"># 批量大小</span></span><br><span class="line">lr = <span class="number">0.1</span>            <span class="comment"># 学习率</span></span><br><span class="line">num_epochs = <span class="number">10</span>     <span class="comment"># 训练轮数</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义损失函数</span></span><br><span class="line">loss = nn.CrossEntropyLoss(reduction=<span class="string">&quot;none&quot;</span>)   <span class="comment"># 使用交叉熵损失函数</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义优化器</span></span><br><span class="line">trainer = torch.optim.SGD(net.parameters(), lr=lr)    <span class="comment"># 使用随机梯度下降优化器</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 调用d2l库中的训练函数进行模型训练</span></span><br><span class="line">d2l.train_ch3(net, train_iter, test_iter, loss, num_epochs, trainer)</span><br></pre></td></tr></table></figure>
+]]></content>
+      <categories>
+        <category>深度学习</category>
+      </categories>
+      <tags>
+        <tag>机器学习</tag>
+        <tag>深度学习</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>单细胞测序教程资源聚合</title>
+    <url>/2023/08/12/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E6%95%99%E7%A8%8B%E5%92%8C%E8%B5%84%E6%BA%90%E8%81%9A%E5%90%88/</url>
+    <content><![CDATA[<h2 id="教程"><a href="#教程" class="headerlink" title="教程"></a>教程</h2><h4 id="转录组学"><a href="#转录组学" class="headerlink" title="转录组学"></a>转录组学</h4><ol>
+<li>单细胞测序-最佳的分析Pipeline <a href="https://single-cell-tutorial.readthedocs.io/zh/latest/">单细胞测序-最佳的分析Pipeline</a> ：Zehua Zeng等为主要作者，包括详细的原理和处理流程（Python）；其中重点介绍了Omicverse的使用； </li>
+<li>哈佛大学单细胞中文笔记：<a href="https://zhuanlan.zhihu.com/p/209018565">哈佛大学单细胞中文笔记</a> 陈同博士撰写。主要包括原理和Seurat的使用。<a href="https://hbctraining.github.io/main">原版教程</a>；</li>
+<li>RNA-SEQ BLOG：最新的RNA测序资讯：<a href="https://www.rna-seqblog.com/">RNA-Seq Blog</a></li>
+</ol>
+<h2 id="资源"><a href="#资源" class="headerlink" title="资源"></a>资源</h2><h4 id="肿瘤生信"><a href="#肿瘤生信" class="headerlink" title="肿瘤生信"></a>肿瘤生信</h4><ol>
+<li>GEPIA2：GEPIA2是一个无代码可视化平台，其数据来源于TCGA和GTEx数据库，用户可以自由探索指定基因的在肿瘤组织中的表达情况以及和预后的关系。<a href="http://gepia2.cancer-pku.cn/">GEPIA2</a></li>
+<li>Prognoscan：Prognoscan整合了2010年以前GEO上Microarray和相应临床信息，可以探索制定基因自不同数据集中和预后的关系。<a href="http://dna00.bio.kyutech.ac.jp/PrognoScan/">PrognoScan</a></li>
+<li>TIMER：TIMER用于分析不同癌症类型的免疫浸润（数据来自于TCGA）。<a href="http://timer.cistrome.org/">TIMER2.0</a></li>
+</ol>
+<h4 id="GWAS"><a href="#GWAS" class="headerlink" title="GWAS"></a>GWAS</h4><ol>
+<li>IEU OPEN GWAS：包含42,484 个GWAS摘要数据集的214,725,223,303 个遗传关联的数据库。<a href="https://gwas.mrcieu.ac.uk/">IEU OpenGWAS</a></li>
+<li>PheWeb：包含Biobank Japan，以及UKB等欧洲样本的GWAS结果。<a href="https://pheweb.jp/downloads">PheWeb</a></li>
+<li>GWAS catalog：内容较全，网页比较慢，建议使用特殊方式访问。<a href="https://www.ebi.ac.uk/gwas/downloads/summary-statistics">GWAS catalog</a>:</li>
+<li>EGG：早期生长联盟数据，包含出生体重，出生头围等。<a href="http://egg-consortium.org/index.html">EGG</a></li>
+<li>CKDGEN：包含慢性肾病、MA、eGFR等。<a href="http://ckdgen.imbi.uni-freiburg.de/?tdsourcetag=s_pctim_aiomsg">CKDGEN</a></li>
+<li>GLGC：血脂GWAS数据库。<a href="http://csg.sph.umich.edu/willer/public/glgc-lipids2021/">GLGC</a></li>
+<li>PGC：精神病学基因组学联盟。<a href="https://www.med.unc.edu/pgc/results-and-downloads/downloads">PGC</a></li>
+<li>GEFOS：骨质疏松联盟。<a href="http://www.gefos.org/">GEFOS</a></li>
+<li>DIAGRAM：二型糖尿病数据库。<a href="http://diagram-consortium.org/downloads.html">DIAGRAM</a>: </li>
+<li>代谢组学数据库：<a href="http://www.metabolomix.com/list-of-all-published-gwas-with-metabolomics/">A Table of all published GWAS with metabolomics</a></li>
+</ol>
+]]></content>
+      <categories>
+        <category>生物信息学</category>
+      </categories>
+      <tags>
+        <tag>生物信息学</tag>
+        <tag>单细胞测序</tag>
       </tags>
   </entry>
   <entry>

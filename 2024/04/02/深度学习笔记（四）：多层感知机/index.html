@@ -26,20 +26,21 @@
   </script>
 
 
-  <meta name="description" content="冰棒汽水的味道，一个夏天的年少。">
-<meta property="og:type" content="website">
-<meta property="og:title" content="一个夏天的年少">
-<meta property="og:url" content="https://www.zhuangqingyuan.site/archives/index.html">
+  <meta name="description" content="参考教材《动手学深度学习》">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深度学习笔记（四）：多层感知机">
+<meta property="og:url" content="https://www.zhuangqingyuan.site/2024/04/02/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E5%9B%9B%EF%BC%89%EF%BC%9A%E5%A4%9A%E5%B1%82%E6%84%9F%E7%9F%A5%E6%9C%BA/index.html">
 <meta property="og:site_name" content="一个夏天的年少">
-<meta property="og:description" content="冰棒汽水的味道，一个夏天的年少。">
+<meta property="og:description" content="参考教材《动手学深度学习》">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-04-02T14:26:11.000Z">
+<meta property="article:modified_time" content="2024-04-02T15:33:27.948Z">
 <meta property="article:author" content="Qingyuan Zhuang&#39; Blog">
-<meta property="article:tag" content="生物信息学">
-<meta property="article:tag" content="医学">
-<meta property="article:tag" content="临床">
+<meta property="article:tag" content="机器学习">
+<meta property="article:tag" content="深度学习">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://www.zhuangqingyuan.site/archives/">
+<link rel="canonical" href="https://www.zhuangqingyuan.site/2024/04/02/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E5%9B%9B%EF%BC%89%EF%BC%9A%E5%A4%9A%E5%B1%82%E6%84%9F%E7%9F%A5%E6%9C%BA/">
 
 
 <script id="page-configurations">
@@ -47,12 +48,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>归档 | 一个夏天的年少</title>
+  <title>深度学习笔记（四）：多层感知机 | 一个夏天的年少</title>
   
 
 
@@ -203,259 +204,203 @@
         <div class="content-wrap">
           
 
-          <div class="content archive">
+          <div class="content post posts-expand">
             
 
+    
   
   
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.zhuangqingyuan.site/2024/04/02/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E5%9B%9B%EF%BC%89%EF%BC%9A%E5%A4%9A%E5%B1%82%E6%84%9F%E7%9F%A5%E6%9C%BA/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingyuan Zhuang' Blog">
+      <meta itemprop="description" content="冰棒汽水的味道，一个夏天的年少。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="一个夏天的年少">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          深度学习笔记（四）：多层感知机
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表</span>
+              
+
+              <time title="创建时间：2024-04-02 22:26:11 / 修改时间：23:33:27" itemprop="dateCreated datePublished" datetime="2024-04-02T22:26:11+08:00">2024-04-02</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">深度学习</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2024/04/02/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E5%9B%9B%EF%BC%89%EF%BC%9A%E5%A4%9A%E5%B1%82%E6%84%9F%E7%9F%A5%E6%9C%BA/" class="post-meta-item leancloud_visitors" data-flag-title="深度学习笔记（四）：多层感知机" title="热度">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">热度：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
   
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        <span class="collection-header">嗯..! 目前共计 29 篇日志。 继续努力。</span>
-      </div>
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2024/04/02/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E5%9B%9B%EF%BC%89%EF%BC%9A%E5%A4%9A%E5%B1%82%E6%84%9F%E7%9F%A5%E6%9C%BA/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2024/04/02/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E5%9B%9B%EF%BC%89%EF%BC%9A%E5%A4%9A%E5%B1%82%E6%84%9F%E7%9F%A5%E6%9C%BA/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>968</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>4 分钟</span>
+            </span>
+            <div class="post-description">参考教材《动手学深度学习》</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <h1 class="collection-header">2024</h1>
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>本文将基于MINIST数据集，建立一个多层感知机完成图像分类任务。和本系列之前的博文一样，首先采用“造轮子”的方法从头开始实现，最后用pytorch的高级API封装实现。值得注意的是，训练过程和模型评价的函数由d2l包给出，d2l包并不具有普适性。本文采用的代码如下：<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">d2l.train_ch3(net, train_iter, test_iter, loss, num_epochs,trainer)</span><br></pre></td></tr></table></figure><br>事实上，我们从该函数的参数可以窥见完成深度学习的基本要素：</p>
+<div class="box">
+<strong>深度学习的基本要素</strong>
+<p></p>
+    <li><strong>数据采集（train_iter, test_iter）：</strong>获取和规范数据，划分为训练集、验证集和测试集。</li>
+    <li><strong>模型定义（net）：</strong>包括模型的层数和每层进行的运算（激活函数），神经元和神经元之间的联系；最重要的是输入层和输出层的定义（一般使用nn.Sequential()进行连续定义）。</li>
+    <li><strong>损失函数（loss）：</strong>描述输出层数据（或进一步变换）和真实数据的误差。</li>
+    <li><strong>优化方法（trainer, num_epochs）：</strong>包括降低损失的手段（如梯度下降法）、需要优化的参数、以及参数变化幅度（学习率）。num_epochs则定义了重复训练的次数。</li>
+</div>
+
+<h1 id="多层感知机的从头实现"><a href="#多层感知机的从头实现" class="headerlink" title="多层感知机的从头实现"></a>多层感知机的从头实现</h1><h2 id="导包"><a href="#导包" class="headerlink" title="导包"></a>导包</h2><p>我们使用torch实现多层感知机。从torch包中导入nn模块。<br><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">from</span> torch <span class="keyword">import</span> nn</span><br><span class="line"><span class="keyword">from</span> d2l <span class="keyword">import</span> torch <span class="keyword">as</span> d2l</span><br></pre></td></tr></table></figure></p>
+<h2 id="数据采集"><a href="#数据采集" class="headerlink" title="数据采集"></a>数据采集</h2><p>使用d2l已经封装好的数据采集函数，定义每个batch的大小为256。<br>这里还需要记录一下：深度学习对训练集划分为不同的batch，batch的获得是随机的，初始化的参数经过batch优化后得到新的参数，继而进入下一个batch运算。通过所有batch运算完最后得到本轮epoch训练的参数。本轮epoch训练的参数继续进入下一个epoch。<br>epoch 的概念是为了让模型在整个训练数据集上得到充分的学习，以便提高模型的性能和泛化能力。增加 epoch 的数量可以使模型更好地适应训练数据，但过多的 Epoch 可能会导致过拟合，即模型在训练数据上表现很好，但在新数据上表现不佳。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">batch_size = <span class="number">256</span></span><br><span class="line">train_iter, test_iter = d2l.load_data_fashion_mnist(batch_size)</span><br></pre></td></tr></table></figure>
+<h2 id="定义待优化参数和初始化参数"><a href="#定义待优化参数和初始化参数" class="headerlink" title="定义待优化参数和初始化参数"></a>定义待优化参数和初始化参数</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">num_inputs, num_outputs, num_hiddens = <span class="number">784</span>, <span class="number">10</span>, <span class="number">256</span></span><br><span class="line">W1 = nn.Parameter(torch.randn(num_inputs, num_hiddens, requires_grad = <span class="literal">True</span>))</span><br><span class="line">b1 = nn.Parameter(torch.zeros(num_hiddens, requires_grad = <span class="literal">True</span>))</span><br><span class="line">W2 = nn.Parameter(torch.randn(num_hiddens, num_outputs, requires_grad = <span class="literal">True</span>))</span><br><span class="line">b2 = nn.Parameter(torch.zeros(num_outputs,requires_grad = <span class="literal">True</span>))</span><br><span class="line">params = [W1, b1, W2, b2]</span><br></pre></td></tr></table></figure>
+<h2 id="定义模型"><a href="#定义模型" class="headerlink" title="定义模型"></a>定义模型</h2><h3 id="定义激活函数"><a href="#定义激活函数" class="headerlink" title="定义激活函数"></a>定义激活函数</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">relu</span>(<span class="params">x</span>):</span><br><span class="line">    <span class="keyword">return</span> torch.<span class="built_in">max</span>(x,torch.zeros_like(x))</span><br></pre></td></tr></table></figure>
+<h3 id="定义学习模型"><a href="#定义学习模型" class="headerlink" title="定义学习模型"></a>定义学习模型</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">net</span>(<span class="params">x</span>):</span><br><span class="line">    x = x.reshape(-<span class="number">1</span>, num_inputs)</span><br><span class="line">    h = relu(x@W1 + b1)</span><br><span class="line">    <span class="keyword">return</span> (h@W2 + b2)</span><br></pre></td></tr></table></figure>
+<h2 id="定义损失函数"><a href="#定义损失函数" class="headerlink" title="定义损失函数"></a>定义损失函数</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">loss = nn.CrossEntropyLoss(reduction = <span class="string">&#x27;none&#x27;</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="定义优化手段"><a href="#定义优化手段" class="headerlink" title="定义优化手段"></a>定义优化手段</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">num_epochs = <span class="number">10</span></span><br><span class="line">lr = <span class="number">0.1</span></span><br><span class="line">updater = torch.optim.SGD(params, lr = lr)</span><br><span class="line">d2l.train_ch3(net, train_iter, test_iter,loss, num_epochs, updater)</span><br></pre></td></tr></table></figure>
+<h1 id="基于PyTorch高级API的简洁实现"><a href="#基于PyTorch高级API的简洁实现" class="headerlink" title="基于PyTorch高级API的简洁实现"></a>基于PyTorch高级API的简洁实现</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">from</span> torch <span class="keyword">import</span> nn</span><br><span class="line"><span class="keyword">from</span> d2l <span class="keyword">import</span> torch <span class="keyword">as</span> d2l</span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义神经网络模型</span></span><br><span class="line">net = nn.Sequential(</span><br><span class="line">    nn.Flatten(),           <span class="comment"># 将输入的图像展平为向量</span></span><br><span class="line">    nn.Linear(<span class="number">784</span>, <span class="number">256</span>),    <span class="comment"># 全连接层，输入维度为784，输出维度为256</span></span><br><span class="line">    nn.ReLU(),              <span class="comment"># 激活函数ReLU</span></span><br><span class="line">    nn.Linear(<span class="number">256</span>, <span class="number">10</span>)      <span class="comment"># 全连接层，输入维度为256，输出维度为10（输出类别数）</span></span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 初始化模型权重</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">init_weights</span>(<span class="params">m</span>):</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">type</span>(m) == nn.Linear:                    <span class="comment"># 判断是否为线性层</span></span><br><span class="line">        nn.init.normal_(m.weight, std=<span class="number">0.01</span>)     <span class="comment"># 使用正态分布初始化权重</span></span><br><span class="line">net.apply(init_weights)                         <span class="comment"># 应用初始化函数</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义超参数</span></span><br><span class="line">batch_size = <span class="number">256</span>    <span class="comment"># 批量大小</span></span><br><span class="line">lr = <span class="number">0.1</span>            <span class="comment"># 学习率</span></span><br><span class="line">num_epochs = <span class="number">10</span>     <span class="comment"># 训练轮数</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义损失函数</span></span><br><span class="line">loss = nn.CrossEntropyLoss(reduction=<span class="string">&quot;none&quot;</span>)   <span class="comment"># 使用交叉熵损失函数</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 定义优化器</span></span><br><span class="line">trainer = torch.optim.SGD(net.parameters(), lr=lr)    <span class="comment"># 使用随机梯度下降优化器</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 调用d2l库中的训练函数进行模型训练</span></span><br><span class="line">d2l.train_ch3(net, train_iter, test_iter, loss, num_epochs, trainer)</span><br></pre></td></tr></table></figure>
+
     </div>
 
-  <article class="my-post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="my-post-header">
+    
+    
+    
+        
 
-      <div class="my-post-meta">
-        <time class="my-post-time" itemprop="dateCreated"
-              datetime="2024-04-02T23:35:24+08:00"
-              content="2024-04-02">
-          04-02
-        </time>
-      </div>
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Qingyuan Zhuang' Blog
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://www.zhuangqingyuan.site/2024/04/02/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E5%9B%9B%EF%BC%89%EF%BC%9A%E5%A4%9A%E5%B1%82%E6%84%9F%E7%9F%A5%E6%9C%BA/" title="深度学习笔记（四）：多层感知机">https://www.zhuangqingyuan.site/2024/04/02/深度学习笔记（四）：多层感知机/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
 
-      <h2 class="my-post-title">
-          <a class="my-post-title-link" href="/2024/04/02/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E6%9D%83%E9%87%8D%E8%A1%B0%E5%87%8F/" itemprop="url">
-            
-              <span itemprop="name">深度学习笔记（五）：权重衰减</span>
-            
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
           </a>
-      </h2>
-
-    </header>
-  </article>
-
-  <article class="my-post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="my-post-header">
-
-      <div class="my-post-meta">
-        <time class="my-post-time" itemprop="dateCreated"
-              datetime="2024-04-02T22:26:11+08:00"
-              content="2024-04-02">
-          04-02
-        </time>
-      </div>
-
-      <h2 class="my-post-title">
-          <a class="my-post-title-link" href="/2024/04/02/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E5%9B%9B%EF%BC%89%EF%BC%9A%E5%A4%9A%E5%B1%82%E6%84%9F%E7%9F%A5%E6%9C%BA/" itemprop="url">
-            
-              <span itemprop="name">深度学习笔记（四）：多层感知机</span>
-            
-          </a>
-      </h2>
-
-    </header>
-  </article>
-
-  <article class="my-post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="my-post-header">
-
-      <div class="my-post-meta">
-        <time class="my-post-time" itemprop="dateCreated"
-              datetime="2024-04-02T08:00:00+08:00"
-              content="2024-04-02">
-          04-02
-        </time>
-      </div>
-
-      <h2 class="my-post-title">
-          <a class="my-post-title-link" href="/2024/04/02/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89%EF%BC%9APyTorch%20%E5%AE%9E%E7%8E%B0%20Softmax%20%E5%9B%9E%E5%BD%92/" itemprop="url">
-            
-              <span itemprop="name">深度学习笔记（三）：PyTorch 实现 Softmax 回归</span>
-            
-          </a>
-      </h2>
-
-    </header>
-  </article>
-
-  <article class="my-post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="my-post-header">
-
-      <div class="my-post-meta">
-        <time class="my-post-time" itemprop="dateCreated"
-              datetime="2024-04-01T23:27:01+08:00"
-              content="2024-04-01">
-          04-01
-        </time>
-      </div>
-
-      <h2 class="my-post-title">
-          <a class="my-post-title-link" href="/2024/04/01/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9APyTorch%E5%AE%9E%E7%8E%B0%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/" itemprop="url">
-            
-              <span itemprop="name">深度学习笔记（二）：PyTorch实现线性回归</span>
-            
-          </a>
-      </h2>
-
-    </header>
-  </article>
-
-  <article class="my-post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="my-post-header">
-
-      <div class="my-post-meta">
-        <time class="my-post-time" itemprop="dateCreated"
-              datetime="2024-03-30T08:37:06+08:00"
-              content="2024-03-30">
-          03-30
-        </time>
-      </div>
-
-      <h2 class="my-post-title">
-          <a class="my-post-title-link" href="/2024/03/30/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%80%EF%BC%89%EF%BC%9A%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/" itemprop="url">
-            
-              <span itemprop="name">深度学习笔记（一）：线性回归</span>
-            
-          </a>
-      </h2>
-
-    </header>
-  </article>
-
-  <article class="my-post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="my-post-header">
-
-      <div class="my-post-meta">
-        <time class="my-post-time" itemprop="dateCreated"
-              datetime="2024-03-26T19:18:57+08:00"
-              content="2024-03-26">
-          03-26
-        </time>
-      </div>
-
-      <h2 class="my-post-title">
-          <a class="my-post-title-link" href="/2024/03/26/HEXO%E5%8D%9A%E5%AE%A2%E7%9A%84%E8%BD%AE%E6%92%AD%E6%A0%8F/" itemprop="url">
-            
-              <span itemprop="name">HEXO博客的轮播栏</span>
-            
-          </a>
-      </h2>
-
-    </header>
-  </article>
-
-  <article class="my-post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="my-post-header">
-
-      <div class="my-post-meta">
-        <time class="my-post-time" itemprop="dateCreated"
-              datetime="2024-03-26T12:55:44+08:00"
-              content="2024-03-26">
-          03-26
-        </time>
-      </div>
-
-      <h2 class="my-post-title">
-          <a class="my-post-title-link" href="/2024/03/26/%E5%9F%BA%E4%BA%8ENLP%E7%9A%84%E5%AF%86%E9%92%A5%E8%A7%A3%E7%A0%81%E5%B7%A5%E5%85%B7%EF%BC%9ACiphey/" itemprop="url">
-            
-              <span itemprop="name">基于NLP的密钥解码工具：Ciphey</span>
-            
-          </a>
-      </h2>
-
-    </header>
-  </article>
-
-  <article class="my-post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="my-post-header">
-
-      <div class="my-post-meta">
-        <time class="my-post-time" itemprop="dateCreated"
-              datetime="2024-03-24T10:31:15+08:00"
-              content="2024-03-24">
-          03-24
-        </time>
-      </div>
-
-      <h2 class="my-post-title">
-          <a class="my-post-title-link" href="/2024/03/24/%E5%BF%83%E8%84%8F%E5%90%AC%E8%AF%8A%E6%80%BB%E7%BB%93/" itemprop="url">
-            
-              <span itemprop="name">心脏听诊总结</span>
-            
-          </a>
-      </h2>
-
-    </header>
-  </article>
-
-  <article class="my-post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="my-post-header">
-
-      <div class="my-post-meta">
-        <time class="my-post-time" itemprop="dateCreated"
-              datetime="2024-03-23T08:00:00+08:00"
-              content="2024-03-23">
-          03-23
-        </time>
-      </div>
-
-      <h2 class="my-post-title">
-          <a class="my-post-title-link" href="/2024/03/23/%E5%9F%9F%E5%90%8D%E6%9B%B4%E6%8D%A2/" itemprop="url">
-            
-              <span itemprop="name">域名更换</span>
-            
-          </a>
-      </h2>
-
-    </header>
-  </article>
-
-  <article class="my-post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="my-post-header">
-
-      <div class="my-post-meta">
-        <time class="my-post-time" itemprop="dateCreated"
-              datetime="2024-03-19T13:29:00+08:00"
-              content="2024-03-19">
-          03-19
-        </time>
-      </div>
-
-      <h2 class="my-post-title">
-          <a class="my-post-title-link" href="/2024/03/19/%E7%BD%91%E7%BB%9C%E7%88%AC%E8%99%AB%E8%87%AA%E5%8A%A8%E8%8E%B7%E5%8F%96%E6%95%99%E5%8A%A1%E5%A4%84%E6%9C%80%E6%96%B0%E9%80%9A%E7%9F%A5/" itemprop="url">
-            
-              <span itemprop="name">网络爬虫自动获取教务处最新通知</span>
-            
-          </a>
-      </h2>
-
-    </header>
-  </article>
-
-
+        </div>
     </div>
   </div>
-  
-  
-  
 
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 机器学习</a>
+              <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 深度学习</a>
+          </div>
+
+        
+<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------　　　　本文结束　<i class="fa fa-flag"></i>　感谢阅读　　　　-------------</div>
+    
+</div>
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2024/04/02/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89%EF%BC%9APyTorch%20%E5%AE%9E%E7%8E%B0%20Softmax%20%E5%9B%9E%E5%BD%92/" rel="prev" title="深度学习笔记（三）：PyTorch 实现 Softmax 回归">
+      <i class="fa fa-chevron-left"></i> 深度学习笔记（三）：PyTorch 实现 Softmax 回归
+    </a></div>
+      <div class="post-nav-item">
+    <a href="/2024/04/02/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E6%9D%83%E9%87%8D%E8%A1%B0%E5%87%8F/" rel="next" title="深度学习笔记（五）：权重衰减">
+      深度学习笔记（五）：权重衰减 <i class="fa fa-chevron-right"></i>
+    </a></div>
+    </div>
+      </footer>
+    
+    
+    <div><center>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/css/share.min.css">
+    <div class="social-share" data-sites="weibo, qq, qzone,wechat"></div>
+    <script src="http://apps.bdimg.com/libs/jquery/1.8.2/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/js/social-share.min.js"></script>
+    </center></div>  
+  </article>
   
-  <nav class="pagination">
-    <span class="page-number current">1</span><a class="page-number" href="/archives/page/2/">2</a><a class="page-number" href="/archives/page/3/">3</a><a class="extend next" rel="next" href="/archives/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
-  </nav>
+  
+  
 
 
 
           </div>
           
+    <div class="comments" id="valine-comments"></div>
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -502,6 +447,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A4%9A%E5%B1%82%E6%84%9F%E7%9F%A5%E6%9C%BA%E7%9A%84%E4%BB%8E%E5%A4%B4%E5%AE%9E%E7%8E%B0"><span class="nav-text">多层感知机的从头实现</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%BC%E5%8C%85"><span class="nav-text">导包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E9%87%87%E9%9B%86"><span class="nav-text">数据采集</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89%E5%BE%85%E4%BC%98%E5%8C%96%E5%8F%82%E6%95%B0%E5%92%8C%E5%88%9D%E5%A7%8B%E5%8C%96%E5%8F%82%E6%95%B0"><span class="nav-text">定义待优化参数和初始化参数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89%E6%A8%A1%E5%9E%8B"><span class="nav-text">定义模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89%E6%BF%80%E6%B4%BB%E5%87%BD%E6%95%B0"><span class="nav-text">定义激活函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89%E5%AD%A6%E4%B9%A0%E6%A8%A1%E5%9E%8B"><span class="nav-text">定义学习模型</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89%E6%8D%9F%E5%A4%B1%E5%87%BD%E6%95%B0"><span class="nav-text">定义损失函数</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89%E4%BC%98%E5%8C%96%E6%89%8B%E6%AE%B5"><span class="nav-text">定义优化手段</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8EPyTorch%E9%AB%98%E7%BA%A7API%E7%9A%84%E7%AE%80%E6%B4%81%E5%AE%9E%E7%8E%B0"><span class="nav-text">基于PyTorch高级API的简洁实现</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
