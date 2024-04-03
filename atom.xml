@@ -6,7 +6,7 @@
   <link href="https://www.zhuangqingyuan.site/atom.xml" rel="self"/>
   
   <link href="https://www.zhuangqingyuan.site/"/>
-  <updated>2024-04-02T16:35:34.208Z</updated>
+  <updated>2024-04-03T01:33:02.125Z</updated>
   <id>https://www.zhuangqingyuan.site/</id>
   
   <author>
@@ -17,11 +17,32 @@
   <generator uri="https://hexo.io/">Hexo</generator>
   
   <entry>
+    <title>深度学习笔记（六）：暂退法</title>
+    <link href="https://www.zhuangqingyuan.site/2024/04/03/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E5%85%AD%EF%BC%89%EF%BC%9A%E6%9A%82%E9%80%80%E6%B3%95/"/>
+    <id>https://www.zhuangqingyuan.site/2024/04/03/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E5%85%AD%EF%BC%89%EF%BC%9A%E6%9A%82%E9%80%80%E6%B3%95/</id>
+    <published>2024-04-03T01:09:45.000Z</published>
+    <updated>2024-04-03T01:33:02.125Z</updated>
+    
+    
+    <summary type="html">参考教材《动手学深度学习》</summary>
+    
+    
+    
+    <category term="深度学习" scheme="https://www.zhuangqingyuan.site/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"/>
+    
+    
+    <category term="机器学习" scheme="https://www.zhuangqingyuan.site/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
+    
+    <category term="深度学习" scheme="https://www.zhuangqingyuan.site/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"/>
+    
+  </entry>
+  
+  <entry>
     <title>深度学习笔记（五）：权重衰减</title>
     <link href="https://www.zhuangqingyuan.site/2024/04/02/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E6%9D%83%E9%87%8D%E8%A1%B0%E5%87%8F/"/>
     <id>https://www.zhuangqingyuan.site/2024/04/02/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%94%EF%BC%89%EF%BC%9A%E6%9D%83%E9%87%8D%E8%A1%B0%E5%87%8F/</id>
     <published>2024-04-02T15:35:24.000Z</published>
-    <updated>2024-04-02T16:35:34.208Z</updated>
+    <updated>2024-04-03T01:08:57.755Z</updated>
     
     
     <summary type="html">参考教材《动手学深度学习》</summary>
@@ -224,9 +245,9 @@
     <category term="随笔" scheme="https://www.zhuangqingyuan.site/categories/%E9%9A%8F%E7%AC%94/"/>
     
     
-    <category term="计算机" scheme="https://www.zhuangqingyuan.site/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA/"/>
-    
     <category term="python" scheme="https://www.zhuangqingyuan.site/tags/python/"/>
+    
+    <category term="计算机" scheme="https://www.zhuangqingyuan.site/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA/"/>
     
     <category term="随笔" scheme="https://www.zhuangqingyuan.site/tags/%E9%9A%8F%E7%AC%94/"/>
     
@@ -424,29 +445,6 @@
     <category term="转录组学" scheme="https://www.zhuangqingyuan.site/tags/%E8%BD%AC%E5%BD%95%E7%BB%84%E5%AD%A6/"/>
     
     <category term="计数" scheme="https://www.zhuangqingyuan.site/tags/%E8%AE%A1%E6%95%B0/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>生物信息学笔记（二）：数据变换</title>
-    <link href="https://www.zhuangqingyuan.site/2024/02/07/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9A%E6%95%B0%E6%8D%AE%E5%8F%98%E6%8D%A2/"/>
-    <id>https://www.zhuangqingyuan.site/2024/02/07/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9A%E6%95%B0%E6%8D%AE%E5%8F%98%E6%8D%A2/</id>
-    <published>2024-02-07T15:31:00.000Z</published>
-    <updated>2024-02-17T02:37:52.759Z</updated>
-    
-    
-    <summary type="html">本文讲述统计学、机器学习中数据变换的目的、原理和基本方法。</summary>
-    
-    
-    
-    <category term="生物信息学" scheme="https://www.zhuangqingyuan.site/categories/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
-    
-    
-    <category term="生物信息学" scheme="https://www.zhuangqingyuan.site/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
-    
-    <category term="统计学" scheme="https://www.zhuangqingyuan.site/tags/%E7%BB%9F%E8%AE%A1%E5%AD%A6/"/>
-    
-    <category term="机器学习" scheme="https://www.zhuangqingyuan.site/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
     
   </entry>
   
