@@ -34,7 +34,7 @@
 <meta property="og:description" content="参考教材《动手学深度学习》">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-04-03T15:55:20.000Z">
-<meta property="article:modified_time" content="2024-04-03T16:22:45.836Z">
+<meta property="article:modified_time" content="2024-04-03T16:25:03.989Z">
 <meta property="article:author" content="Qingyuan Zhuang&#39; Blog">
 <meta property="article:tag" content="机器学习">
 <meta property="article:tag" content="深度学习">
@@ -239,7 +239,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新</span>
-                <time title="修改时间：2024-04-04 00:22:45" itemprop="dateModified" datetime="2024-04-04T00:22:45+08:00">2024-04-04</time>
+                <time title="修改时间：2024-04-04 00:25:03" itemprop="dateModified" datetime="2024-04-04T00:25:03+08:00">2024-04-04</time>
               </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -299,7 +299,7 @@
 
       
         <blockquote><p>Dataset shift is a challenging situation where the joint distribution of inputs and outputs differs between the training and test stages.</p>
-<footer><strong>[**_Dataset Shift</strong><cite>The MIT Press._**](https://cs.nyu.edu/~roweis/papers/invar-chapter.pdf)</cite></footer></blockquote>
+<footer><strong>Dataset Shift</strong><cite>The MIT Press</cite></footer></blockquote>
 <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>从数理统计的角度来看，统计学习（或包括深度学习）的本质是给定样本空间的条件概率分布建模问题。那么，特征、标签的分布以及机器学习任务中特征和标签的条件概率分布的改变都会对模型的应用产生影响。所谓“分布的改变”就是<strong>分布偏移</strong>问题。</p>
 <h1 id="分布偏移的分类"><a href="#分布偏移的分类" class="headerlink" title="分布偏移的分类"></a>分布偏移的分类</h1><h2 id="协变量偏移"><a href="#协变量偏移" class="headerlink" title="协变量偏移"></a>协变量偏移</h2><p>协变量偏移指的是训练数据的分布与测试数据的分布不同（即特征分布不同，在流行病学的观点中几句是基线数据不同），但是条件概率分布（即给定输入X时目标Y的分布）保持不变的情况。这种情况下，尽管输入数据的分布发生了变化，但是输入与输出之间的关系（即模型试图学习的映射）保持不变。</p>
 <h3 id="协变量偏移的影响"><a href="#协变量偏移的影响" class="headerlink" title="协变量偏移的影响"></a>协变量偏移的影响</h3><p>协变量偏移可能会对模型的泛化能力产生负面影响。由于模型是在训练数据上学习得到的，如果测试数据的分布与训练数据有显著不同，模型可能无法正确预测测试数据的标签。这会导致模型在实际应用中的性能下降。</p>
