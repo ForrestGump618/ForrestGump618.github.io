@@ -34,7 +34,7 @@
 <meta property="og:description" content="参考教材《动手学深度学习》">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-04-03T01:09:45.000Z">
-<meta property="article:modified_time" content="2024-04-03T01:39:31.781Z">
+<meta property="article:modified_time" content="2024-04-03T06:08:06.696Z">
 <meta property="article:author" content="Qingyuan Zhuang&#39; Blog">
 <meta property="article:tag" content="机器学习">
 <meta property="article:tag" content="深度学习">
@@ -235,7 +235,7 @@
               <span class="post-meta-item-text">发表</span>
               
 
-              <time title="创建时间：2024-04-03 09:09:45 / 修改时间：09:39:31" itemprop="dateCreated datePublished" datetime="2024-04-03T09:09:45+08:00">2024-04-03</time>
+              <time title="创建时间：2024-04-03 09:09:45 / 修改时间：14:08:06" itemprop="dateCreated datePublished" datetime="2024-04-03T09:09:45+08:00">2024-04-03</time>
             </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
@@ -274,14 +274,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>1.3k</span>
+              <span>2.9k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>5 分钟</span>
+              <span>11 分钟</span>
             </span>
             <div class="post-description">参考教材《动手学深度学习》</div>
 
@@ -317,7 +317,110 @@
 <p>假设在训练时，每个神经元被保留（即不被丢弃）的概率是 $p$ （因此，被丢弃的概率是 $1-p$ ）。那么，为了保持期望值不变，输出  $h’$ 应该被缩放一个因子，以补偿因丢弃神经元而减少的输出。这个缩放因子是  $1/p$ ，因为在期望意义下，只有 $p$  比例的神经元在任何时间点被激活。</p>
 <blockquote><p>暂退法的原始论文提到了一个有关有性生殖的类比；神经网络过拟合与每一层都依赖前一层的激活值有关，这种情况称之为”共适应性“。共适应性（Co-adaptation）在机器学习领域通常指的是模型的不同部分在训练过程中相互适应，以优化整体性能的现象。这种相互适应可以是有益的，比如在深度学习中，网络的不同层次通过共适应学习到更有效的特征表示。然而，共适应性也可能导致模型对训练数据过度特化，这在一定程度上与过拟合的概念相关联。我们认为，暂退法会破坏共适应性，就像有性生殖会破坏共适应的基因一样。</p>
 </blockquote>
-<h1 id="暂退法的从头实现"><a href="#暂退法的从头实现" class="headerlink" title="暂退法的从头实现"></a>暂退法的从头实现</h1><h1 id="暂退法的高级API实现"><a href="#暂退法的高级API实现" class="headerlink" title="暂退法的高级API实现"></a>暂退法的高级API实现</h1>
+<h1 id="暂退法的从头实现"><a href="#暂退法的从头实现" class="headerlink" title="暂退法的从头实现"></a>暂退法的从头实现</h1><h2 id="导包"><a href="#导包" class="headerlink" title="导包"></a>导包</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">from</span> torch <span class="keyword">import</span> nn</span><br><span class="line"><span class="keyword">from</span> d2l <span class="keyword">import</span> torch <span class="keyword">as</span> d2l</span><br></pre></td></tr></table></figure>
+<h2 id="丢失过程的定义"><a href="#丢失过程的定义" class="headerlink" title="丢失过程的定义"></a>丢失过程的定义</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">dropout_layer</span>(<span class="params">X, dropout</span>):</span><br><span class="line">    <span class="keyword">assert</span> <span class="number">0</span>&lt;= dropout &lt;=<span class="number">1</span></span><br><span class="line">    <span class="keyword">if</span> dropout == <span class="number">1</span>:</span><br><span class="line">        <span class="keyword">return</span> torch.zeros_like(X)</span><br><span class="line">    <span class="keyword">if</span> dropout == <span class="number">0</span>:</span><br><span class="line">        <span class="keyword">return</span> X</span><br><span class="line">    mask = (torch.rand(X.shape) &gt; dropout).<span class="built_in">float</span>()</span><br><span class="line">    <span class="keyword">return</span> mask*X/(<span class="number">1.0</span>-dropout)</span><br></pre></td></tr></table></figure>
+<p>这个函数定义了一个名为 <code>dropout_layer</code> 的操作，它实现了在深度学习中常用的 Dropout 技术，用于防止模型过拟合。下面逐行解释这个函数的代码：</p>
+<ol>
+<li><p><code>def dropout_layer(X, dropout):</code></p>
+<ul>
+<li>这行定义了函数 <code>dropout_layer</code>，它接受两个参数：<code>X</code> 和 <code>dropout</code>。<code>X</code> 是输入的数据（通常是一个张量），<code>dropout</code> 是一个介于 0 和 1 之间的浮点数，表示 dropout 率，即随机丢弃神经网络中某些节点的比例。</li>
+</ul>
+</li>
+<li><p><code>assert 0&lt;= dropout &lt;=1</code></p>
+<ul>
+<li>这行代码是一个断言语句，用来确保传入的 <code>dropout</code> 参数值在 0 到 1 之间。如果 <code>dropout</code> 不满足这个条件，程序将抛出异常。</li>
+</ul>
+</li>
+<li><p><code>if dropout == 1:</code></p>
+<ul>
+<li>这行代码检查 <code>dropout</code> 是否等于 1。如果等于 1，意味着需要丢弃所有节点。</li>
+</ul>
+</li>
+<li><p><code>return torch.zeros_like(X)</code></p>
+<ul>
+<li>如果 <code>dropout</code> 等于 1，这行代码将返回一个与输入 <code>X</code> 形状相同但所有元素都是 0 的张量。这表示所有的输入节点都被丢弃了。</li>
+</ul>
+</li>
+<li><p><code>if dropout == 0:</code></p>
+<ul>
+<li>这行代码检查 <code>dropout</code> 是否等于 0。如果等于 0，意味着不丢弃任何节点。</li>
+</ul>
+</li>
+<li><p><code>return X</code></p>
+<ul>
+<li>如果 <code>dropout</code> 等于 0，这行代码直接返回输入的张量 <code>X</code>，表示保留所有节点，不进行任何丢弃。</li>
+</ul>
+</li>
+<li><p><code>mask = (torch.rand(X.shape) &gt; dropout).float</code></p>
+<ul>
+<li>这行代码首先使用 <code>torch.rand(X.shape)</code> 生成一个与 <code>X</code> 形状相同的随机张量，其元素值在 0 到 1 之间。然后，这个随机张量与 <code>dropout</code> 进行比较，得到一个布尔型张量，其中大于 <code>dropout</code> 的元素被标记为 <code>True</code>（这些是将被保留的节点），否则为 <code>False</code>（这些节点将被丢弃）。最后，调用 <code>.float()</code> 方法将布尔型张量转换为浮点型张量，<code>True</code> 转换为 1.0，<code>False</code> 转换为 0.0，生成了一个掩码（mask）张量。</li>
+</ul>
+</li>
+<li><p><code>return mask*X/(1.0-dropout)</code></p>
+<ul>
+<li>这行代码首先使用前面生成的掩码张量 <code>mask</code> 与输入 <code>X</code> 进行元素乘法，这样被标记为 0（即应该被丢弃）的节点的值将变为 0，而被保留的节点值不变。然后，将结果除以 <code>(1.0-dropout)</code> 进行缩放，以保持激活的总和的期望值不变。这是一种常见的做法，用以补偿因为部分节点的丢弃而可能导致的激活总量的减少。</li>
+</ul>
+</li>
+</ol>
+<p>这个函数通过随机丢弃网络中的一部分节点，帮助防止模型在训练过程中过拟合。</p>
+<p><strong>可能你会注意到，这里丢弃的神经元比率似乎并不是dropout，事实上，所谓dropout指的是每个神经元被丢弃的概率。</strong></p>
+<h2 id="参数和模型的定义"><a href="#参数和模型的定义" class="headerlink" title="参数和模型的定义"></a>参数和模型的定义</h2><h3 id="定义参数"><a href="#定义参数" class="headerlink" title="定义参数"></a>定义参数</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">num_inputs, num_outputs, num_hiddens1, num_hiddens2 = <span class="number">784</span>, <span class="number">10</span>, <span class="number">256</span>, <span class="number">256</span></span><br><span class="line">dropout1, dropout2 = <span class="number">0.2</span>, <span class="number">0.5</span></span><br></pre></td></tr></table></figure>
+<h3 id="模型定义"><a href="#模型定义" class="headerlink" title="模型定义"></a>模型定义</h3><p>在这里，我们继承了<code>nn.Module</code>定义一个新的类<code>Net</code>。继承自 <code>nn.Module</code>，使用了 PyTorch 框架。</p>
+<h4 id="类定义与初始化方法"><a href="#类定义与初始化方法" class="headerlink" title="类定义与初始化方法"></a>类定义与初始化方法</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Net</span>(nn.Module):</span><br></pre></td></tr></table></figure>
+<ul>
+<li>定义了一个名为 <code>Net</code> 的新类，这个类继承自 PyTorch 的 <code>nn.Module</code> 类。<code>nn.Module</code> 是所有神经网络模块的基类，你的网络应该也继承自这个类。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, num_inputs, num_outputs, num_hiddens1, num_hiddens2, is_training = <span class="literal">True</span></span>):</span><br></pre></td></tr></table></figure>
+<ul>
+<li>这是 <code>Net</code> 类的初始化方法，用于创建类的实例。它接受五个参数：输入层的大小 (<code>num_inputs</code>)、输出层的大小 (<code>num_outputs</code>)、两个隐藏层的大小 (<code>num_hiddens1</code> 和 <code>num_hiddens2</code>)，以及一个标志 <code>is_training</code> 指示网络是否处于训练模式。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">super</span>(Net, self).__init__()</span><br></pre></td></tr></table></figure>
+<ul>
+<li>这行代码调用了父类 <code>nn.Module</code> 的初始化方法。这是继承中常见的做法，用于确保父类被正确初始化。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">self.num_inputs = num_inputs self.num_outputs = num_outputs self.training = is_training</span><br></pre></td></tr></table></figure>
+<ul>
+<li>这三行代码将传入的参数值分别赋给实例变量，以便后续使用。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">self.lin1 = nn.Linear(num_inputs,num_hiddens1) self.lin2 = nn.Linear(num_hiddens1,num_hiddens2) self.lin3 = nn.Linear(num_hiddens2,num_outputs)</span><br></pre></td></tr></table></figure>
+<ul>
+<li><p>这三行定义了网络中的三个线性层（也称为全连接层）。<code>nn.Linear</code> 创建一个线性转换层，它的参数分别指定了输入和输出特征的数量。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">self.relu = nn.ReLU()</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>创建了一个ReLU激活函数实例，用于在网络的隐藏层之后添加非线性。</p>
+<h4 id="前向传播方法"><a href="#前向传播方法" class="headerlink" title="前向传播方法"></a>前向传播方法</h4></li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, X</span>):</span><br></pre></td></tr></table></figure>
+<ul>
+<li>定义了一个名为 <code>forward</code> 的方法，它覆盖了父类 <code>nn.Module</code> 的 <code>forward</code> 方法。这是模型定义数据如何通过网络的关键部分。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">H1 = self.relu(self.lin1(X.reshape((-<span class="number">1</span>,self.num_inputs))))</span><br></pre></td></tr></table></figure>
+<ul>
+<li>首先，输入 <code>X</code> 被重塑为一个二维张量，其中第二维大小为 <code>num_inputs</code>。然后，数据通过第一个线性层 <code>lin1</code>，最后通过ReLU激活函数。结果是第一个隐藏层的输出。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> self.training == <span class="literal">True</span>:</span><br><span class="line">	H1 = dropout_layer(H1,dropout1)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>如果 <code>self.training</code> 为真，则对第一个隐藏层应用dropout。这里似乎有一个小错误：<code>dropout_layer</code> 和 <code>drop1</code> 没有在前面的代码中定义。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">H2 = self.relu(self.lin2(H1))</span><br></pre></td></tr></table></figure>
+<ul>
+<li>第一个隐藏层的输出 <code>H1</code> 通过第二个线性层 <code>lin2</code>，然后通过ReLU激活函数。结果是第二个隐藏层的输出。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> self.training == <span class="literal">True</span>:</span><br><span class="line">	H2 = dropout_layer(H2,dropout2)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>同样地，如果 <code>self.training</code> 为真，则对第二个隐藏层应用dropout。这里同样存在一个未定义的 <code>dropout_layer</code> 和 <code>drop2</code> 的问题。</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">out = self.lin3(H2)</span><br><span class="line"><span class="keyword">return</span> out</span><br></pre></td></tr></table></figure>
+<ul>
+<li>第二个隐藏层的输出 <code>H2</code> 通过第三个线性层 <code>lin3</code>，没有激活函数，结果是网络的最终输出。</li>
+<li>返回网络的最终输出。</li>
+</ul>
+<h4 id="网络实例化"><a href="#网络实例化" class="headerlink" title="网络实例化"></a>网络实例化</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">net = Net(num_inputs,num_outputs,num_hiddens1,num_hiddens2)</span><br></pre></td></tr></table></figure>
+<h4 id="代码合并"><a href="#代码合并" class="headerlink" title="代码合并"></a>代码合并</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">Net</span>(nn.Module):</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, num_inputs, num_outputs, num_hiddens1, num_hiddens2, is_training = <span class="literal">True</span></span>):</span><br><span class="line">        <span class="built_in">super</span>(Net, self).__init__()</span><br><span class="line">        self.num_inputs = num_inputs</span><br><span class="line">        self.num_outputs = num_outputs</span><br><span class="line">        self.training = is_training</span><br><span class="line">        self.lin1 = nn.Linear(num_inputs,num_hiddens1)</span><br><span class="line">        self.lin2 = nn.Linear(num_hiddens1,num_hiddens2)</span><br><span class="line">        self.lin3 = nn.Linear(num_hiddens2,num_outputs)</span><br><span class="line">        self.relu = nn.ReLU()</span><br><span class="line">        </span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">forward</span>(<span class="params">self, X</span>):</span><br><span class="line">        H1 = self.relu(self.lin1(X.reshape((-<span class="number">1</span>,self.num_inputs))))</span><br><span class="line">        <span class="keyword">if</span> self.training == <span class="literal">True</span>:</span><br><span class="line">            H1 = dropout_layer(H1,dropout1)</span><br><span class="line">        H2 = self.relu(self.lin2(H1))</span><br><span class="line">        <span class="keyword">if</span> self.training == <span class="literal">True</span>:</span><br><span class="line">            H2 = dropout_layer(H2,dropout2)</span><br><span class="line">        out = self.lin3(H2)</span><br><span class="line">        <span class="keyword">return</span> out</span><br><span class="line"></span><br><span class="line">net = Net(num_inputs,num_outputs,num_hiddens1,num_hiddens2) </span><br></pre></td></tr></table></figure>
+<h2 id="模型训练"><a href="#模型训练" class="headerlink" title="模型训练"></a>模型训练</h2><p>从上面的推导我们可以发现，我们想要改动网络架构进行训练过程的优化，只需要在net上做文章即可，事实上，后面的高级API实现也证明了这一点。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">num_epochs, lr, batch_size = <span class="number">10</span>,<span class="number">0.5</span>,<span class="number">256</span></span><br><span class="line">loss = nn.CrossEntropyLoss(reduction=<span class="string">&#x27;none&#x27;</span>)</span><br><span class="line">train_iter, test_iter = d2l.load_data_fashion_mnist(batch_size)</span><br><span class="line">trainer = torch.optim.SGD(net.parameters(),lr = lr)</span><br><span class="line">d2l.train_ch3(net,train_iter,test_iter,loss,num_epochs,trainer)</span><br></pre></td></tr></table></figure>
+<h1 id="暂退法的高级API实现"><a href="#暂退法的高级API实现" class="headerlink" title="暂退法的高级API实现"></a>暂退法的高级API实现</h1><p>只需要单独定义net和初始化参数，训练过程等从前。事实上，PyTorch的优势在于把网络用连续过程进行定义，十分的直观。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">net = nn.Sequential(nn.Flatten(),</span><br><span class="line">                    nn.Linear(<span class="number">784</span>,<span class="number">256</span>),</span><br><span class="line">                    nn.ReLU()</span><br><span class="line">                    nn.Dropout(<span class="number">0.2</span>),</span><br><span class="line">                    nn.Linear(<span class="number">256</span>,<span class="number">256</span>),</span><br><span class="line">                    nn.ReLU()</span><br><span class="line">                    nn.Dropout(<span class="number">0.5</span>),</span><br><span class="line">                    nn.Linear(<span class="number">256</span>,<span class="number">10</span>)</span><br><span class="line">)</span><br><span class="line"><span class="keyword">def</span> <span class="title function_">init_weights</span>(<span class="params">m</span>):</span><br><span class="line">    <span class="keyword">if</span> <span class="built_in">type</span>(m) == nn.Linear:</span><br><span class="line">        nn.init.normal_(m.weight,std=<span class="number">0.01</span>)</span><br><span class="line">        </span><br><span class="line">net.apply(init_weights)</span><br></pre></td></tr></table></figure>
     </div>
 
     
@@ -448,7 +551,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9A%82%E9%80%80%E6%B3%95%E7%9A%84%E4%BB%8E%E5%A4%B4%E5%AE%9E%E7%8E%B0"><span class="nav-text">暂退法的从头实现</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9A%82%E9%80%80%E6%B3%95%E7%9A%84%E9%AB%98%E7%BA%A7API%E5%AE%9E%E7%8E%B0"><span class="nav-text">暂退法的高级API实现</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9A%82%E9%80%80%E6%B3%95%E7%9A%84%E4%BB%8E%E5%A4%B4%E5%AE%9E%E7%8E%B0"><span class="nav-text">暂退法的从头实现</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%AF%BC%E5%8C%85"><span class="nav-text">导包</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%A2%E5%A4%B1%E8%BF%87%E7%A8%8B%E7%9A%84%E5%AE%9A%E4%B9%89"><span class="nav-text">丢失过程的定义</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8F%82%E6%95%B0%E5%92%8C%E6%A8%A1%E5%9E%8B%E7%9A%84%E5%AE%9A%E4%B9%89"><span class="nav-text">参数和模型的定义</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89%E5%8F%82%E6%95%B0"><span class="nav-text">定义参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E5%AE%9A%E4%B9%89"><span class="nav-text">模型定义</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%B1%BB%E5%AE%9A%E4%B9%89%E4%B8%8E%E5%88%9D%E5%A7%8B%E5%8C%96%E6%96%B9%E6%B3%95"><span class="nav-text">类定义与初始化方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%89%8D%E5%90%91%E4%BC%A0%E6%92%AD%E6%96%B9%E6%B3%95"><span class="nav-text">前向传播方法</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BD%91%E7%BB%9C%E5%AE%9E%E4%BE%8B%E5%8C%96"><span class="nav-text">网络实例化</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E4%BB%A3%E7%A0%81%E5%90%88%E5%B9%B6"><span class="nav-text">代码合并</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%A8%A1%E5%9E%8B%E8%AE%AD%E7%BB%83"><span class="nav-text">模型训练</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9A%82%E9%80%80%E6%B3%95%E7%9A%84%E9%AB%98%E7%BA%A7API%E5%AE%9E%E7%8E%B0"><span class="nav-text">暂退法的高级API实现</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -549,13 +652,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">42k</span>
+    <span title="站点总字数">44k</span>
 
     <span class="post-meta-item-icon">
       <span class="post-meta-divider"> </span>
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">2:32</span>
+    <span title="站点阅读时长">2:38</span>
   
   
     <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
