@@ -6,7 +6,7 @@
   <link href="https://www.zhuangqingyuan.site/atom.xml" rel="self"/>
   
   <link href="https://www.zhuangqingyuan.site/"/>
-  <updated>2024-04-03T01:33:02.125Z</updated>
+  <updated>2024-04-03T01:39:31.781Z</updated>
   <id>https://www.zhuangqingyuan.site/</id>
   
   <author>
@@ -21,7 +21,7 @@
     <link href="https://www.zhuangqingyuan.site/2024/04/03/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E5%85%AD%EF%BC%89%EF%BC%9A%E6%9A%82%E9%80%80%E6%B3%95/"/>
     <id>https://www.zhuangqingyuan.site/2024/04/03/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E5%85%AD%EF%BC%89%EF%BC%9A%E6%9A%82%E9%80%80%E6%B3%95/</id>
     <published>2024-04-03T01:09:45.000Z</published>
-    <updated>2024-04-03T01:33:02.125Z</updated>
+    <updated>2024-04-03T01:39:31.781Z</updated>
     
     
     <summary type="html">参考教材《动手学深度学习》</summary>
@@ -245,9 +245,9 @@
     <category term="随笔" scheme="https://www.zhuangqingyuan.site/categories/%E9%9A%8F%E7%AC%94/"/>
     
     
-    <category term="python" scheme="https://www.zhuangqingyuan.site/tags/python/"/>
-    
     <category term="计算机" scheme="https://www.zhuangqingyuan.site/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA/"/>
+    
+    <category term="python" scheme="https://www.zhuangqingyuan.site/tags/python/"/>
     
     <category term="随笔" scheme="https://www.zhuangqingyuan.site/tags/%E9%9A%8F%E7%AC%94/"/>
     
@@ -377,9 +377,9 @@
     <category term="生物信息学" scheme="https://www.zhuangqingyuan.site/categories/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
     
     
-    <category term="生物信息学" scheme="https://www.zhuangqingyuan.site/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
-    
     <category term="单细胞测序" scheme="https://www.zhuangqingyuan.site/tags/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F/"/>
+    
+    <category term="生物信息学" scheme="https://www.zhuangqingyuan.site/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
     
   </entry>
   
