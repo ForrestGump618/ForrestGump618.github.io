@@ -26,20 +26,21 @@
   </script>
 
 
-  <meta name="description" content="冰棒汽水的味道，一个夏天的年少。">
-<meta property="og:type" content="website">
-<meta property="og:title" content="一个夏天的年少">
-<meta property="og:url" content="https://www.zhuangqingyuan.site/tags/HEXO/index.html">
+  <meta name="description" content="参考教材《动手学深度学习》">
+<meta property="og:type" content="article">
+<meta property="og:title" content="深度学习笔记（十）：批量归一化">
+<meta property="og:url" content="https://www.zhuangqingyuan.site/2024/04/06/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E5%8D%81%EF%BC%89%EF%BC%9A%E6%89%B9%E9%87%8F%E5%BD%92%E4%B8%80%E5%8C%96/index.html">
 <meta property="og:site_name" content="一个夏天的年少">
-<meta property="og:description" content="冰棒汽水的味道，一个夏天的年少。">
+<meta property="og:description" content="参考教材《动手学深度学习》">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-04-06T05:01:43.000Z">
+<meta property="article:modified_time" content="2024-04-06T05:17:31.314Z">
 <meta property="article:author" content="Qingyuan Zhuang&#39; Blog">
-<meta property="article:tag" content="生物信息学">
-<meta property="article:tag" content="医学">
-<meta property="article:tag" content="临床">
+<meta property="article:tag" content="机器学习">
+<meta property="article:tag" content="深度学习">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="https://www.zhuangqingyuan.site/tags/HEXO/">
+<link rel="canonical" href="https://www.zhuangqingyuan.site/2024/04/06/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E5%8D%81%EF%BC%89%EF%BC%9A%E6%89%B9%E9%87%8F%E5%BD%92%E4%B8%80%E5%8C%96/">
 
 
 <script id="page-configurations">
@@ -47,12 +48,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>标签: HEXO | 一个夏天的年少</title>
+  <title>深度学习笔记（十）：批量归一化 | 一个夏天的年少</title>
   
 
 
@@ -201,59 +202,205 @@
         <div class="content-wrap">
           
 
-          <div class="content tag">
+          <div class="content post posts-expand">
             
 
+    
   
   
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.zhuangqingyuan.site/2024/04/06/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E5%8D%81%EF%BC%89%EF%BC%9A%E6%89%B9%E9%87%8F%E5%BD%92%E4%B8%80%E5%8C%96/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingyuan Zhuang' Blog">
+      <meta itemprop="description" content="冰棒汽水的味道，一个夏天的年少。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="一个夏天的年少">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          深度学习笔记（十）：批量归一化
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表</span>
+              
+
+              <time title="创建时间：2024-04-06 13:01:43 / 修改时间：13:17:31" itemprop="dateCreated datePublished" datetime="2024-04-06T13:01:43+08:00">2024-04-06</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">深度学习</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2024/04/06/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E5%8D%81%EF%BC%89%EF%BC%9A%E6%89%B9%E9%87%8F%E5%BD%92%E4%B8%80%E5%8C%96/" class="post-meta-item leancloud_visitors" data-flag-title="深度学习笔记（十）：批量归一化" title="热度">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">热度：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
   
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        <h2 class="collection-header">HEXO
-          <small>标签</small>
-        </h2>
-      </div>
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2024/04/06/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E5%8D%81%EF%BC%89%EF%BC%9A%E6%89%B9%E9%87%8F%E5%BD%92%E4%B8%80%E5%8C%96/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2024/04/06/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E5%8D%81%EF%BC%89%EF%BC%9A%E6%89%B9%E9%87%8F%E5%BD%92%E4%B8%80%E5%8C%96/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>1.3k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>5 分钟</span>
+            </span>
+            <div class="post-description">参考教材《动手学深度学习》</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <h1 class="collection-header">2024</h1>
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>批量归一化（Batch Normalization，简称BN）是由 Sergey Ioffe 和 Christian Szegedy 在 2015 年提出的一种深度学习技术。它主要用于加快深度神经网络的训练速度，同时增强模型的稳定性，通过解决内部协变量偏移（Internal Covariate Shift）问题来实现这些优点。就本质而言，就是把<strong>每一层的数据分布本身当成超参数进行学习</strong>。</p>
+<h1 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h1><p>批量归一化处理（Batch Normalization）的核心概念是在神经网络的训练过程中，针对每个批次的数据，对每个网络层的激活输入进行标准化处理。这种处理方法的目的是为了减少所谓的“内部协变量偏移”，即保持网络在不同层之间传递的输入数据分布的一致性。通过实施批量归一化，可以使得每层的输入在训练过程中保持相同的均值和方差，从而帮助网络更快地收敛，同时提高训练过程的稳定性。这种技术不仅可以提升模型训练的效率，还能在<strong>一定程度上帮助减少模型对初始权重的敏感度</strong>，使得训练过程更加健壮。</p>
+<h2 id="目的"><a href="#目的" class="headerlink" title="目的"></a>目的</h2><p>批量归一化主要是为了解决深度神经网络在训练过程中的内部协变量偏移问题，即前一层的参数更新导致后一层输入分布发生变化，这种变化会导致训练过程中学习速率的不稳定。此技术的实施不仅对提升训练效率具有重要作用，还有助于优化神经网络的整体表现，使其在各种初始化条件下都能稳定运行。</p>
+<h2 id="基本操作"><a href="#基本操作" class="headerlink" title="基本操作"></a>基本操作</h2><p>在具体操作上，批量归一化通过以下步骤对输入的激活值进行处理：</p>
+<ol>
+<li><p><strong>计算批次均值</strong>：$\mu_B = \frac{1}{m} \sum_{i=1}^{m} x_i$ ，其中，$m$ 是批次中的样本数，$x_i$ 是单个样本的输入。</p>
+</li>
+<li><p><strong>计算批次方差</strong>： $\sigma_B^2 = \frac{1}{m} \sum_{i=1}^{m} (x_i - \mu_B)^2$。</p>
+</li>
+<li><p><strong>归一化处理</strong>：$\hat{x}_i = \frac{x_i - \mu_B}{\sqrt{\sigma_B^2 + \epsilon}}$，这里 $\epsilon$ 是一个很小的数，用来防止分母为零。</p>
+</li>
+<li><p><strong>缩放与偏移</strong>：$y_i = \gamma \hat{x}_i + \beta$， $\gamma$ 和 $\beta$ 是可学习的参数，允许模型恢复归一化可能丢失的信息。</p>
+</li>
+</ol>
+<h1 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h1><p>批量归一化可以应用于网络中几乎所有的有权重的层，常见的做法是将其置于全连接层或卷积层的输出和激活函数之前。BN层可能通过平滑隐藏层输入的分布来辅助随机梯度下降，从而减轻随机梯度下降中权重更新对后续层的不利影响。因此，不论是置于非线性激活前还是后，BN层均可能有效发挥作用。但具体效果可能因激活函数的不同而有所区别。例如，对于sigmoid和tanh激活函数，将BN层置于其前可能还有助于减缓梯度消失问题；而对于ReLU激活函数，其非线性特性可能会减弱BN层的平滑效果。</p>
+<h1 id="优势与劣势"><a href="#优势与劣势" class="headerlink" title="优势与劣势"></a>优势与劣势</h1><h2 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h2><ul>
+<li><strong>加速收敛</strong>：批量归一化使得网络各层的输入分布更加稳定，允许使用更大的学习率，从而加速收敛。这种稳定性减少了训练过程中的内部协变量偏移，使模型更快地达到最优化。</li>
+<li><strong>具有正则化效果</strong>：由于每个批次的均值和方差都有所不同，这种微小的噪声可以起到与 Dropout 类似的正则化效果。后续也有论文指出，<strong>或许是每一次批量归一化都引入了一个噪声项，用来控制模型的复杂度</strong>。这有助于防止模型过拟合，并可能使模型在未见过的数据上表现得更好。</li>
+</ul>
+<h2 id="劣势"><a href="#劣势" class="headerlink" title="劣势"></a>劣势</h2><ul>
+<li><strong>增加计算负担</strong>：在每一层都需要进行额外的均值和方差的计算以及反向传播。这意味着在训练和推理阶段都需要进行额外的数学运算，从而增加了计算资源的消耗。</li>
+<li><strong>对批次大小敏感</strong>：非常小的批次会导致均值和方差估计不准确，影响模型性能。当批次大小减小时，估计的不稳定性可能导致模型训练不稳定，特别是在需要精确梯度估计的任务中。</li>
+</ul>
+<h2 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h2><p>批量归一化是深度学习中一个非常重要的技术，它通过规范化层输入的分布来改善训练的稳定性和速度，一般而言，不改变模型精度。虽然带来了额外的计算负担，但其在实践中的优势使其成为现代深度神经网络架构中不可或缺的一部分。此外，正确的批量大小选择和计算资源的优化可以减轻其劣势，使得批量归一化更加高效地服务于模型优化过程。</p>
+
     </div>
 
-  <article class="my-post post-type-normal" itemscope itemtype="http://schema.org/Article">
-    <header class="my-post-header">
+    
+    
+    
+        
 
-      <div class="my-post-meta">
-        <time class="my-post-time" itemprop="dateCreated"
-              datetime="2024-03-26T19:18:57+08:00"
-              content="2024-03-26">
-          03-26
-        </time>
-      </div>
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Qingyuan Zhuang' Blog
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://www.zhuangqingyuan.site/2024/04/06/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E5%8D%81%EF%BC%89%EF%BC%9A%E6%89%B9%E9%87%8F%E5%BD%92%E4%B8%80%E5%8C%96/" title="深度学习笔记（十）：批量归一化">https://www.zhuangqingyuan.site/2024/04/06/深度学习笔记（十）：批量归一化/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
 
-      <h2 class="my-post-title">
-          <a class="my-post-title-link" href="/2024/03/26/HEXO%E5%8D%9A%E5%AE%A2%E7%9A%84%E8%BD%AE%E6%92%AD%E6%A0%8F/" itemprop="url">
-            
-              <span itemprop="name">HEXO博客的轮播栏</span>
-            
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
           </a>
-      </h2>
-
-    </header>
-  </article>
-
+        </div>
     </div>
   </div>
-  
-  
-  
 
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 机器学习</a>
+              <a href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 深度学习</a>
+          </div>
+
+        
+<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------　　　　本文结束　<i class="fa fa-flag"></i>　感谢阅读　　　　-------------</div>
+    
+</div>
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2024/04/06/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B9%9D%EF%BC%89%EF%BC%9A%E5%8D%B7%E7%A7%AF%E5%92%8C%E5%8D%B7%E7%A7%AF%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/" rel="prev" title="深度学习笔记（九）：卷积层">
+      <i class="fa fa-chevron-left"></i> 深度学习笔记（九）：卷积层
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+    
+    <div><center>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/css/share.min.css">
+    <div class="social-share" data-sites="weibo, qq, qzone,wechat"></div>
+    <script src="http://apps.bdimg.com/libs/jquery/1.8.2/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/js/social-share.min.js"></script>
+    </center></div>  
+  </article>
+  
+  
   
 
 
 
           </div>
           
+    <div class="comments" id="valine-comments"></div>
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -300,6 +447,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%89%8D%E8%A8%80"><span class="nav-text">前言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%8E%9F%E7%90%86"><span class="nav-text">原理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%9B%AE%E7%9A%84"><span class="nav-text">目的</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9F%BA%E6%9C%AC%E6%93%8D%E4%BD%9C"><span class="nav-text">基本操作</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BA%94%E7%94%A8"><span class="nav-text">应用</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BC%98%E5%8A%BF%E4%B8%8E%E5%8A%A3%E5%8A%BF"><span class="nav-text">优势与劣势</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%98%E5%8A%BF"><span class="nav-text">优势</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%8A%A3%E5%8A%BF"><span class="nav-text">劣势</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA"><span class="nav-text">结论</span></a></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -643,6 +791,59 @@ window.addEventListener('pjax:success', () => {
   
 
   
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
 
   
 <script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.7/lib/darkmode-js.min.js"></script>
