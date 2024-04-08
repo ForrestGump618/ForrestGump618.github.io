@@ -6,7 +6,7 @@
   <link href="https://www.zhuangqingyuan.site/atom.xml" rel="self"/>
   
   <link href="https://www.zhuangqingyuan.site/"/>
-  <updated>2024-04-06T05:17:31.314Z</updated>
+  <updated>2024-04-08T13:43:19.440Z</updated>
   <id>https://www.zhuangqingyuan.site/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>朴素贝叶斯法</title>
+    <link href="https://www.zhuangqingyuan.site/2024/04/08/%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E6%B3%95/"/>
+    <id>https://www.zhuangqingyuan.site/2024/04/08/%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E6%B3%95/</id>
+    <published>2024-04-08T13:33:23.000Z</published>
+    <updated>2024-04-08T13:43:19.440Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;前言&quot;&gt;&lt;a href=&quot;#前言&quot; class=&quot;headerlink&quot; title=&quot;前言&quot;&gt;&lt;/a&gt;前言&lt;/h1&gt;&lt;p&gt; </summary>
+        
+      
+    
+    
+    
+    
+    <category term="机器学习" scheme="https://www.zhuangqingyuan.site/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
+    
+  </entry>
   
   <entry>
     <title>深度学习笔记（十）：批量归一化</title>
@@ -412,29 +435,6 @@
     
     
     <category term="随笔" scheme="https://www.zhuangqingyuan.site/tags/%E9%9A%8F%E7%AC%94/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>大四课程资源（持续更新）</title>
-    <link href="https://www.zhuangqingyuan.site/2024/02/26/%E5%A4%A7%E5%9B%9B%E8%AF%BE%E7%A8%8B%E8%B5%84%E6%BA%90%EF%BC%88%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%EF%BC%89/"/>
-    <id>https://www.zhuangqingyuan.site/2024/02/26/%E5%A4%A7%E5%9B%9B%E8%AF%BE%E7%A8%8B%E8%B5%84%E6%BA%90%EF%BC%88%E6%8C%81%E7%BB%AD%E6%9B%B4%E6%96%B0%EF%BC%89/</id>
-    <published>2024-02-26T14:12:00.000Z</published>
-    <updated>2024-03-24T14:51:46.107Z</updated>
-    
-    
-    <summary type="html">大四课程资源聚合站（持续更新）</summary>
-    
-    
-    
-    <category term="医学课程" scheme="https://www.zhuangqingyuan.site/categories/%E5%8C%BB%E5%AD%A6%E8%AF%BE%E7%A8%8B/"/>
-    
-    
-    <category term="医学" scheme="https://www.zhuangqingyuan.site/tags/%E5%8C%BB%E5%AD%A6/"/>
-    
-    <category term="医学生" scheme="https://www.zhuangqingyuan.site/tags/%E5%8C%BB%E5%AD%A6%E7%94%9F/"/>
-    
-    <category term="大四" scheme="https://www.zhuangqingyuan.site/tags/%E5%A4%A7%E5%9B%9B/"/>
     
   </entry>
   
