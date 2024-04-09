@@ -230,10 +230,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表</span>
-              
 
-              <time title="创建时间：2024-04-08 21:33:23 / 修改时间：21:43:19" itemprop="dateCreated datePublished" datetime="2024-04-08T21:33:23+08:00">2024-04-08</time>
+              <time title="创建时间：2024-04-08 21:33:23" itemprop="dateCreated datePublished" datetime="2024-04-08T21:33:23+08:00">2024-04-08</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新</span>
+                <time title="修改时间：2024-04-09 23:08:49" itemprop="dateModified" datetime="2024-04-09T23:08:49+08:00">2024-04-09</time>
+              </span>
 
           
             <span id="/2024/04/08/%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E6%B3%95/" class="post-meta-item leancloud_visitors" data-flag-title="朴素贝叶斯法" title="热度">
@@ -262,14 +268,14 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>1.7k</span>
+              <span>809</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>2 分钟</span>
+              <span>3 分钟</span>
             </span>
 
         </div>
@@ -281,27 +287,15 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>  朴素贝叶斯法是一种基于贝叶斯定理的简单概率分类器，广泛应用于垃圾邮件识别、文本分类等领域。其主要思想是在给定的输入特征条件下，利用每个类的条件概率来进行决策。接下来，将详细介绍朴素贝叶斯的理论基础、数学推导，以及使用PyTorCh实现，并通过一个例子来说明其应用。</p>
-<h1 id="理论基础与数学推导"><a href="#理论基础与数学推导" class="headerlink" title="理论基础与数学推导"></a>理论基础与数学推导</h1><p>朴素贝叶斯分类器的核心是贝叶斯定理，它描述了在已知一些条件的情况下，某事件的发生概率。贝叶斯定理公式为：</p>
-<script type="math/tex; mode=display">
-P(A|B) = \frac{P(B|A)P(A)}{P(B)}</script><p>其中，$P(A|B)$ 是在事件B发生的条件下事件A发生的概率，$P(B|A)$ 是在事件A发生的条件下事件B发生的概率，$P(A)$ 和 $P(B)$ 分别是事件A和事件B的边缘概率。</p>
-<p>在朴素贝叶斯中，假设所有特征都是相互独立的（朴素假设）。这使得在给定类别 $C$ 的条件下，某个特定特征向量 $x=(x_1, x_2, …, x_n)$ 的联合概率可以表示为： </p>
-<script type="math/tex; mode=display">
-P(x|C) = P(x_1|C)P(x_2|C)...P(x_n|C)</script><p>使用朴素贝叶斯进行分类时，我们会计算给定特征向量 $x$ 下，属于每个类 $C$ 的后验概率 $P(C|x)$，并选择概率最高的类。根据贝叶斯定理，我们有： </p>
-<script type="math/tex; mode=display">
-P(C|x) = \frac{P(x|C)P(C)}{P(x)}</script><p>​ 由于 $P(x)$ 对所有类是常数，所以分类问题简化为最大化 $P(x|C)P(C)$。</p>
-<h1 id="PyTorch实现"><a href="#PyTorch实现" class="headerlink" title="PyTorch实现"></a>PyTorch实现</h1><p>在PyTorCh中实现朴素贝叶斯分类器，我们通常不直接实现整个模型，因为PyTorCh主要设计用于梯度下降法等连续优化问题，而朴素贝叶斯通常用于处理离散数据。不过，我们可以用以下方法来示范如何处理类似的问题：</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> torch</span><br><span class="line"><span class="keyword">import</span> torch.nn.functional <span class="keyword">as</span> F</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">NaiveBayes</span>:</span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">__init__</span>(<span class="params">self, num_features, num_classes</span>):</span><br><span class="line">        self.num_classes = num_classes</span><br><span class="line">        self.class_log_prior = torch.zeros(num_classes)</span><br><span class="line">        self.feature_log_prob = torch.zeros(num_classes, num_features)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">fit</span>(<span class="params">self, X, y</span>):</span><br><span class="line">        class_count = torch.bincount(y, minlength=self.num_classes).<span class="built_in">float</span>()</span><br><span class="line">        self.class_log_prior = torch.log(class_count / class_count.<span class="built_in">sum</span>())</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> c <span class="keyword">in</span> <span class="built_in">range</span>(self.num_classes):</span><br><span class="line">            features_c = X[y == c]</span><br><span class="line">            count_c = features_c.<span class="built_in">sum</span>(axis=<span class="number">0</span>) + <span class="number">1</span>  <span class="comment"># Laplace smoothing</span></span><br><span class="line">            self.feature_log_prob[c] = torch.log(count_c / count_c.<span class="built_in">sum</span>())</span><br><span class="line"></span><br><span class="line">    <span class="keyword">def</span> <span class="title function_">predict</span>(<span class="params">self, X</span>):</span><br><span class="line">        <span class="keyword">return</span> torch.argmax(X @ self.feature_log_prob.T + self.class_log_prior, axis=<span class="number">1</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Example usage</span></span><br><span class="line">X = torch.tensor([[<span class="number">1</span>, <span class="number">0</span>], [<span class="number">1</span>, <span class="number">1</span>], [<span class="number">0</span>, <span class="number">1</span>], [<span class="number">0</span>, <span class="number">0</span>]])</span><br><span class="line">y = torch.tensor([<span class="number">0</span>, <span class="number">0</span>, <span class="number">1</span>, <span class="number">1</span>])</span><br><span class="line">model = NaiveBayes(num_features=<span class="number">2</span>, num_classes=<span class="number">2</span>)</span><br><span class="line">model.fit(X, y)</span><br><span class="line"><span class="built_in">print</span>(model.predict(X))</span><br></pre></td></tr></table></figure>
-<h1 id="应用示例：文本分类"><a href="#应用示例：文本分类" class="headerlink" title="应用示例：文本分类"></a>应用示例：文本分类</h1><p>考虑一个简单的文本分类问题，我们需要分类来自两个新闻组的文本：科技与体育。假设我们有以下简化的数据集：</p>
-<ul>
-<li>科技: “电脑 算法”</li>
-<li>科技: “电脑 编程”</li>
-<li>体育: “足球 比赛”</li>
-<li>体育: “篮球 比赛”</li>
-</ul>
-<p>我们首先将文本转换为词频向量，然后使用上述实现的朴素贝叶斯模型来进行分类。</p>
-<p>朴素贝叶斯法以其简单和高效而广受欢迎，尽管其假设有时过于简化，但在许多实际应用中仍然表现出色。通过上述的理论推导、实现代码和具体例子，我们可以看到这种方法在处理分类问题时的直观与力量。</p>
-
+          <p>朴素贝叶斯法的简易实现。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2024/04/08/%E6%9C%B4%E7%B4%A0%E8%B4%9D%E5%8F%B6%E6%96%AF%E6%B3%95/">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
       
     </div>
 
@@ -385,14 +379,14 @@ P(C|x) = \frac{P(x|C)P(C)}{P(x)}</script><p>​ 由于 $P(x)$ 对所有类是常
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>1.7k</span>
+              <span>1.3k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>2 分钟</span>
+              <span>5 分钟</span>
             </span>
 
         </div>
@@ -589,14 +583,14 @@ P(C|x) = \frac{P(x|C)P(C)}{P(x)}</script><p>​ 由于 $P(x)$ 对所有类是常
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>3.4k</span>
+              <span>2k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>3 分钟</span>
+              <span>7 分钟</span>
             </span>
 
         </div>
@@ -706,14 +700,14 @@ P(C|x) = \frac{P(x|C)P(C)}{P(x)}</script><p>​ 由于 $P(x)$ 对所有类是常
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>2.6k</span>
+              <span>2.2k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>2 分钟</span>
+              <span>8 分钟</span>
             </span>
 
         </div>
@@ -817,14 +811,14 @@ P(C|x) = \frac{P(x|C)P(C)}{P(x)}</script><p>​ 由于 $P(x)$ 对所有类是常
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>5.7k</span>
+              <span>2.9k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>5 分钟</span>
+              <span>11 分钟</span>
             </span>
 
         </div>
@@ -934,14 +928,14 @@ P(C|x) = \frac{P(x|C)P(C)}{P(x)}</script><p>​ 由于 $P(x)$ 对所有类是常
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>3.7k</span>
+              <span>1.5k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>3 分钟</span>
+              <span>5 分钟</span>
             </span>
 
         </div>
@@ -1045,14 +1039,14 @@ P(C|x) = \frac{P(x|C)P(C)}{P(x)}</script><p>​ 由于 $P(x)$ 对所有类是常
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>2.3k</span>
+              <span>968</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>2 分钟</span>
+              <span>4 分钟</span>
             </span>
 
         </div>
@@ -1156,7 +1150,7 @@ P(C|x) = \frac{P(x|C)P(C)}{P(x)}</script><p>​ 由于 $P(x)$ 对所有类是常
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>4.4k</span>
+              <span>981</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
@@ -1273,14 +1267,14 @@ P(C|x) = \frac{P(x|C)P(C)}{P(x)}</script><p>​ 由于 $P(x)$ 对所有类是常
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>3.7k</span>
+              <span>1.4k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>3 分钟</span>
+              <span>5 分钟</span>
             </span>
 
         </div>
@@ -1473,13 +1467,13 @@ P(C|x) = \frac{P(x|C)P(C)}{P(x)}</script><p>​ 由于 $P(x)$ 对所有类是常
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">107k</span>
+    <span title="站点总字数">50k</span>
 
     <span class="post-meta-item-icon">
       <span class="post-meta-divider"> </span>
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">1:37</span>
+    <span title="站点阅读时长">3:01</span>
   
   
     <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
