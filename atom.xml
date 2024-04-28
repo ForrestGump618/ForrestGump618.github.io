@@ -6,7 +6,7 @@
   <link href="https://www.zhuangqingyuan.site/atom.xml" rel="self"/>
   
   <link href="https://www.zhuangqingyuan.site/"/>
-  <updated>2024-04-15T13:46:18.791Z</updated>
+  <updated>2024-04-28T09:44:02.811Z</updated>
   <id>https://www.zhuangqingyuan.site/</id>
   
   <author>
@@ -15,6 +15,52 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>口腔科学总结</title>
+    <link href="https://www.zhuangqingyuan.site/2024/04/28/%E5%8F%A3%E8%85%94%E7%A7%91%E5%AD%A6%E6%80%BB%E7%BB%93/"/>
+    <id>https://www.zhuangqingyuan.site/2024/04/28/%E5%8F%A3%E8%85%94%E7%A7%91%E5%AD%A6%E6%80%BB%E7%BB%93/</id>
+    <published>2024-04-28T04:13:00.000Z</published>
+    <updated>2024-04-28T09:44:02.811Z</updated>
+    
+    
+    <summary type="html">口腔科学内容提要。</summary>
+    
+    
+    
+    <category term="医学课程" scheme="https://www.zhuangqingyuan.site/categories/%E5%8C%BB%E5%AD%A6%E8%AF%BE%E7%A8%8B/"/>
+    
+    
+    <category term="大四" scheme="https://www.zhuangqingyuan.site/tags/%E5%A4%A7%E5%9B%9B/"/>
+    
+    <category term="医学生" scheme="https://www.zhuangqingyuan.site/tags/%E5%8C%BB%E5%AD%A6%E7%94%9F/"/>
+    
+    <category term="医学" scheme="https://www.zhuangqingyuan.site/tags/%E5%8C%BB%E5%AD%A6/"/>
+    
+  </entry>
+  
+  <entry>
+    <title>医学心理学总结</title>
+    <link href="https://www.zhuangqingyuan.site/2024/04/28/%E5%8C%BB%E5%AD%A6%E5%BF%83%E7%90%86%E5%AD%A6%E6%80%BB%E7%BB%93/"/>
+    <id>https://www.zhuangqingyuan.site/2024/04/28/%E5%8C%BB%E5%AD%A6%E5%BF%83%E7%90%86%E5%AD%A6%E6%80%BB%E7%BB%93/</id>
+    <published>2024-04-28T04:12:00.000Z</published>
+    <updated>2024-04-28T09:41:07.607Z</updated>
+    
+    
+    <summary type="html">医学心理学全书理解和摘要。</summary>
+    
+    
+    
+    <category term="医学课程" scheme="https://www.zhuangqingyuan.site/categories/%E5%8C%BB%E5%AD%A6%E8%AF%BE%E7%A8%8B/"/>
+    
+    
+    <category term="大四" scheme="https://www.zhuangqingyuan.site/tags/%E5%A4%A7%E5%9B%9B/"/>
+    
+    <category term="医学生" scheme="https://www.zhuangqingyuan.site/tags/%E5%8C%BB%E5%AD%A6%E7%94%9F/"/>
+    
+    <category term="医学" scheme="https://www.zhuangqingyuan.site/tags/%E5%8C%BB%E5%AD%A6/"/>
+    
+  </entry>
   
   <entry>
     <title>卡尔·马克思：青年在选择职业时的考虑</title>
@@ -334,9 +380,9 @@
     <category term="医学课程" scheme="https://www.zhuangqingyuan.site/categories/%E5%8C%BB%E5%AD%A6%E8%AF%BE%E7%A8%8B/"/>
     
     
-    <category term="医学" scheme="https://www.zhuangqingyuan.site/tags/%E5%8C%BB%E5%AD%A6/"/>
-    
     <category term="大四" scheme="https://www.zhuangqingyuan.site/tags/%E5%A4%A7%E5%9B%9B/"/>
+    
+    <category term="医学" scheme="https://www.zhuangqingyuan.site/tags/%E5%8C%BB%E5%AD%A6/"/>
     
     <category term="心内科" scheme="https://www.zhuangqingyuan.site/tags/%E5%BF%83%E5%86%85%E7%A7%91/"/>
     
@@ -378,55 +424,9 @@
     
     <category term="计算机" scheme="https://www.zhuangqingyuan.site/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA/"/>
     
-    <category term="随笔" scheme="https://www.zhuangqingyuan.site/tags/%E9%9A%8F%E7%AC%94/"/>
-    
     <category term="python" scheme="https://www.zhuangqingyuan.site/tags/python/"/>
     
-  </entry>
-  
-  <entry>
-    <title>从医行公众号内容整理</title>
-    <link href="https://www.zhuangqingyuan.site/2024/03/19/%E4%BB%8E%E5%8C%BB%E8%A1%8C%E5%85%AC%E4%BC%97%E5%8F%B7%E5%86%85%E5%AE%B9%E6%95%B4%E7%90%86/"/>
-    <id>https://www.zhuangqingyuan.site/2024/03/19/%E4%BB%8E%E5%8C%BB%E8%A1%8C%E5%85%AC%E4%BC%97%E5%8F%B7%E5%86%85%E5%AE%B9%E6%95%B4%E7%90%86/</id>
-    <published>2024-03-19T00:00:00.000Z</published>
-    <updated>2024-03-23T14:02:04.772Z</updated>
-    
-    
-    <summary type="html">爬取了从医行微信公众号的数据，并结构化。</summary>
-    
-    
-    
-    <category term="医学课程" scheme="https://www.zhuangqingyuan.site/categories/%E5%8C%BB%E5%AD%A6%E8%AF%BE%E7%A8%8B/"/>
-    
-    
-    <category term="计算机" scheme="https://www.zhuangqingyuan.site/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA/"/>
-    
-    <category term="爬虫" scheme="https://www.zhuangqingyuan.site/tags/%E7%88%AC%E8%99%AB/"/>
-    
-    <category term="研究生" scheme="https://www.zhuangqingyuan.site/tags/%E7%A0%94%E7%A9%B6%E7%94%9F/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>实操：把chatGPT接入智能音箱？</title>
-    <link href="https://www.zhuangqingyuan.site/2024/03/18/%E5%AE%9E%E6%93%8D%EF%BC%9A%E6%8A%8AchatGPT%E6%8E%A5%E5%85%A5%E6%99%BA%E8%83%BD%E9%9F%B3%E7%AE%B1%EF%BC%9F/"/>
-    <id>https://www.zhuangqingyuan.site/2024/03/18/%E5%AE%9E%E6%93%8D%EF%BC%9A%E6%8A%8AchatGPT%E6%8E%A5%E5%85%A5%E6%99%BA%E8%83%BD%E9%9F%B3%E7%AE%B1%EF%BC%9F/</id>
-    <published>2024-03-18T01:53:00.000Z</published>
-    <updated>2024-03-18T03:00:12.821Z</updated>
-    
-    
-    <summary type="html">基于GITHUB项目xiaogpt，把chatGPT接入智能音箱！</summary>
-    
-    
-    
-    <category term="随笔" scheme="https://www.zhuangqingyuan.site/categories/%E9%9A%8F%E7%AC%94/"/>
-    
-    
-    <category term="LLM" scheme="https://www.zhuangqingyuan.site/tags/LLM/"/>
-    
-    <category term="AI" scheme="https://www.zhuangqingyuan.site/tags/AI/"/>
-    
-    <category term="智能音箱" scheme="https://www.zhuangqingyuan.site/tags/%E6%99%BA%E8%83%BD%E9%9F%B3%E7%AE%B1/"/>
+    <category term="随笔" scheme="https://www.zhuangqingyuan.site/tags/%E9%9A%8F%E7%AC%94/"/>
     
   </entry>
   
