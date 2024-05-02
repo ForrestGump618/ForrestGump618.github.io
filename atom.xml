@@ -6,7 +6,7 @@
   <link href="https://www.zhuangqingyuan.site/atom.xml" rel="self"/>
   
   <link href="https://www.zhuangqingyuan.site/"/>
-  <updated>2024-05-02T08:35:57.955Z</updated>
+  <updated>2024-05-02T16:13:00.518Z</updated>
   <id>https://www.zhuangqingyuan.site/</id>
   
   <author>
@@ -15,6 +15,29 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>产科学疾病诊断</title>
+    <link href="https://www.zhuangqingyuan.site/2024/05/03/%E4%BA%A7%E7%A7%91%E5%AD%A6%E7%96%BE%E7%97%85%E8%AF%8A%E6%96%AD/"/>
+    <id>https://www.zhuangqingyuan.site/2024/05/03/%E4%BA%A7%E7%A7%91%E5%AD%A6%E7%96%BE%E7%97%85%E8%AF%8A%E6%96%AD/</id>
+    <published>2024-05-02T16:10:46.000Z</published>
+    <updated>2024-05-02T16:13:00.518Z</updated>
+    
+    
+    <summary type="html">产科疾病的诊断和标准格式。</summary>
+    
+    
+    
+    <category term="医学课程" scheme="https://www.zhuangqingyuan.site/categories/%E5%8C%BB%E5%AD%A6%E8%AF%BE%E7%A8%8B/"/>
+    
+    
+    <category term="大四" scheme="https://www.zhuangqingyuan.site/tags/%E5%A4%A7%E5%9B%9B/"/>
+    
+    <category term="医学生" scheme="https://www.zhuangqingyuan.site/tags/%E5%8C%BB%E5%AD%A6%E7%94%9F/"/>
+    
+    <category term="医学" scheme="https://www.zhuangqingyuan.site/tags/%E5%8C%BB%E5%AD%A6/"/>
+    
+  </entry>
   
   <entry>
     <title>心电图基础参数</title>
@@ -410,29 +433,6 @@
     <category term="密码学" scheme="https://www.zhuangqingyuan.site/tags/%E5%AF%86%E7%A0%81%E5%AD%A6/"/>
     
     <category term="Docker" scheme="https://www.zhuangqingyuan.site/tags/Docker/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>心脏听诊总结</title>
-    <link href="https://www.zhuangqingyuan.site/2024/03/24/%E5%BF%83%E8%84%8F%E5%90%AC%E8%AF%8A%E6%80%BB%E7%BB%93/"/>
-    <id>https://www.zhuangqingyuan.site/2024/03/24/%E5%BF%83%E8%84%8F%E5%90%AC%E8%AF%8A%E6%80%BB%E7%BB%93/</id>
-    <published>2024-03-24T02:31:15.000Z</published>
-    <updated>2024-03-28T08:51:41.568Z</updated>
-    
-    
-    <summary type="html">对心脏杂音的形成机制进行介绍，同时整理总结一些规律。</summary>
-    
-    
-    
-    <category term="医学课程" scheme="https://www.zhuangqingyuan.site/categories/%E5%8C%BB%E5%AD%A6%E8%AF%BE%E7%A8%8B/"/>
-    
-    
-    <category term="大四" scheme="https://www.zhuangqingyuan.site/tags/%E5%A4%A7%E5%9B%9B/"/>
-    
-    <category term="医学" scheme="https://www.zhuangqingyuan.site/tags/%E5%8C%BB%E5%AD%A6/"/>
-    
-    <category term="心内科" scheme="https://www.zhuangqingyuan.site/tags/%E5%BF%83%E5%86%85%E7%A7%91/"/>
     
   </entry>
   
