@@ -6,7 +6,7 @@
   <link href="https://www.zhuangqingyuan.site/atom.xml" rel="self"/>
   
   <link href="https://www.zhuangqingyuan.site/"/>
-  <updated>2024-05-02T16:13:00.518Z</updated>
+  <updated>2024-05-03T06:50:52.594Z</updated>
   <id>https://www.zhuangqingyuan.site/</id>
   
   <author>
@@ -15,6 +15,27 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>LINGER：从单细胞多组学数据推断基因调控网络</title>
+    <link href="https://www.zhuangqingyuan.site/2024/05/03/LINGER%EF%BC%9A%E4%BB%8E%E5%8D%95%E7%BB%86%E8%83%9E%E5%A4%9A%E7%BB%84%E5%AD%A6%E6%95%B0%E6%8D%AE%E6%8E%A8%E6%96%AD%E5%9F%BA%E5%9B%A0%E8%B0%83%E6%8E%A7%E7%BD%91%E7%BB%9C/"/>
+    <id>https://www.zhuangqingyuan.site/2024/05/03/LINGER%EF%BC%9A%E4%BB%8E%E5%8D%95%E7%BB%86%E8%83%9E%E5%A4%9A%E7%BB%84%E5%AD%A6%E6%95%B0%E6%8D%AE%E6%8E%A8%E6%96%AD%E5%9F%BA%E5%9B%A0%E8%B0%83%E6%8E%A7%E7%BD%91%E7%BB%9C/</id>
+    <published>2024-05-03T00:00:00.000Z</published>
+    <updated>2024-05-03T06:50:52.594Z</updated>
+    
+    
+    <summary type="html">LINGER（LIfelong neural Network for GEne Regulation，即终生基因调控神经网络）是一种新颖的方法，用于从单细胞多组学数据中推断基因调控网络（GRN）。</summary>
+    
+    
+    
+    <category term="生物信息学" scheme="https://www.zhuangqingyuan.site/categories/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
+    
+    
+    <category term="单细胞测序" scheme="https://www.zhuangqingyuan.site/tags/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F/"/>
+    
+    <category term="生物信息学" scheme="https://www.zhuangqingyuan.site/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
+    
+  </entry>
   
   <entry>
     <title>产科学疾病诊断</title>
@@ -410,29 +431,6 @@
     <category term="计算机" scheme="https://www.zhuangqingyuan.site/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA/"/>
     
     <category term="HEXO" scheme="https://www.zhuangqingyuan.site/tags/HEXO/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>基于NLP的密钥解码工具：Ciphey</title>
-    <link href="https://www.zhuangqingyuan.site/2024/03/26/%E5%9F%BA%E4%BA%8ENLP%E7%9A%84%E5%AF%86%E9%92%A5%E8%A7%A3%E7%A0%81%E5%B7%A5%E5%85%B7%EF%BC%9ACiphey/"/>
-    <id>https://www.zhuangqingyuan.site/2024/03/26/%E5%9F%BA%E4%BA%8ENLP%E7%9A%84%E5%AF%86%E9%92%A5%E8%A7%A3%E7%A0%81%E5%B7%A5%E5%85%B7%EF%BC%9ACiphey/</id>
-    <published>2024-03-26T04:55:44.000Z</published>
-    <updated>2024-03-28T08:52:19.603Z</updated>
-    
-    
-    <summary type="html">Ciphey 旨在成为一种工具，用于自动执行许多解密和解码，例如多种基本编码，经典密码，哈希或更高级的加密技术。如果您对密码学不太了解，或者想在自己进行密文处理之前快速检查密文，那么 Ciphey 会是一个有用的工具。</summary>
-    
-    
-    
-    <category term="开源" scheme="https://www.zhuangqingyuan.site/categories/%E5%BC%80%E6%BA%90/"/>
-    
-    
-    <category term="开源" scheme="https://www.zhuangqingyuan.site/tags/%E5%BC%80%E6%BA%90/"/>
-    
-    <category term="密码学" scheme="https://www.zhuangqingyuan.site/tags/%E5%AF%86%E7%A0%81%E5%AD%A6/"/>
-    
-    <category term="Docker" scheme="https://www.zhuangqingyuan.site/tags/Docker/"/>
     
   </entry>
   
