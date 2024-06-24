@@ -484,21 +484,7 @@
   </url>
   
   <url>
-    <loc>https://www.zhuangqingyuan.site/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/</loc>
-    <lastmod>2024-06-24</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://www.zhuangqingyuan.site/tags/GWAS/</loc>
-    <lastmod>2024-06-24</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>https://www.zhuangqingyuan.site/tags/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F/</loc>
     <lastmod>2024-06-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -512,14 +498,14 @@
   </url>
   
   <url>
-    <loc>https://www.zhuangqingyuan.site/tags/%E7%BB%9F%E8%AE%A1%E5%AD%A6/</loc>
+    <loc>https://www.zhuangqingyuan.site/tags/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F/</loc>
     <lastmod>2024-06-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://www.zhuangqingyuan.site/tags/%E4%BA%A4%E5%8F%89%E5%AD%A6%E7%A7%91/</loc>
+    <loc>https://www.zhuangqingyuan.site/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/</loc>
     <lastmod>2024-06-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -534,6 +520,20 @@
   
   <url>
     <loc>https://www.zhuangqingyuan.site/tags/%E7%A0%94%E7%A9%B6%E7%94%9F/</loc>
+    <lastmod>2024-06-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.zhuangqingyuan.site/tags/%E7%BB%9F%E8%AE%A1%E5%AD%A6/</loc>
+    <lastmod>2024-06-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.zhuangqingyuan.site/tags/%E4%BA%A4%E5%8F%89%E5%AD%A6%E7%A7%91/</loc>
     <lastmod>2024-06-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -638,13 +638,6 @@
   </url>
   
   <url>
-    <loc>https://www.zhuangqingyuan.site/tags/%E5%BF%83%E5%86%85%E7%A7%91/</loc>
-    <lastmod>2024-06-24</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>https://www.zhuangqingyuan.site/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/</loc>
     <lastmod>2024-06-24</lastmod>
     <changefreq>weekly</changefreq>
@@ -653,6 +646,13 @@
   
   <url>
     <loc>https://www.zhuangqingyuan.site/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/</loc>
+    <lastmod>2024-06-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>https://www.zhuangqingyuan.site/tags/%E5%BF%83%E5%86%85%E7%A7%91/</loc>
     <lastmod>2024-06-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -689,14 +689,14 @@
   </url>
   
   <url>
-    <loc>https://www.zhuangqingyuan.site/categories/%E9%9A%8F%E7%AC%94/</loc>
+    <loc>https://www.zhuangqingyuan.site/categories/%E5%8C%BB%E5%AD%A6%E8%AF%BE%E7%A8%8B/</loc>
     <lastmod>2024-06-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://www.zhuangqingyuan.site/categories/%E5%8C%BB%E5%AD%A6%E8%AF%BE%E7%A8%8B/</loc>
+    <loc>https://www.zhuangqingyuan.site/categories/%E9%9A%8F%E7%AC%94/</loc>
     <lastmod>2024-06-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -710,14 +710,14 @@
   </url>
   
   <url>
-    <loc>https://www.zhuangqingyuan.site/categories/%E7%BB%9F%E8%AE%A1%E5%AD%A6/</loc>
+    <loc>https://www.zhuangqingyuan.site/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/</loc>
     <lastmod>2024-06-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>https://www.zhuangqingyuan.site/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/</loc>
+    <loc>https://www.zhuangqingyuan.site/categories/%E7%BB%9F%E8%AE%A1%E5%AD%A6/</loc>
     <lastmod>2024-06-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
