@@ -6,7 +6,7 @@
   <link href="https://www.zhuangqingyuan.site/atom.xml" rel="self"/>
   
   <link href="https://www.zhuangqingyuan.site/"/>
-  <updated>2024-05-03T06:50:52.594Z</updated>
+  <updated>2024-07-20T13:08:00.061Z</updated>
   <id>https://www.zhuangqingyuan.site/</id>
   
   <author>
@@ -15,6 +15,35 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>文献阅读：自上而下描述肿瘤发展的时空动力学</title>
+    <link href="https://www.zhuangqingyuan.site/2024/07/19/%E6%96%87%E7%8C%AE%E9%98%85%E8%AF%BB%EF%BC%9A%E8%87%AA%E4%B8%8A%E8%80%8C%E4%B8%8B%E6%8F%8F%E8%BF%B0%E8%82%BF%E7%98%A4%E5%8F%91%E5%B1%95%E7%9A%84%E6%97%B6%E7%A9%BA%E5%8A%A8%E5%8A%9B%E5%AD%A6/"/>
+    <id>https://www.zhuangqingyuan.site/2024/07/19/%E6%96%87%E7%8C%AE%E9%98%85%E8%AF%BB%EF%BC%9A%E8%87%AA%E4%B8%8A%E8%80%8C%E4%B8%8B%E6%8F%8F%E8%BF%B0%E8%82%BF%E7%98%A4%E5%8F%91%E5%B1%95%E7%9A%84%E6%97%B6%E7%A9%BA%E5%8A%A8%E5%8A%9B%E5%AD%A6/</id>
+    <published>2024-07-19T02:12:05.000Z</published>
+    <updated>2024-07-20T13:08:00.061Z</updated>
+    
+    
+    <summary type="html">发表于Cell Rep Med上的文献：Multicellular ecotypes shape progression of lung adenocarcinoma from ground-glass opacity toward advanced stages。</summary>
+    
+    
+    
+    <category term="生物信息学" scheme="https://www.zhuangqingyuan.site/categories/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
+    
+    
+    <category term="单细胞测序" scheme="https://www.zhuangqingyuan.site/tags/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F/"/>
+    
+    <category term="生物信息学" scheme="https://www.zhuangqingyuan.site/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
+    
+    <category term="医学生" scheme="https://www.zhuangqingyuan.site/tags/%E5%8C%BB%E5%AD%A6%E7%94%9F/"/>
+    
+    <category term="研究生" scheme="https://www.zhuangqingyuan.site/tags/%E7%A0%94%E7%A9%B6%E7%94%9F/"/>
+    
+    <category term="肿瘤" scheme="https://www.zhuangqingyuan.site/tags/%E8%82%BF%E7%98%A4/"/>
+    
+    <category term="转录组学" scheme="https://www.zhuangqingyuan.site/tags/%E8%BD%AC%E5%BD%95%E7%BB%84%E5%AD%A6/"/>
+    
+  </entry>
   
   <entry>
     <title>LINGER：从单细胞多组学数据推断基因调控网络</title>
@@ -31,9 +60,9 @@
     <category term="生物信息学" scheme="https://www.zhuangqingyuan.site/categories/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
     
     
-    <category term="生物信息学" scheme="https://www.zhuangqingyuan.site/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
-    
     <category term="单细胞测序" scheme="https://www.zhuangqingyuan.site/tags/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F/"/>
+    
+    <category term="生物信息学" scheme="https://www.zhuangqingyuan.site/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
     
   </entry>
   
@@ -410,27 +439,6 @@
     <category term="机器学习" scheme="https://www.zhuangqingyuan.site/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
     
     <category term="深度学习" scheme="https://www.zhuangqingyuan.site/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>HEXO博客的轮播栏</title>
-    <link href="https://www.zhuangqingyuan.site/2024/03/26/HEXO%E5%8D%9A%E5%AE%A2%E7%9A%84%E8%BD%AE%E6%92%AD%E6%A0%8F/"/>
-    <id>https://www.zhuangqingyuan.site/2024/03/26/HEXO%E5%8D%9A%E5%AE%A2%E7%9A%84%E8%BD%AE%E6%92%AD%E6%A0%8F/</id>
-    <published>2024-03-26T11:18:57.000Z</published>
-    <updated>2024-03-26T11:30:32.350Z</updated>
-    
-    
-    <summary type="html">HEXO博客的轮播栏的CSS实现。</summary>
-    
-    
-    
-    <category term="开源" scheme="https://www.zhuangqingyuan.site/categories/%E5%BC%80%E6%BA%90/"/>
-    
-    
-    <category term="计算机" scheme="https://www.zhuangqingyuan.site/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA/"/>
-    
-    <category term="HEXO" scheme="https://www.zhuangqingyuan.site/tags/HEXO/"/>
     
   </entry>
   

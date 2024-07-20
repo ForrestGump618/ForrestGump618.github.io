@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+<meta name="baidu-site-verification" content="codeva-q4zg3o0c1B" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico">
+  <link rel="mask-icon" href="/images/favicon.ico" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link href="https://fonts.loli.net/css?family=Noto+Serif+SC|Roboto&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/pace-js@1/themes/blue/pace-theme-minimal.css">
+  <script src="//cdn.jsdelivr.net/npm/pace-js@1/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.zhuangqingyuan.site","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"mac"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null,"activeClass":"valine"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+
+  <meta name="description" content="发表于Cell Rep Med上的文献：Multicellular ecotypes shape progression of lung adenocarcinoma from ground-glass opacity toward advanced stages。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="文献阅读：自上而下描述肿瘤发展的时空动力学">
+<meta property="og:url" content="https://www.zhuangqingyuan.site/2024/07/19/%E6%96%87%E7%8C%AE%E9%98%85%E8%AF%BB%EF%BC%9A%E8%87%AA%E4%B8%8A%E8%80%8C%E4%B8%8B%E6%8F%8F%E8%BF%B0%E8%82%BF%E7%98%A4%E5%8F%91%E5%B1%95%E7%9A%84%E6%97%B6%E7%A9%BA%E5%8A%A8%E5%8A%9B%E5%AD%A6/index.html">
+<meta property="og:site_name" content="一个夏天的年少">
+<meta property="og:description" content="发表于Cell Rep Med上的文献：Multicellular ecotypes shape progression of lung adenocarcinoma from ground-glass opacity toward advanced stages。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://www.zhuangqingyuan.site/2024/07/19/%E6%96%87%E7%8C%AE%E9%98%85%E8%AF%BB%EF%BC%9A%E8%87%AA%E4%B8%8A%E8%80%8C%E4%B8%8B%E6%8F%8F%E8%BF%B0%E8%82%BF%E7%98%A4%E5%8F%91%E5%B1%95%E7%9A%84%E6%97%B6%E7%A9%BA%E5%8A%A8%E5%8A%9B%E5%AD%A6/fx1.jpg">
+<meta property="article:published_time" content="2024-07-19T02:12:05.000Z">
+<meta property="article:modified_time" content="2024-07-20T13:08:00.061Z">
+<meta property="article:author" content="Qingyuan Zhuang&#39; Blog">
+<meta property="article:tag" content="单细胞测序">
+<meta property="article:tag" content="生物信息学">
+<meta property="article:tag" content="医学生">
+<meta property="article:tag" content="研究生">
+<meta property="article:tag" content="肿瘤">
+<meta property="article:tag" content="转录组学">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://www.zhuangqingyuan.site/2024/07/19/%E6%96%87%E7%8C%AE%E9%98%85%E8%AF%BB%EF%BC%9A%E8%87%AA%E4%B8%8A%E8%80%8C%E4%B8%8B%E6%8F%8F%E8%BF%B0%E8%82%BF%E7%98%A4%E5%8F%91%E5%B1%95%E7%9A%84%E6%97%B6%E7%A9%BA%E5%8A%A8%E5%8A%9B%E5%AD%A6/fx1.jpg">
+
+<link rel="canonical" href="https://www.zhuangqingyuan.site/2024/07/19/%E6%96%87%E7%8C%AE%E9%98%85%E8%AF%BB%EF%BC%9A%E8%87%AA%E4%B8%8A%E8%80%8C%E4%B8%8B%E6%8F%8F%E8%BF%B0%E8%82%BF%E7%98%A4%E5%8F%91%E5%B1%95%E7%9A%84%E6%97%B6%E7%A9%BA%E5%8A%A8%E5%8A%9B%E5%AD%A6/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>文献阅读：自上而下描述肿瘤发展的时空动力学 | 一个夏天的年少</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="一个夏天的年少" type="application/atom+xml">
+<style>.darkmode--activated{--body-bg-color:#282828;--content-bg-color:#333;--card-bg-color:#555;--text-color:#ccc;--blockquote-color:#bbb;--link-color:#ccc;--link-hover-color:#eee;--brand-color:#ddd;--brand-hover-color:#ddd;--table-row-odd-bg-color:#282828;--table-row-hover-bg-color:#363636;--menu-item-bg-color:#555;--btn-default-bg:#222;--btn-default-color:#ccc;--btn-default-border-color:#555;--btn-default-hover-bg:#666;--btn-default-hover-color:#ccc;--btn-default-hover-border-color:#666;--highlight-background:#282b2e;--highlight-foreground:#a9b7c6;--highlight-gutter-background:#34393d;--highlight-gutter-foreground:#9ca9b6}.darkmode--activated img{opacity:.75}.darkmode--activated img:hover{opacity:.9}.darkmode--activated code{color:#69dbdc;background:0 0}button.darkmode-toggle{z-index:9999}.darkmode-ignore,img{display:flex!important}.beian img{display:inline-block!important}</style></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">一个夏天的年少</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-guestbook">
+
+    <a href="/guestbook/" rel="section"><i class="fa fa-book fa-fw"></i>留言</a>
+
+  </li>
+        <li class="menu-item menu-item-stars">
+
+    <a href="/stars/" rel="section"><i class="fa fa-star fa-fw"></i>收藏</a>
+
+  </li>
+        <li class="menu-item menu-item-friend">
+
+    <a href="/friend/" rel="section"><i class="fa fa-link fa-fw"></i>友链</a>
+
+  </li>
+        <li class="menu-item menu-item-love">
+
+    <a href="/love/" rel="section"><i class="fa fa-heartbeat fa-fw"></i>她</a>
+
+  </li>
+        <li class="menu-item menu-item-summer">
+
+    <a href="/summer/" rel="section"><i class="fa fa-bullhorn fa-fw"></i>推免</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.zhuangqingyuan.site/2024/07/19/%E6%96%87%E7%8C%AE%E9%98%85%E8%AF%BB%EF%BC%9A%E8%87%AA%E4%B8%8A%E8%80%8C%E4%B8%8B%E6%8F%8F%E8%BF%B0%E8%82%BF%E7%98%A4%E5%8F%91%E5%B1%95%E7%9A%84%E6%97%B6%E7%A9%BA%E5%8A%A8%E5%8A%9B%E5%AD%A6/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingyuan Zhuang' Blog">
+      <meta itemprop="description" content="冰棒汽水的味道，一个夏天的年少。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="一个夏天的年少">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          文献阅读：自上而下描述肿瘤发展的时空动力学
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表</span>
+
+              <time title="创建时间：2024-07-19 10:12:05" itemprop="dateCreated datePublished" datetime="2024-07-19T10:12:05+08:00">2024-07-19</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新</span>
+                <time title="修改时间：2024-07-20 21:08:00" itemprop="dateModified" datetime="2024-07-20T21:08:00+08:00">2024-07-20</time>
+              </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/" itemprop="url" rel="index"><span itemprop="name">生物信息学</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2024/07/19/%E6%96%87%E7%8C%AE%E9%98%85%E8%AF%BB%EF%BC%9A%E8%87%AA%E4%B8%8A%E8%80%8C%E4%B8%8B%E6%8F%8F%E8%BF%B0%E8%82%BF%E7%98%A4%E5%8F%91%E5%B1%95%E7%9A%84%E6%97%B6%E7%A9%BA%E5%8A%A8%E5%8A%9B%E5%AD%A6/" class="post-meta-item leancloud_visitors" data-flag-title="文献阅读：自上而下描述肿瘤发展的时空动力学" title="热度">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">热度：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2024/07/19/%E6%96%87%E7%8C%AE%E9%98%85%E8%AF%BB%EF%BC%9A%E8%87%AA%E4%B8%8A%E8%80%8C%E4%B8%8B%E6%8F%8F%E8%BF%B0%E8%82%BF%E7%98%A4%E5%8F%91%E5%B1%95%E7%9A%84%E6%97%B6%E7%A9%BA%E5%8A%A8%E5%8A%9B%E5%AD%A6/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2024/07/19/%E6%96%87%E7%8C%AE%E9%98%85%E8%AF%BB%EF%BC%9A%E8%87%AA%E4%B8%8A%E8%80%8C%E4%B8%8B%E6%8F%8F%E8%BF%B0%E8%82%BF%E7%98%A4%E5%8F%91%E5%B1%95%E7%9A%84%E6%97%B6%E7%A9%BA%E5%8A%A8%E5%8A%9B%E5%AD%A6/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>2.3k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>8 分钟</span>
+            </span>
+            <div class="post-description">发表于Cell Rep Med上的文献：Multicellular ecotypes shape progression of lung adenocarcinoma from ground-glass opacity toward advanced stages。</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h1><p>肺腺癌是一种具有多样临床表现和放射学特征的癌症，从磨玻璃样影（GGO）到纯实性结节，这些特征在生物学特性上存在显著差异。目前，我们对这种异质性的理解尚不充分。为了填补这一知识空白，我们利用机器学习、单细胞RNA测序（scRNA-seq）和全外显子测序技术，对58位肺腺癌患者进行了分析，发现了六种与特定放射学模式和癌细胞状态相关的肺多细胞生态类型（LME）。特别地，早期癌症中与GGO相关的新抗原能被CD8+ T细胞识别，显示出一个免疫活跃的环境；而实性结节则表现为具有免疫抑制作用的LME，其中CD8+ T细胞呈现耗竭状态，这一现象由特定基质细胞如CTHCR1+成纤维细胞所驱动。此外，本研究还发现GGO样本中的EGFR(L858R)新抗原可能触发CD8+ T细胞的激活。这些发现为理解肺腺癌的异质性提供了重要视角，并为早期疾病阶段的靶向治疗提供了新的思路。</p>
+<p><img src="/2024/07/19/%E6%96%87%E7%8C%AE%E9%98%85%E8%AF%BB%EF%BC%9A%E8%87%AA%E4%B8%8A%E8%80%8C%E4%B8%8B%E6%8F%8F%E8%BF%B0%E8%82%BF%E7%98%A4%E5%8F%91%E5%B1%95%E7%9A%84%E6%97%B6%E7%A9%BA%E5%8A%A8%E5%8A%9B%E5%AD%A6/fx1.jpg" alt="图形摘要"></p>
+<h1 id="生信方法"><a href="#生信方法" class="headerlink" title="生信方法"></a>生信方法</h1><div class="table-container">
+<table>
+<thead>
+<tr>
+<th>软件和算法</th>
+<th><strong>链接</strong></th>
+<th><strong>用途</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>EcoTyper (v1.0)</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/digitalcytometry/ecotyper">https://github.com/digitalcytometry/ecotyper</a></td>
+<td>从大规模基因表达数据中识别细胞状态和细胞生态系统。</td>
+</tr>
+<tr>
+<td>CellRanger (v5.0.1)</td>
+<td><a target="_blank" rel="noopener" href="https://support.10xgenomics.com/single-cell-gene-expression/software/downloads/latest">https://support.10xgenomics.com/single-cell-gene-expression/software/downloads/latest</a></td>
+<td>处理单细胞RNA测序数据，包括去混合、对齐和基因计数。</td>
+</tr>
+<tr>
+<td>GATK (v4.0.2.1)</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/broadinstitute/gatk">https://github.com/broadinstitute/gatk</a></td>
+<td>高通量测序数据中变异发现的工具。</td>
+</tr>
+<tr>
+<td>ANNOVAR (2017-07-17)</td>
+<td><a target="_blank" rel="noopener" href="https://annovar.openbioinformatics.org/en/latest/">https://annovar.openbioinformatics.org/en/latest/</a></td>
+<td>注释从各种基因组中检测到的遗传变异。</td>
+</tr>
+<tr>
+<td>ABSOLUTE R package (v1.0.6)</td>
+<td><a target="_blank" rel="noopener" href="https://www.broadinstitute.org/scientific-community/software/absolute">https://www.broadinstitute.org/scientific-community/software/absolute</a></td>
+<td>确定绝对拷贝数变异和肿瘤纯度。</td>
+</tr>
+<tr>
+<td>Seurat R package (v3.1.0 and v4.0.0)</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/satijalab/seurat">https://github.com/satijalab/seurat</a></td>
+<td>分析单细胞RNA测序数据，重点是聚类、可视化和跨条件整合。</td>
+</tr>
+<tr>
+<td>CopyKAT R package (v1.0.4)</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/navinlabcode/copykat">https://github.com/navinlabcode/copykat</a></td>
+<td>在单细胞RNA测序数据中识别拷贝数变异。</td>
+</tr>
+<tr>
+<td>Monocle R package (v2.14.0)</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/cole-trapnell-lab/monocle-release">https://github.com/cole-trapnell-lab/monocle-release</a></td>
+<td>分析单细胞基因表达轨迹，用于研究细胞状态转换。</td>
+</tr>
+<tr>
+<td>CellChat R package (v1.0.0)</td>
+<td><a target="_blank" rel="noopener" href="http://www.cellchat.org/">http://www.cellchat.org/</a></td>
+<td>推断和分析单细胞RNA测序数据中的细胞间通信网络。</td>
+</tr>
+<tr>
+<td>Nichenetr R package (v1.0.0)</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/saeyslab/nichenetr">https://github.com/saeyslab/nichenetr</a></td>
+<td>预测相互作用细胞之间的配体-靶基因链接。</td>
+</tr>
+<tr>
+<td>MixCR (v4.0.0)</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/milaboratory/mixcr/">https://github.com/milaboratory/mixcr/</a></td>
+<td>分析T细胞受体和B细胞受体的序列数据。</td>
+</tr>
+<tr>
+<td>TCRAI (v0.1.1)</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/regeneron-mpds/TCRAI/">https://github.com/regeneron-mpds/TCRAI/</a></td>
+<td>分析T细胞受体测序数据，侧重于免疫库多样性和克隆性。</td>
+</tr>
+<tr>
+<td>TRUST4 (v1.0.4)</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/liulab-dfci/TRUST4/">https://github.com/liulab-dfci/TRUST4/</a></td>
+<td>从RNA测序数据中识别T细胞受体和B细胞受体序列。</td>
+</tr>
+<tr>
+<td>FragPipe (v19.1)</td>
+<td><a target="_blank" rel="noopener" href="https://www.nesvilab.org/software">https://www.nesvilab.org/software</a></td>
+<td>进行全面的蛋白质组数据分析，包括肽鉴定和定量。</td>
+</tr>
+<tr>
+<td>Infercnv (v1.13.0)</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/broadinstitute/inferCNV">https://github.com/broadinstitute/inferCNV</a></td>
+<td>从单细胞RNA测序数据中推断拷贝数变异。</td>
+</tr>
+<tr>
+<td>Customprodbj (v1.2.0)</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/wenbostar/Customprodbj">https://github.com/wenbostar/Customprodbj</a></td>
+<td>为质谱数据分析定制蛋白基因组数据库。</td>
+</tr>
+<tr>
+<td>Pyclone (v0.13.1)</td>
+<td><a target="_blank" rel="noopener" href="https://github.com/Roth-Lab/pyclone">https://github.com/Roth-Lab/pyclone</a></td>
+<td>聚类并推断体细胞突变的细胞比例。</td>
+</tr>
+</tbody>
+</table>
+</div>
+<h1 id="学术写作积累"><a href="#学术写作积累" class="headerlink" title="学术写作积累"></a>学术写作积累</h1><ol>
+<li><p>To reveal the multicellular ecotypes and distinct cell states present within both early-stage GGO lesions and advanced LUADs, we utilized EcoTyper, a <strong>unified chassis</strong> for scRNA-seq datasets（用于单细胞RNA测序数据集的统一框架）。</p>
+</li>
+<li><p>Frameshift：移码突变；</p>
+</li>
+<li><p>Synonymous：无义突变；</p>
+</li>
+<li><p>We conducted droplet-based scRNA-seq using 10X Genomics on a total of 35 GGO samples from untreated patients and 14 solid nodule LUAD samples from <strong>treatment-naive</strong> patients（未经治疗）；</p>
+</li>
+<li><p><strong>Mitogen</strong>（丝裂原，常见词汇）-activated protein kinase (MAPK)；</p>
+</li>
+<li><p>we observed that the majority of the residual disease group had low-to-undetectable levels of Epi S03 and higher fractions of Epi S02 compared to the treatment-naive and progressive disease patients：我们观察到，在**残留疾病组（治疗后仍然有残留）中，与未经治疗和疾病进展的患者相比，大多数患者的Epi S03水平较低或无法检测，而Epi S02的比例较高。</p>
+</li>
+<li><p>cilium：纤毛、睫毛；</p>
+</li>
+<li><p>major histocompatibility complex：MHC；</p>
+</li>
+<li><p>We validated these scRNA-seq results by <strong>interrogating</strong> <strong>（审查，查询）</strong> our bulk RNA-seq of 76 biopsies from early-stage LUAD patients and observed similar trends of increased subpopulations of immune cells.</p>
+</li>
+</ol>
+<h1 id="论述亮点"><a href="#论述亮点" class="headerlink" title="论述亮点"></a>论述亮点</h1><blockquote><p>In a recently identified LCAM that promotes anti-tumoral response upon immunotherapy, CD138+IgG+ plasma cells were found to surround TLSs with dense aggregates of CXCL13+PD1+CD8+ T cells and CD20+ B cells as well as CD68+/SPP1+/FABP4− macrophages. However, in our GGO patient cohort, we observed that _MZB1_+ B cells (B S01) and _SPP1_+ macrophages (Mo/Mφ S03) were not forming an ecotype with CXCL13+CD8+ T cells. <strong>Instead, they may be re-polarized by interacting with cancer-associated fibroblasts (CAFs) and mast cells.</strong></p>
+</blockquote>  
+<p>对癌生物学有很深入的了解。<br>执行力（建模、编码、推进）+理解力（解释实验结果、确定探索方向）。</p>
+<blockquote><p>Furthermore, due to the plasticity of monocyte-derived macrophages, the cell state of Mo/Mφ observed in LME01 may be polarized from other Mo/Mφ cell states present in another ecotype, highlighting the intercommunity interactions.</p>
+</blockquote>  
+<blockquote><p><strong>The emergence of pro-exhausted CD8+ T cells</strong> at the later stage of GGO progression prompted us to <strong>explore whether the immune system could sense and detect GGO at an earlier phase.</strong></p>
+</blockquote>  
+<blockquote><p>In addition, decreased diversity of T cell receptor (TCR) repertoires was observed upon the progression of LUAD, which is negatively correlated with CNVs. These observations suggested an increased intratumoral heterogeneity, which may be associated with decreased CD8+ T cytotoxicity at the later stage. </p>
+</blockquote>  
+<p>CNV和抗肿瘤免疫环境是相反的？或许可以在免疫治疗中获益更多？</p>
+<blockquote><p>In our validation cohort, we did not detect the ITDFGRAK peptide in our HLA-class-I-associated immunopeptidome. However, we indeed detected the KITDFGRAK and VKITDFGRAK peptides in the tumors from two patients with GGO radiological features (<a target="_blank" rel="noopener" href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC11031428/figure/fig5/">Figure 5</a>H). These two patients also showed an HLA-A11.01 allele type, which is seemingly a dominant HLA allele type (&gt;40%) in Asian individuals.<a target="_blank" rel="noopener" href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC11031428/#bib48">48</a> The distributions of HLA-A11.01 were also overrepresented in non-progressors as shown by another study. </p>
+</blockquote>  
+<p>预后GWAS中很有可能会存在HLA区域的效应位点；由于HLA区域的SNP，即便有相同的肿瘤突变，最后的临床结局可能依然不同。</p>
+<h1 id="文章思路和感悟"><a href="#文章思路和感悟" class="headerlink" title="文章思路和感悟"></a>文章思路和感悟</h1><ol>
+<li><p>目标：描述GGO发展到腺癌的分子动力学景观。</p>
+</li>
+<li><p>建模方法：传统思路是从DEG出发的，而本文则反其道而行之，根据全转录组鉴定细胞状态，并根据不同细胞和状态转录组表达的关联性，将细胞群组合为具有可解释表型信息的细胞“生态位”。以“生态位”为基础开展下面的分析，并逐层剖析每个生态位内部的分子生物学状态。<strong>这样的处理思路最大化了局部的生物学信息，避免了从DEG开始的分析造成的局部偏倚。</strong> 这一基本思想在GWAS富集分析方法scPagwas中也得到了体现（<a target="_blank" rel="noopener" href="https://www.sciencedirect.com/science/article/pii/S2666979X23001805">Polygenic regression uncovers trait-relevant cellular contexts through pathway activation transformation of single-cell RNA sequencing data - ScienceDirect</a>）。</p>
+</li>
+<li><p>分析思路：首先对探究的问题进行建模，利用EcoTyper算法所构建的细胞状态、多细胞生态位作为全文分析的基础，并指出所分析样本包含的6个多细胞生态位。简单来说，肿瘤的组成是肿瘤细胞+肿瘤细胞相关微环境；</p>
+<ol>
+<li>首先作者关注肿瘤细胞本身，研究了恶性细胞的细胞状态和相应表型特征，鉴定疾病进展或有进展潜能的特征细胞状态；在这里，作者确认<strong>磨玻璃结节中会存在恶性细胞，恶性细胞的不同状态部分决定了疾病的进展</strong>。</li>
+<li><strong>磨玻璃结节的转归不尽相同，虽然磨玻璃结节中有恶性细胞，且恶性细胞的不同状态部分决定疾病进展，但恶性细胞必须和周围环境相互作用才决定了最终的归宿</strong>。所以，作者关注局部微环境的特征，鉴定疾病进展多细胞生态位的演化方向。在这个部分，作者使用朴素的基因注释和细胞通讯分析等方法，结合了临床情况，详细阐述了前面所定义的多细胞生态位内部的分子生物学事件。此外，文章还根据免疫细胞分化轨迹，精细刻画了不同生态位的演变过程。这里的论述，作者发现了<strong>早期抗肿瘤免疫环境，晚期CD8耗竭</strong>的典型免疫表型。这一独特现象促使作者考虑病变早期T细胞克隆的激活原因。</li>
+<li>作者认为新抗原的产生以及被识别是早期T细胞克隆的产生原因。作者通过转录组数据推断CNV。CNV和新抗原产生成正比，CNV事件越多提示新抗原越多，肿瘤内部异质性越大，疾病更加进展，而TCR克隆反而减少。接着本文鉴定了TCR克隆激活的关键新抗原因素（突变）。</li>
+<li>最后，作者进一步分析了耗竭表型的形成原因。</li>
+</ol>
+</li>
+<li><p>感悟：在还原论和系统论中寻找认知事物的平衡。</p>
+</li>
+</ol>
+<h1 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h1><p>Deng Y, Xia L, Zhang J, et al. Multicellular ecotypes shape progression of lung adenocarcinoma from ground-glass opacity toward advanced stages. _Cell Rep Med_. 2024;5(4):101489. doi:10.1016/j.xcrm.2024.101489</p>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Qingyuan Zhuang' Blog
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://www.zhuangqingyuan.site/2024/07/19/%E6%96%87%E7%8C%AE%E9%98%85%E8%AF%BB%EF%BC%9A%E8%87%AA%E4%B8%8A%E8%80%8C%E4%B8%8B%E6%8F%8F%E8%BF%B0%E8%82%BF%E7%98%A4%E5%8F%91%E5%B1%95%E7%9A%84%E6%97%B6%E7%A9%BA%E5%8A%A8%E5%8A%9B%E5%AD%A6/" title="文献阅读：自上而下描述肿瘤发展的时空动力学">https://www.zhuangqingyuan.site/2024/07/19/文献阅读：自上而下描述肿瘤发展的时空动力学/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F/" rel="tag"><i class="fa fa-tag"></i> 单细胞测序</a>
+              <a href="/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/" rel="tag"><i class="fa fa-tag"></i> 生物信息学</a>
+              <a href="/tags/%E5%8C%BB%E5%AD%A6%E7%94%9F/" rel="tag"><i class="fa fa-tag"></i> 医学生</a>
+              <a href="/tags/%E7%A0%94%E7%A9%B6%E7%94%9F/" rel="tag"><i class="fa fa-tag"></i> 研究生</a>
+              <a href="/tags/%E8%82%BF%E7%98%A4/" rel="tag"><i class="fa fa-tag"></i> 肿瘤</a>
+              <a href="/tags/%E8%BD%AC%E5%BD%95%E7%BB%84%E5%AD%A6/" rel="tag"><i class="fa fa-tag"></i> 转录组学</a>
+          </div>
+
+        
+<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------　　　　本文结束　<i class="fa fa-flag"></i>　感谢阅读　　　　-------------</div>
+    
+</div>
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2024/05/03/LINGER%EF%BC%9A%E4%BB%8E%E5%8D%95%E7%BB%86%E8%83%9E%E5%A4%9A%E7%BB%84%E5%AD%A6%E6%95%B0%E6%8D%AE%E6%8E%A8%E6%96%AD%E5%9F%BA%E5%9B%A0%E8%B0%83%E6%8E%A7%E7%BD%91%E7%BB%9C/" rel="prev" title="LINGER：从单细胞多组学数据推断基因调控网络">
+      <i class="fa fa-chevron-left"></i> LINGER：从单细胞多组学数据推断基因调控网络
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+    
+    <div><center>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/css/share.min.css">
+    <div class="social-share" data-sites="weibo, qq, qzone,wechat"></div>
+    <script src="http://apps.bdimg.com/libs/jquery/1.8.2/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/js/social-share.min.js"></script>
+    </center></div>  
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%91%98%E8%A6%81"><span class="nav-text">摘要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%94%9F%E4%BF%A1%E6%96%B9%E6%B3%95"><span class="nav-text">生信方法</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AD%A6%E6%9C%AF%E5%86%99%E4%BD%9C%E7%A7%AF%E7%B4%AF"><span class="nav-text">学术写作积累</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%BA%E8%BF%B0%E4%BA%AE%E7%82%B9"><span class="nav-text">论述亮点</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%87%E7%AB%A0%E6%80%9D%E8%B7%AF%E5%92%8C%E6%84%9F%E6%82%9F"><span class="nav-text">文章思路和感悟</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%BC%95%E7%94%A8"><span class="nav-text">引用</span></a></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Qingyuan Zhuang' Blog"
+      src="/images/avatar.gif">
+  <p class="site-author-name" itemprop="name">Qingyuan Zhuang' Blog</p>
+  <div class="site-description" itemprop="description">冰棒汽水的味道，一个夏天的年少。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">44</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">29</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ForrestGump618" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ForrestGump618" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhuangqingyuan@foxmail.com" title="E-Mail → mailto:zhuangqingyuan@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/u/7564625671" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;u&#x2F;7564625671" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/Xiao200105" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;Xiao200105" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/zhuang-qing-yuan-18" title="ZhiHu → https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;zhuang-qing-yuan-18" rel="noopener" target="_blank"><i class="fab fa-zhihu fa-fw"></i>ZhiHu</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://orcid.org/0000-0002-0333-8192" title="ORCID → https:&#x2F;&#x2F;orcid.org&#x2F;0000-0002-0333-8192" rel="noopener" target="_blank"><i class="fab fa-orcid fa-fw"></i>ORCID</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+      
+        <script type="text/javascript" charset="utf-8" src="/js/tagcloud.js"></script>
+        <script type="text/javascript" charset="utf-8" src="/js/tagcanvas.js"></script>
+        <div class="widget-wrap">
+          <!--<h3 class="widget-title">Tag Cloud</h3>
+          -->
+          <div id="myCanvasContainer" class="widget tagcloud">
+          <canvas width="250" height="250" id="resCanvas" style="width=100%">
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AI/" rel="tag">AI</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Docker/" rel="tag">Docker</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GWAS/" rel="tag">GWAS</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HEXO/" rel="tag">HEXO</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LLM/" rel="tag">LLM</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%A4%E5%8F%89%E5%AD%A6%E7%A7%91/" rel="tag">交叉学科</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%85%8D%E7%96%AB/" rel="tag">免疫</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%BB%E5%AD%A6/" rel="tag">医学</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%BB%E5%AD%A6%E7%94%9F/" rel="tag">医学生</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F/" rel="tag">单细胞测序</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E5%9B%9B/" rel="tag">大四</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AD%9F%E5%BE%B7%E5%B0%94%E9%9A%8F%E6%9C%BA%E5%8C%96/" rel="tag">孟德尔随机化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AF%86%E7%A0%81%E5%AD%A6/" rel="tag">密码学</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BC%80%E6%BA%90/" rel="tag">开源</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BF%83%E5%86%85%E7%A7%91/" rel="tag">心内科</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%99%BA%E8%83%BD%E9%9F%B3%E7%AE%B1/" rel="tag">智能音箱</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag">机器学习</a><span class="tag-list-count">11</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B5%81%E8%A1%8C%E7%97%85%E5%AD%A6/" rel="tag">流行病学</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag">深度学习</a><span class="tag-list-count">9</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/" rel="tag">生物信息学</a><span class="tag-list-count">9</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%A0%94%E7%A9%B6%E7%94%9F/" rel="tag">研究生</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BB%9F%E8%AE%A1%E5%AD%A6/" rel="tag">统计学</a><span class="tag-list-count">6</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%82%BF%E7%98%A4/" rel="tag">肿瘤</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AE%A1%E6%95%B0/" rel="tag">计数</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA/" rel="tag">计算机</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%BD%AC%E5%BD%95%E7%BB%84%E5%AD%A6/" rel="tag">转录组学</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9A%8F%E7%AC%94/" rel="tag">随笔</a><span class="tag-list-count">5</span></li></ul>
+          </canvas>
+          </div>
+        </div>
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div style="text-align:center;" class="copyright">
+  
+  &copy; 2023 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Qingyuan Zhuang</span>
+</div>
+
+<div style="text-align:center;" class="copyright">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">201k</span>
+
+    <span class="post-meta-item-icon">
+      <span class="post-meta-divider"> </span>
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">12:09</span>
+  
+  
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-divider"> </span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span id="busuanzi_container_site_pv"><span id="busuanzi_value_site_pv"></span>次</span>
+    <span class="post-meta-divider"> </span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-fire"></i>
+    </span>
+    <span id="busuanzi_container_site_uv"><span id="busuanzi_value_site_uv"></span>人</span>
+</div>
+
+
+
+
+<script>
+$(document).ready(function() {
+
+    var int = setInterval(fixCount, 50);  // 50ms周期检测函数
+    var countOffset = 20000;  // 初始化首次数据
+
+    function fixCount() {            
+       if (document.getElementById("busuanzi_container_site_pv").style.display != "none")
+        {
+            $("#busuanzi_value_site_pv").html(parseInt($("#busuanzi_value_site_pv").html()) + countOffset); 
+            clearInterval(int);
+        }                  
+        if ($("#busuanzi_container_site_pv").css("display") != "none")
+        {
+            $("#busuanzi_value_site_uv").html(parseInt($("#busuanzi_value_site_uv").html()) + countOffset); // 加上初始数据 
+            clearInterval(int); // 停止检测
+        }  
+    }
+});
+</script> 
+
+<div style="text-align:center;">
+<!--添加网站运行时间-->
+<span>小破站已经在风雨中度过了</span>
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>
+<script>
+    function createtime() {
+        const startTime = '08/11/2023 20:00:00',
+            start = new Date(startTime)
+        let mill = new Date() - start,
+            seconds = Math.floor(mill / 1000),
+            mins = Math.floor(seconds / 60),
+            hours = Math.floor(mins / 60),
+            days = Math.floor(hours / 24)
+        const time = {
+            seconds: seconds - mins * 60,
+            mins: mins - hours * 60,
+            hours: hours - days * 24,
+        }
+        for (const k in time) {
+            time[k] = `${time[k]}`.padStart(2, '0')
+        }
+        document.getElementById("timeDate").innerHTML = ` ${days} 天`
+        document.getElementById("times").innerHTML = ` ${time.hours} 小时 ${time.mins} 分 ${time.seconds} 秒`
+    }
+    setInterval(createtime, 500)
+</script>
+</div>
+
+
+
+        
+<div class="busuanzi-count">
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.2/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-pjax@0/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+  <script data-pjax>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+  <script src="//code.tidio.co/qqrjcchnt9lv02g8xd8s3ouwpqtxtia2.js"></script>
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+
+  
+<script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.7/lib/darkmode-js.min.js"></script>
+
+<script>
+var options = {
+  bottom: '128px',
+  right: 'unset',
+  left: '32px',
+  time: '0.s',
+  mixColor: 'transparent',
+  backgroundColor: 'transparent',
+  buttonColorDark: '#100f2c',
+  buttonColorLight: '#fff',
+  saveInCookies: true,
+  label: '🌓',
+  autoMatchOsTheme: true
+}
+const darkmode = new Darkmode(options);
+window.darkmode = darkmode;
+darkmode.showWidget();
+</script>
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine@latest/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'Dn2HgqGikthxTy5tlhKqdRK8-gzGzoHsz',
+      appKey     : 'B9a4a4bFtqIKoDkPg7p2em3j',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : true,
+      serverURLs : 'https://dn2hgqgi.lc-cn-n1-shared.com'
+    });
+  }, window.Valine);
+});
+</script>
+
+    </div>
+</body>
+</html>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/love.js"></script>
