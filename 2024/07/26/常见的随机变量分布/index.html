@@ -1,0 +1,1148 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta name="generator" content="Hexo 6.3.0">
+<meta name="baidu-site-verification" content="codeva-q4zg3o0c1B" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico">
+  <link rel="mask-icon" href="/images/favicon.ico" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/all.min.css">
+<link href="https://fonts.loli.net/css?family=Noto+Serif+SC|Roboto&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.css">
+  <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/pace-js@1/themes/blue/pace-theme-minimal.css">
+  <script src="//cdn.jsdelivr.net/npm/pace-js@1/pace.min.js"></script>
+
+<script id="hexo-configurations">
+    var NexT = window.NexT || {};
+    var CONFIG = {"hostname":"www.zhuangqingyuan.site","root":"/","scheme":"Mist","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":true,"show_result":false,"style":"mac"},"back2top":{"enable":true,"sidebar":true,"scrollpercent":true},"bookmark":{"enable":true,"color":"#222","save":"auto"},"fancybox":true,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":"valine","storage":true,"lazyload":false,"nav":null,"activeClass":"valine"},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},"path":"search.xml"};
+  </script>
+
+
+  <meta name="description" content="认识和理解常用的随机变量的分布，对正确选用统计方法和应用模型十分重要。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="常见的随机变量分布">
+<meta property="og:url" content="https://www.zhuangqingyuan.site/2024/07/26/%E5%B8%B8%E8%A7%81%E7%9A%84%E9%9A%8F%E6%9C%BA%E5%8F%98%E9%87%8F%E5%88%86%E5%B8%83/index.html">
+<meta property="og:site_name" content="一个夏天的年少">
+<meta property="og:description" content="认识和理解常用的随机变量的分布，对正确选用统计方法和应用模型十分重要。">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-07-26T00:00:00.000Z">
+<meta property="article:modified_time" content="2024-07-26T05:38:12.415Z">
+<meta property="article:author" content="Qingyuan Zhuang&#39; Blog">
+<meta property="article:tag" content="统计学">
+<meta property="article:tag" content="机器学习">
+<meta name="twitter:card" content="summary">
+
+<link rel="canonical" href="https://www.zhuangqingyuan.site/2024/07/26/%E5%B8%B8%E8%A7%81%E7%9A%84%E9%9A%8F%E6%9C%BA%E5%8F%98%E9%87%8F%E5%88%86%E5%B8%83/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome : false,
+    isPost : true,
+    lang   : 'zh-CN'
+  };
+</script>
+
+  <title>常见的随机变量分布 | 一个夏天的年少</title>
+  
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+<link rel="alternate" href="/atom.xml" title="一个夏天的年少" type="application/atom+xml">
+<style>.darkmode--activated{--body-bg-color:#282828;--content-bg-color:#333;--card-bg-color:#555;--text-color:#ccc;--blockquote-color:#bbb;--link-color:#ccc;--link-hover-color:#eee;--brand-color:#ddd;--brand-hover-color:#ddd;--table-row-odd-bg-color:#282828;--table-row-hover-bg-color:#363636;--menu-item-bg-color:#555;--btn-default-bg:#222;--btn-default-color:#ccc;--btn-default-border-color:#555;--btn-default-hover-bg:#666;--btn-default-hover-color:#ccc;--btn-default-hover-border-color:#666;--highlight-background:#282b2e;--highlight-foreground:#a9b7c6;--highlight-gutter-background:#34393d;--highlight-gutter-foreground:#9ca9b6}.darkmode--activated img{opacity:.75}.darkmode--activated img:hover{opacity:.9}.darkmode--activated code{color:#69dbdc;background:0 0}button.darkmode-toggle{z-index:9999}.darkmode-ignore,img{display:flex!important}.beian img{display:inline-block!important}</style></head>
+
+<body itemscope itemtype="http://schema.org/WebPage">
+  <div class="container use-motion">
+    <div class="headband"></div>
+
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏">
+      <span class="toggle-line toggle-line-first"></span>
+      <span class="toggle-line toggle-line-middle"></span>
+      <span class="toggle-line toggle-line-last"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <h1 class="site-title">一个夏天的年少</h1>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+
+<nav class="site-nav">
+  <ul id="menu" class="main-menu menu">
+        <li class="menu-item menu-item-home">
+
+    <a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a>
+
+  </li>
+        <li class="menu-item menu-item-about">
+
+    <a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a>
+
+  </li>
+        <li class="menu-item menu-item-guestbook">
+
+    <a href="/guestbook/" rel="section"><i class="fa fa-book fa-fw"></i>留言</a>
+
+  </li>
+        <li class="menu-item menu-item-stars">
+
+    <a href="/stars/" rel="section"><i class="fa fa-star fa-fw"></i>收藏</a>
+
+  </li>
+        <li class="menu-item menu-item-friend">
+
+    <a href="/friend/" rel="section"><i class="fa fa-link fa-fw"></i>友链</a>
+
+  </li>
+        <li class="menu-item menu-item-love">
+
+    <a href="/love/" rel="section"><i class="fa fa-heartbeat fa-fw"></i>她</a>
+
+  </li>
+        <li class="menu-item menu-item-summer">
+
+    <a href="/summer/" rel="section"><i class="fa fa-bullhorn fa-fw"></i>推免</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+        <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocapitalize="off"
+           placeholder="搜索..." spellcheck="false"
+           type="search" class="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result">
+  <div id="no-result">
+    <i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>
+  </div>
+</div>
+
+    </div>
+  </div>
+
+</div>
+    </header>
+
+    
+  <a role="button" class="book-mark-link book-mark-link-fixed"></a>
+
+
+    <main class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          
+
+          <div class="content post posts-expand">
+            
+
+    
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://www.zhuangqingyuan.site/2024/07/26/%E5%B8%B8%E8%A7%81%E7%9A%84%E9%9A%8F%E6%9C%BA%E5%8F%98%E9%87%8F%E5%88%86%E5%B8%83/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Qingyuan Zhuang' Blog">
+      <meta itemprop="description" content="冰棒汽水的味道，一个夏天的年少。">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="一个夏天的年少">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          常见的随机变量分布
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表</span>
+              
+
+              <time title="创建时间：2024-07-26 08:00:00 / 修改时间：13:38:12" itemprop="dateCreated datePublished" datetime="2024-07-26T08:00:00+08:00">2024-07-26</time>
+            </span>
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-folder"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/%E7%BB%9F%E8%AE%A1%E5%AD%A6/" itemprop="url" rel="index"><span itemprop="name">统计学</span></a>
+                </span>
+            </span>
+
+          
+            <span id="/2024/07/26/%E5%B8%B8%E8%A7%81%E7%9A%84%E9%9A%8F%E6%9C%BA%E5%8F%98%E9%87%8F%E5%88%86%E5%B8%83/" class="post-meta-item leancloud_visitors" data-flag-title="常见的随机变量分布" title="热度">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">热度：</span>
+              <span class="leancloud-visitors-count"></span>
+            </span>
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="far fa-comment"></i>
+      </span>
+      <span class="post-meta-item-text">Valine：</span>
+    
+    <a title="valine" href="/2024/07/26/%E5%B8%B8%E8%A7%81%E7%9A%84%E9%9A%8F%E6%9C%BA%E5%8F%98%E9%87%8F%E5%88%86%E5%B8%83/#valine-comments" itemprop="discussionUrl">
+      <span class="post-comments-count valine-comment-count" data-xid="/2024/07/26/%E5%B8%B8%E8%A7%81%E7%9A%84%E9%9A%8F%E6%9C%BA%E5%8F%98%E9%87%8F%E5%88%86%E5%B8%83/" itemprop="commentCount"></span>
+    </a>
+  </span>
+  
+  <br>
+            <span class="post-meta-item" title="本文字数">
+              <span class="post-meta-item-icon">
+                <i class="far fa-file-word"></i>
+              </span>
+                <span class="post-meta-item-text">本文字数：</span>
+              <span>5.4k</span>
+            </span>
+            <span class="post-meta-item" title="阅读时长">
+              <span class="post-meta-item-icon">
+                <i class="far fa-clock"></i>
+              </span>
+                <span class="post-meta-item-text">阅读时长 &asymp;</span>
+              <span>20 分钟</span>
+            </span>
+            <div class="post-description">认识和理解常用的随机变量的分布，对正确选用统计方法和应用模型十分重要。</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="离散型随机变量的分布"><a href="#离散型随机变量的分布" class="headerlink" title="离散型随机变量的分布"></a>离散型随机变量的分布</h1><h2 id="二项分布"><a href="#二项分布" class="headerlink" title="二项分布"></a>二项分布</h2><h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h3><p>二项分布是一种离散概率分布，常用于描述在固定次数的独立实验中，成功次数的概率分布。假设每次实验只有两种可能的结果：成功或失败，且每次实验成功的概率是相同的。如果进行 $n$ 次独立的伯努利试验，每次试验成功的概率为 $p$ ，那么在这些试验中成功 $k$ 次的概率可以用二项分布来描述。</p>
+<h3 id="公式表示"><a href="#公式表示" class="headerlink" title="公式表示"></a>公式表示</h3><p>二项分布的概率质量函数（PMF）为：</p>
+<script type="math/tex; mode=display">P(X = k) = \binom{n}{k} p^k (1-p)^{n-k}</script><p>其中：</p>
+<ul>
+<li>$n$ 是试验次数。</li>
+<li>$k$ 是成功次数。</li>
+<li>$p$ 是每次试验成功的概率。<h3 id="推导"><a href="#推导" class="headerlink" title="推导"></a>推导</h3></li>
+</ul>
+<p>二项分布的推导可以从伯努利试验的性质开始。假设每次试验成功的概率为 $p$，失败的概率为 $1-p$。通过组合这些试验的结果，我们可以计算出在 $n$ 次试验中恰好有 $k$ 次成功的概率。</p>
+<ol>
+<li><strong>单次试验</strong>：在单次试验中，成功的概率为$p$，失败的概率为$1-p$。</li>
+<li><strong>多次试验</strong>：将$n$ 次试验看作是$n$ 个独立的伯努利试验。每次试验的结果可以是成功或失败。</li>
+<li><strong>组合计数</strong>：在$n$ 次试验中恰好有$k$ 次成功，意味着有$k$ 次试验的结果为成功，剩下的$n-k$ 次试验的结果为失败。这种组合方式有$\binom{n}{k}$ 种。</li>
+<li><strong>概率乘积</strong>：每次成功的试验对应一个$p$，每次失败的试验对应一个$1-p$。因此，成功$k$ 次的概率是：<script type="math/tex; mode=display">P(X = k) = \binom{n}{k} p^k (1-p)^{n-k}</script></li>
+</ol>
+<h3 id="二项分布的性质"><a href="#二项分布的性质" class="headerlink" title="二项分布的性质"></a>二项分布的性质</h3><h4 id="期望值"><a href="#期望值" class="headerlink" title="期望值"></a>期望值</h4><p>二项分布的期望值（均值）是：</p>
+<script type="math/tex; mode=display">E(X) = np</script><h4 id="方差"><a href="#方差" class="headerlink" title="方差"></a>方差</h4><p>二项分布的方差是：</p>
+<script type="math/tex; mode=display">\text{Var}(X) = np(1-p)</script><h4 id="正态分布近似"><a href="#正态分布近似" class="headerlink" title="正态分布近似"></a>正态分布近似</h4><p>当$n$ 很大且$p$ 不是接近 0 或 1 时，二项分布可以用正态分布近似。这种近似称为德摩弗-拉普拉斯定理。正态分布的参数为：</p>
+<ul>
+<li>均值：$\mu = np$</li>
+<li>方差：$\sigma^2 = np(1-p)$</li>
+</ul>
+<h3 id="应用"><a href="#应用" class="headerlink" title="应用"></a>应用</h3><p>二项分布在许多领域都有应用，包括医学试验、质量管理、社会科学等。通过二项分布，我们可以预测在一定条件下成功的概率，从而做出更合理的决策。</p>
+<h2 id="泊松分布"><a href="#泊松分布" class="headerlink" title="泊松分布"></a>泊松分布</h2><h3 id="定义-1"><a href="#定义-1" class="headerlink" title="定义"></a>定义</h3><p>泊松分布是一种离散概率分布，常用于描述在固定时间或空间内，某事件随机发生的次数的概率分布。假设事件的发生是相互独立的，并且每个时间或空间单位内事件发生的概率是相同的。如果在一个时间或空间单位内事件的发生次数为 $k$，那么这个概率可以用泊松分布来描述。</p>
+<h3 id="公式表示-1"><a href="#公式表示-1" class="headerlink" title="公式表示"></a>公式表示</h3><p>泊松分布的概率质量函数（PMF）为：</p>
+<script type="math/tex; mode=display">P(X = k) = \frac{e^{-\lambda} \lambda^k}{k!}</script><p>其中：</p>
+<ul>
+<li>$\lambda$ 是单位时间或空间内事件发生的平均次数。</li>
+<li>$k$ 是事件的发生次数。</li>
+<li>$e$ 是自然对数的底数，约等于 2.71828。</li>
+</ul>
+<h3 id="推导-1"><a href="#推导-1" class="headerlink" title="推导"></a>推导</h3><p>不妨设一个观测区间 $[0,1)$ ，在观测区间中我们观测到某个事件 $A$ 发生的次数可以记作随机变量 $X$ ，事件$A$ 是瞬时发生的，且在观测区间中的发生彼此独立。事件 $A$ 的发生概率是恒定的，那么就和我们观测时间的长短划分。我们把观测区间微分，在极小的区间中我们可以认为事件只可能发生一次，并且不同的微分区间彼此独立。这个微分段可以如下定义：$l~i~: [\frac{i-1}{n}\,\frac{i}{n})$​</p>
+<p>不妨设在这个微分区间中事件 $A$ 发生的概率为 $\frac{\lambda}{n}$ 根据上述假设，有 $X\sim B(n, \frac{\lambda}{n})$。于是有：</p>
+<script type="math/tex; mode=display">
+P(X = i) = \binom{n}{i} (\frac{\lambda}{n})^i (1-\frac{\lambda}{n})^{n-i}</script><p>又根据常见极限：</p>
+<script type="math/tex; mode=display">
+lim_{n \to \infty} \binom{n}{i} (\frac{\lambda}{n})^i = \frac{\lambda^i}{i!}</script><script type="math/tex; mode=display">
+lim_{n \to \infty} (1-\frac{\lambda}{n})^{n-i}  = e^{-\lambda}</script><p>所以：</p>
+<script type="math/tex; mode=display">
+P(X = i) = \frac {e^{-\lambda}\lambda^i}{i!}</script><h3 id="泊松分布的性质"><a href="#泊松分布的性质" class="headerlink" title="泊松分布的性质"></a>泊松分布的性质</h3><h4 id="期望值-1"><a href="#期望值-1" class="headerlink" title="期望值"></a>期望值</h4><p>泊松分布的期望值（均值）是：</p>
+<script type="math/tex; mode=display">E(X) = \lambda</script><h4 id="方差-1"><a href="#方差-1" class="headerlink" title="方差"></a>方差</h4><p>泊松分布的方差是：</p>
+<script type="math/tex; mode=display">\text{Var}(X) = \lambda</script><h3 id="应用-1"><a href="#应用-1" class="headerlink" title="应用"></a>应用</h3><p>泊松分布在许多领域都有应用，包括通信、交通流量分析、保险业等。通过泊松分布，我们可以预测在一定条件下事件发生的次数，从而做出更合理的决策。</p>
+<p>例如：</p>
+<ul>
+<li>在通信系统中，泊松分布可以用来预测在一定时间内接收到的信号数量。</li>
+<li>在交通流量分析中，泊松分布可以用来预测在一定时间内通过某个路口的车辆数量。</li>
+<li>在保险业中，泊松分布可以用来预测在一定时间内发生的索赔次数。</li>
+</ul>
+<h2 id="超几何分布"><a href="#超几何分布" class="headerlink" title="超几何分布"></a>超几何分布</h2><h3 id="定义-2"><a href="#定义-2" class="headerlink" title="定义"></a>定义</h3><p>超几何分布是一种离散概率分布，常用于描述从有限总体中抽取样本时，特定类型元素出现的次数的概率分布。假设总体中有 $N$个元素，其中 $K$个是成功元素（即我们感兴趣的类型）。如果我们从这个总体中随机抽取 $n$个元素，那么抽取到 $k$个成功元素的概率可以用超几何分布来描述。</p>
+<h3 id="公式表示-2"><a href="#公式表示-2" class="headerlink" title="公式表示"></a>公式表示</h3><p>超几何分布的概率质量函数（PMF）为：</p>
+<script type="math/tex; mode=display">
+P(X = k) = \frac{\binom{K}{k} \binom{N-K}{n-k}}{\binom{N}{n}}</script><p>其中：</p>
+<ul>
+<li>$N$是总体元素的总数。</li>
+<li>$K$是总体中成功元素的数量。</li>
+<li>$n$是抽取的样本大小。</li>
+<li>$k$是抽取到的成功元素的数量。</li>
+<li>$\binom{a}{b}$ 表示从 $a$个不同元素中选择 $b$个元素的组合数。</li>
+</ul>
+<h3 id="推导-2"><a href="#推导-2" class="headerlink" title="推导"></a>推导</h3><p>假设我们从总体中抽取 $n$个元素，抽取到 $k$个成功元素的组合数可以通过以下方式计算：</p>
+<ol>
+<li>从 $K$个成功元素中选择 $k$个元素的组合数为 $\binom{K}{k}$。</li>
+<li>从 $N-K$个非成功元素中选择 $n-k$个元素的组合数为 $\binom{N-K}{n-k}$。</li>
+</ol>
+<p>总的抽取 $n$个元素的组合数为 $\binom{N}{n}$。</p>
+<p>因此，抽取到 $k$个成功元素的概率为：</p>
+<script type="math/tex; mode=display">
+P(X = k) = \frac{\binom{K}{k} \binom{N-K}{n-k}}{\binom{N}{n}}</script><h3 id="超几何分布的性质"><a href="#超几何分布的性质" class="headerlink" title="超几何分布的性质"></a>超几何分布的性质</h3><h4 id="期望值-2"><a href="#期望值-2" class="headerlink" title="期望值"></a>期望值</h4><p>超几何分布的期望值（均值）是：</p>
+<script type="math/tex; mode=display">
+E(X) = \frac{Kn}{N}</script><h4 id="方差-2"><a href="#方差-2" class="headerlink" title="方差"></a>方差</h4><p>超几何分布的方差是：</p>
+<script type="math/tex; mode=display">
+\text{Var}(X) = \frac{K(N-K)n(N-n)}{N^2(N-1)}</script><h3 id="应用-2"><a href="#应用-2" class="headerlink" title="应用"></a>应用</h3><p>超几何分布在许多领域都有应用，包括统计学、生物统计学、质量控制等。通过超几何分布，我们可以预测在特定条件下抽取到特定类型元素的概率，从而做出更合理的决策。需要注意的是，如果$\frac {n}{N}$ 非常小，也就是说每一次放不放回影响不大，这个时候超几何分布可以近似用二次分布表示。</p>
+<p>例如：</p>
+<ul>
+<li>在质量控制中，超几何分布可以用来预测从一批产品中抽取的样本中不合格产品的数量。</li>
+<li>在生物统计学中，超几何分布可以用来预测从某个种群中抽取的样本中具有某种特征的个体数量。</li>
+<li>在市场研究中，超几何分布可以用来预测从消费者群体中抽取的样本中具有某种偏好的消费者数量。</li>
+</ul>
+<h2 id="负二项分布"><a href="#负二项分布" class="headerlink" title="负二项分布"></a>负二项分布</h2><h3 id="定义-3"><a href="#定义-3" class="headerlink" title="定义"></a>定义</h3><p>负二项分布（也称为伽玛-泊松分布或Pascal分布）是一种离散概率分布，常用于描述在固定数量的事件中，某个特定事件首次发生之前其他事件随机发生的次数的概率分布。与泊松分布类似，负二项分布在描述事件的随机发生次数方面也有广泛的应用，但它更侧重于在达到某个特定事件之前发生的事件次数。</p>
+<h3 id="公式表示-3"><a href="#公式表示-3" class="headerlink" title="公式表示"></a>公式表示</h3><p>负二项分布的概率质量函数（PMF）为：</p>
+<script type="math/tex; mode=display">P(X = k) = \binom{k-1}{r-1} p^r (1-p)^{k-r}</script><p>其中：</p>
+<ul>
+<li>$r$ 是达到特定事件所需的次数。</li>
+<li>$p$ 是每次试验中特定事件发生的概率。</li>
+<li>$k$ 是在首次达到特定事件之前发生的事件总数。</li>
+<li>$\binom{n}{k}$ 是组合数，表示从 $n$ 个不同元素中取出 $k$ 个元素的组合方式数。</li>
+</ul>
+<h3 id="推导-3"><a href="#推导-3" class="headerlink" title="推导"></a>推导</h3><p>假设我们有一个试验序列，每次试验中特定事件的发生概率为 $p$，不发生的概率为 $1-p$。我们感兴趣的是在首次达到 $r$ 次特定事件之前，不发生事件的次数。假设这个次数为 $k-r$。</p>
+<p>根据二项分布的性质，我们知道在 $k-1$ 次试验中恰好有 $r-1$ 次特定事件发生的概率为：</p>
+<script type="math/tex; mode=display">P(X = k-1) = \binom{k-1}{r-1} p^{r-1} (1-p)^{k-r}</script><p>由于在第 $k$ 次试验中发生了特定事件，我们可以将上述概率乘以 $p$ 来得到负二项分布的 PMF：</p>
+<script type="math/tex; mode=display">P(X = k) = \binom{k-1}{r-1} p^r (1-p)^{k-r}</script><h3 id="负二项分布的性质"><a href="#负二项分布的性质" class="headerlink" title="负二项分布的性质"></a>负二项分布的性质</h3><h4 id="期望值-3"><a href="#期望值-3" class="headerlink" title="期望值"></a>期望值</h4><p>负二项分布的期望值（均值）是：</p>
+<script type="math/tex; mode=display">E(X) = \frac{r(1-p)}{p}</script><h4 id="方差-3"><a href="#方差-3" class="headerlink" title="方差"></a>方差</h4><p>负二项分布的方差是：</p>
+<script type="math/tex; mode=display">\text{Var}(X) = \frac{r(1-p)}{p^2}</script><h3 id="应用-3"><a href="#应用-3" class="headerlink" title="应用"></a>应用</h3><p>负二项分布在许多领域都有应用，尤其是在需要预测在达到某个特定事件之前发生的事件次数的场景中。以下是一些具体应用实例：</p>
+<ul>
+<li><strong>体育比赛</strong>：在篮球比赛中，负二项分布可以用来预测在首次投中三分球之前，球员投篮不中的次数。</li>
+<li><strong>医学研究</strong>：在药物试验中，负二项分布可以用来预测在首次观察到治疗效果之前，需要进行多少次试验。</li>
+<li><strong>工业生产</strong>：在产品质量控制中，负二项分布可以用来预测在首次生产出合格产品之前，需要进行多少次生产尝试。</li>
+</ul>
+<p>通过这些应用，负二项分布帮助我们更好地理解和预测在特定条件下事件的发生次数，从而做出更合理的决策和规划。<br>负二项分布是二项分布的“反其道而行之”，二项分布是定下总抽样个数 $n$，把事件个数 $X$ 作为变量；儿负二项分布则恰恰相反，它顶下事件个数 $r$ ，把总抽样次数减去 $r$ 作为变量。</p>
+<p>我们可以推演一个十分重要的例子，当 $r=1$ 时，可以得到几何分布：</p>
+<script type="math/tex; mode=display">P(X = k) = p (1-p)^{k-1}</script><h1 id="连续型随机变量的分布"><a href="#连续型随机变量的分布" class="headerlink" title="连续型随机变量的分布"></a>连续型随机变量的分布</h1><h2 id="正态分布"><a href="#正态分布" class="headerlink" title="正态分布"></a>正态分布</h2><h3 id="定义-4"><a href="#定义-4" class="headerlink" title="定义"></a>定义</h3><p>正态分布，也称为高斯分布，是一种在自然和社会科学领域中极为常见的连续概率分布。它描述了大量独立随机变量的平均值接近其总体均值的概率分布。正态分布的图形呈钟形曲线，左右对称，中间高，两端低。</p>
+<h3 id="公式表示-4"><a href="#公式表示-4" class="headerlink" title="公式表示"></a>公式表示</h3><p>正态分布的概率密度函数（PDF）为：</p>
+<script type="math/tex; mode=display">
+f(x) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x-\mu)^2}{2\sigma^2}}</script><p>其中：</p>
+<ul>
+<li>$mu$是分布的均值。</li>
+<li>$sigma$是分布的标准差。</li>
+<li>$sigma^2$是方差。</li>
+</ul>
+<h3 id="推导-4"><a href="#推导-4" class="headerlink" title="推导"></a>推导</h3><p>正态分布的推导可以从中心极限定理开始，该定理指出，大量独立随机变量的平均值，无论这些变量本身是什么分布，当样本量足够大时，其分布都会接近正态分布。正态分布的数学形式可以通过以下方式推导：</p>
+<ol>
+<li>假设随机变量 $X$ 服从正态分布 $N(\mu, \sigma^2)$。</li>
+<li>正态分布的概率密度函数可以通过最大化熵的方式得到，即在给定均值和方差的情况下，使得分布的熵最大。</li>
+</ol>
+<h3 id="正态分布的性质"><a href="#正态分布的性质" class="headerlink" title="正态分布的性质"></a>正态分布的性质</h3><h4 id="期望值-4"><a href="#期望值-4" class="headerlink" title="期望值"></a>期望值</h4><p>正态分布的期望值（均值）是：</p>
+<script type="math/tex; mode=display">
+E(X) = \mu</script><h4 id="方差-4"><a href="#方差-4" class="headerlink" title="方差"></a>方差</h4><p>正态分布的方差是：</p>
+<script type="math/tex; mode=display">
+\text{Var}(X) = \sigma^2</script><h4 id="标准差"><a href="#标准差" class="headerlink" title="标准差"></a>标准差</h4><p>正态分布的标准差是方差的平方根：</p>
+<script type="math/tex; mode=display">
+\sigma = \sqrt{\text{Var}(X)}</script><h4 id="68-95-99-7-规则"><a href="#68-95-99-7-规则" class="headerlink" title="68-95-99.7 规则"></a>68-95-99.7 规则</h4><p>正态分布的一个重要性质是其数据分布的集中趋势。根据正态分布的68-95-99.7规则：</p>
+<ul>
+<li>大约68%的数据值落在 $mu \pm \sigma$范围内。</li>
+<li>大约95%的数据值落在 $mu \pm 2\sigma$范围内。</li>
+<li>大约99.7%的数据值落在 $mu \pm 3\sigma$范围内。</li>
+</ul>
+<h3 id="应用-4"><a href="#应用-4" class="headerlink" title="应用"></a>应用</h3><p>正态分布在许多领域都有应用，包括统计学、物理学、经济学、工程学等。通过正态分布，我们可以预测在特定条件下数据的分布情况，从而做出更合理的决策。以下是一些具体应用示例：</p>
+<ul>
+<li><strong>统计学</strong>：在统计学中，正态分布被用来估计总体参数，如均值和方差。</li>
+<li><strong>物理学</strong>：在物理学中，正态分布可以用来描述粒子的位置和速度分布。</li>
+<li><strong>经济学</strong>：在经济学中，正态分布可以用来预测股票价格的变化。</li>
+<li><strong>工程学</strong>：在工程学中，正态分布可以用来预测机械部件的尺寸分布。</li>
+</ul>
+<p>正态分布的广泛应用使其成为统计学和数据分析中不可或缺的工具。</p>
+<h2 id="指数分布"><a href="#指数分布" class="headerlink" title="指数分布"></a>指数分布</h2><h3 id="定义-5"><a href="#定义-5" class="headerlink" title="定义"></a>定义</h3><p>指数分布是一种连续概率分布，常用于描述独立随机事件发生的时间间隔。这种分布广泛应用于描述设备故障时间、电话呼叫到达时间、放射性原子的衰变时间等。指数分布的图形呈单峰曲线，随着值的增加而逐渐减小。</p>
+<h3 id="公式表示-5"><a href="#公式表示-5" class="headerlink" title="公式表示"></a>公式表示</h3><p>指数分布的概率密度函数（PDF）为：</p>
+<script type="math/tex; mode=display">
+f(x) = \lambda e^{-\lambda x}</script><p>其中：</p>
+<ul>
+<li>$x \geq 0$</li>
+<li>$\lambda &gt; 0$ 是分布的率参数，表示单位时间内事件发生的平均次数。</li>
+</ul>
+<h3 id="推导-5"><a href="#推导-5" class="headerlink" title="推导"></a>推导</h3><p>指数分布的推导可以从泊松过程开始，泊松过程是一种描述单位时间内随机事件发生次数的模型。当事件的平均发生次数为 $\lambda$ 时，事件之间的时间间隔服从指数分布。具体推导如下：</p>
+<ol>
+<li>假设事件在单位时间内平均发生 $\lambda$ 次。</li>
+<li>事件之间的时间间隔 $X$ 服从指数分布，其概率密度函数可以通过泊松过程的性质推导得出。</li>
+</ol>
+<p>不妨考虑这样一个实例。设想一种大批生产的电子元件，其寿命 $X$ 是随机变量，以 $F(x)$ 记为 $X$ 的分布函数。我们认为电子元件的失效率为一个常数 $\lambda$ ，那么有：</p>
+<script type="math/tex; mode=display">
+lim_{h \to 0} \frac{P(x\leq X \leq x+h \mid X>x)}{h}  = \lambda</script><p>又有：</p>
+<script type="math/tex; mode=display">
+P(X>x) = 1-F(x)</script><p>那么：</p>
+<script type="math/tex; mode=display">
+\frac{P(x\leq X \leq x+h \mid X>x)}{h} = \frac{P(x\leq X \leq x+h )}{h(1-F(x))} = \frac{F((x+h)-F(x))}{h(1-F(x))}</script><p>所以：</p>
+<script type="math/tex; mode=display">
+\frac{F^{`}(x)}{1-F(x)} = \lambda</script><p>解这个微分方程即可。</p>
+<h3 id="指数分布的性质"><a href="#指数分布的性质" class="headerlink" title="指数分布的性质"></a>指数分布的性质</h3><h4 id="期望值-5"><a href="#期望值-5" class="headerlink" title="期望值"></a>期望值</h4><p>指数分布的期望值是：</p>
+<script type="math/tex; mode=display">
+E(X) = \frac{1}{\lambda}</script><h4 id="方差-5"><a href="#方差-5" class="headerlink" title="方差"></a>方差</h4><p>指数分布的方差是：</p>
+<script type="math/tex; mode=display">
+\text{Var}(X) = \frac{1}{\lambda^2}</script><h4 id="标准差-1"><a href="#标准差-1" class="headerlink" title="标准差"></a>标准差</h4><p>指数分布的标准差是方差的平方根：</p>
+<script type="math/tex; mode=display">
+\sigma = \sqrt{\text{Var}(X)} = \frac{1}{\lambda}</script><h4 id="无记忆性"><a href="#无记忆性" class="headerlink" title="无记忆性"></a>无记忆性</h4><p>指数分布的一个重要性质是其无记忆性（memoryless property），即：</p>
+<script type="math/tex; mode=display">
+P(X > s + t | X > s) = P(X > t)</script><p>这意味着，给定一个随机事件已经等待了 $s$ 单位时间，未来再等待 $ t$ 单位时间的概率与初始等待 $t$ 单位时间的概率相同。</p>
+<h3 id="应用-5"><a href="#应用-5" class="headerlink" title="应用"></a>应用</h3><p>指数分布在许多领域都有应用，包括可靠性工程、通信系统、金融数学等。以下是一些具体应用示例：</p>
+<ul>
+<li><strong>可靠性工程</strong>：在可靠性工程中，指数分布被用来预测设备故障的时间。</li>
+<li><strong>通信系统</strong>：在通信系统中，指数分布可以用来描述电话呼叫到达的时间间隔。</li>
+<li><strong>金融数学</strong>：在金融数学中，指数分布可以用来模拟金融资产价格的变动时间。</li>
+<li><strong>物理学</strong>：在物理学中，指数分布可以用来描述放射性衰变的时间。</li>
+</ul>
+<p>指数分布的广泛应用使其成为描述随机事件发生时间间隔的重要工具。</p>
+<h2 id="威布尔分布"><a href="#威布尔分布" class="headerlink" title="威布尔分布"></a>威布尔分布</h2><h3 id="定义-6"><a href="#定义-6" class="headerlink" title="定义"></a>定义</h3><p>在前面的推导中，我们定义事件发生概率是 $x$ 的函数就可以得到威布尔分布（Weibull Distribution），这是一种连续概率分布，常用于描述某些具有寿命特征的设备或组件的失效时间。这种分布广泛应用于可靠性工程、生物学、经济学等领域。威布尔分布的图形可以是单峰或双峰，具体形状取决于其参数。事实上，指数分布是威布尔分布的退化。</p>
+<h3 id="公式表示-6"><a href="#公式表示-6" class="headerlink" title="公式表示"></a>公式表示</h3><p>威布尔分布的概率密度函数（PDF）为：</p>
+<script type="math/tex; mode=display">
+f(x) = \frac{k}{\lambda} \left(\frac{x}{\lambda}\right)^{k-1} e^{-(x/\lambda)^k}</script><p>其中：</p>
+<ul>
+<li>$x \geq 0$</li>
+<li>$\lambda &gt; 0$ 是分布的尺度参数，表示事件的典型寿命。</li>
+<li>$k &gt; 0$ 是分布的形状参数，影响分布的形状和峰值位置。</li>
+</ul>
+<h3 id="推导-6"><a href="#推导-6" class="headerlink" title="推导"></a>推导</h3><p>威布尔分布的推导可以从其定义出发。假设设备或组件的失效时间 ( X ) 服从威布尔分布，其概率密度函数可以通过以下方式推导得出：</p>
+<ol>
+<li><p>设备或组件的失效时间 ( X ) 服从威布尔分布，其概率密度函数可以表示为：</p>
+<script type="math/tex; mode=display">
+f(x) = \frac{k}{\lambda} \left(\frac{x}{\lambda}\right)^{k-1} e^{-(x/\lambda)^k}</script></li>
+<li><p>威布尔分布的累积分布函数（CDF）为：</p>
+<script type="math/tex; mode=display">
+F(x) = 1 - e^{-(x/\lambda)^k}</script></li>
+</ol>
+<h3 id="威布尔分布的性质"><a href="#威布尔分布的性质" class="headerlink" title="威布尔分布的性质"></a>威布尔分布的性质</h3><h4 id="期望值-6"><a href="#期望值-6" class="headerlink" title="期望值"></a>期望值</h4><p>威布尔分布的期望值是：</p>
+<script type="math/tex; mode=display">
+E(X) = \lambda \Gamma \left(1 + \frac{1}{k}\right)</script><p>其中 $\Gamma$ 是伽玛函数。</p>
+<h4 id="方差-6"><a href="#方差-6" class="headerlink" title="方差"></a>方差</h4><p>威布尔分布的方差是：</p>
+<script type="math/tex; mode=display">
+\text{Var}(X) = \lambda^2 \left[ \Gamma \left(1 + \frac{2}{k}\right) - \left(\Gamma \left(1 + \frac{1}{k}\right)\right)^2 \right]</script><h4 id="标准差-2"><a href="#标准差-2" class="headerlink" title="标准差"></a>标准差</h4><p>威布尔分布的标准差是方差的平方根：</p>
+<script type="math/tex; mode=display">
+\sigma = \sqrt{\text{Var}(X)}</script><h3 id="应用-6"><a href="#应用-6" class="headerlink" title="应用"></a>应用</h3><p>威布尔分布在许多领域都有应用，以下是一些具体应用示例：</p>
+<ul>
+<li><strong>可靠性工程</strong>：在可靠性工程中，威布尔分布被用来预测设备或组件的失效时间。</li>
+<li><strong>生物学</strong>：在生物学中，威布尔分布可以用来描述生物体的寿命。</li>
+<li><strong>经济学</strong>：在经济学中，威布尔分布可以用来分析经济活动的持续时间。</li>
+<li><strong>物理学</strong>：在物理学中，威布尔分布可以用来描述某些物理过程的持续时间。</li>
+</ul>
+<p>威布尔分布的广泛应用使其成为描述随机事件发生时间间隔的重要工具之一。</p>
+<h1 id="生物数据中数据分布的应用"><a href="#生物数据中数据分布的应用" class="headerlink" title="生物数据中数据分布的应用"></a>生物数据中数据分布的应用</h1><h2 id="二项分布-Binomial-Distribution"><a href="#二项分布-Binomial-Distribution" class="headerlink" title="二项分布 (Binomial Distribution)"></a>二项分布 (Binomial Distribution)</h2><ul>
+<li><strong>描述</strong>：用于描述在固定次数的独立实验中，成功次数的概率分布。</li>
+<li><strong>公式</strong>：$P(X = k) = \binom{n}{k} p^k (1-p)^{n-k}$</li>
+<li><strong>应用示例</strong>：<ul>
+<li>基因测序中，某个特定突变在样本中的出现次数。</li>
+<li>药物筛选中，药物对细胞的杀伤效果的实验结果。</li>
+</ul>
+</li>
+</ul>
+<h2 id="泊松分布-Poisson-Distribution"><a href="#泊松分布-Poisson-Distribution" class="headerlink" title="泊松分布 (Poisson Distribution)"></a>泊松分布 (Poisson Distribution)</h2><ul>
+<li><strong>描述</strong>：用于描述在固定时间或空间内，某事件发生次数的概率分布。</li>
+<li><strong>公式</strong>：$P(X = k) = \frac{e^{-\lambda} \lambda^k}{k!}$</li>
+<li><strong>应用示例</strong>：<ul>
+<li>基因组中某基因的突变频率。</li>
+<li>蛋白质组学中，特定蛋白质的表达量。</li>
+</ul>
+</li>
+</ul>
+<h2 id="超几何分布-Hypergeometric-Distribution"><a href="#超几何分布-Hypergeometric-Distribution" class="headerlink" title="超几何分布 (Hypergeometric Distribution)"></a>超几何分布 (Hypergeometric Distribution)</h2><ul>
+<li><strong>描述</strong>：用于描述从有限总体中抽取样本时，成功次数的概率分布。</li>
+<li><strong>公式</strong>：$P(X = k) = \frac{\binom{K}{k} \binom{N-K}{n-k}}{\binom{N}{n}}$</li>
+<li><strong>应用示例</strong>：<ul>
+<li>从特定群体中抽取样本，计算样本中某种基因型的比例。</li>
+<li>从特定组织中抽取细胞，分析细胞类型的比例。</li>
+</ul>
+</li>
+</ul>
+<h2 id="负二项分布-Negative-Binomial-Distribution"><a href="#负二项分布-Negative-Binomial-Distribution" class="headerlink" title="负二项分布 (Negative Binomial Distribution)"></a>负二项分布 (Negative Binomial Distribution)</h2><ul>
+<li><strong>描述</strong>：用于描述在一系列独立实验中，达到固定成功次数所需的实验次数的概率分布。</li>
+<li><strong>公式</strong>：$P(X = k) = \binom{k-1}{r-1} p^r (1-p)^{k-r}$</li>
+<li><strong>应用示例</strong>：<ul>
+<li>基因测序中，达到一定覆盖度所需的测序深度。</li>
+<li>药物筛选中，达到一定效果所需的药物浓度。</li>
+</ul>
+</li>
+</ul>
+<h2 id="正态分布-Normal-Distribution"><a href="#正态分布-Normal-Distribution" class="headerlink" title="正态分布 (Normal Distribution)"></a>正态分布 (Normal Distribution)</h2><ul>
+<li><strong>描述</strong>：用于描述连续变量的概率分布，假设数据呈对称分布。</li>
+<li><strong>公式</strong>：$P(x) = \frac{1}{\sqrt{2\pi\sigma^2}} e^{-\frac{(x-\mu)^2}{2\sigma^2}}$</li>
+<li><strong>应用示例</strong>：<ul>
+<li>蛋白质表达量的分布。</li>
+<li>基因表达量的标准化值。</li>
+</ul>
+</li>
+</ul>
+<h2 id="指数分布-Exponential-Distribution"><a href="#指数分布-Exponential-Distribution" class="headerlink" title="指数分布 (Exponential Distribution)"></a>指数分布 (Exponential Distribution)</h2><ul>
+<li><strong>描述</strong>：用于描述连续变量的概率分布，假设事件发生的时间间隔是独立且同分布的。</li>
+<li><strong>公式</strong>：$P(x) = \lambda e^{-\lambda x}$</li>
+<li><strong>应用示例</strong>：<ul>
+<li>DNA测序中，读取的序列长度分布。</li>
+<li>蛋白质降解的时间分布。</li>
+</ul>
+</li>
+</ul>
+<h2 id="威布尔分布-Weibull-Distribution"><a href="#威布尔分布-Weibull-Distribution" class="headerlink" title="威布尔分布 (Weibull Distribution)"></a>威布尔分布 (Weibull Distribution)</h2><ul>
+<li><strong>描述</strong>：用于描述连续变量的概率分布，常用于描述寿命数据。</li>
+<li><strong>公式</strong>：$P(x) = \frac{k}{\lambda} (\frac{x}{\lambda})^{k-1} e^{-(\frac{x}{\lambda})^k}$</li>
+<li><strong>应用示例</strong>：<ul>
+<li>细胞的存活时间。</li>
+<li>蛋白质的降解时间。</li>
+</ul>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>本文作者： </strong>Qingyuan Zhuang' Blog
+  </li>
+  <li class="post-copyright-link">
+    <strong>本文链接：</strong>
+    <a href="https://www.zhuangqingyuan.site/2024/07/26/%E5%B8%B8%E8%A7%81%E7%9A%84%E9%9A%8F%E6%9C%BA%E5%8F%98%E9%87%8F%E5%88%86%E5%B8%83/" title="常见的随机变量分布">https://www.zhuangqingyuan.site/2024/07/26/常见的随机变量分布/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>版权声明： </strong>本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fab fa-fw fa-creative-commons"></i>BY-NC-SA</a> 许可协议。转载请注明出处！
+  </li>
+</ul>
+</div>
+
+        
+
+  <div class="followme">
+    <p>欢迎关注我的其它发布渠道</p>
+
+    <div class="social-list">
+
+        <div class="social-item">
+          <a target="_blank" class="social-link" href="/atom.xml">
+            <span class="icon">
+              <i class="fa fa-rss"></i>
+            </span>
+
+            <span class="label">RSS</span>
+          </a>
+        </div>
+    </div>
+  </div>
+
+
+      <footer class="post-footer">
+          
+          <div class="post-tags">
+              <a href="/tags/%E7%BB%9F%E8%AE%A1%E5%AD%A6/" rel="tag"><i class="fa fa-tag"></i> 统计学</a>
+              <a href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag"><i class="fa fa-tag"></i> 机器学习</a>
+          </div>
+
+        
+<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------　　　　本文结束　<i class="fa fa-flag"></i>　感谢阅读　　　　-------------</div>
+    
+</div>
+
+
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2024/07/19/%E6%96%87%E7%8C%AE%E9%98%85%E8%AF%BB%EF%BC%9A%E8%87%AA%E4%B8%8A%E8%80%8C%E4%B8%8B%E6%8F%8F%E8%BF%B0%E8%82%BF%E7%98%A4%E5%8F%91%E5%B1%95%E7%9A%84%E6%97%B6%E7%A9%BA%E5%8A%A8%E5%8A%9B%E5%AD%A6/" rel="prev" title="文献阅读：自上而下描述肿瘤发展的时空动力学">
+      <i class="fa fa-chevron-left"></i> 文献阅读：自上而下描述肿瘤发展的时空动力学
+    </a></div>
+      <div class="post-nav-item"></div>
+    </div>
+      </footer>
+    
+    
+    <div><center>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/css/share.min.css">
+    <div class="social-share" data-sites="weibo, qq, qzone,wechat"></div>
+    <script src="http://apps.bdimg.com/libs/jquery/1.8.2/jquery.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/social-share.js/1.0.16/js/social-share.min.js"></script>
+    </center></div>  
+  </article>
+  
+  
+  
+
+
+
+          </div>
+          
+    <div class="comments" id="valine-comments"></div>
+
+<script>
+  window.addEventListener('tabs:register', () => {
+    let { activeClass } = CONFIG.comments;
+    if (CONFIG.comments.storage) {
+      activeClass = localStorage.getItem('comments_active') || activeClass;
+    }
+    if (activeClass) {
+      let activeTab = document.querySelector(`a[href="#comment-${activeClass}"]`);
+      if (activeTab) {
+        activeTab.click();
+      }
+    }
+  });
+  if (CONFIG.comments.storage) {
+    window.addEventListener('tabs:click', event => {
+      if (!event.target.matches('.tabs-comment .tab-content .tab-pane')) return;
+      let commentClass = event.target.classList[1];
+      localStorage.setItem('comments_active', commentClass);
+    });
+  }
+</script>
+
+        </div>
+          
+  
+  <div class="toggle sidebar-toggle">
+    <span class="toggle-line toggle-line-first"></span>
+    <span class="toggle-line toggle-line-middle"></span>
+    <span class="toggle-line toggle-line-last"></span>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc">
+          目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%A6%BB%E6%95%A3%E5%9E%8B%E9%9A%8F%E6%9C%BA%E5%8F%98%E9%87%8F%E7%9A%84%E5%88%86%E5%B8%83"><span class="nav-text">离散型随机变量的分布</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E9%A1%B9%E5%88%86%E5%B8%83"><span class="nav-text">二项分布</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89"><span class="nav-text">定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%AC%E5%BC%8F%E8%A1%A8%E7%A4%BA"><span class="nav-text">公式表示</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A8%E5%AF%BC"><span class="nav-text">推导</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%BA%8C%E9%A1%B9%E5%88%86%E5%B8%83%E7%9A%84%E6%80%A7%E8%B4%A8"><span class="nav-text">二项分布的性质</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%9F%E6%9C%9B%E5%80%BC"><span class="nav-text">期望值</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E5%B7%AE"><span class="nav-text">方差</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%AD%A3%E6%80%81%E5%88%86%E5%B8%83%E8%BF%91%E4%BC%BC"><span class="nav-text">正态分布近似</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BA%94%E7%94%A8"><span class="nav-text">应用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B3%8A%E6%9D%BE%E5%88%86%E5%B8%83"><span class="nav-text">泊松分布</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89-1"><span class="nav-text">定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%AC%E5%BC%8F%E8%A1%A8%E7%A4%BA-1"><span class="nav-text">公式表示</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A8%E5%AF%BC-1"><span class="nav-text">推导</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%B3%8A%E6%9D%BE%E5%88%86%E5%B8%83%E7%9A%84%E6%80%A7%E8%B4%A8"><span class="nav-text">泊松分布的性质</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%9F%E6%9C%9B%E5%80%BC-1"><span class="nav-text">期望值</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E5%B7%AE-1"><span class="nav-text">方差</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BA%94%E7%94%A8-1"><span class="nav-text">应用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B6%85%E5%87%A0%E4%BD%95%E5%88%86%E5%B8%83"><span class="nav-text">超几何分布</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89-2"><span class="nav-text">定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%AC%E5%BC%8F%E8%A1%A8%E7%A4%BA-2"><span class="nav-text">公式表示</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A8%E5%AF%BC-2"><span class="nav-text">推导</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B6%85%E5%87%A0%E4%BD%95%E5%88%86%E5%B8%83%E7%9A%84%E6%80%A7%E8%B4%A8"><span class="nav-text">超几何分布的性质</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%9F%E6%9C%9B%E5%80%BC-2"><span class="nav-text">期望值</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E5%B7%AE-2"><span class="nav-text">方差</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BA%94%E7%94%A8-2"><span class="nav-text">应用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B4%9F%E4%BA%8C%E9%A1%B9%E5%88%86%E5%B8%83"><span class="nav-text">负二项分布</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89-3"><span class="nav-text">定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%AC%E5%BC%8F%E8%A1%A8%E7%A4%BA-3"><span class="nav-text">公式表示</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A8%E5%AF%BC-3"><span class="nav-text">推导</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B4%9F%E4%BA%8C%E9%A1%B9%E5%88%86%E5%B8%83%E7%9A%84%E6%80%A7%E8%B4%A8"><span class="nav-text">负二项分布的性质</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%9F%E6%9C%9B%E5%80%BC-3"><span class="nav-text">期望值</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E5%B7%AE-3"><span class="nav-text">方差</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BA%94%E7%94%A8-3"><span class="nav-text">应用</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%BF%9E%E7%BB%AD%E5%9E%8B%E9%9A%8F%E6%9C%BA%E5%8F%98%E9%87%8F%E7%9A%84%E5%88%86%E5%B8%83"><span class="nav-text">连续型随机变量的分布</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AD%A3%E6%80%81%E5%88%86%E5%B8%83"><span class="nav-text">正态分布</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89-4"><span class="nav-text">定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%AC%E5%BC%8F%E8%A1%A8%E7%A4%BA-4"><span class="nav-text">公式表示</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A8%E5%AF%BC-4"><span class="nav-text">推导</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%AD%A3%E6%80%81%E5%88%86%E5%B8%83%E7%9A%84%E6%80%A7%E8%B4%A8"><span class="nav-text">正态分布的性质</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%9F%E6%9C%9B%E5%80%BC-4"><span class="nav-text">期望值</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E5%B7%AE-4"><span class="nav-text">方差</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A0%87%E5%87%86%E5%B7%AE"><span class="nav-text">标准差</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#68-95-99-7-%E8%A7%84%E5%88%99"><span class="nav-text">68-95-99.7 规则</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BA%94%E7%94%A8-4"><span class="nav-text">应用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8C%87%E6%95%B0%E5%88%86%E5%B8%83"><span class="nav-text">指数分布</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89-5"><span class="nav-text">定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%AC%E5%BC%8F%E8%A1%A8%E7%A4%BA-5"><span class="nav-text">公式表示</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A8%E5%AF%BC-5"><span class="nav-text">推导</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8C%87%E6%95%B0%E5%88%86%E5%B8%83%E7%9A%84%E6%80%A7%E8%B4%A8"><span class="nav-text">指数分布的性质</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%9F%E6%9C%9B%E5%80%BC-5"><span class="nav-text">期望值</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E5%B7%AE-5"><span class="nav-text">方差</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A0%87%E5%87%86%E5%B7%AE-1"><span class="nav-text">标准差</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%97%A0%E8%AE%B0%E5%BF%86%E6%80%A7"><span class="nav-text">无记忆性</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BA%94%E7%94%A8-5"><span class="nav-text">应用</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A8%81%E5%B8%83%E5%B0%94%E5%88%86%E5%B8%83"><span class="nav-text">威布尔分布</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AE%9A%E4%B9%89-6"><span class="nav-text">定义</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%AC%E5%BC%8F%E8%A1%A8%E7%A4%BA-6"><span class="nav-text">公式表示</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A8%E5%AF%BC-6"><span class="nav-text">推导</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A8%81%E5%B8%83%E5%B0%94%E5%88%86%E5%B8%83%E7%9A%84%E6%80%A7%E8%B4%A8"><span class="nav-text">威布尔分布的性质</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%9C%9F%E6%9C%9B%E5%80%BC-6"><span class="nav-text">期望值</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%96%B9%E5%B7%AE-6"><span class="nav-text">方差</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E6%A0%87%E5%87%86%E5%B7%AE-2"><span class="nav-text">标准差</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BA%94%E7%94%A8-6"><span class="nav-text">应用</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%94%9F%E7%89%A9%E6%95%B0%E6%8D%AE%E4%B8%AD%E6%95%B0%E6%8D%AE%E5%88%86%E5%B8%83%E7%9A%84%E5%BA%94%E7%94%A8"><span class="nav-text">生物数据中数据分布的应用</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%E9%A1%B9%E5%88%86%E5%B8%83-Binomial-Distribution"><span class="nav-text">二项分布 (Binomial Distribution)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%B3%8A%E6%9D%BE%E5%88%86%E5%B8%83-Poisson-Distribution"><span class="nav-text">泊松分布 (Poisson Distribution)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B6%85%E5%87%A0%E4%BD%95%E5%88%86%E5%B8%83-Hypergeometric-Distribution"><span class="nav-text">超几何分布 (Hypergeometric Distribution)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%B4%9F%E4%BA%8C%E9%A1%B9%E5%88%86%E5%B8%83-Negative-Binomial-Distribution"><span class="nav-text">负二项分布 (Negative Binomial Distribution)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%AD%A3%E6%80%81%E5%88%86%E5%B8%83-Normal-Distribution"><span class="nav-text">正态分布 (Normal Distribution)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8C%87%E6%95%B0%E5%88%86%E5%B8%83-Exponential-Distribution"><span class="nav-text">指数分布 (Exponential Distribution)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A8%81%E5%B8%83%E5%B0%94%E5%88%86%E5%B8%83-Weibull-Distribution"><span class="nav-text">威布尔分布 (Weibull Distribution)</span></a></li></ol></li></ol></div>
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="Qingyuan Zhuang' Blog"
+      src="/images/avatar.gif">
+  <p class="site-author-name" itemprop="name">Qingyuan Zhuang' Blog</p>
+  <div class="site-description" itemprop="description">冰棒汽水的味道，一个夏天的年少。</div>
+</div>
+<div class="site-state-wrap motion-element">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+          <a href="/archives">
+          <span class="site-state-item-count">45</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+            <a href="/categories/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+            <a href="/tags/">
+        <span class="site-state-item-count">29</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+        <a href="https://github.com/ForrestGump618" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;ForrestGump618" rel="noopener" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:zhuangqingyuan@foxmail.com" title="E-Mail → mailto:zhuangqingyuan@foxmail.com" rel="noopener" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://weibo.com/u/7564625671" title="Weibo → https:&#x2F;&#x2F;weibo.com&#x2F;u&#x2F;7564625671" rel="noopener" target="_blank"><i class="fab fa-weibo fa-fw"></i>Weibo</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://twitter.com/Xiao200105" title="Twitter → https:&#x2F;&#x2F;twitter.com&#x2F;Xiao200105" rel="noopener" target="_blank"><i class="fab fa-twitter fa-fw"></i>Twitter</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://www.zhihu.com/people/zhuang-qing-yuan-18" title="ZhiHu → https:&#x2F;&#x2F;www.zhihu.com&#x2F;people&#x2F;zhuang-qing-yuan-18" rel="noopener" target="_blank"><i class="fab fa-zhihu fa-fw"></i>ZhiHu</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="https://orcid.org/0000-0002-0333-8192" title="ORCID → https:&#x2F;&#x2F;orcid.org&#x2F;0000-0002-0333-8192" rel="noopener" target="_blank"><i class="fab fa-orcid fa-fw"></i>ORCID</a>
+      </span>
+  </div>
+
+
+
+      </div>
+        <div class="back-to-top motion-element">
+          <i class="fa fa-arrow-up"></i>
+          <span>0%</span>
+        </div>
+
+      
+        <script type="text/javascript" charset="utf-8" src="/js/tagcloud.js"></script>
+        <script type="text/javascript" charset="utf-8" src="/js/tagcanvas.js"></script>
+        <div class="widget-wrap">
+          <!--<h3 class="widget-title">Tag Cloud</h3>
+          -->
+          <div id="myCanvasContainer" class="widget tagcloud">
+          <canvas width="250" height="250" id="resCanvas" style="width=100%">
+            <ul class="tag-list" itemprop="keywords"><li class="tag-list-item"><a class="tag-list-link" href="/tags/AI/" rel="tag">AI</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/Docker/" rel="tag">Docker</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/GWAS/" rel="tag">GWAS</a><span class="tag-list-count">4</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/HEXO/" rel="tag">HEXO</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/LLM/" rel="tag">LLM</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/python/" rel="tag">python</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E4%BA%A4%E5%8F%89%E5%AD%A6%E7%A7%91/" rel="tag">交叉学科</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%85%8D%E7%96%AB/" rel="tag">免疫</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%BB%E5%AD%A6/" rel="tag">医学</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8C%BB%E5%AD%A6%E7%94%9F/" rel="tag">医学生</a><span class="tag-list-count">8</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F/" rel="tag">单细胞测序</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%A4%A7%E5%9B%9B/" rel="tag">大四</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AD%9F%E5%BE%B7%E5%B0%94%E9%9A%8F%E6%9C%BA%E5%8C%96/" rel="tag">孟德尔随机化</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%AF%86%E7%A0%81%E5%AD%A6/" rel="tag">密码学</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BC%80%E6%BA%90/" rel="tag">开源</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E5%BF%83%E5%86%85%E7%A7%91/" rel="tag">心内科</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%99%BA%E8%83%BD%E9%9F%B3%E7%AE%B1/" rel="tag">智能音箱</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/" rel="tag">机器学习</a><span class="tag-list-count">12</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B5%81%E8%A1%8C%E7%97%85%E5%AD%A6/" rel="tag">流行病学</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/" rel="tag">深度学习</a><span class="tag-list-count">9</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%88%AC%E8%99%AB/" rel="tag">爬虫</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/" rel="tag">生物信息学</a><span class="tag-list-count">9</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%A0%94%E7%A9%B6%E7%94%9F/" rel="tag">研究生</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E7%BB%9F%E8%AE%A1%E5%AD%A6/" rel="tag">统计学</a><span class="tag-list-count">7</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%82%BF%E7%98%A4/" rel="tag">肿瘤</a><span class="tag-list-count">2</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AE%A1%E6%95%B0/" rel="tag">计数</a><span class="tag-list-count">1</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA/" rel="tag">计算机</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E8%BD%AC%E5%BD%95%E7%BB%84%E5%AD%A6/" rel="tag">转录组学</a><span class="tag-list-count">3</span></li><li class="tag-list-item"><a class="tag-list-link" href="/tags/%E9%9A%8F%E7%AC%94/" rel="tag">随笔</a><span class="tag-list-count">5</span></li></ul>
+          </canvas>
+          </div>
+        </div>
+      
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer class="footer">
+      <div class="footer-inner">
+        
+
+        
+
+<div style="text-align:center;" class="copyright">
+  
+  &copy; 2023 – 
+  <span itemprop="copyrightYear">2024</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Qingyuan Zhuang</span>
+</div>
+
+<div style="text-align:center;" class="copyright">
+    <span class="post-meta-item-icon">
+      <i class="fa fa-chart-area"></i>
+    </span>
+    <span title="站点总字数">206k</span>
+
+    <span class="post-meta-item-icon">
+      <span class="post-meta-divider"> </span>
+      <i class="fa fa-coffee"></i>
+    </span>
+    <span title="站点阅读时长">12:29</span>
+  
+  
+    <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-divider"> </span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span id="busuanzi_container_site_pv"><span id="busuanzi_value_site_pv"></span>次</span>
+    <span class="post-meta-divider"> </span>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-fire"></i>
+    </span>
+    <span id="busuanzi_container_site_uv"><span id="busuanzi_value_site_uv"></span>人</span>
+</div>
+
+
+
+
+<script>
+$(document).ready(function() {
+
+    var int = setInterval(fixCount, 50);  // 50ms周期检测函数
+    var countOffset = 20000;  // 初始化首次数据
+
+    function fixCount() {            
+       if (document.getElementById("busuanzi_container_site_pv").style.display != "none")
+        {
+            $("#busuanzi_value_site_pv").html(parseInt($("#busuanzi_value_site_pv").html()) + countOffset); 
+            clearInterval(int);
+        }                  
+        if ($("#busuanzi_container_site_pv").css("display") != "none")
+        {
+            $("#busuanzi_value_site_uv").html(parseInt($("#busuanzi_value_site_uv").html()) + countOffset); // 加上初始数据 
+            clearInterval(int); // 停止检测
+        }  
+    }
+});
+</script> 
+
+<div style="text-align:center;">
+<!--添加网站运行时间-->
+<span>小破站已经在风雨中度过了</span>
+<span id="timeDate">载入天数...</span>
+<span id="times">载入时分秒...</span>
+<script>
+    function createtime() {
+        const startTime = '08/11/2023 20:00:00',
+            start = new Date(startTime)
+        let mill = new Date() - start,
+            seconds = Math.floor(mill / 1000),
+            mins = Math.floor(seconds / 60),
+            hours = Math.floor(mins / 60),
+            days = Math.floor(hours / 24)
+        const time = {
+            seconds: seconds - mins * 60,
+            mins: mins - hours * 60,
+            hours: hours - days * 24,
+        }
+        for (const k in time) {
+            time[k] = `${time[k]}`.padStart(2, '0')
+        }
+        document.getElementById("timeDate").innerHTML = ` ${days} 天`
+        document.getElementById("times").innerHTML = ` ${time.hours} 小时 ${time.mins} 分 ${time.seconds} 秒`
+    }
+    setInterval(createtime, 500)
+</script>
+</div>
+
+
+
+        
+<div class="busuanzi-count">
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item" id="busuanzi_container_site_uv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv" style="display: none;">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+
+
+
+
+
+
+
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="//cdn.jsdelivr.net/npm/animejs@3.2.2/lib/anime.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/theme-next/theme-next-pjax@0/pjax.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/jquery@3/dist/jquery.min.js"></script>
+  <script src="//cdn.jsdelivr.net/gh/fancyapps/fancybox@3/dist/jquery.fancybox.min.js"></script>
+  <script src="//cdn.jsdelivr.net/npm/velocity-animate@1.5.2/velocity.min.js"></script>
+  <script src="/lib/velocity/velocity.ui.min.js"></script>
+
+<script src="/js/utils.js"></script>
+
+<script src="/js/motion.js"></script>
+
+
+<script src="/js/schemes/muse.js"></script>
+
+
+<script src="/js/next-boot.js"></script>
+
+<script src="/js/bookmark.js"></script>
+
+  <script>
+var pjax = new Pjax({
+  selectors: [
+    'head title',
+    '#page-configurations',
+    '.content-wrap',
+    '.post-toc-wrap',
+    '.languages',
+    '#pjax'
+  ],
+  switches: {
+    '.post-toc-wrap': Pjax.switches.innerHTML
+  },
+  analytics: false,
+  cacheBust: false,
+  scrollTo : !CONFIG.bookmark.enable
+});
+
+window.addEventListener('pjax:success', () => {
+  document.querySelectorAll('script[data-pjax], script#page-configurations, #pjax script').forEach(element => {
+    var code = element.text || element.textContent || element.innerHTML || '';
+    var parent = element.parentNode;
+    parent.removeChild(element);
+    var script = document.createElement('script');
+    if (element.id) {
+      script.id = element.id;
+    }
+    if (element.className) {
+      script.className = element.className;
+    }
+    if (element.type) {
+      script.type = element.type;
+    }
+    if (element.src) {
+      script.src = element.src;
+      // Force synchronous loading of peripheral JS.
+      script.async = false;
+    }
+    if (element.dataset.pjax !== undefined) {
+      script.dataset.pjax = '';
+    }
+    if (code !== '') {
+      script.appendChild(document.createTextNode(code));
+    }
+    parent.appendChild(script);
+  });
+  NexT.boot.refresh();
+  // Define Motion Sequence & Bootstrap Motion.
+  if (CONFIG.motion.enable) {
+    NexT.motion.integrator
+      .init()
+      .add(NexT.motion.middleWares.subMenu)
+      .add(NexT.motion.middleWares.postList)
+      .bootstrap();
+  }
+  NexT.utils.updateSidebarPosition();
+});
+</script>
+
+
+
+
+  
+  <script data-pjax>
+    (function(){
+      var canonicalURL, curProtocol;
+      //Get the <link> tag
+      var x=document.getElementsByTagName("link");
+		//Find the last canonical URL
+		if(x.length > 0){
+			for (i=0;i<x.length;i++){
+				if(x[i].rel.toLowerCase() == 'canonical' && x[i].href){
+					canonicalURL=x[i].href;
+				}
+			}
+		}
+    //Get protocol
+	    if (!canonicalURL){
+	    	curProtocol = window.location.protocol.split(':')[0];
+	    }
+	    else{
+	    	curProtocol = canonicalURL.split(':')[0];
+	    }
+      //Get current URL if the canonical URL does not exist
+	    if (!canonicalURL) canonicalURL = window.location.href;
+	    //Assign script content. Replace current URL with the canonical URL
+      !function(){var e=/([http|https]:\/\/[a-zA-Z0-9\_\.]+\.baidu\.com)/gi,r=canonicalURL,t=document.referrer;if(!e.test(r)){var n=(String(curProtocol).toLowerCase() === 'https')?"https://sp0.baidu.com/9_Q4simg2RQJ8t7jm9iCKT-xh_/s.gif":"//api.share.baidu.com/s.gif";t?(n+="?r="+encodeURIComponent(document.referrer),r&&(n+="&l="+r)):r&&(n+="?l="+r);var i=new Image;i.src=n}}(window);})();
+  </script>
+
+
+
+
+  
+<script src="/js/local-search.js"></script>
+
+
+
+
+
+
+  <script src="//code.tidio.co/qqrjcchnt9lv02g8xd8s3ouwpqtxtia2.js"></script>
+
+
+
+
+
+
+
+    <div id="pjax">
+  
+
+  
+      
+
+<script>
+  if (typeof MathJax === 'undefined') {
+    window.MathJax = {
+      loader: {
+        source: {
+          '[tex]/amsCd': '[tex]/amscd',
+          '[tex]/AMScd': '[tex]/amscd'
+        }
+      },
+      tex: {
+        inlineMath: {'[+]': [['$', '$']]},
+        tags: 'ams'
+      },
+      options: {
+        renderActions: {
+          findScript: [10, doc => {
+            document.querySelectorAll('script[type^="math/tex"]').forEach(node => {
+              const display = !!node.type.match(/; *mode=display/);
+              const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
+              const text = document.createTextNode('');
+              node.parentNode.replaceChild(text, node);
+              math.start = {node: text, delim: '', n: 0};
+              math.end = {node: text, delim: '', n: 0};
+              doc.math.push(math);
+            });
+          }, '', false],
+          insertedScript: [200, () => {
+            document.querySelectorAll('mjx-container').forEach(node => {
+              let target = node.parentNode;
+              if (target.nodeName.toLowerCase() === 'li') {
+                target.parentNode.classList.add('has-jax');
+              }
+            });
+          }, '', false]
+        }
+      }
+    };
+    (function () {
+      var script = document.createElement('script');
+      script.src = '//cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js';
+      script.defer = true;
+      document.head.appendChild(script);
+    })();
+  } else {
+    MathJax.startup.document.state(0);
+    MathJax.texReset();
+    MathJax.typeset();
+  }
+</script>
+
+    
+
+  
+<script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.7/lib/darkmode-js.min.js"></script>
+
+<script>
+var options = {
+  bottom: '128px',
+  right: 'unset',
+  left: '32px',
+  time: '0.s',
+  mixColor: 'transparent',
+  backgroundColor: 'transparent',
+  buttonColorDark: '#100f2c',
+  buttonColorLight: '#fff',
+  saveInCookies: true,
+  label: '🌓',
+  autoMatchOsTheme: true
+}
+const darkmode = new Darkmode(options);
+window.darkmode = darkmode;
+darkmode.showWidget();
+</script>
+
+
+<script>
+NexT.utils.loadComments(document.querySelector('#valine-comments'), () => {
+  NexT.utils.getScript('//unpkg.com/valine@latest/dist/Valine.min.js', () => {
+    var GUEST = ['nick', 'mail', 'link'];
+    var guest = 'nick,mail,link';
+    guest = guest.split(',').filter(item => {
+      return GUEST.includes(item);
+    });
+    new Valine({
+      el         : '#valine-comments',
+      verify     : false,
+      notify     : false,
+      appId      : 'Dn2HgqGikthxTy5tlhKqdRK8-gzGzoHsz',
+      appKey     : 'B9a4a4bFtqIKoDkPg7p2em3j',
+      placeholder: "Just go go",
+      avatar     : 'mm',
+      meta       : guest,
+      pageSize   : '10' || 10,
+      visitor    : true,
+      lang       : '' || 'zh-cn',
+      path       : location.pathname,
+      recordIP   : true,
+      serverURLs : 'https://dn2hgqgi.lc-cn-n1-shared.com'
+    });
+  }, window.Valine);
+});
+</script>
+
+    </div>
+</body>
+</html>
+
+<!-- 页面点击小红心 -->
+<script type="text/javascript" src="/js/love.js"></script>
