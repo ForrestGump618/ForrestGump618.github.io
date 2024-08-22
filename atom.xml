@@ -6,7 +6,7 @@
   <link href="https://www.zhuangqingyuan.site/atom.xml" rel="self"/>
   
   <link href="https://www.zhuangqingyuan.site/"/>
-  <updated>2024-07-26T05:38:12.415Z</updated>
+  <updated>2024-08-22T15:33:37.035Z</updated>
   <id>https://www.zhuangqingyuan.site/</id>
   
   <author>
@@ -15,6 +15,37 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>文献阅读：单基因的研究思路</title>
+    <link href="https://www.zhuangqingyuan.site/2024/08/22/%E6%96%87%E7%8C%AE%E9%98%85%E8%AF%BB%EF%BC%9A%E8%82%BF%E7%98%A4%E5%8D%95%E5%9F%BA%E5%9B%A0%E7%A0%94%E7%A9%B6%E6%80%9D%E8%B7%AF/"/>
+    <id>https://www.zhuangqingyuan.site/2024/08/22/%E6%96%87%E7%8C%AE%E9%98%85%E8%AF%BB%EF%BC%9A%E8%82%BF%E7%98%A4%E5%8D%95%E5%9F%BA%E5%9B%A0%E7%A0%94%E7%A9%B6%E6%80%9D%E8%B7%AF/</id>
+    <published>2024-08-22T05:27:05.000Z</published>
+    <updated>2024-08-22T15:33:37.035Z</updated>
+    
+    
+      
+      
+        
+        
+    <summary type="html">&lt;h1 id=&quot;文章信息&quot;&gt;&lt;a href=&quot;#文章信息&quot; class=&quot;headerlink&quot; title=&quot;文章信息&quot;&gt;&lt;/a&gt;文章信息&lt;/h1&gt;&lt;p&gt;&amp;emsp;&amp;emsp;标题：ITGB6 modulates resistance to anti-CD276</summary>
+        
+      
+    
+    
+    
+    <category term="生物信息学" scheme="https://www.zhuangqingyuan.site/categories/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
+    
+    
+    <category term="单细胞测序" scheme="https://www.zhuangqingyuan.site/tags/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F/"/>
+    
+    <category term="生物信息学" scheme="https://www.zhuangqingyuan.site/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
+    
+    <category term="肿瘤" scheme="https://www.zhuangqingyuan.site/tags/%E8%82%BF%E7%98%A4/"/>
+    
+    <category term="转录组学" scheme="https://www.zhuangqingyuan.site/tags/%E8%BD%AC%E5%BD%95%E7%BB%84%E5%AD%A6/"/>
+    
+  </entry>
   
   <entry>
     <title>常见的随机变量分布</title>
@@ -52,15 +83,15 @@
     <category term="生物信息学" scheme="https://www.zhuangqingyuan.site/categories/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
     
     
-    <category term="生物信息学" scheme="https://www.zhuangqingyuan.site/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
-    
     <category term="单细胞测序" scheme="https://www.zhuangqingyuan.site/tags/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F/"/>
+    
+    <category term="生物信息学" scheme="https://www.zhuangqingyuan.site/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
     
     <category term="研究生" scheme="https://www.zhuangqingyuan.site/tags/%E7%A0%94%E7%A9%B6%E7%94%9F/"/>
     
-    <category term="医学生" scheme="https://www.zhuangqingyuan.site/tags/%E5%8C%BB%E5%AD%A6%E7%94%9F/"/>
-    
     <category term="肿瘤" scheme="https://www.zhuangqingyuan.site/tags/%E8%82%BF%E7%98%A4/"/>
+    
+    <category term="医学生" scheme="https://www.zhuangqingyuan.site/tags/%E5%8C%BB%E5%AD%A6%E7%94%9F/"/>
     
     <category term="转录组学" scheme="https://www.zhuangqingyuan.site/tags/%E8%BD%AC%E5%BD%95%E7%BB%84%E5%AD%A6/"/>
     
@@ -81,9 +112,9 @@
     <category term="生物信息学" scheme="https://www.zhuangqingyuan.site/categories/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
     
     
-    <category term="生物信息学" scheme="https://www.zhuangqingyuan.site/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
-    
     <category term="单细胞测序" scheme="https://www.zhuangqingyuan.site/tags/%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F/"/>
+    
+    <category term="生物信息学" scheme="https://www.zhuangqingyuan.site/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
     
   </entry>
   
@@ -407,27 +438,6 @@
     
     
     <summary type="html">在深度学习中，Softmax 回归是一种常见且简单的分类模型。本文将详细介绍如何使用 PyTorch 实现 Softmax 回归模型，并使用 Fashion-MNIST 数据集进行训练和测试。</summary>
-    
-    
-    
-    <category term="深度学习" scheme="https://www.zhuangqingyuan.site/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"/>
-    
-    
-    <category term="机器学习" scheme="https://www.zhuangqingyuan.site/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
-    
-    <category term="深度学习" scheme="https://www.zhuangqingyuan.site/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>深度学习笔记（二）：PyTorch实现线性回归</title>
-    <link href="https://www.zhuangqingyuan.site/2024/04/01/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9APyTorch%E5%AE%9E%E7%8E%B0%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/"/>
-    <id>https://www.zhuangqingyuan.site/2024/04/01/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%BA%8C%EF%BC%89%EF%BC%9APyTorch%E5%AE%9E%E7%8E%B0%E7%BA%BF%E6%80%A7%E5%9B%9E%E5%BD%92/</id>
-    <published>2024-04-01T15:27:01.000Z</published>
-    <updated>2024-04-02T14:24:29.654Z</updated>
-    
-    
-    <summary type="html">本篇博文将介绍如何使用Pytorch库实现线性回归模型，并对代码进行详细解释。</summary>
     
     
     
