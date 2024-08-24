@@ -26,15 +26,15 @@
   </script>
 
 
-  <meta name="description" content="文章信息&amp;emsp;&amp;emsp;标题：ITGB6 modulates resistance to anti-CD276 therapy in head and neck cancer by promoting PF4+ macrophage infiltration&amp;emsp;&amp;emsp;杂志：Nature Communication&amp;emsp;&amp;emsp;日期：2024-08-16 文章概要&amp;e">
+  <meta name="description" content="思路非常清晰的一篇文章，可以学习的东西很多，待更新~">
 <meta property="og:type" content="article">
 <meta property="og:title" content="文献阅读：单基因的研究思路">
 <meta property="og:url" content="https://www.zhuangqingyuan.site/2024/08/22/%E6%96%87%E7%8C%AE%E9%98%85%E8%AF%BB%EF%BC%9A%E8%82%BF%E7%98%A4%E5%8D%95%E5%9F%BA%E5%9B%A0%E7%A0%94%E7%A9%B6%E6%80%9D%E8%B7%AF/index.html">
 <meta property="og:site_name" content="一个夏天的年少">
-<meta property="og:description" content="文章信息&amp;emsp;&amp;emsp;标题：ITGB6 modulates resistance to anti-CD276 therapy in head and neck cancer by promoting PF4+ macrophage infiltration&amp;emsp;&amp;emsp;杂志：Nature Communication&amp;emsp;&amp;emsp;日期：2024-08-16 文章概要&amp;e">
+<meta property="og:description" content="思路非常清晰的一篇文章，可以学习的东西很多，待更新~">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-08-22T05:27:05.000Z">
-<meta property="article:modified_time" content="2024-08-22T15:33:37.035Z">
+<meta property="article:modified_time" content="2024-08-24T15:15:49.991Z">
 <meta property="article:author" content="Qingyuan Zhuang&#39; Blog">
 <meta property="article:tag" content="单细胞测序">
 <meta property="article:tag" content="生物信息学">
@@ -233,10 +233,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表</span>
-              
 
-              <time title="创建时间：2024-08-22 13:27:05 / 修改时间：23:33:37" itemprop="dateCreated datePublished" datetime="2024-08-22T13:27:05+08:00">2024-08-22</time>
+              <time title="创建时间：2024-08-22 13:27:05" itemprop="dateCreated datePublished" datetime="2024-08-22T13:27:05+08:00">2024-08-22</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新</span>
+                <time title="修改时间：2024-08-24 23:15:49" itemprop="dateModified" datetime="2024-08-24T23:15:49+08:00">2024-08-24</time>
+              </span>
             <span class="post-meta-item">
               <span class="post-meta-item-icon">
                 <i class="far fa-folder"></i>
@@ -274,15 +280,16 @@
                 <i class="far fa-file-word"></i>
               </span>
                 <span class="post-meta-item-text">本文字数：</span>
-              <span>420</span>
+              <span>4.2k</span>
             </span>
             <span class="post-meta-item" title="阅读时长">
               <span class="post-meta-item-icon">
                 <i class="far fa-clock"></i>
               </span>
                 <span class="post-meta-item-text">阅读时长 &asymp;</span>
-              <span>2 分钟</span>
+              <span>15 分钟</span>
             </span>
+            <div class="post-description">思路非常清晰的一篇文章，可以学习的东西很多，待更新~</div>
 
         </div>
       </header>
@@ -293,12 +300,162 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h1 id="文章信息"><a href="#文章信息" class="headerlink" title="文章信息"></a>文章信息</h1><p>&emsp;&emsp;标题：ITGB6 modulates resistance to anti-CD276 therapy in head and neck cancer by promoting PF4+ macrophage infiltration<br>&emsp;&emsp;杂志：Nature Communication<br>&emsp;&emsp;日期：2024-08-16</p>
+        <p>、0# 文章信息</p>
+<p>&emsp;&emsp;标题：ITGB6 modulates resistance to anti-CD276 therapy in head and neck cancer by promoting PF4+ macrophage infiltration<br>&emsp;&emsp;杂志：Nature Communication<br>&emsp;&emsp;日期：2024-08-16</p>
 <h1 id="文章概要"><a href="#文章概要" class="headerlink" title="文章概要"></a>文章概要</h1><p>&emsp;&emsp;临床问题：头颈部鳞癌可以采用抗CD276进行治疗，但临床上有治疗应答的差异。<br>&emsp;&emsp;探索方向：基于组学数据表征应答组和非应答组肿瘤微环境（Tumor microenvironment, TME）的差异，筛选驱动抗CD276耐药的基因，并尝试寻找耐药相关的生物学标志物，助力临床精准治疗。</p>
-<h1 id="论述思路"><a href="#论述思路" class="headerlink" title="论述思路"></a>论述思路</h1><h2 id="解析抗CD276治疗应答差异的机制"><a href="#解析抗CD276治疗应答差异的机制" class="headerlink" title="解析抗CD276治疗应答差异的机制"></a>解析抗CD276治疗应答差异的机制</h2><p>&emsp;&emsp;文章设计了对照IgG治疗组、α-CD276抗体治疗耐药组、α-CD276抗体治疗敏感组三组进行后续比较。针对抗CD276治疗应答机制的差异，文章穷举了免疫微环境中的成分，依次做出假设并通过实验验证。</p>
+<h1 id="论述思路"><a href="#论述思路" class="headerlink" title="论述思路"></a>论述思路</h1><h2 id="鉴定影响抗CD276治疗效果的关键基因"><a href="#鉴定影响抗CD276治疗效果的关键基因" class="headerlink" title="鉴定影响抗CD276治疗效果的关键基因"></a>鉴定影响抗CD276治疗效果的关键基因</h2><h3 id="阶段一：抗CD276治疗应答差异的相关表型"><a href="#阶段一：抗CD276治疗应答差异的相关表型" class="headerlink" title="阶段一：抗CD276治疗应答差异的相关表型"></a>阶段一：抗CD276治疗应答差异的相关表型</h3><p>&emsp;&emsp;文章设计了对照IgG治疗组、α-CD276抗体治疗耐药组、α-CD276抗体治疗敏感组三组进行后续比较。针对抗CD276治疗应答机制的差异，文章穷举了免疫微环境中的成分，依次做出假设并通过实验验证。最终发现，抗CD276治疗应答差异可能和肿瘤细胞凋亡和免疫微环境有关，最终作者进一步从免疫微环境中寻找上游。</p>
 <blockquote><p>假设一：抗CD276治疗应答差异归因于CD276表达水平的变化</p>
 </blockquote>
-<p>&emsp;&emsp;文章的验证方法验证：在对照IgG治疗组、α-CD276抗体治疗耐药组、α-CD276抗体治疗敏感组或对照IgG治疗组，这三组样本中免疫组化检测CD276表达水平，结果发现三组之间没有显著差异。最终得出结论CD276抗体治疗结果与CD276表达水平无关。<br>&emsp;&emsp;这一假设和验证提示我们需要审慎看待目前临床作为治疗指征的标志物（如PD-L1、HRD、MSI等），在针对这些标志物的分析上可以采用相似的实验设计。</p>
+<p>&emsp;&emsp;文章的验证方法：在对照IgG治疗组、α-CD276抗体治疗耐药组、α-CD276抗体治疗敏感组或对照IgG治疗组，这三组样本中免疫组化检测CD276表达水平，结果发现三组之间没有显著差异。最终得出结论CD276抗体治疗结果与CD276表达水平无关。<br>&emsp;&emsp;这一假设和验证提示我们需要审慎看待目前临床作为治疗指征的标志物（如PD-L1、HRD、MSI等），在针对这些标志物的分析上可以采用相似的实验设计。</p>
+<blockquote><p>假设二：抗CD276治疗应答差异归因于肿瘤增殖性的变化</p>
+</blockquote>
+<p>&emsp;&emsp;文章的验证方法：在对照IgG治疗组、α-CD276抗体治疗耐药组、α-CD276抗体治疗敏感组或对照IgG治疗组，这三组样本中免疫组化检测Ki67表达水平，结果发现三组之间没有显著差异。最终得出结论CD276抗体治疗结果与肿瘤增殖性无关。</p>
+<blockquote><p>假设三：抗CD276治疗应答差异归因于肿瘤凋亡水平的变化</p>
+</blockquote>
+<p>&emsp;&emsp;文章的验证方法：在对照IgG治疗组、α-CD276抗体治疗耐药组、α-CD276抗体治疗敏感组或对照IgG治疗组，这三组样本中免疫组化检测凋亡标志物cleaved-caspase-3的表达水平，结果发现肿瘤细胞三组之间有显著差异，间质细胞无差异。最终得出结论CD276抗体治疗结果与肿瘤组织凋亡水平可能有关。</p>
+<blockquote><p>假设四：抗CD276治疗应答差异归因于免疫微环境差异</p>
+</blockquote>
+<p>&emsp;&emsp;文章的验证方法：在对照IgG治疗组、α-CD276抗体治疗耐药组、α-CD276抗体治疗敏感组或对照IgG治疗组，这三组样本中多重免疫组化检测凋亡标志物CD8和GZMB的表达水平，结果发现三组之间有显著差异。治疗敏感组相较于耐药组和对照组的CD8+ T细胞和CD8+ GZMB+ T细胞浸润更多。</p>
+<h3 id="阶段二：抗CD276治疗应答差异的免疫表型"><a href="#阶段二：抗CD276治疗应答差异的免疫表型" class="headerlink" title="阶段二：抗CD276治疗应答差异的免疫表型"></a>阶段二：抗CD276治疗应答差异的免疫表型</h3><p>&emsp;&emsp;阶段一回顾性分析认为免疫微环境差异是应答差异的机制，具体而言即发现CD8+ T细胞和CD8+ GZMB+ T细胞浸润的不同。由此，作者设计如下实验：将治疗应答组的小鼠分为四组——对照组、CD4耗竭组、CD8耗竭组和CD4、CD8双耗竭组，并观察相应表型。<br>&emsp;&emsp;文章通过动物实验发现，CD8+ T细胞耗竭逆转了治疗敏感组的疗效；而CD4+ T细胞耗竭并没有对治疗效果有影响。这里的实验设计是前瞻性的，因此能够证明CD8+ T细胞和抗CD276治疗的效果有因果关系。</p>
+<h3 id="阶段三：抗CD276治疗应答差异的关键基因"><a href="#阶段三：抗CD276治疗应答差异的关键基因" class="headerlink" title="阶段三：抗CD276治疗应答差异的关键基因"></a>阶段三：抗CD276治疗应答差异的关键基因</h3><p>&emsp;&emsp;文章对1个耐药样本、1个敏感样本和2个对照样本进行了单细胞测序，并进一步将恶性的上皮细胞分为4种亚型（Cycling，Differentiated，p-EMT，Stress），随后进一步基于Scissor算法筛选了与预后不良相关的肿瘤细胞，及与CD276治疗抵抗及敏感相关的肿瘤细胞，最后将预后不良相关肿瘤细胞中异常表达的基因与CD276治疗抵抗相关肿瘤细胞中异常表达的基因取交集，最终筛选出3个交集基因（候选基因）——ITGB6，PRNP和CAV1。<br>&emsp;&emsp;生信的作用主要是为了找到关键基因，缩小研究范围。值得注意的是，如这里的差异分析，很多生信分析的过程是相关性的分析，没有因果关系的证明。</p>
+<h3 id="阶段四：基于湿实验证明ITGB6是关键基因"><a href="#阶段四：基于湿实验证明ITGB6是关键基因" class="headerlink" title="阶段四：基于湿实验证明ITGB6是关键基因"></a>阶段四：基于湿实验证明ITGB6是关键基因</h3><p>&emsp;&emsp;通过生物信息学找到三个可能相关的基因。文章对三个候选基因均进行了基因功能实验——对候选基因进行基因敲除，并观察基因敲除后对肿瘤生长和对CD276治疗响应的影响。结果发现ITGB6基因敲除可以增加肿瘤对CD276治疗的敏感性。所以，ITGB6成为最终的主角基因。</p>
+<p>&emsp;&emsp;确定关键基因后，作者做了一个简单的表型验证，即比较CD276治疗敏感组和耐药组ITGB6的免疫荧光染色差异，发现敏感组的ITGB6表达更低，并且CD276的表达和ITGB6之间无显著相关性，这进一步表明CD276表达丰度不能作为抗CD276的治疗指征。这一验证思路比较常见。</p>
+<h3 id="阶段五：探索关键基因ITGB6对肿瘤表型的影响"><a href="#阶段五：探索关键基因ITGB6对肿瘤表型的影响" class="headerlink" title="阶段五：探索关键基因ITGB6对肿瘤表型的影响"></a>阶段五：探索关键基因ITGB6对肿瘤表型的影响</h3><p>&emsp;&emsp;在口腔上皮中条件性敲除ITGB6并诱导头颈癌小鼠模型中，耗竭CD8+ T细胞可以显著逆转抗CD276介导的侵袭性生长抑制。而耗竭CD4+ T细胞则无明显影响。<br>&emsp;&emsp;接着，作者作者使用高表达ITGB6的SCC15细胞系，基于CRISPR-Cas9技术，敲除ITGB6，发现并没有改变CD276蛋白的表达，这和前文动物组织的IHC结果一致。利用这个细胞系，作者还发现了敲除后肿瘤的增殖性和克隆形成能力没有明显变化。有趣的是，敲除后肿瘤本身的凋亡水平没有明显改变，这和前面直接在肿瘤组织中看到的结论不同。结合上述发现，ITGB6很可能不是通过肿瘤细胞本身直接参与了耐药机制，这强烈提示我们去探索肿瘤微环境中的其他成分。<br>&emsp;&emsp;为了加强实验结果的可信度，作者从时空的角度进一步探索ITGB6和肿瘤表型的变化。ITGB6蛋白的表达和肿瘤的进展显著相关，在耐药组中发现了ITGB6的显著升高。</p>
+<h2 id="探索ITGB6影响抗CD276治疗疗效的机制"><a href="#探索ITGB6影响抗CD276治疗疗效的机制" class="headerlink" title="探索ITGB6影响抗CD276治疗疗效的机制"></a>探索ITGB6影响抗CD276治疗疗效的机制</h2><h3 id="基因敲除鼠的准备"><a href="#基因敲除鼠的准备" class="headerlink" title="基因敲除鼠的准备"></a>基因敲除鼠的准备</h3><p>在文章中，研究者们通过基因敲除技术来探究ITGB6基因在头颈部鳞状细胞癌（HNSCC）中的作用。</p>
+<ol>
+<li><p><strong>基因敲除的准备</strong>：</p>
+<ul>
+<li>研究者们首先制备了条件性基因敲除小鼠模型（Itgb6flox），这些小鼠的Itgb6基因的第2和第3外显子被“floxed”，即被两个loxP位点所包围。这种设计允许通过特定方式精确地移除或“敲除”这些外显子。</li>
+</ul>
+</li>
+<li><p><strong>基因敲除的实施</strong>：</p>
+<ul>
+<li>将Itgb6flox/flox小鼠与K14creER小鼠交配。K14creER小鼠携带一个cre重组酶，该酶在四环素类似物Tamoxifen的作用下在口腔上皮细胞中特异性表达。交配后产生的后代小鼠（K14creER; Itgb6flox/flox）在给予Tamoxifen后，可以在口腔上皮细胞中特异性敲除Itgb6基因。</li>
+</ul>
+</li>
+<li><p><strong>对照组的设置</strong>：</p>
+<ul>
+<li>同时，研究者们也使用了K14creER; Itgb6wt/wt小鼠作为对照组（ITGB6-ctl），这些小鼠在给予Tamoxifen后，Itgb6基因不会被敲除。</li>
+</ul>
+</li>
+<li><p><strong>基因敲除后的效果观察</strong>：</p>
+<ul>
+<li>研究者们在给予Tamoxifen后，从1个月大和12个月大的ITGB6-ctl和ITGB6-cKO小鼠中收集舌组织样本，以观察Itgb6基因敲除对口腔上皮组织稳态的影响。</li>
+</ul>
+</li>
+<li><p><strong>观察结果</strong>：</p>
+<ul>
+<li>研究发现，在ITGB6-cKO小鼠中，ITGB6基因的特异性敲除并没有对正常口腔上皮组织产生明显的影响。</li>
+<li>在ITGB6-ctl小鼠中，无论是1个月还是12个月大，都观察到了较低水平的ITGB6表达。而在ITGB6-cKO小鼠中，ITGB6的表达几乎完全缺失，这证实了基因敲除的效率。</li>
+</ul>
+</li>
+</ol>
+<h3 id="ITGB6表达影响了肿瘤表型"><a href="#ITGB6表达影响了肿瘤表型" class="headerlink" title="ITGB6表达影响了肿瘤表型"></a>ITGB6表达影响了肿瘤表型</h3><p>&emsp;&emsp;文章首先比较了敲除和对照动物模型肿瘤的成熟率、肿瘤的大小和组织学分度，发现了显著的差异。接着，对肿瘤进行多重免疫组化，观察到ITGB-cKO小鼠肿瘤浸润了更多的GZMK+ CD8+ T细胞。同时，ITGB6-cKO小鼠和ITGB6-ctl小鼠肿瘤的Ki67和基质细胞凋亡水平没有明显差异，肿瘤细胞本身凋亡水平有差异，这和前面细胞实验、耐药组和敏感组组的对比实验所得的结论是一致的。进一步加强了结论的可信度，并且把研究的重点放在免疫微环境。<br>&emsp;&emsp;和前面的实验一样，作者将cKO组小鼠随机分为4组，给于CD4、CD8和CD4\CD8耗竭治疗，结论与前一致。CD8耗竭逆转了抗CD276的治疗效果。<br>&emsp;&emsp;Treg可以表征局部的抑制性微环境，但是通过流式并没有发现组间的明显差异，这为后面探索其他细胞群做了铺垫。</p>
+<h3 id="ITGB6影响抗CD276治疗效果"><a href="#ITGB6影响抗CD276治疗效果" class="headerlink" title="ITGB6影响抗CD276治疗效果"></a>ITGB6影响抗CD276治疗效果</h3><h4 id="实验目的"><a href="#实验目的" class="headerlink" title="实验目的"></a>实验目的</h4><ul>
+<li>研究ITGB6的缺失是否能够增强α-CD276治疗对头颈鳞状细胞癌（HNSCC）的疗效。</li>
+</ul>
+<h4 id="实验设计"><a href="#实验设计" class="headerlink" title="实验设计"></a>实验设计</h4><ol>
+<li><p><strong>模型建立</strong>：</p>
+<ul>
+<li>使用4NQO处理ITGB6正常对照（ITGB6-ctl）和条件性敲除（ITGB6-cKO）小鼠，以诱导HNSCC。</li>
+</ul>
+</li>
+<li><p><strong>α-CD276治疗</strong>：</p>
+<ul>
+<li>在26周时，选择病变区域相似的小鼠进行α-CD276治疗。</li>
+</ul>
+</li>
+<li><p><strong>治疗后处理</strong>：</p>
+<ul>
+<li>治疗后13天，选出8只耐药小鼠（ITGB6-ctl和ITGB6-cKO组都有）。</li>
+<li>这些小鼠被注射他莫昔芬或玉米油，连续5天。</li>
+</ul>
+</li>
+<li><p><strong>样本收集</strong>：</p>
+<ul>
+<li>在最初的α-CD276治疗后41天收集舌组织。</li>
+</ul>
+</li>
+<li><p><strong>监测</strong>：</p>
+<ul>
+<li>从第一次α-CD276注射开始，每四天监测一次小鼠。</li>
+</ul>
+</li>
+</ol>
+<h4 id="实验结果"><a href="#实验结果" class="headerlink" title="实验结果"></a>实验结果</h4><ol>
+<li><p><strong>肿瘤生长</strong>：</p>
+<ul>
+<li>ITGB6的缺失部分减缓了肿瘤的进展。</li>
+<li>ITGB6敲除与α-CD276治疗的联合使用显著增强了治疗效果。</li>
+</ul>
+</li>
+<li><p><strong>肿瘤细胞标志物</strong>：</p>
+<ul>
+<li>Ki67表达在各治疗组间没有显著变化。</li>
+</ul>
+</li>
+<li><p><strong>细胞凋亡</strong>：</p>
+<ul>
+<li>肿瘤细胞中caspase-3表达在ITGB6-cKO组中增强，尤其在α-CD276治疗后。</li>
+</ul>
+</li>
+<li><p><strong>基质细胞凋亡</strong>：</p>
+<ul>
+<li>基质细胞的凋亡水平在各组间没有显著差异。</li>
+</ul>
+</li>
+<li><p><strong>免疫细胞浸润</strong>：</p>
+<ul>
+<li>ITGB6的敲除显著增强了CD8+ T细胞的浸润。</li>
+<li>α-CD276治疗在ITGB6-cKO组中进一步增加了GZMB+CD8+ T细胞的比例。</li>
+</ul>
+</li>
+</ol>
+<h4 id="结论"><a href="#结论" class="headerlink" title="结论"></a>结论</h4><p>&emsp;&emsp;实验结果表明，ITGB6的缺失和α-CD276治疗的联合使用可能对HNSCC有协同治疗效果，这主要体现在肿瘤生长的减缓、肿瘤细胞凋亡标志物的增强以及免疫细胞浸润的增加。</p>
+<h3 id="ITGB6在抗CD276耐药中的作用机制——PF4-巨噬细胞"><a href="#ITGB6在抗CD276耐药中的作用机制——PF4-巨噬细胞" class="headerlink" title="ITGB6在抗CD276耐药中的作用机制——PF4+ 巨噬细胞"></a>ITGB6在抗CD276耐药中的作用机制——PF4+ 巨噬细胞</h3><h5 id="基于单细胞测序的探索性分析"><a href="#基于单细胞测序的探索性分析" class="headerlink" title="基于单细胞测序的探索性分析"></a>基于单细胞测序的探索性分析</h5><p>&emsp;&emsp;在上一个段落已经进行了Proportion analysis，这里是更进一步，对细胞之间的相互作用进行探索，从而确定关键的细胞群。</p>
+<p>&emsp;&emsp;为探讨ITGB6介导的α-CD276抗性机制，研究者对显示治疗抗性的ITGB6-ctl和ITGB6-cKO小鼠的肿瘤进行了单细胞RNA测序分析。共获取了22,376个细胞。通过数据整合和降维，发现ITGB6-ctl和ITGB6-cKO样本的分布有显著重叠，识别出四种主要细胞类型：上皮细胞、免疫细胞、成纤维细胞和内皮细胞。</p>
+<p>&emsp;&emsp;通过CopyKAT分析发现了932个非整倍体细胞。为理解ITGB6在HNSCC中α-CD276介导的免疫反应中的作用，研究者分离了免疫细胞并将其分为六大类，发现与对照组相比，ITGB6-cKO小鼠中的单核细胞/巨噬细胞/树突状细胞（MoMΦDC）和γδT细胞比例下降，而中性粒细胞、CD8 T细胞和CD4 T细胞比例上升。进一步通过CellPhoneDB分析发现，肿瘤细胞与PF4巨噬细胞之间的CX3CL1-CX3CR1相互作用在ITGB6-cKO肿瘤中显著减少。</p>
+<p>&emsp;&emsp;此外，研究表明，ITGB6的敲除会显著下调肿瘤细胞中CX3CL1的mRNA和蛋白表达。通过SCENIC分析和在线工具，发现Stat3是与CX3CL1基因启动子相关的转录因子。随后，通过ChIP-qPCR实验证实STAT3能够结合CX3CL1基因的启动子区域，而STAT3的敲除显著减少了这种结合。ITGB6敲除还减少了FAK/SRC的磷酸化。此外，研究显示CX3CR1在PF4巨噬细胞中特异性表达，但Tregs在接受α-CD276治疗的ITGB6-cKO组中并未显著变化。</p>
+<p>该部分的论述思路和技术路线如下：</p>
+<ol>
+<li><p><strong>研究目标</strong>：探讨ITGB6在头颈鳞状细胞癌（HNSCC）中介导的α-CD276抗性机制。</p>
+</li>
+<li><p><strong>实验设计</strong>：</p>
+<ul>
+<li>使用Tamoxifen处理ITGB6-ctl和ITGB6-cKO小鼠，收集显示治疗抗性的肿瘤组织进行单细胞RNA测序分析（scRNA-seq）。</li>
+<li>获取和分析不同样本中的细胞，鉴定出主要的细胞类型，并使用CopyKAT分析确定非整倍体细胞。</li>
+</ul>
+</li>
+<li><p><strong>免疫细胞分析</strong>：</p>
+<ul>
+<li>分离并注释免疫细胞，分析不同免疫细胞类型在ITGB6-ctl和ITGB6-cKO小鼠中的分布差异。</li>
+<li>使用CellPhoneDB分析肿瘤细胞与免疫细胞之间的相互作用，特别关注肿瘤细胞与MoMΦDC细胞之间的配体-受体相互作用。</li>
+</ul>
+</li>
+<li><p><strong>细胞亚型分析</strong>：</p>
+<ul>
+<li>对MoMΦDC细胞进行细分，识别出具体的亚型，并分析这些亚型之间的相互作用强度及其变化。</li>
+</ul>
+</li>
+<li><p><strong>分子机制探究</strong>：</p>
+<ul>
+<li>通过CellChat分析定量推断细胞间的通信网络，并发现CX3CL1-CX3CR1相互作用在ITGB6-cKO肿瘤中减少。</li>
+<li>通过IHC、ChIP-qPCR和Western blot实验，验证CX3CL1的表达及其调控机制，重点研究STAT3在CX3CL1基因启动子区域的结合情况。</li>
+</ul>
+</li>
+<li><p><strong>信号通路研究</strong>：</p>
+<ul>
+<li>探讨ITGB6对整合素家族相关的下游信号通路（如FAK/SRC、ERK1/2、NFKB1等）的影响，确定ITGB6敲除对这些通路的磷酸化影响。</li>
+</ul>
+</li>
+<li><p><strong>结论和验证</strong>：</p>
+<ul>
+<li>最终，通过免疫荧光和流式细胞术验证实验结果。至此，核心细胞群已通过干实验初步锁定。PF4+巨噬细胞—以表达血小板因子4为特征的肿瘤相关巨噬细胞的一个亚群—可以通过分泌多种细胞因子和趋化因子来调节炎症和免疫反应，进而影响各种免疫细胞的募集和激活，在肿瘤免疫监视中起着关键作用</li>
+</ul>
+</li>
+</ol>
+<h5 id="临床病理联系和其他验证"><a href="#临床病理联系和其他验证" class="headerlink" title="临床病理联系和其他验证"></a>临床病理联系和其他验证</h5><p>&emsp;&emsp;基于单细胞数据提取PF4+ 巨噬细胞的特征基因，在TCGA数据库中进行基因评分并评估和预后的关系。此外还评估了和其他病理学参数的联系，这一步是常用的验证方法。</p>
+<p>&emsp;&emsp;接着，作者通过PF4敲除鼠进一步探索了肿瘤和免疫细胞表型，同时在动物模型中强调了PF4和IGTB6表达的相关性，这进一步验证了PF4是ITGB6作用的下游。</p>
 
     </div>
 
@@ -432,7 +589,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%87%E7%AB%A0%E4%BF%A1%E6%81%AF"><span class="nav-text">文章信息</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%87%E7%AB%A0%E6%A6%82%E8%A6%81"><span class="nav-text">文章概要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%BA%E8%BF%B0%E6%80%9D%E8%B7%AF"><span class="nav-text">论述思路</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E8%A7%A3%E6%9E%90%E6%8A%97CD276%E6%B2%BB%E7%96%97%E5%BA%94%E7%AD%94%E5%B7%AE%E5%BC%82%E7%9A%84%E6%9C%BA%E5%88%B6"><span class="nav-text">解析抗CD276治疗应答差异的机制</span></a></li></ol></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%87%E7%AB%A0%E6%A6%82%E8%A6%81"><span class="nav-text">文章概要</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%AE%BA%E8%BF%B0%E6%80%9D%E8%B7%AF"><span class="nav-text">论述思路</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E9%89%B4%E5%AE%9A%E5%BD%B1%E5%93%8D%E6%8A%97CD276%E6%B2%BB%E7%96%97%E6%95%88%E6%9E%9C%E7%9A%84%E5%85%B3%E9%94%AE%E5%9F%BA%E5%9B%A0"><span class="nav-text">鉴定影响抗CD276治疗效果的关键基因</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%98%B6%E6%AE%B5%E4%B8%80%EF%BC%9A%E6%8A%97CD276%E6%B2%BB%E7%96%97%E5%BA%94%E7%AD%94%E5%B7%AE%E5%BC%82%E7%9A%84%E7%9B%B8%E5%85%B3%E8%A1%A8%E5%9E%8B"><span class="nav-text">阶段一：抗CD276治疗应答差异的相关表型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%98%B6%E6%AE%B5%E4%BA%8C%EF%BC%9A%E6%8A%97CD276%E6%B2%BB%E7%96%97%E5%BA%94%E7%AD%94%E5%B7%AE%E5%BC%82%E7%9A%84%E5%85%8D%E7%96%AB%E8%A1%A8%E5%9E%8B"><span class="nav-text">阶段二：抗CD276治疗应答差异的免疫表型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%98%B6%E6%AE%B5%E4%B8%89%EF%BC%9A%E6%8A%97CD276%E6%B2%BB%E7%96%97%E5%BA%94%E7%AD%94%E5%B7%AE%E5%BC%82%E7%9A%84%E5%85%B3%E9%94%AE%E5%9F%BA%E5%9B%A0"><span class="nav-text">阶段三：抗CD276治疗应答差异的关键基因</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%98%B6%E6%AE%B5%E5%9B%9B%EF%BC%9A%E5%9F%BA%E4%BA%8E%E6%B9%BF%E5%AE%9E%E9%AA%8C%E8%AF%81%E6%98%8EITGB6%E6%98%AF%E5%85%B3%E9%94%AE%E5%9F%BA%E5%9B%A0"><span class="nav-text">阶段四：基于湿实验证明ITGB6是关键基因</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%98%B6%E6%AE%B5%E4%BA%94%EF%BC%9A%E6%8E%A2%E7%B4%A2%E5%85%B3%E9%94%AE%E5%9F%BA%E5%9B%A0ITGB6%E5%AF%B9%E8%82%BF%E7%98%A4%E8%A1%A8%E5%9E%8B%E7%9A%84%E5%BD%B1%E5%93%8D"><span class="nav-text">阶段五：探索关键基因ITGB6对肿瘤表型的影响</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E6%8E%A2%E7%B4%A2ITGB6%E5%BD%B1%E5%93%8D%E6%8A%97CD276%E6%B2%BB%E7%96%97%E7%96%97%E6%95%88%E7%9A%84%E6%9C%BA%E5%88%B6"><span class="nav-text">探索ITGB6影响抗CD276治疗疗效的机制</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9F%BA%E5%9B%A0%E6%95%B2%E9%99%A4%E9%BC%A0%E7%9A%84%E5%87%86%E5%A4%87"><span class="nav-text">基因敲除鼠的准备</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ITGB6%E8%A1%A8%E8%BE%BE%E5%BD%B1%E5%93%8D%E4%BA%86%E8%82%BF%E7%98%A4%E8%A1%A8%E5%9E%8B"><span class="nav-text">ITGB6表达影响了肿瘤表型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ITGB6%E5%BD%B1%E5%93%8D%E6%8A%97CD276%E6%B2%BB%E7%96%97%E6%95%88%E6%9E%9C"><span class="nav-text">ITGB6影响抗CD276治疗效果</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E7%9B%AE%E7%9A%84"><span class="nav-text">实验目的</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E8%AE%BE%E8%AE%A1"><span class="nav-text">实验设计</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E5%AE%9E%E9%AA%8C%E7%BB%93%E6%9E%9C"><span class="nav-text">实验结果</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#%E7%BB%93%E8%AE%BA"><span class="nav-text">结论</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#ITGB6%E5%9C%A8%E6%8A%97CD276%E8%80%90%E8%8D%AF%E4%B8%AD%E7%9A%84%E4%BD%9C%E7%94%A8%E6%9C%BA%E5%88%B6%E2%80%94%E2%80%94PF4-%E5%B7%A8%E5%99%AC%E7%BB%86%E8%83%9E"><span class="nav-text">ITGB6在抗CD276耐药中的作用机制——PF4+ 巨噬细胞</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E5%9F%BA%E4%BA%8E%E5%8D%95%E7%BB%86%E8%83%9E%E6%B5%8B%E5%BA%8F%E7%9A%84%E6%8E%A2%E7%B4%A2%E6%80%A7%E5%88%86%E6%9E%90"><span class="nav-text">基于单细胞测序的探索性分析</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E4%B8%B4%E5%BA%8A%E7%97%85%E7%90%86%E8%81%94%E7%B3%BB%E5%92%8C%E5%85%B6%E4%BB%96%E9%AA%8C%E8%AF%81"><span class="nav-text">临床病理联系和其他验证</span></a></li></ol></li></ol></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -534,13 +691,13 @@
     <span class="post-meta-item-icon">
       <i class="fa fa-chart-area"></i>
     </span>
-    <span title="站点总字数">206k</span>
+    <span title="站点总字数">210k</span>
 
     <span class="post-meta-item-icon">
       <span class="post-meta-divider"> </span>
       <i class="fa fa-coffee"></i>
     </span>
-    <span title="站点阅读时长">12:30</span>
+    <span title="站点阅读时长">12:44</span>
   
   
     <script async src="//dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
