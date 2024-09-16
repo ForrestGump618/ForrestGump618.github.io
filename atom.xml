@@ -6,7 +6,7 @@
   <link href="https://www.zhuangqingyuan.site/atom.xml" rel="self"/>
   
   <link href="https://www.zhuangqingyuan.site/"/>
-  <updated>2024-08-24T15:15:49.991Z</updated>
+  <updated>2024-09-16T08:10:49.346Z</updated>
   <id>https://www.zhuangqingyuan.site/</id>
   
   <author>
@@ -15,6 +15,31 @@
   </author>
   
   <generator uri="https://hexo.io/">Hexo</generator>
+  
+  <entry>
+    <title>文献阅读：单基因的研究思路</title>
+    <link href="https://www.zhuangqingyuan.site/2024/08/22/%E3%80%90%E8%BD%AC%E8%BD%BD%E6%96%87%E7%AB%A0%E3%80%91%E5%BD%B1%E5%83%8F%E7%BB%84%E5%AD%A6%E7%9A%84%E7%A0%94%E7%A9%B6%E6%80%9D%E8%B7%AF/"/>
+    <id>https://www.zhuangqingyuan.site/2024/08/22/%E3%80%90%E8%BD%AC%E8%BD%BD%E6%96%87%E7%AB%A0%E3%80%91%E5%BD%B1%E5%83%8F%E7%BB%84%E5%AD%A6%E7%9A%84%E7%A0%94%E7%A9%B6%E6%80%9D%E8%B7%AF/</id>
+    <published>2024-08-22T05:27:05.000Z</published>
+    <updated>2024-09-16T08:10:49.346Z</updated>
+    
+    
+    <summary type="html">转载公众号《君莲会》</summary>
+    
+    
+    
+    <category term="生物信息学" scheme="https://www.zhuangqingyuan.site/categories/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
+    
+    
+    <category term="生物信息学" scheme="https://www.zhuangqingyuan.site/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
+    
+    <category term="肿瘤" scheme="https://www.zhuangqingyuan.site/tags/%E8%82%BF%E7%98%A4/"/>
+    
+    <category term="转录组学" scheme="https://www.zhuangqingyuan.site/tags/%E8%BD%AC%E5%BD%95%E7%BB%84%E5%AD%A6/"/>
+    
+    <category term="影像组学" scheme="https://www.zhuangqingyuan.site/tags/%E5%BD%B1%E5%83%8F%E7%BB%84%E5%AD%A6/"/>
+    
+  </entry>
   
   <entry>
     <title>文献阅读：单基因的研究思路</title>
@@ -81,13 +106,13 @@
     
     <category term="生物信息学" scheme="https://www.zhuangqingyuan.site/tags/%E7%94%9F%E7%89%A9%E4%BF%A1%E6%81%AF%E5%AD%A6/"/>
     
-    <category term="研究生" scheme="https://www.zhuangqingyuan.site/tags/%E7%A0%94%E7%A9%B6%E7%94%9F/"/>
-    
     <category term="肿瘤" scheme="https://www.zhuangqingyuan.site/tags/%E8%82%BF%E7%98%A4/"/>
     
-    <category term="医学生" scheme="https://www.zhuangqingyuan.site/tags/%E5%8C%BB%E5%AD%A6%E7%94%9F/"/>
-    
     <category term="转录组学" scheme="https://www.zhuangqingyuan.site/tags/%E8%BD%AC%E5%BD%95%E7%BB%84%E5%AD%A6/"/>
+    
+    <category term="研究生" scheme="https://www.zhuangqingyuan.site/tags/%E7%A0%94%E7%A9%B6%E7%94%9F/"/>
+    
+    <category term="医学生" scheme="https://www.zhuangqingyuan.site/tags/%E5%8C%BB%E5%AD%A6%E7%94%9F/"/>
     
   </entry>
   
@@ -411,27 +436,6 @@
     
     
     <summary type="html">参考教材《动手学深度学习》</summary>
-    
-    
-    
-    <category term="深度学习" scheme="https://www.zhuangqingyuan.site/categories/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"/>
-    
-    
-    <category term="机器学习" scheme="https://www.zhuangqingyuan.site/tags/%E6%9C%BA%E5%99%A8%E5%AD%A6%E4%B9%A0/"/>
-    
-    <category term="深度学习" scheme="https://www.zhuangqingyuan.site/tags/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0/"/>
-    
-  </entry>
-  
-  <entry>
-    <title>深度学习笔记（三）：PyTorch 实现 Softmax 回归</title>
-    <link href="https://www.zhuangqingyuan.site/2024/04/02/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89%EF%BC%9APyTorch%20%E5%AE%9E%E7%8E%B0%20Softmax%20%E5%9B%9E%E5%BD%92/"/>
-    <id>https://www.zhuangqingyuan.site/2024/04/02/%E6%B7%B1%E5%BA%A6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0%EF%BC%88%E4%B8%89%EF%BC%89%EF%BC%9APyTorch%20%E5%AE%9E%E7%8E%B0%20Softmax%20%E5%9B%9E%E5%BD%92/</id>
-    <published>2024-04-02T00:00:00.000Z</published>
-    <updated>2024-04-02T03:55:12.626Z</updated>
-    
-    
-    <summary type="html">在深度学习中，Softmax 回归是一种常见且简单的分类模型。本文将详细介绍如何使用 PyTorch 实现 Softmax 回归模型，并使用 Fashion-MNIST 数据集进行训练和测试。</summary>
     
     
     
