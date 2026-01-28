@@ -33,8 +33,8 @@
 <meta property="og:site_name" content="一个夏天的年少">
 <meta property="og:description" content="&#x2F;&#x2F; DOM 加载完成后执行 stars.js 的初始化   document.addEventListener(&quot;DOMContentLoaded&quot;, function() {       if (typeof initStars &#x3D;&#x3D;&#x3D; &quot;function&quot;) {           initStars();  &#x2F;&#x2F; 这里假设 stars.js 定义了 initStars()">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2026-01-28T10:29:36.865Z">
-<meta property="article:modified_time" content="2026-01-28T10:29:36.865Z">
+<meta property="article:published_time" content="2026-01-28T13:35:36.440Z">
+<meta property="article:modified_time" content="2026-01-28T13:35:36.440Z">
 <meta property="article:author" content="ForrestGump">
 <meta property="article:tag" content="生物信息学">
 <meta property="article:tag" content="医学">
@@ -226,16 +226,18 @@
       
       
       <div class="post-body">
-          <p><script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script></p>
-<p><script>
+          <script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script>
+<script>
   // DOM 加载完成后执行 stars.js 的初始化
   document.addEventListener("DOMContentLoaded", function() {
       if (typeof initStars === "function") {
           initStars();  // 这里假设 stars.js 定义了 initStars()
       }
   });
-</script></p>
-<p><script src="./stars.js"></script></p>
+</script>
+<script src="./stars.js"></script>
+
+
 <style>
 :root {
   --radius: 14px;
