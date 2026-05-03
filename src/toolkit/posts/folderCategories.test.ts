@@ -24,6 +24,15 @@ describe("resolveFolderCategories", () => {
       ),
     ).toEqual([]);
   });
+
+  it("根据 POSIX 风格路径解析嵌套分类", () => {
+    expect(
+      resolveFolderCategories(
+        "/home/runner/work/astro-blog-shokax/astro-blog-shokax/src/posts/foo/bar/1.md",
+        "/home/runner/work/astro-blog-shokax/astro-blog-shokax/src/posts",
+      ),
+    ).toEqual(["foo", "bar"]);
+  });
 });
 
 describe("normalizeFolderCategories", () => {
