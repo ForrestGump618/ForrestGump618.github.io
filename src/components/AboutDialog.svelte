@@ -358,7 +358,7 @@
     display: flex;
     flex-direction: column;
     min-width: 0;
-    max-width: min(34rem, 86%);
+    max-width: min(34rem, 80%);
   }
 
   .message-content.is-user {
@@ -402,7 +402,8 @@
   }
 
   .message-bubble {
-    max-width: min(34rem, 86%);
+    box-sizing: border-box;
+    max-width: 100%;
     padding: 0.55rem 0.75rem;
     border-radius: 0.8rem;
     line-height: 1.65;
@@ -410,6 +411,7 @@
     background: var(--grey-1);
     border: 1px solid var(--grey-3);
     white-space: pre-wrap;
+    overflow-wrap: anywhere;
     font-size: 0.92rem;
     box-shadow: 0 0.35rem 0.9rem var(--grey-9-a1);
     transition:
@@ -658,8 +660,8 @@
   }
 
   @media (max-width: 768px) {
-    .message-bubble {
-      max-width: 92%;
+    .message-content {
+      max-width: 80%;
     }
 
     .dialog-body {

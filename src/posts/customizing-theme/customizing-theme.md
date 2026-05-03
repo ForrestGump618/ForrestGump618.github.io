@@ -2,7 +2,7 @@
 title: Explore the various customization options available in ShokaX theme configuration.
 date: 2025-12-04
 tags: [customization, config, styling]
-categories: [Advanced, Tutorial]
+categories: ${folder}
 draft: false
 ---
 
