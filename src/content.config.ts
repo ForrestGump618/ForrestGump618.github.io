@@ -1,12 +1,15 @@
 import { glob } from "astro/loaders";
 import { defineCollection } from "astro:content";
 import { z } from "astro/zod";
+import { FOLDER_CATEGORY_TOKEN, withFolderCategories } from "./toolkit/posts/folderCategories";
 
 const posts = defineCollection({
-  loader: glob({
-    pattern: "**/*.{md,mdx}",
-    base: "src/posts",
-  }),
+  loader: withFolderCategories(
+    glob({
+      pattern: "**/*.{md,mdx}",
+      base: "src/posts",
+    }),
+  ),
   schema: ({ image }) =>
     z.object({
       title: z.string(),
@@ -16,7 +19,11 @@ const posts = defineCollection({
       }),
       updated: z.date().optional(),
       tags: z.array(z.string()).nullable().optional(),
-      categories: z.array(z.string()).nullable().optional(),
+      categories: z.preprocess(
+        (categories) =>
+          categories === FOLDER_CATEGORY_TOKEN ? [FOLDER_CATEGORY_TOKEN] : categories,
+        z.array(z.string()).nullable().optional(),
+      ),
       draft: z.boolean().optional(),
       cover: image().optional(),
       sticky: z.boolean().optional(),
