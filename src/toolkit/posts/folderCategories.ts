@@ -7,16 +7,21 @@ export const FOLDER_CATEGORY_TOKEN = "${folder}";
 
 type FrontmatterCategories = string | string[] | null | undefined;
 
+function getPathParser(filePath: string, postsBasePath: string): typeof path.win32 {
+  return filePath.includes("\\") || postsBasePath.includes("\\") ? path.win32 : path.posix;
+}
+
 export function resolveFolderCategories(filePath: string, postsBasePath: string): string[] {
-  const relativePath = path.relative(postsBasePath, filePath);
-  const directory = path.dirname(relativePath);
+  const pathParser = getPathParser(filePath, postsBasePath);
+  const relativePath = pathParser.relative(postsBasePath, filePath);
+  const directory = pathParser.dirname(relativePath);
 
   if (!directory || directory === ".") {
     return [];
   }
 
   return directory
-    .split(path.sep)
+    .split(pathParser.sep)
     .map((segment) => segment.trim())
     .filter(Boolean);
 }
