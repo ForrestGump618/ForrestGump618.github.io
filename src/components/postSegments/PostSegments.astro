@@ -3,11 +3,12 @@ import type { ImageMetadata } from "astro";
 import PostSegmentItem from "./PostSegmentItem.astro";
 
 export interface PostItem {
+  slug: string;
   title: string;
   url: string;
   date: Date;
   excerpt: string;
-  cover?: ImageMetadata;
+  cover?: ImageMetadata | string;
   category?: string;
   categoryUrl?: string;
   wordCount?: number;
