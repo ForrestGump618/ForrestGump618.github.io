@@ -13,6 +13,7 @@ const { src, alt, index, isListItem = false } = Astro.props as Props;
 
 // 动画延迟(仅多图轮播)
 const animationDelay = isListItem ? `${index * 6}s` : "0s";
+const isPrimaryCarouselImage = !isListItem || index === 0;
 
 // Astro 的 <Image /> 需要 ImageMetadata；字符串（public 路径/远程 URL）用 <img> 兜底
 const isStringSrc = typeof src === "string";
@@ -35,9 +36,9 @@ const assetSrc = !isStringSrc ? (src as ImageMetadata) : undefined;
           src={imgSrc}
           alt={alt}
           class="cover-image"
-          loading="eager"
+          loading={isPrimaryCarouselImage ? "eager" : "lazy"}
           decoding="async"
-          fetchpriority="high"
+          fetchpriority={isPrimaryCarouselImage ? "high" : "auto"}
         />
       ) : (
         <Image
@@ -45,9 +46,9 @@ const assetSrc = !isStringSrc ? (src as ImageMetadata) : undefined;
           alt={alt}
           layout="constrained"
           format="avif"
-          priority={true}
+          priority={isPrimaryCarouselImage}
           quality={65}
-          decoding="sync"
+          decoding={isPrimaryCarouselImage ? "sync" : "async"}
           class="cover-image"
         />
       )}
