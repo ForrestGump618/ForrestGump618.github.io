@@ -145,7 +145,7 @@ const directCarouselUrls = (coverConfig.carouselUrls || []).filter(
 );
 const sourceCarouselUrls =
   directCarouselUrls.length > 0 ? [] : await loadCarouselSource(coverConfig.carouselSource);
-const headerCarouselCovers: HeaderCarouselCover[] =
+export const headerCarouselCovers: HeaderCarouselCover[] =
   directCarouselUrls.length > 0
     ? directCarouselUrls
     : sourceCarouselUrls.length > 0

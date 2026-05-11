@@ -7,11 +7,12 @@ const DEFAULT_EXCERPT_LENGTH = 300;
 const DEFAULT_WORDS_PER_MINUTE = 300;
 
 export interface TransformedIndexPost {
+  slug: string;
   title: string;
   url: string;
   date: Date;
   excerpt: string;
-  cover?: ImageMetadata;
+  cover?: ImageMetadata | string;
   category?: string;
   categoryUrl?: string;
   wordCount: number;
@@ -22,7 +23,7 @@ export interface TransformIndexPostsOptions {
   encryptedExcerpt: string;
   excerptLength?: number;
   wordsPerMinute?: number;
-  resolveCover?: (post: CollectionEntry<"posts">) => ImageMetadata | undefined;
+  resolveCover?: (post: CollectionEntry<"posts">) => ImageMetadata | string | undefined;
 }
 
 export function calculateReadTime(
@@ -73,6 +74,7 @@ export function transformIndexPosts(
     const lastCategory = post.data.categories?.[post.data.categories.length - 1];
 
     return {
+      slug: post.id,
       title: post.data.title,
       url: toPostHref(post.id),
       date: post.data.date,

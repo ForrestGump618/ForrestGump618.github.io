@@ -5,6 +5,7 @@ import CategoryCards from "./categoryCard/CategoryCards.svelte";
 import Divider from "./Divider.astro";
 import { transformIndexPosts } from "@/toolkit/posts/transformIndexPosts";
 import { getPostCover } from "./Images.astro";
+import { headerCarouselCovers } from "@/layouts/Layout.astro";
 import { t } from "@/i18n";
 
 interface CategoryItem {
@@ -36,7 +37,7 @@ const {
 
 const transformOptions = {
   encryptedExcerpt: t("post.encryptedExcerpt"),
-  resolveCover: getPostCover,
+  resolveCover: (post: CollectionEntry<"posts">) => getPostCover(post, headerCarouselCovers),
 };
 
 const transformedStickyPosts = transformIndexPosts(stickyPosts, transformOptions);
