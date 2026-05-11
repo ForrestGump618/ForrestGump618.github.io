@@ -4,9 +4,10 @@ import PostSegments from "./postSegments/PostSegments.astro";
 import CategoryCards from "./categoryCard/CategoryCards.svelte";
 import Divider from "./Divider.astro";
 import { transformIndexPosts } from "@/toolkit/posts/transformIndexPosts";
-import { getPostCover } from "./Images.astro";
-import { headerCarouselCovers } from "@/layouts/Layout.astro";
+import { covers, getPostCover } from "./Images.astro";
+import { resolveHeaderCarouselCovers } from "@/toolkit/headerCarousel";
 import { t } from "@/i18n";
+import themeConfig from "@/theme.config";
 
 interface CategoryItem {
   name: string;
@@ -34,6 +35,13 @@ const {
   categories = [],
   isFirstPage = true,
 } = Astro.props;
+
+const coverConfig = themeConfig.cover || {};
+const headerCarouselCovers = await resolveHeaderCarouselCovers({
+  carouselUrls: coverConfig.carouselUrls,
+  carouselSource: coverConfig.carouselSource,
+  fallbackCovers: covers,
+});
 
 const transformOptions = {
   encryptedExcerpt: t("post.encryptedExcerpt"),
