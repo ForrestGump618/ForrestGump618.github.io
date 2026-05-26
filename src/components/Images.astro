@@ -47,14 +47,14 @@ export function resolveFixedCover(
 
 export function getPostCover(
   post: Partial<Post>,
-  carouselCovers?: Array<ImageMetadata | string>,
+  Covers?: Array<ImageMetadata | string>,
 ): ImageMetadata | string {
   if (post?.data?.cover) {
     return post.data.cover;
   }
 
-  const defaultCovers = carouselCovers?.length ? carouselCovers : covers;
-  return sample(defaultCovers ?? [])!;
+  const defaultCovers = Covers?.length ? Covers : covers;
+  return sample(defaultCovers)!;
 }
 
 export const avatar = avatarImg;
