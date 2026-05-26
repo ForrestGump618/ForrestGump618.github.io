@@ -27,7 +27,7 @@ import ThreeColumnLayout from "@/layouts/ThreeColumnLayout.astro";
 import { generateTagCloud } from "@/toolkit/posts/generateTagCloud";
 import { createWidgetPosts } from "@/toolkit/posts/createWidgetPosts";
 import { toTagHref } from "@/toolkit/posts/url";
-import { resolveHeaderCarouselCovers } from "@/toolkit/headerCarousel";
+import { resolveHeaderCovers } from "@/toolkit/headerCarousel";
 import Footer from "@/components/footer/Footer.astro";
 import type { ImageMetadata } from "astro";
 import { currentLocale } from "@/i18n";
@@ -89,9 +89,8 @@ const ActiveLayout = enableThirdColumn ? ThreeColumnLayout : TwoColumnLayout;
 const fixedCover = coverConfig.fixedCover?.enable
   ? resolveFixedCover(coverConfig.fixedCover.url)
   : undefined;
-const headerCarouselCovers = await resolveHeaderCarouselCovers({
-  carouselUrls: coverConfig.carouselUrls,
-  carouselSource: coverConfig.carouselSource,
+const headerCarouselCovers = await resolveHeaderCovers({
+  carouselUrls: coverConfig.coverUrls,
   fallbackCovers: covers,
 });
 const resolvedHeaderCover = pageCover ?? fixedCover;

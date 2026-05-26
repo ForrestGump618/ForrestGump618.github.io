@@ -5,7 +5,7 @@ import CategoryCards from "./categoryCard/CategoryCards.svelte";
 import Divider from "./Divider.astro";
 import { transformIndexPosts } from "@/toolkit/posts/transformIndexPosts";
 import { covers, getPostCover } from "./Images.astro";
-import { resolveHeaderCarouselCovers } from "@/toolkit/headerCarousel";
+import { resolveHeaderCovers } from "@/toolkit/headerCarousel";
 import { t } from "@/i18n";
 import themeConfig from "@/theme.config";
 
@@ -37,9 +37,8 @@ const {
 } = Astro.props;
 
 const coverConfig = themeConfig.cover || {};
-const headerCarouselCovers = await resolveHeaderCarouselCovers({
-  carouselUrls: coverConfig.carouselUrls,
-  carouselSource: coverConfig.carouselSource,
+const headerCarouselCovers = await resolveHeaderCovers({
+  carouselUrls: coverConfig.coverUrls,
   fallbackCovers: covers,
 });
 
