@@ -1,26 +1,23 @@
-import { readFile } from "node:fs/promises";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
 import type { ImageMetadata } from "astro";
-import defineCovers from "@/covers.config";
+import coversConfig from "@/covers.config";
 
-export type HeaderCarouselCover = ImageMetadata | string;
+export type HeaderCover = ImageMetadata | string;
 
 export async function resolveHeaderCovers(options: {
-  carouselUrls?: string[];
-  fallbackCovers: HeaderCarouselCover[];
-}): Promise<HeaderCarouselCover[]> {
-  const directCarouselUrls = (options.carouselUrls || []).filter(
+  coverUrls?: string[];
+  fallbackCovers: HeaderCover[];
+}): Promise<HeaderCover[]> {
+  const directCoverUrls = (options.coverUrls || []).filter(
     (item): item is string => typeof item === "string" && item.trim().length > 0,
   );
 
-  if (directCarouselUrls.length > 0) {
-    return directCarouselUrls;
+  if (directCoverUrls.length > 0) {
+    return directCoverUrls;
   }
 
-  const sourceCarouselUrls = defineCovers.urls;
-  if (sourceCarouselUrls.length > 0) {
-    return sourceCarouselUrls;
+  const configCoverUrls = coversConfig.urls;
+  if (configCoverUrls.length > 0) {
+    return configCoverUrls;
   }
 
   return options.fallbackCovers;

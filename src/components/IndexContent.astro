@@ -37,14 +37,14 @@ const {
 } = Astro.props;
 
 const coverConfig = themeConfig.cover || {};
-const headerCarouselCovers = await resolveHeaderCovers({
-  carouselUrls: coverConfig.coverUrls,
+const headerCovers = await resolveHeaderCovers({
+  coverUrls: coverConfig.coverUrls,
   fallbackCovers: covers,
 });
 
 const transformOptions = {
   encryptedExcerpt: t("post.encryptedExcerpt"),
-  resolveCover: (post: CollectionEntry<"posts">) => getPostCover(post, headerCarouselCovers),
+  resolveCover: (post: CollectionEntry<"posts">) => getPostCover(post, headerCovers),
 };
 
 const transformedStickyPosts = transformIndexPosts(stickyPosts, transformOptions);

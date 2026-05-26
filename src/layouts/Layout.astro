@@ -89,8 +89,8 @@ const ActiveLayout = enableThirdColumn ? ThreeColumnLayout : TwoColumnLayout;
 const fixedCover = coverConfig.fixedCover?.enable
   ? resolveFixedCover(coverConfig.fixedCover.url)
   : undefined;
-const headerCarouselCovers = await resolveHeaderCovers({
-  carouselUrls: coverConfig.coverUrls,
+const headerCovers = await resolveHeaderCovers({
+  coverUrls: coverConfig.coverUrls,
   fallbackCovers: covers,
 });
 const resolvedHeaderCover = pageCover ?? fixedCover;
@@ -188,7 +188,7 @@ import SearchPage from "@/components/search/SearchPage.svelte";
         preload={coverConfig.preload}
         fixedCover={resolvedHeaderCover}
         gradient={coverConfig.gradient}
-        covers={headerCarouselCovers}
+        covers={headerCovers}
         title={brandConfig.title}
       />
       <Brand
