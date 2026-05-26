@@ -8,8 +8,8 @@ export async function resolveHeaderCovers(options: {
   fallbackCovers: HeaderCover[];
 }): Promise<HeaderCover[]> {
   const directCoverUrls = (options.coverUrls || [])
-  .filter((item): item is string => typeof item === "string" && item.trim().length > 0,)
-  .map((url) => url.trim());
+    .filter((item): item is string => typeof item === "string" && item.trim().length > 0)
+    .map((url) => url.trim());
 
   if (directCoverUrls.length > 0) {
     return directCoverUrls;
