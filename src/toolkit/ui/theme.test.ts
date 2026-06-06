@@ -27,7 +27,7 @@ function createDocumentMock() {
     },
   });
 
-  // eslint-disable-next-line no-unsafe-type-assertion
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
   const doc = {
     documentElement: {
       dataset,
@@ -47,7 +47,7 @@ function createWindowMock(options: {
 }) {
   const { storage, prefersDark = false, prefersReducedMotion = false } = options;
 
-  // eslint-disable-next-line no-unsafe-type-assertion
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
   return {
     localStorage: {
       getItem: (key: string) => storage.getItem(key),
@@ -57,17 +57,17 @@ function createWindowMock(options: {
     },
     matchMedia(query: string) {
       if (query === "(prefers-color-scheme: dark)") {
-        // eslint-disable-next-line no-unsafe-type-assertion
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
         return { matches: prefersDark } as any;
       }
       if (query === "(prefers-reduced-motion: reduce)") {
-        // eslint-disable-next-line no-unsafe-type-assertion
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
         return { matches: prefersReducedMotion } as any;
       }
-      // eslint-disable-next-line no-unsafe-type-assertion
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
       return { matches: false } as any;
     },
-    // eslint-disable-next-line no-unsafe-type-assertion
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
   } as any;
 }
 
@@ -85,7 +85,7 @@ describe("theme helpers", () => {
 
   it("falls back to system preference when storage is unavailable", () => {
     const { doc, attrs } = createDocumentMock();
-    // eslint-disable-next-line no-unsafe-type-assertion
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
     const win = {
       localStorage: {
         getItem() {
@@ -97,13 +97,13 @@ describe("theme helpers", () => {
       },
       matchMedia(query: string) {
         if (query === "(prefers-color-scheme: dark)") {
-          // eslint-disable-next-line no-unsafe-type-assertion
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
           return { matches: true } as any;
         }
-        // eslint-disable-next-line no-unsafe-type-assertion
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
         return { matches: false } as any;
       },
-      // eslint-disable-next-line no-unsafe-type-assertion
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
     } as any;
 
     const theme = initTheme(doc, win);
@@ -138,22 +138,22 @@ describe("theme helpers", () => {
     const { doc, attrs } = createDocumentMock();
 
     let transitionCalled = false;
-    // eslint-disable-next-line no-unsafe-type-assertion
     (
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
       doc as Document & { startViewTransition: NonNullable<Document["startViewTransition"]> }
     ).startViewTransition =
-      // eslint-disable-next-line no-unsafe-type-assertion
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
       ((callbackOrOptions?: Parameters<NonNullable<Document["startViewTransition"]>>[0]) => {
         transitionCalled = true;
         if (typeof callbackOrOptions === "function") {
           callbackOrOptions();
         }
 
-        // eslint-disable-next-line no-unsafe-type-assertion
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
         return {
           finished: Promise.resolve(),
         } as any;
-        // eslint-disable-next-line no-unsafe-type-assertion
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
       }) as any;
 
     const next = toggleThemeWithTransition(doc, win, "light");
