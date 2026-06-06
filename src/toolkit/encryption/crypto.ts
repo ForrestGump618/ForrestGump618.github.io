@@ -13,9 +13,9 @@ async function getSubtle(): Promise<SubtleCrypto> {
     return window.crypto.subtle;
   }
   // Node.js / Bun 环境
-  // @ts-ignore - Node.js 全局
+  // @ts-expect-error - Node.js 全局
   if (typeof globalThis !== "undefined" && globalThis.crypto?.subtle) {
-    // @ts-ignore
+    // @ts-expect-error
     return globalThis.crypto.subtle;
   }
   throw new Error("Web Crypto API not available");
@@ -32,7 +32,7 @@ function arrayToBase64(array: Uint8Array): string {
   // 浏览器环境
   let binary = "";
   for (let i = 0; i < array.length; i++) {
-    binary += String.fromCharCode(array[i]);
+    binary += String.fromCodePoint(array[i]);
   }
   return btoa(binary);
 }
@@ -49,7 +49,7 @@ function base64ToArray(base64: string): Uint8Array {
   const binary = atob(base64);
   const array = new Uint8Array(binary.length);
   for (let i = 0; i < binary.length; i++) {
-    array[i] = binary.charCodeAt(i);
+    array[i] = binary.codePointAt(i);
   }
   return array;
 }

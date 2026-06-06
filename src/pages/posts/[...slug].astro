@@ -35,7 +35,7 @@ export async function getStaticPaths() {
   const posts = await getCollection("posts");
   const sortedPosts = posts
     .filter((post) => !post.data.draft)
-    .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+    .toSorted((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
   const container = await createPostContentContainer();
 
@@ -194,8 +194,8 @@ const navigation: QuickNavigation = {
 
 // Calculate word count from content
 const plainText = (post.body || "")
-  .replace(/[#*`_[\]()]/g, "")
-  .replace(/\s+/g, " ");
+  .replaceAll(/[#*`_[\]()]/g, "")
+  .replaceAll(/\s+/g, " ");
 const wordCount = plainText.length;
 
 // Calculate read time (assume 300 words per minute)
@@ -251,7 +251,7 @@ if (!isEncrypted && hycEnable && aiSummaryEnable) {
     const { getPostSummary } = await import("@hyacine/cli/api");
 
     if (typeof getPostSummary !== "function") {
-      throw new Error(
+      throw new TypeError(
         "getPostSummary is not available in current @hyacine/cli",
       );
     }
@@ -289,7 +289,7 @@ if (!isEncrypted && hycEnable && aiRecommendEnable) {
           typeof item.score === "number" &&
           item.score >= aiRecommendMinSimilarity,
       )
-      .sort((a, b) => b.score - a.score)
+      .toSorted((a, b) => b.score - a.score)
       .slice(0, aiRecommendLimit)
       .map((item) => ({
         slug: item.slug,

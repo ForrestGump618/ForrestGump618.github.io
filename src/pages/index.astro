@@ -14,13 +14,13 @@ const publishedPosts = allPosts.filter((post) => !post.data.draft);
 // Separate sticky posts and regular posts
 const stickyPosts = publishedPosts
   .filter((post) => post.data.sticky === true)
-  .sort(
+  .toSorted(
     (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime(),
   );
 
 const regularPosts = publishedPosts
   .filter((post) => !post.data.sticky)
-  .sort(
+  .toSorted(
     (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime(),
   );
 
@@ -77,7 +77,7 @@ const categories = Array.from(categoryMap.entries())
       url: `/posts/${p.slug}/`,
     })),
   }))
-  .sort((a, b) => b.postCount - a.postCount);
+  .toSorted((a, b) => b.postCount - a.postCount);
 
 let pageTitle = themeConfig.home?.title?.customTitle ?? "";
 

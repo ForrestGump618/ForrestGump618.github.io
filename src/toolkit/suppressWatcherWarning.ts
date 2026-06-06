@@ -38,8 +38,8 @@ export function installProcessWarningFilter() {
       return;
     }
 
-    return originalEmitWarning(
-      warning as Parameters<typeof process.emitWarning>[0],
+     originalEmitWarning(
+      warning,
       ...(args as Parameters<typeof process.emitWarning> extends [unknown, ...infer Rest]
         ? Rest
         : never),

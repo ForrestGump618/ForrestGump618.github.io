@@ -61,8 +61,8 @@ const latestMoments = moments.slice(0, 1).map((moment) => ({
   href: "/moments/",
   date: moment.data.date,
   excerpt: String(moment.body || "")
-    .replace(/<[^>]*>/g, "")
-    .replace(/\s+/g, " ")
+    .replaceAll(/<[^>]*>/g, "")
+    .replaceAll(/\s+/g, " ")
     .trim(),
 }));
 

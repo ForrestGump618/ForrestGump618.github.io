@@ -99,7 +99,7 @@ const resolvedHeaderCover = pageCover ?? fixedCover;
 const allPosts = await getCollection("posts");
 const posts = allPosts.filter((post) => !post.data.draft);
 const moments = shouldComputeRightSidebarRecentMoments
-  ? (await getCollection("moments")).sort(
+  ? (await getCollection("moments")).toSorted(
       (a, b) =>
         new Date(b.data.date).getTime() - new Date(a.data.date).getTime(),
     )

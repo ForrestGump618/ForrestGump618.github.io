@@ -12,7 +12,7 @@ export function initMenuActive() {
   if (typeof document === "undefined") return;
 
   document.querySelectorAll(".menu .item:not(.title)").forEach((element) => {
-    const target = element.querySelector("a[href]") as HTMLAnchorElement | null;
+    const target = element.querySelector("a[href]");
     const parentItem = element.parentNode?.parentNode as HTMLElement | null;
 
     if (!target) return;
@@ -65,8 +65,8 @@ export function extractTocFromContent(content: string): TocItem[] {
     const text = match[2].trim();
     const id = text
       .toLowerCase()
-      .replace(/[^\w\u4E00-\u9FA5]+/g, "-")
-      .replace(/^-+|-+$/g, "");
+      .replaceAll(/[^\w\u4E00-\u9FA5]+/g, "-")
+      .replaceAll(/^-+|-+$/g, "");
 
     toc.push({
       id,
@@ -90,14 +90,14 @@ export function buildTocTree(items: TocItem[]): TocItem[] {
   items.forEach((item) => {
     const newItem: TocItem = { ...item, children: [] };
 
-    while (stack.length > 0 && stack[stack.length - 1].level >= item.level) {
+    while (stack.length > 0 && stack.at(-1).level >= item.level) {
       stack.pop();
     }
 
     if (stack.length === 0) {
       result.push(newItem);
     } else {
-      const parent = stack[stack.length - 1];
+      const parent = stack.at(-1);
       if (!parent.children) parent.children = [];
       parent.children.push(newItem);
     }

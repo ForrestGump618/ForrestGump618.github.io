@@ -30,7 +30,7 @@ test("@regression 主题切换后刷新仍保持", async ({ page }) => {
   await page.goto(ROUTES.home);
 
   const initialTheme = await page.evaluate(() => {
-    return document.documentElement.getAttribute("data-theme");
+    return document.documentElement.dataset.theme;
   });
 
   await page.getByRole("button", { name: "Toggle theme" }).click();
@@ -38,13 +38,13 @@ test("@regression 主题切换后刷新仍保持", async ({ page }) => {
   await expect
     .poll(async () => {
       return page.evaluate(() => {
-        return document.documentElement.getAttribute("data-theme");
+        return document.documentElement.dataset.theme;
       });
     })
     .not.toBe(initialTheme);
 
   const toggledTheme = await page.evaluate(() => {
-    return document.documentElement.getAttribute("data-theme");
+    return document.documentElement.dataset.theme;
   });
 
   await expect
@@ -60,7 +60,7 @@ test("@regression 主题切换后刷新仍保持", async ({ page }) => {
   await expect
     .poll(async () => {
       return page.evaluate(() => {
-        return document.documentElement.getAttribute("data-theme");
+        return document.documentElement.dataset.theme;
       });
     })
     .toBe(toggledTheme);

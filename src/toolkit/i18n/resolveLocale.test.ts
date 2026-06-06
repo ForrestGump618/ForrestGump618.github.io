@@ -10,7 +10,7 @@ describe("resolveLocale", () => {
   });
 
   it("falls back to zh-CN for missing or invalid locale", () => {
-    expect(resolveLocale(undefined)).toBe("zh-CN");
+    expect(resolveLocale()).toBe("zh-CN");
     expect(resolveLocale(null)).toBe("zh-CN");
     expect(resolveLocale("fr")).toBe("zh-CN");
   });

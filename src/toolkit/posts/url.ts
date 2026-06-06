@@ -1,5 +1,5 @@
 function trimSlashes(input: string): string {
-  return input.replace(/^\/+|\/+$/g, "");
+  return input.replaceAll(/^\/+|\/+$/g, "");
 }
 
 function removeMarkdownExtension(input: string): string {
@@ -24,10 +24,10 @@ export function toTagSlug(name: string): string {
   }
 
   return normalized
-    .replace(/[\\/]+/g, "-")
-    .replace(/\s+/g, "-")
-    .replace(/-+/g, "-")
-    .replace(/^-|-$/g, "");
+    .replaceAll(/[\\/]+/g, "-")
+    .replaceAll(/\s+/g, "-")
+    .replaceAll(/-+/g, "-")
+    .replaceAll(/^-|-$/g, "");
 }
 
 export function toTagHref(name: string): string {

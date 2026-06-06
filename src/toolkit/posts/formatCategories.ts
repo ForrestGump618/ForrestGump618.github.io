@@ -53,7 +53,7 @@ export function formatCategories(
     if (level >= depth) return [];
 
     return nodes
-      .sort((a, b) => b.length - a.length) // 按 length 降序
+      .toSorted((a, b) => b.length - a.length) // 按 length 降序
       .map((node) => ({
         ...node,
         children: limitAndSort(node.children, level + 1),

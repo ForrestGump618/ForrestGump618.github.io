@@ -28,7 +28,7 @@
 
   let isDecrypted = $state(false);
   let decryptedContent = $state("");
-  let decryptedToc = $state<TocItem[] | undefined>(undefined);
+  let decryptedToc = $state<TocItem[] | undefined>();
   let isDecrypting = $state(false);
 
   async function handleDecrypted(content: string) {

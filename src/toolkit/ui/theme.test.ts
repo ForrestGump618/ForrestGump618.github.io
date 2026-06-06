@@ -44,7 +44,7 @@ function createWindowMock(options: {
   return {
     localStorage: {
       getItem: (key: string) => storage.getItem(key),
-      setItem: (key: string, value: string) => storage.setItem(key, value),
+      setItem: (key: string, value: string) =>{  storage.setItem(key, value); },
     },
     matchMedia(query: string) {
       if (query === "(prefers-color-scheme: dark)") {

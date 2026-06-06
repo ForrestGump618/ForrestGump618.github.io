@@ -30,14 +30,14 @@ test("@smoke 主题切换与 moments 页面可达", async ({ page }) => {
   await page.goto(ROUTES.home);
 
   const initialTheme = await page.evaluate(() => {
-    return document.documentElement.getAttribute("data-theme");
+    return document.documentElement.dataset.theme;
   });
 
   await page.getByRole("button", { name: "Toggle theme" }).click();
   await expect
     .poll(async () => {
       return page.evaluate(() => {
-        return document.documentElement.getAttribute("data-theme");
+        return document.documentElement.dataset.theme;
       });
     })
     .not.toBe(initialTheme);

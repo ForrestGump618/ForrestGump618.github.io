@@ -11,7 +11,7 @@
     showSearch?: boolean;
   }
 
-  let { selector = undefined, showSearch = $bindable(false) }: Props = $props();
+  let { selector, showSearch = $bindable(false) }: Props = $props();
   const t = getT(currentLocale);
 
   let internalVisible = $state(false);
@@ -106,7 +106,7 @@
   function resolveThemeFromRoot(): "light" | "dark" {
     if (typeof document === "undefined") return "light";
 
-    return document.documentElement.getAttribute("data-theme") === "dark"
+    return document.documentElement.dataset.theme === "dark"
       ? "dark"
       : "light";
   }

@@ -49,11 +49,11 @@ export function generateTagCloud(tags: Tag[], options: TagCloudOptions): TagClou
     "tagCloud.endColor(generate)",
   );
 
-  const sorted = [...tags].sort((a, b) => b.count - a.count);
+  const sorted = [...tags].toSorted((a, b) => b.count - a.count);
   const limited = typeof limit === "number" ? sorted.slice(0, limit) : sorted;
 
   const maxCount = limited[0]?.count || 1;
-  const minCount = limited[limited.length - 1]?.count || 1;
+  const minCount = limited.at(-1)?.count || 1;
   const range = maxCount - minCount || 1;
 
   const start = new TinyColor(effectiveStartColor);

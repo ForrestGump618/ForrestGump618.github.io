@@ -37,7 +37,7 @@ const postsInCategory = publishedPosts.filter((post) => {
 });
 
 // Sort posts by date ascending (older first, matching old project)
-const sortedPosts = postsInCategory.sort(
+const sortedPosts = postsInCategory.toSorted(
   (a, b) => new Date(a.data.date).getTime() - new Date(b.data.date).getTime(),
 );
 
@@ -78,7 +78,7 @@ sortedPosts.forEach((post) => {
     // Build subcategory path (categories after current one)
     const subcategoryPath = categories.slice(currentIndex + 1);
     const subcategorySlug = subcategoryPath
-      .map((c) => c.toLowerCase().replace(/\s+/g, "-"))
+      .map((c) => c.toLowerCase().replaceAll(/\s+/g, "-"))
       .join("-");
 
     postDisplays.push({

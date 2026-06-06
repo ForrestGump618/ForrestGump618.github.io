@@ -18,7 +18,7 @@ export function buildPaginationItems(currentPage: number, lastPage: number): Pag
 
   const items: PaginationItem[] = [];
   const add = (item: PaginationItem) => {
-    if (items.length === 0 || items[items.length - 1] !== item) {
+    if (items.length === 0 || items.at(-1) !== item) {
       items.push(item);
     }
   };

@@ -21,7 +21,7 @@ const visiblePosts = posts
   .filter(
     (item) => typeof item.score === "number" && item.score >= minSimilarity,
   )
-  .sort((a, b) => b.score - a.score);
+  .toSorted((a, b) => b.score - a.score);
 ---
 
 {
