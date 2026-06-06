@@ -89,10 +89,13 @@ const ActiveLayout = enableThirdColumn ? ThreeColumnLayout : TwoColumnLayout;
 const fixedCover = coverConfig.fixedCover?.enable
   ? resolveFixedCover(coverConfig.fixedCover.url)
   : undefined;
-const headerCovers = await resolveHeaderCovers({
-  coverUrls: coverConfig.coverUrls,
-  fallbackCovers: covers,
-});
+const advancedCarousel = coverConfig.advancedCarousel === true;
+const headerCovers = advancedCarousel
+  ? await resolveHeaderCovers({
+      coverUrls: coverConfig.coverUrls,
+      fallbackCovers: covers,
+    })
+  : [];
 const resolvedHeaderCover = pageCover ?? fixedCover;
 
 // Get all posts for widgets
@@ -191,7 +194,8 @@ import SearchPage from "@/components/search/SearchPage.svelte";
         preload={coverConfig.preload}
         fixedCover={resolvedHeaderCover}
         gradient={coverConfig.gradient}
-        covers={headerCovers}
+        covers={advancedCarousel ? headerCovers : covers}
+        advancedCarousel={advancedCarousel}
         title={brandConfig.title}
       />
       <Brand

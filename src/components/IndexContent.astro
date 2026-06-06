@@ -37,10 +37,13 @@ const {
 } = Astro.props;
 
 const coverConfig = themeConfig.cover || {};
-const headerCovers = await resolveHeaderCovers({
-  coverUrls: coverConfig.coverUrls,
-  fallbackCovers: covers,
-});
+const advancedCarousel = coverConfig.advancedCarousel === true;
+const headerCovers = advancedCarousel
+  ? await resolveHeaderCovers({
+      coverUrls: coverConfig.coverUrls,
+      fallbackCovers: covers,
+    })
+  : [];
 
 const transformOptions = {
   encryptedExcerpt: t("post.encryptedExcerpt"),

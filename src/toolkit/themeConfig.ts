@@ -64,10 +64,17 @@ interface CoverConfig {
   };
 
   /**
+   * 启用高级轮播模式。
+   * - true：使用 PR #36 的新行为（支持远程 URL、covers.config.ts、任意 ≥2 张图即可轮播）
+   * - false（默认）：使用旧行为（仅本地图片、必须恰好 6 张才启动轮播）
+   */
+  advancedCarousel?: boolean;
+
+  /**
    * 远端/字符串轮播图列表。
    * - 仅在 fixedCover 未启用且 gradient 为 false 时参与轮播
    * - 适用于直接在配置中填写一组 URL
-   * - 當 carouselUrls 非空时，优先使用 carouselUrls 否則利用 covers.config.ts 中的 defineCovers 定义的 URL 列表
+   * - 當 advancedCarousel 为 true 且 coverUrls 非空时，优先使用 coverUrls，否则利用 covers.config.ts 中的 defineCovers 定义的 URL 列表
    */
   coverUrls?: string[];
 
