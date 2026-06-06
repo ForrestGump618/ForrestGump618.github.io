@@ -56,13 +56,13 @@ export function withFolderCategories(loader: Loader, postsBase = "src/posts"): L
         parseData<TData extends Record<string, unknown>>(
           props: ParseDataOptions<TData>,
         ): Promise<TData> {
+          const raw = props.data.categories;
+          const categories: FrontmatterCategories =
+            typeof raw === "string" ? raw : Array.isArray(raw) ? raw.map((x) => String(x)) : null;
+
           const data = {
             ...props.data,
-            categories: normalizeFolderCategories(
-              props.data.categories as FrontmatterCategories,
-              props.filePath,
-              postsBasePath,
-            ),
+            categories: normalizeFolderCategories(categories, props.filePath, postsBasePath),
           };
 
           return context.parseData({

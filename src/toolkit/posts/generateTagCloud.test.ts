@@ -80,8 +80,10 @@ describe("generateTagCloud", () => {
   it("should fallback to default tokens when color values are invalid", () => {
     const cloud = generateTagCloud(tags, {
       ...options,
-      startColor: "rgb(255, 0, 0); background: red" as never,
-      endColor: "{oops}" as never,
+      // eslint-disable-next-line no-unsafe-type-assertion
+      startColor: "rgb(255, 0, 0); background: red" as any,
+      // eslint-disable-next-line no-unsafe-type-assertion
+      endColor: "{oops}" as any,
     });
 
     expect(cloud.length).toBeGreaterThan(0);

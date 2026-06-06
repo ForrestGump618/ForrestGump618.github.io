@@ -40,7 +40,7 @@ const postsWithTag = publishedPosts.filter((post) => {
 });
 
 // Sort posts by date descending (newest first)
-const sortedPosts = postsWithTag.sort(
+const sortedPosts = postsWithTag.toSorted(
   (a, b) => b.data.date.getTime() - a.data.date.getTime(),
 );
 
@@ -54,7 +54,7 @@ function formatDate(date: Date): string {
 
 // Get last category name for display
 function getLastCategory(categories: string[]): string | undefined {
-  return categories.length > 0 ? categories[categories.length - 1] : undefined;
+  return categories.length > 0 ? categories.at(-1) : undefined;
 }
 ---
 

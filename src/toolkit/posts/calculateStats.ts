@@ -13,13 +13,13 @@ export function countWords(text: string): number {
   if (!text) return 0;
 
   // Remove punctuation
-  const cleanedText = text.replace(/[^\w\s\u4E00-\u9FFF]/g, "");
+  const cleanedText = text.replaceAll(/[^\w\s\u4E00-\u9FFF]/g, "");
 
   // Count Chinese characters (each character is one word)
   const chineseCount = (cleanedText.match(/[\u4E00-\u9FFF]/g) || []).length;
 
   // Remove Chinese characters and count English words
-  const englishText = cleanedText.replace(/[\u4E00-\u9FFF]/g, "");
+  const englishText = cleanedText.replaceAll(/[\u4E00-\u9FFF]/g, "");
   const englishCount = englishText
     .trim()
     .split(/\s+/)
@@ -51,9 +51,8 @@ export function formatReadingTime(wordCount: number, awl: number = 150, wpm: num
     return "less than a minute";
   } else if (readingMinutes === 1) {
     return "1 minute";
-  } else {
-    return `${readingMinutes} minutes`;
   }
+  return `${readingMinutes} minutes`;
 }
 
 /**

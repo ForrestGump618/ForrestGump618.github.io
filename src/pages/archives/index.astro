@@ -12,7 +12,7 @@ import "../../styles/collapse.css";
 const allPosts = await getCollection("posts");
 const publishedPosts = allPosts
   .filter((post) => !post.data.draft)
-  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+  .toSorted((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
 // Structure posts by date
 const structuredPosts = structurePostsByDate(publishedPosts, { daily: false });
@@ -20,7 +20,7 @@ const structuredPosts = structurePostsByDate(publishedPosts, { daily: false });
 // Get all years in descending order
 const years = Object.keys(structuredPosts)
   .map(Number)
-  .sort((a, b) => b - a);
+  .toSorted((a, b) => b - a);
 
 // Total post count for cheers message
 const totalPosts = publishedPosts.length;

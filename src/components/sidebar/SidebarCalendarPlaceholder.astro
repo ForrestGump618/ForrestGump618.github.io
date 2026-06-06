@@ -44,19 +44,36 @@ const monthLabel = new Intl.DateTimeFormat(locale, {
   year: "numeric",
   month: "long",
 }).format(monthStart);
+
+// 将构建时日期嵌入 DOM 用于客户端校正
+const buildYear = year;
+const buildMonth = month;
+const buildDay = today;
 ---
 
 <section class="calendar-card">
   <div class="card-head">
     <h3>{t("sidebar.calendar.title")}</h3>
-    <span class="badge">{monthLabel}</span>
+    <span class="badge" data-calendar-month-label>{monthLabel}</span>
   </div>
 
-  <div class="calendar-grid" aria-hidden="true">
+  <div
+    class="calendar-grid"
+    aria-hidden="true"
+    data-calendar-grid
+    data-build-year={buildYear}
+    data-build-month={buildMonth}
+    data-build-day={buildDay}
+    data-locale={locale}
+    data-monday-first={String(useMondayAsFirstDay)}
+  >
     {weekdays.map((label) => <span class="weekday">{label}</span>)}
     {
       cells.map(({ day, isToday }) => (
-        <span class:list={["date", { today: isToday, empty: day === null }]}>
+        <span
+          class:list={["date", { today: isToday, empty: day === null }]}
+          data-calendar-day={day ?? ""}
+        >
           {day ?? ""}
         </span>
       ))
@@ -186,3 +203,89 @@ const monthLabel = new Intl.DateTimeFormat(locale, {
     color: var(--grey-0);
   }
 </style>
+
+<script is:inline>
+  (() => {
+    const grid = document.querySelector("[data-calendar-grid]");
+    if (!grid) return;
+
+    const now = new Date();
+    const realYear = now.getFullYear();
+    const realMonth = now.getMonth();
+    const realDay = now.getDate();
+    const buildYear = Number(grid.dataset.buildYear);
+    const buildMonth = Number(grid.dataset.buildMonth);
+
+    // 月份不变：仅修正 today 高亮
+    if (realYear === buildYear && realMonth === buildMonth) {
+      const dateCells = grid.querySelectorAll("[data-calendar-day]");
+      dateCells.forEach((cell) => {
+        const day = Number(cell.getAttribute("data-calendar-day"));
+        cell.classList.toggle("today", day === realDay);
+      });
+      return;
+    }
+
+    // 月份变化：重新渲染整个日历
+    const locale = grid.dataset.locale || "zh-CN";
+    const mondayFirst = grid.dataset.mondayFirst === "true";
+    const daysInMonth = new Date(realYear, realMonth + 1, 0).getDate();
+    const monthStart = new Date(realYear, realMonth, 1);
+    const firstWeekday = mondayFirst
+      ? (monthStart.getDay() + 6) % 7
+      : monthStart.getDay();
+
+    // 更新月份标签
+    const badge = document.querySelector("[data-calendar-month-label]");
+    if (badge) {
+      badge.textContent = new Intl.DateTimeFormat(locale, {
+        year: "numeric",
+        month: "long",
+      }).format(monthStart);
+    }
+
+    // 更新星期标签
+    const weekdayBase = mondayFirst ? [1, 2, 3, 4, 5, 6, 0] : [0, 1, 2, 3, 4, 5, 6];
+    const weekdayFormatter = new Intl.DateTimeFormat(locale, { weekday: "short" });
+    const weekdays = grid.querySelectorAll(".weekday");
+    weekdayBase.forEach((day, i) => {
+      const date = new Date(2026, 2, 1 + ((day + 7) % 7));
+      if (weekdays[i]) weekdays[i].textContent = weekdayFormatter.format(date);
+    });
+
+    // 重建日期单元格
+    const dateCellElements = grid.querySelectorAll(".date");
+    let cellIndex = 0;
+
+    // 空白填充
+    for (let i = 0; i < firstWeekday; i++) {
+      if (dateCellElements[cellIndex]) {
+        dateCellElements[cellIndex].classList.add("empty");
+        dateCellElements[cellIndex].classList.remove("today");
+        dateCellElements[cellIndex].setAttribute("data-calendar-day", "");
+        dateCellElements[cellIndex].textContent = "";
+      }
+      cellIndex++;
+    }
+
+    // 日期单元格
+    for (let day = 1; day <= daysInMonth; day++) {
+      if (dateCellElements[cellIndex]) {
+        dateCellElements[cellIndex].classList.remove("empty");
+        dateCellElements[cellIndex].classList.toggle("today", day === realDay);
+        dateCellElements[cellIndex].setAttribute("data-calendar-day", String(day));
+        dateCellElements[cellIndex].textContent = String(day);
+      }
+      cellIndex++;
+    }
+
+    // 剩余空白
+    while (cellIndex < dateCellElements.length) {
+      dateCellElements[cellIndex].classList.add("empty");
+      dateCellElements[cellIndex].classList.remove("today");
+      dateCellElements[cellIndex].setAttribute("data-calendar-day", "");
+      dateCellElements[cellIndex].textContent = "";
+      cellIndex++;
+    }
+  })();
+</script>

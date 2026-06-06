@@ -4,8 +4,10 @@ import PostSegments from "./postSegments/PostSegments.astro";
 import CategoryCards from "./categoryCard/CategoryCards.svelte";
 import Divider from "./Divider.astro";
 import { transformIndexPosts } from "@/toolkit/posts/transformIndexPosts";
-import { getPostCover } from "./Images.astro";
+import { covers, getPostCover } from "./Images.astro";
+import { resolveHeaderCovers } from "@/toolkit/headerCover";
 import { t } from "@/i18n";
+import themeConfig from "@/theme.config";
 
 interface CategoryItem {
   name: string;
@@ -34,9 +36,18 @@ const {
   isFirstPage = true,
 } = Astro.props;
 
+const coverConfig = themeConfig.cover || {};
+const advancedCarousel = coverConfig.advancedCarousel === true;
+const headerCovers = advancedCarousel
+  ? await resolveHeaderCovers({
+      coverUrls: coverConfig.coverUrls,
+      fallbackCovers: covers,
+    })
+  : [];
+
 const transformOptions = {
   encryptedExcerpt: t("post.encryptedExcerpt"),
-  resolveCover: getPostCover,
+  resolveCover: (post: CollectionEntry<"posts">) => getPostCover(post, headerCovers),
 };
 
 const transformedStickyPosts = transformIndexPosts(stickyPosts, transformOptions);

@@ -64,6 +64,21 @@ interface CoverConfig {
   };
 
   /**
+   * 启用高级轮播模式。
+   * - true：使用 PR #36 的新行为（支持远程 URL、covers.config.ts、任意 ≥2 张图即可轮播）
+   * - false（默认）：使用旧行为（仅本地图片、必须恰好 6 张才启动轮播）
+   */
+  advancedCarousel?: boolean;
+
+  /**
+   * 远端/字符串轮播图列表。
+   * - 仅在 fixedCover 未启用且 gradient 为 false 时参与轮播
+   * - 适用于直接在配置中填写一组 URL
+   * - 當 advancedCarousel 为 true 且 coverUrls 非空时，优先使用 coverUrls，否则利用 covers.config.ts 中的 defineCovers 定义的 URL 列表
+   */
+  coverUrls?: string[];
+
+  /**
    * 是否使用渐变背景封面。
    * - true：使用必应 API 获取每日图片作为封面
    * - false：使用预设封面图片或轮播
@@ -713,10 +728,12 @@ function isPlainObject(value: unknown): value is Record<string, unknown> {
 
 function cloneConfigValue<T>(value: T): T {
   if (Array.isArray(value)) {
+    // eslint-disable-next-line no-unsafe-type-assertion
     return value.map((item) => cloneConfigValue(item)) as T;
   }
 
   if (isPlainObject(value)) {
+    // eslint-disable-next-line no-unsafe-type-assertion
     return Object.fromEntries(
       Object.entries(value).map(([key, entryValue]) => [key, cloneConfigValue(entryValue)]),
     ) as T;
@@ -737,6 +754,7 @@ function mergeThemeConfig<T>(defaults: T, overrides?: ThemeUserConfig<T>): T {
   }
 
   if (Array.isArray(defaults) || Array.isArray(overrides)) {
+    // eslint-disable-next-line no-unsafe-type-assertion
     return cloneConfigValue(overrides as T);
   }
 
@@ -761,9 +779,11 @@ function mergeThemeConfig<T>(defaults: T, overrides?: ThemeUserConfig<T>): T {
       }
     });
 
+    // eslint-disable-next-line no-unsafe-type-assertion
     return Object.fromEntries(mergedEntries) as T;
   }
 
+  // eslint-disable-next-line no-unsafe-type-assertion
   return cloneConfigValue(overrides as T);
 }
 

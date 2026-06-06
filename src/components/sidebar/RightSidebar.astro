@@ -61,8 +61,8 @@ const latestMoments = moments.slice(0, 1).map((moment) => ({
   href: "/moments/",
   date: moment.data.date,
   excerpt: String(moment.body || "")
-    .replace(/<[^>]*>/g, "")
-    .replace(/\s+/g, " ")
+    .replaceAll(/<[^>]*>/g, "")
+    .replaceAll(/\s+/g, " ")
     .trim(),
 }));
 
@@ -282,6 +282,14 @@ const hasRenderedContent =
 </aside>
 
 <script is:inline>
+  const onSearchOpen = () => {
+    const searchButton = document.querySelector("#search");
+
+    if (searchButton instanceof HTMLElement) {
+      searchButton.click();
+    }
+  };
+
   (() => {
     const registryKey = "__hyacineRightSidebarAffix";
     const previous = window[registryKey];
@@ -293,13 +301,6 @@ const hasRenderedContent =
     const searchTriggers = Array.from(
       document.querySelectorAll("[data-open-global-search]"),
     );
-    const onSearchOpen = () => {
-      const searchButton = document.querySelector("#search");
-
-      if (searchButton instanceof HTMLElement) {
-        searchButton.click();
-      }
-    };
 
     searchTriggers.forEach((trigger) => {
       trigger.addEventListener("click", onSearchOpen);

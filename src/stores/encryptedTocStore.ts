@@ -16,13 +16,17 @@ export const encryptedTocStore = {
   // 设置 TOC（解密成功后调用）
   set(toc: TocItem[]): void {
     decryptedToc = toc;
-    subscribers.forEach((fn) => fn(toc));
+    subscribers.forEach((fn) => {
+      fn(toc);
+    });
   },
 
   // 清除 TOC
   clear(): void {
     decryptedToc = [];
-    subscribers.forEach((fn) => fn([]));
+    subscribers.forEach((fn) => {
+      fn([]);
+    });
   },
 
   // 订阅 TOC 变化

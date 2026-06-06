@@ -22,7 +22,7 @@ function getPreferredTheme(win: Window): ThemeMode {
 }
 
 export function applyTheme(doc: Document, theme: ThemeMode) {
-  doc.documentElement.setAttribute("data-theme", theme);
+  doc.documentElement.dataset.theme = theme;
 }
 
 export function initTheme(doc: Document, win: Window): ThemeMode {

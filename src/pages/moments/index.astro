@@ -9,7 +9,7 @@ import themeConfig from "@/theme.config";
 const allMoments = await getCollection("moments");
 
 // 按时间倒序排序
-const sortedMoments = allMoments.sort(
+const sortedMoments = allMoments.toSorted(
   (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime(),
 );
 

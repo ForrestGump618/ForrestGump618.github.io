@@ -11,8 +11,8 @@ const { post } = Astro.props;
 const t = getT();
 const postUrl = `/posts/${post.id}/`;
 const publicDescription =
-  post.data.description || post.body?.substring(0, 300) || "";
-const lastCategory = post.data.categories?.[post.data.categories.length - 1];
+  post.data.description || post.body?.slice(0, 300) || "";
+const lastCategory = post.data.categories?.at(-1);
 ---
 
 <article class="post-card">

@@ -1,5 +1,6 @@
 import svelte from "@astrojs/svelte";
 import { defineConfig } from "astro/config";
+import { unified } from "@astrojs/markdown-remark";
 import sitemap from "@astrojs/sitemap";
 import esToolkitPlugin from "vite-plugin-es-toolkit";
 import { transformerColorizedBrackets } from "@shikijs/colorized-brackets";
@@ -128,20 +129,22 @@ export default defineConfig({
         transformerColorizedBrackets(),
       ],
     },
-    remarkPlugins: [
-      remarkMath,
-      remarkBreaks,
-      remarkRubyDirective,
-      remarkIns,
-      remarkDirective,
-      noteDirective,
-      spanDirective,
-      remarkGfm,
-      remarkEmoji,
-      remarkExtendedTable,
-      [spoiler, { title: "..." }],
-    ],
-    rehypePlugins: [rehypeKatex, rehypeAutoLinkHeadings],
+    processor: unified({
+      remarkPlugins: [
+        remarkMath,
+        remarkBreaks,
+        remarkRubyDirective,
+        remarkIns,
+        remarkDirective,
+        noteDirective,
+        spanDirective,
+        remarkGfm,
+        remarkEmoji,
+        remarkExtendedTable,
+        [spoiler, { title: "..." }],
+      ],
+      rehypePlugins: [rehypeKatex, rehypeAutoLinkHeadings],
+    }),
   },
   experimental: {
     rustCompiler: true,

@@ -27,7 +27,7 @@
   };
 
   const updateHasComments = () => {
-    hasComments = Boolean(document.getElementById("comments"));
+    hasComments = Boolean(document.querySelector("#comments"));
   };
 
   const updateIsMobile = () => {
@@ -42,7 +42,7 @@
   };
 
   const scrollToComments = () => {
-    const target = document.getElementById("comments");
+    const target = document.querySelector("#comments");
     if (!target) {
       return;
     }
@@ -70,8 +70,8 @@
       return;
     }
 
-    const player = document.getElementById("player");
-    const showBtn = document.getElementById("nyx-show-btn");
+    const player = document.querySelector("#player") as HTMLElement | null;
+    const showBtn = document.querySelector("#nyx-show-btn");
 
     if (!player || !showBtn) {
       return;

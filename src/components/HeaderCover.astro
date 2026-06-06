@@ -7,8 +7,9 @@ interface Props {
   preload?: boolean
   fixedCover?: ImageMetadata | string
   gradient?: boolean
-  covers?: ImageMetadata[]
+  covers?: Array<ImageMetadata | string>
   title?: string
+  advancedCarousel?: boolean
 }
 
 const {
@@ -17,11 +18,15 @@ const {
   gradient = false,
   covers = [],
   title = '',
+  advancedCarousel = false,
 } = Astro.props as Props
 
 // 是否显示多图轮播
+// 新版行为（advancedCarousel）：≥2 张即可
+// 旧版行为：必须恰好 6 张
+const minCoversForCarousel = advancedCarousel ? 2 : 6
 const isMultipleImages =
-  !fixedCover && !gradient && covers.length === 6
+  !fixedCover && !gradient && covers.length >= minCoversForCarousel
 
 // 单图模式图片来源
 const singleImage =
@@ -61,7 +66,7 @@ const singleImage =
 )}
 
 <script>
-  const imgs = document.getElementById('imgs')
+  const imgs = document.querySelector('#imgs')
 
   if (imgs) {
     const toggleHoverByPointer = (event: MouseEvent) => {

@@ -20,9 +20,9 @@
 
   let linkHover = $state(false);
   let submenuHover = $state(false);
-  let linkTimer: ReturnType<typeof setTimeout> | undefined = $state(undefined);
+  let linkTimer: ReturnType<typeof setTimeout> | undefined = $state();
   let submenuTimer: ReturnType<typeof setTimeout> | undefined =
-    $state(undefined);
+    $state();
 
   const setLinkHover = (value: boolean) => {
     if (linkTimer) clearTimeout(linkTimer);

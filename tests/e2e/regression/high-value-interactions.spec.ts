@@ -2,14 +2,14 @@ import { expect, test } from "@playwright/test";
 import { POSTS, ROUTES, SEARCH_TERMS } from "../support/routes";
 
 function escapeRegExp(input: string) {
-  return input.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return input.replaceAll(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
 async function readTheme(page: import("@playwright/test").Page) {
   return expect
     .poll(async () => {
       return page.evaluate(() => {
-        return document.documentElement.getAttribute("data-theme");
+        return document.documentElement.dataset.theme;
       });
     })
     .toBeTruthy();
@@ -147,7 +147,7 @@ test("@regression 主题切换后跨页面导航与刷新仍保持", async ({ pa
   await readTheme(page);
 
   const initialTheme = await page.evaluate(() => {
-    return document.documentElement.getAttribute("data-theme");
+    return document.documentElement.dataset.theme;
   });
 
   await page.getByRole("button", { name: "Toggle theme" }).click();
@@ -155,13 +155,13 @@ test("@regression 主题切换后跨页面导航与刷新仍保持", async ({ pa
   await expect
     .poll(async () => {
       return page.evaluate(() => {
-        return document.documentElement.getAttribute("data-theme");
+        return document.documentElement.dataset.theme;
       });
     })
     .not.toBe(initialTheme);
 
   const toggledTheme = await page.evaluate(() => {
-    return document.documentElement.getAttribute("data-theme");
+    return document.documentElement.dataset.theme;
   });
   expect(toggledTheme).toBeTruthy();
   expect(["light", "dark"]).toContain(toggledTheme);
@@ -170,7 +170,7 @@ test("@regression 主题切换后跨页面导航与刷新仍保持", async ({ pa
   await expect
     .poll(async () => {
       return page.evaluate(() => {
-        return document.documentElement.getAttribute("data-theme");
+        return document.documentElement.dataset.theme;
       });
     })
     .toBe(toggledTheme ?? null);
@@ -179,7 +179,7 @@ test("@regression 主题切换后跨页面导航与刷新仍保持", async ({ pa
   await expect
     .poll(async () => {
       return page.evaluate(() => {
-        return document.documentElement.getAttribute("data-theme");
+        return document.documentElement.dataset.theme;
       });
     })
     .toBe(toggledTheme ?? null);
@@ -189,7 +189,7 @@ test("@regression 主题切换后跨页面导航与刷新仍保持", async ({ pa
   await expect
     .poll(async () => {
       return page.evaluate(() => {
-        return document.documentElement.getAttribute("data-theme");
+        return document.documentElement.dataset.theme;
       });
     })
     .toBe(toggledTheme ?? null);

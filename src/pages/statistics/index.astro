@@ -10,7 +10,7 @@ const allPosts = await getCollection("posts");
 const statistics = buildSiteStatistics(allPosts);
 
 const latestMonth =
-  statistics.monthlyPostCounts[statistics.monthlyPostCounts.length - 1] || null;
+  statistics.monthlyPostCounts.at(-1) || null;
 ---
 
 <Layout pageTitle={t("statistics.title")}>

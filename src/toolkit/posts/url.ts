@@ -1,5 +1,5 @@
 function trimSlashes(input: string): string {
-  return input.replace(/^\/+|\/+$/g, "");
+  return input.replaceAll(/^\/+|\/+$/g, "");
 }
 
 function removeMarkdownExtension(input: string): string {
@@ -15,19 +15,17 @@ function encodePathSegments(input: string): string {
 }
 
 export function toTagSlug(name: string): string {
-  const normalized = String(name || "")
-    .trim()
-    .toLowerCase();
+  const normalized = (name || "").trim().toLowerCase();
 
   if (!normalized) {
     return "";
   }
 
   return normalized
-    .replace(/[\\/]+/g, "-")
-    .replace(/\s+/g, "-")
-    .replace(/-+/g, "-")
-    .replace(/^-|-$/g, "");
+    .replaceAll(/[\\/]+/g, "-")
+    .replaceAll(/\s+/g, "-")
+    .replaceAll(/-+/g, "-")
+    .replaceAll(/^-|-$/g, "");
 }
 
 export function toTagHref(name: string): string {
@@ -36,12 +34,12 @@ export function toTagHref(name: string): string {
 }
 
 export function toCategoryHref(name: string): string {
-  const normalized = String(name || "").trim();
+  const normalized = (name || "").trim();
   return normalized ? `/categories/${encodeURIComponent(normalized)}/` : "/categories/";
 }
 
 export function toPostHref(idOrSlug: string): string {
-  const normalized = trimSlashes(removeMarkdownExtension(String(idOrSlug || "").trim()));
+  const normalized = trimSlashes(removeMarkdownExtension((idOrSlug || "").trim()));
 
   if (!normalized) {
     return "/posts/";

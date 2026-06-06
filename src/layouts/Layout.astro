@@ -27,6 +27,7 @@ import ThreeColumnLayout from "@/layouts/ThreeColumnLayout.astro";
 import { generateTagCloud } from "@/toolkit/posts/generateTagCloud";
 import { createWidgetPosts } from "@/toolkit/posts/createWidgetPosts";
 import { toTagHref } from "@/toolkit/posts/url";
+import { resolveHeaderCovers } from "@/toolkit/headerCover";
 import Footer from "@/components/footer/Footer.astro";
 import type { ImageMetadata } from "astro";
 import { currentLocale } from "@/i18n";
@@ -88,13 +89,20 @@ const ActiveLayout = enableThirdColumn ? ThreeColumnLayout : TwoColumnLayout;
 const fixedCover = coverConfig.fixedCover?.enable
   ? resolveFixedCover(coverConfig.fixedCover.url)
   : undefined;
+const advancedCarousel = coverConfig.advancedCarousel === true;
+const headerCovers = advancedCarousel
+  ? await resolveHeaderCovers({
+      coverUrls: coverConfig.coverUrls,
+      fallbackCovers: covers,
+    })
+  : [];
 const resolvedHeaderCover = pageCover ?? fixedCover;
 
 // Get all posts for widgets
 const allPosts = await getCollection("posts");
 const posts = allPosts.filter((post) => !post.data.draft);
 const moments = shouldComputeRightSidebarRecentMoments
-  ? (await getCollection("moments")).sort(
+  ? (await getCollection("moments")).toSorted(
       (a, b) =>
         new Date(b.data.date).getTime() - new Date(a.data.date).getTime(),
     )
@@ -125,7 +133,10 @@ const rightSidebarTagCloud = shouldComputeRightSidebarTagCloud
           limit: 16,
         },
       ).map((tag) => ({
-        ...tag,
+        name: tag.name,
+        count: tag.count,
+        fontSize: tag.fontSize,
+        color: tag.color,
         href: toTagHref(tag.name),
       }));
     })()
@@ -183,7 +194,8 @@ import SearchPage from "@/components/search/SearchPage.svelte";
         preload={coverConfig.preload}
         fixedCover={resolvedHeaderCover}
         gradient={coverConfig.gradient}
-        covers={covers}
+        covers={advancedCarousel ? headerCovers : covers}
+        advancedCarousel={advancedCarousel}
         title={brandConfig.title}
       />
       <Brand

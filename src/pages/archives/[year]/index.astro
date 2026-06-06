@@ -12,14 +12,14 @@ export async function getStaticPaths() {
   const allPosts = await getCollection("posts");
   const publishedPosts = allPosts
     .filter((post) => !post.data.draft)
-    .sort((a, b) => b.data.date.getTime() - a.data.date.getTime());
+    .toSorted((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
   const structuredPosts = structurePostsByDate(publishedPosts, {
     daily: false,
   });
 
   const years = Object.keys(structuredPosts).map(Number);
-  const sortedYears = [...years].sort((a, b) => b - a);
+  const sortedYears = [...years].toSorted((a, b) => b - a);
 
   return sortedYears.map((year) => ({
     params: { year: String(year) },
