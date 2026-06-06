@@ -10,14 +10,7 @@ export default defineConfig({
     "no-underscore-dangle": [
       "error",
       {
-        allow: [
-          "_id",
-          "_title",
-          "_passwordPlaceholder",
-          "_submitText",
-          "_errorText",
-          "__hyacineMdxInitBound",
-        ],
+        allow: ["_id", "_title", "_passwordPlaceholder", "_submitText", "_errorText"],
       },
     ],
   },

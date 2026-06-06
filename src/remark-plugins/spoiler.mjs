@@ -71,7 +71,8 @@ export default function spoiler(options = {}) {
       }
 
       parent.children.splice(index, 1, ...parts);
-      index = index + parts.length - 1;
+      // eslint-disable-next-line consistent-return
+      return index + parts.length - 1;
     });
   };
 }

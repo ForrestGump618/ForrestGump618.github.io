@@ -27,7 +27,7 @@
 
   function handleTocClick(event: MouseEvent, id: string, index: number) {
     event.preventDefault()
-    const target = document.querySelector(`#${id}`) as HTMLElement | null;
+    const target = document.getElementById(id)
     if (target) {
       const scrollTop = target.offsetTop - 100
       window.scrollTo({

@@ -58,11 +58,7 @@ export function withFolderCategories(loader: Loader, postsBase = "src/posts"): L
         ): Promise<TData> {
           const raw = props.data.categories;
           const categories: FrontmatterCategories =
-            typeof raw === "string"
-              ? raw
-              : Array.isArray(raw)
-                ? raw.map((x) => String(x))
-                : null;
+            typeof raw === "string" ? raw : Array.isArray(raw) ? raw.map((x) => String(x)) : null;
 
           const data = {
             ...props.data,

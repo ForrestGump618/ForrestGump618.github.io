@@ -8,8 +8,15 @@ import { DEFAULT_ENCRYPTION_CONFIG } from "./types";
 
 /** 运行时类型守卫：验证值是否为 TocItem[] */
 function isTocItemArray(v: unknown): v is TocItem[] {
-  return Array.isArray(v) && v.every(
-    (item) => typeof item === "object" && item !== null && typeof item.id === "string" && typeof item.text === "string",
+  return (
+    Array.isArray(v) &&
+    v.every(
+      (item) =>
+        typeof item === "object" &&
+        item !== null &&
+        typeof item.id === "string" &&
+        typeof item.text === "string",
+    )
   );
 }
 
