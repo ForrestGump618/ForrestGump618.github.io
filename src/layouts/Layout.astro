@@ -27,6 +27,7 @@ import ThreeColumnLayout from "@/layouts/ThreeColumnLayout.astro";
 import { generateTagCloud } from "@/toolkit/posts/generateTagCloud";
 import { createWidgetPosts } from "@/toolkit/posts/createWidgetPosts";
 import { toTagHref } from "@/toolkit/posts/url";
+import { resolveHeaderCovers } from "@/toolkit/headerCover";
 import Footer from "@/components/footer/Footer.astro";
 import type { ImageMetadata } from "astro";
 import { currentLocale } from "@/i18n";
@@ -88,6 +89,10 @@ const ActiveLayout = enableThirdColumn ? ThreeColumnLayout : TwoColumnLayout;
 const fixedCover = coverConfig.fixedCover?.enable
   ? resolveFixedCover(coverConfig.fixedCover.url)
   : undefined;
+const headerCovers = await resolveHeaderCovers({
+  coverUrls: coverConfig.coverUrls,
+  fallbackCovers: covers,
+});
 const resolvedHeaderCover = pageCover ?? fixedCover;
 
 // Get all posts for widgets
@@ -183,7 +188,7 @@ import SearchPage from "@/components/search/SearchPage.svelte";
         preload={coverConfig.preload}
         fixedCover={resolvedHeaderCover}
         gradient={coverConfig.gradient}
-        covers={covers}
+        covers={headerCovers}
         title={brandConfig.title}
       />
       <Brand

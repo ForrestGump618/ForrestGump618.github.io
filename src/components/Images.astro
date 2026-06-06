@@ -45,12 +45,16 @@ export function resolveFixedCover(
   return coverPresets[fixedCover] ?? fixedCover;
 }
 
-export function getPostCover(post: Partial<Post>): ImageMetadata {
+export function getPostCover(
+  post: Partial<Post>,
+  Covers?: Array<ImageMetadata | string>,
+): ImageMetadata | string {
   if (post?.data?.cover) {
     return post.data.cover;
   }
 
-  return sample(covers ?? []);
+  const defaultCovers = Covers?.length ? Covers : covers;
+  return sample(defaultCovers)!;
 }
 
 export const avatar = avatarImg;

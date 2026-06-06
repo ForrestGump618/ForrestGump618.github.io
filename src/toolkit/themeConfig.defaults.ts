@@ -67,6 +67,7 @@ export const DEFAULT_THEME_CONFIG: ShokaXThemeConfig = {
       enable: true,
       url: "cover-4",
     },
+    coverUrls: [],
     nextGradientCover: false,
   },
   sidebar: {
