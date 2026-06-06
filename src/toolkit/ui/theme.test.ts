@@ -20,12 +20,20 @@ function createStorage(initial: Record<string, string> = {}) {
 function createDocumentMock() {
   const attrs = new Map<string, string>();
 
+  const dataset = new Proxy(
+    {} as Record<string, string>,
+    {
+      set(_target, prop: string, value: string) {
+        attrs.set(`data-${prop}`, value);
+        return true;
+      },
+    },
+  );
+
   // eslint-disable-next-line no-unsafe-type-assertion
   const doc = {
     documentElement: {
-      setAttribute(name: string, value: string) {
-        attrs.set(name, value);
-      },
+      dataset,
     },
   } as any;
 
