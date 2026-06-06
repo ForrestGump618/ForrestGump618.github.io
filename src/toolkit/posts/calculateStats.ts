@@ -52,8 +52,7 @@ export function formatReadingTime(wordCount: number, awl: number = 150, wpm: num
   } else if (readingMinutes === 1) {
     return "1 minute";
   }
-    return `${readingMinutes} minutes`;
-  
+  return `${readingMinutes} minutes`;
 }
 
 /**

@@ -71,7 +71,7 @@ export default function spoiler(options = {}) {
       }
 
       parent.children.splice(index, 1, ...parts);
-      return index + parts.length;
+      index = index + parts.length - 1;
     });
   };
 }

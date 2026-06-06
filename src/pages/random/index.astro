@@ -88,7 +88,7 @@ const msgNoScript = t("random.noScript");
     const homeLink = document.querySelector("#home-link");
 
     if (iconSpin) {
-      iconSpin.style.animation = "none";
+      (iconSpin as HTMLElement).style.animation = "none";
       const icon = iconSpin.querySelector("i");
       if (icon) {
         icon.className = "i-ri-inbox-line";

@@ -11,7 +11,8 @@ describe("defineCovers", () => {
       undefined, // undefined value
     ];
     const expected = ["https://example.com/image1.jpg", "https://example.com/image2.jpg"];
-    const result = defineCovers(urls as string[]);
+    // eslint-disable-next-line no-unsafe-type-assertion
+    const result = defineCovers(urls as unknown as string[]);
     expect(result.urls).toEqual(expected);
   });
   it("should trim URLs and remove duplicates", () => {
@@ -24,7 +25,8 @@ describe("defineCovers", () => {
       undefined, // undefined value
     ];
     const expected = ["https://example.com/image1.jpg", "https://example.com/image2.jpg"];
-    const result = defineCovers(urls as string[]);
+    // eslint-disable-next-line no-unsafe-type-assertion
+    const result = defineCovers(urls as unknown as string[]);
     expect(result.urls).toEqual(expected);
   });
 });

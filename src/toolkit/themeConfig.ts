@@ -721,10 +721,12 @@ function isPlainObject(value: unknown): value is Record<string, unknown> {
 
 function cloneConfigValue<T>(value: T): T {
   if (Array.isArray(value)) {
+    // eslint-disable-next-line no-unsafe-type-assertion
     return value.map((item) => cloneConfigValue(item)) as T;
   }
 
   if (isPlainObject(value)) {
+    // eslint-disable-next-line no-unsafe-type-assertion
     return Object.fromEntries(
       Object.entries(value).map(([key, entryValue]) => [key, cloneConfigValue(entryValue)]),
     ) as T;
@@ -745,6 +747,7 @@ function mergeThemeConfig<T>(defaults: T, overrides?: ThemeUserConfig<T>): T {
   }
 
   if (Array.isArray(defaults) || Array.isArray(overrides)) {
+    // eslint-disable-next-line no-unsafe-type-assertion
     return cloneConfigValue(overrides as T);
   }
 
@@ -769,9 +772,11 @@ function mergeThemeConfig<T>(defaults: T, overrides?: ThemeUserConfig<T>): T {
       }
     });
 
+    // eslint-disable-next-line no-unsafe-type-assertion
     return Object.fromEntries(mergedEntries) as T;
   }
 
+  // eslint-disable-next-line no-unsafe-type-assertion
   return cloneConfigValue(overrides as T);
 }
 

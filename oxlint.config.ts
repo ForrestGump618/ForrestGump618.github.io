@@ -4,6 +4,21 @@ export default defineConfig({
   categories: {
     correctness: "error",
     suspicious: "error",
-    perf: "warn"
-  }
+    perf: "warn",
+  },
+  rules: {
+    "no-underscore-dangle": [
+      "error",
+      {
+        allow: [
+          "_id",
+          "_title",
+          "_passwordPlaceholder",
+          "_submitText",
+          "_errorText",
+          "__hyacineMdxInitBound",
+        ],
+      },
+    ],
+  },
 });

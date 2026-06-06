@@ -13,9 +13,8 @@ export function initMenuActive() {
 
   document.querySelectorAll(".menu .item:not(.title)").forEach((element) => {
     const target = element.querySelector("a[href]");
-    const parentItem = element.parentNode?.parentNode as HTMLElement | null;
-
-    if (!target) return;
+    if (!(target instanceof HTMLAnchorElement)) return;
+    const parentItem = element.closest(".dropdown");
 
     const isActive = isSidebarMenuItemActive({
       targetPathname: target.pathname,
@@ -90,14 +89,14 @@ export function buildTocTree(items: TocItem[]): TocItem[] {
   items.forEach((item) => {
     const newItem: TocItem = { ...item, children: [] };
 
-    while (stack.length > 0 && stack.at(-1).level >= item.level) {
+    while (stack.length > 0 && stack[stack.length - 1].level >= item.level) {
       stack.pop();
     }
 
     if (stack.length === 0) {
       result.push(newItem);
     } else {
-      const parent = stack.at(-1);
+      const parent = stack[stack.length - 1];
       if (!parent.children) parent.children = [];
       parent.children.push(newItem);
     }

@@ -71,7 +71,7 @@ export function transformIndexPosts(
   return postList.map((post) => {
     const wordCount = countWords(post.body || "");
     const readTime = calculateReadTime(wordCount, wordsPerMinute);
-    const lastCategory = post.data.categories.at(-1);
+    const lastCategory = post.data.categories?.at(-1);
 
     return {
       slug: post.id,

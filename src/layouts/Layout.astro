@@ -130,7 +130,10 @@ const rightSidebarTagCloud = shouldComputeRightSidebarTagCloud
           limit: 16,
         },
       ).map((tag) => ({
-        ...tag,
+        name: tag.name,
+        count: tag.count,
+        fontSize: tag.fontSize,
+        color: tag.color,
         href: toTagHref(tag.name),
       }));
     })()

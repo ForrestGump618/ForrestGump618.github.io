@@ -54,10 +54,10 @@ export function formatCategories(
 
     return nodes
       .toSorted((a, b) => b.length - a.length) // 按 length 降序
-      .map((node) => ({
-        ...node,
-        children: limitAndSort(node.children, level + 1),
-      }));
+      .map((node) => {
+        node.children = limitAndSort(node.children, level + 1);
+        return node;
+      });
   };
 
   return limitAndSort(roots);

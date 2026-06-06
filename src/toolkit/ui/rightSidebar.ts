@@ -17,7 +17,7 @@ export function normalizeRightSidebarCardOrder(
   return [
     ...explicitOrder.filter(
       (key, index, array): key is RightSidebarCardKey =>
-        RIGHT_SIDEBAR_CARD_ORDER.includes(key as RightSidebarCardKey) &&
+        (RIGHT_SIDEBAR_CARD_ORDER as readonly string[]).includes(key) &&
         array.indexOf(key) === index,
     ),
     ...RIGHT_SIDEBAR_CARD_ORDER.filter((key) => !explicitOrder.includes(key)),

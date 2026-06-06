@@ -23,6 +23,7 @@
   "dependencies": {
     "@astrojs/check": "0.9.9",
     "@astrojs/compiler-rs": "^0.2.1",
+    "@astrojs/markdown-satteri": "^0.2.1",
     "@astrojs/mdx": "6.0.1",
     "@astrojs/rss": "4.0.18",
     "@astrojs/sitemap": "3.7.3",
@@ -62,6 +63,7 @@
     "remark-ins": "^1.2.5",
     "remark-math": "^6.0.0",
     "remark-ruby-directive": "^0.3.0",
+    "satteri": "^0.6.3",
     "svelte": "^5.56.2",
     "typescript": "^6.0.3",
     "unist-util-visit": "^5.1.0",

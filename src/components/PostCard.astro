@@ -12,7 +12,7 @@ const t = getT();
 const postUrl = `/posts/${post.id}/`;
 const publicDescription =
   post.data.description || post.body?.slice(0, 300) || "";
-const lastCategory = post.data.categories.at(-1);
+const lastCategory = post.data.categories?.at(-1);
 ---
 
 <article class="post-card">

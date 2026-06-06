@@ -70,7 +70,7 @@
       return;
     }
 
-    const player = document.querySelector("#player");
+    const player = document.querySelector("#player") as HTMLElement | null;
     const showBtn = document.querySelector("#nyx-show-btn");
 
     if (!player || !showBtn) {

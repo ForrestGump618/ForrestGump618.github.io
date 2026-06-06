@@ -3,7 +3,7 @@ import { ROUTES } from "../support/routes";
 
 async function measureMainOffset(page: import("@playwright/test").Page) {
   return page.evaluate(() => {
-    const target = document.querySelector("main article, main") as HTMLElement | null;
+    const target = document.querySelector("main article, main");
     return target?.getBoundingClientRect().left ?? 0;
   });
 }
@@ -16,6 +16,7 @@ async function openSearchDialog(page: import("@playwright/test").Page) {
     return searchDialog;
   }
 
+  /* eslint-disable no-await-in-loop */
   for (let attempt = 0; attempt < 6; attempt += 1) {
     await openSearchButton.click({ force: true });
 
@@ -25,6 +26,7 @@ async function openSearchDialog(page: import("@playwright/test").Page) {
 
     await page.waitForTimeout(150);
   }
+  /* eslint-enable no-await-in-loop */
 
   await expect(searchDialog).toBeVisible();
   return searchDialog;

@@ -25,9 +25,7 @@ describe("createWidgetPosts", () => {
       },
     ]);
     expect("body" in result[0]).toBe(false);
-    expect("password" in ((result[0].data as unknown as Record<string, unknown>) || {})).toBe(
-      false,
-    );
+    expect("password" in result[0].data).toBe(false);
   });
 
   it("should use body excerpt for non-encrypted posts when description is missing", () => {

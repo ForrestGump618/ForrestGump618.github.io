@@ -11,6 +11,7 @@ async function openSearchDialog(page: import("@playwright/test").Page) {
     return searchDialog;
   }
 
+  /* eslint-disable no-await-in-loop */
   for (let attempt = 0; attempt < 6; attempt += 1) {
     await openSearchButton.dispatchEvent("click");
 
@@ -20,6 +21,7 @@ async function openSearchDialog(page: import("@playwright/test").Page) {
 
     await page.waitForTimeout(150);
   }
+  /* eslint-enable no-await-in-loop */
 
   await expect(searchDialog).toBeVisible();
   return searchDialog;
