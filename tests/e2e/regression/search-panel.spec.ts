@@ -3,7 +3,7 @@ import { ROUTES } from "../support/routes";
 
 async function measureMainOffset(page: import("@playwright/test").Page) {
   return page.evaluate(() => {
-    const target = document.querySelector("main article, main") as HTMLElement | null;
+    const target = document.querySelector("main article, main");
     return target?.getBoundingClientRect().left ?? 0;
   });
 }
@@ -16,6 +16,7 @@ async function openSearchDialog(page: import("@playwright/test").Page) {
     return searchDialog;
   }
 
+  /* eslint-disable no-await-in-loop */
   for (let attempt = 0; attempt < 6; attempt += 1) {
     await openSearchButton.click({ force: true });
 
@@ -25,6 +26,7 @@ async function openSearchDialog(page: import("@playwright/test").Page) {
 
     await page.waitForTimeout(150);
   }
+  /* eslint-enable no-await-in-loop */
 
   await expect(searchDialog).toBeVisible();
   return searchDialog;
@@ -85,7 +87,7 @@ test("@regression 输入框聚焦时 Ctrl/Cmd+K 不应触发搜索面板", async
   const editableInput = page.getByLabel("E2E editable input");
 
   await page.evaluate(() => {
-    const existing = document.getElementById("e2e-editable-input");
+    const existing = document.querySelector("#e2e-editable-input");
     if (existing instanceof HTMLInputElement) {
       existing.focus();
       return;
@@ -94,7 +96,7 @@ test("@regression 输入框聚焦时 Ctrl/Cmd+K 不应触发搜索面板", async
     const input = document.createElement("input");
     input.id = "e2e-editable-input";
     input.setAttribute("aria-label", "E2E editable input");
-    document.body.appendChild(input);
+    document.body.append(input);
     input.focus();
   });
 

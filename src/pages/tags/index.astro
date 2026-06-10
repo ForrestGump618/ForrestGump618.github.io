@@ -42,7 +42,7 @@ const tagCloud = generateTagCloud(tags, {
 });
 
 // Sort tag cloud alphabetically for display
-const sortedTagCloud = [...tagCloud].sort((a, b) =>
+const sortedTagCloud = [...tagCloud].toSorted((a, b) =>
   a.name.localeCompare(b.name),
 );
 

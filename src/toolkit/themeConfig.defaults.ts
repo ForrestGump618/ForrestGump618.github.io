@@ -63,10 +63,12 @@ export const DEFAULT_THEME_CONFIG: ShokaXThemeConfig = {
   cover: {
     enable: true,
     preload: true,
+    advancedCarousel: false,
     fixedCover: {
       enable: true,
       url: "cover-4",
     },
+    coverUrls: [],
     nextGradientCover: false,
   },
   sidebar: {

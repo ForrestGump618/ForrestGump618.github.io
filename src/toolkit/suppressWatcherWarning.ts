@@ -34,12 +34,14 @@ export function installProcessWarningFilter() {
   const originalEmitWarning = process.emitWarning.bind(process);
 
   process.emitWarning = ((warning: string | Error, ...args: unknown[]) => {
+    // eslint-disable-next-line no-unsafe-type-assertion
     if (shouldSuppressProcessWarning(warning, args[0] as string | { type?: string } | undefined)) {
       return;
     }
 
-    return originalEmitWarning(
-      warning as Parameters<typeof process.emitWarning>[0],
+    originalEmitWarning(
+      warning,
+      // eslint-disable-next-line no-unsafe-type-assertion
       ...(args as Parameters<typeof process.emitWarning> extends [unknown, ...infer Rest]
         ? Rest
         : never),

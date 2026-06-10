@@ -29,7 +29,7 @@ interface BuildSiteStatisticsOptions {
 function sortCountItems(map: Map<string, number>): CountItem[] {
   return Array.from(map.entries())
     .map(([name, count]) => ({ name, count }))
-    .sort((a, b) => b.count - a.count || a.name.localeCompare(b.name));
+    .toSorted((a, b) => b.count - a.count || a.name.localeCompare(b.name));
 }
 
 export function buildSiteStatistics(
@@ -69,7 +69,7 @@ export function buildSiteStatistics(
         count,
       };
     })
-    .sort((a, b) => a.year - b.year || a.month - b.month);
+    .toSorted((a, b) => a.year - b.year || a.month - b.month);
 
   const categoryCounts = sortCountItems(categoryMap);
   const tagCounts = sortCountItems(tagMap);

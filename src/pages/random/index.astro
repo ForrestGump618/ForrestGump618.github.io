@@ -82,13 +82,13 @@ const msgNoScript = t("random.noScript");
   }
 
   function showNoPost() {
-    const iconSpin = document.getElementById("icon-spin");
-    const msg = document.getElementById("msg");
-    const card = document.getElementById("random-card");
-    const homeLink = document.getElementById("home-link");
+    const iconSpin = document.querySelector("#icon-spin");
+    const msg = document.querySelector("#msg");
+    const card = document.querySelector("#random-card");
+    const homeLink = document.querySelector("#home-link");
 
     if (iconSpin) {
-      iconSpin.style.animation = "none";
+      (iconSpin as HTMLElement).style.animation = "none";
       const icon = iconSpin.querySelector("i");
       if (icon) {
         icon.className = "i-ri-inbox-line";

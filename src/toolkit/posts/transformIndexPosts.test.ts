@@ -33,7 +33,8 @@ describe("transformIndexPosts", () => {
       },
     };
 
-    expect(getExcerpt(post as never, "[ENCRYPTED]")).toBe("[ENCRYPTED]");
+    // eslint-disable-next-line no-unsafe-type-assertion
+    expect(getExcerpt(post as any, "[ENCRYPTED]")).toBe("[ENCRYPTED]");
   });
 
   it("prioritizes description, then falls back to body excerpt", () => {
@@ -57,8 +58,10 @@ describe("transformIndexPosts", () => {
       },
     };
 
-    expect(getExcerpt(withDescription as never, "[ENCRYPTED]")).toBe("description first");
-    expect(getExcerpt(withoutDescription as never, "[ENCRYPTED]")).toBe(longBody.slice(0, 300));
+    // eslint-disable-next-line no-unsafe-type-assertion
+    expect(getExcerpt(withDescription as any, "[ENCRYPTED]")).toBe("description first");
+    // eslint-disable-next-line no-unsafe-type-assertion
+    expect(getExcerpt(withoutDescription as any, "[ENCRYPTED]")).toBe(longBody.slice(0, 300));
   });
 
   it("builds transformed cards with url, category and stats", () => {
@@ -73,9 +76,11 @@ describe("transformIndexPosts", () => {
       },
     };
 
-    const transformed = transformIndexPosts([post as never], {
+    // eslint-disable-next-line no-unsafe-type-assertion
+    const transformed = transformIndexPosts([post as any], {
       encryptedExcerpt: "[ENCRYPTED]",
-      resolveCover: () => "cover://test" as never,
+      // eslint-disable-next-line no-unsafe-type-assertion
+      resolveCover: () => "cover://test" as any,
     });
 
     expect(transformed).toHaveLength(1);
@@ -102,7 +107,8 @@ describe("transformIndexPosts", () => {
       },
     };
 
-    const transformed = transformIndexPosts([post as never], {
+    // eslint-disable-next-line no-unsafe-type-assertion
+    const transformed = transformIndexPosts([post as any], {
       encryptedExcerpt: "[ENCRYPTED]",
     });
 

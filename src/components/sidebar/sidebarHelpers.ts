@@ -12,10 +12,9 @@ export function initMenuActive() {
   if (typeof document === "undefined") return;
 
   document.querySelectorAll(".menu .item:not(.title)").forEach((element) => {
-    const target = element.querySelector("a[href]") as HTMLAnchorElement | null;
-    const parentItem = element.parentNode?.parentNode as HTMLElement | null;
-
-    if (!target) return;
+    const target = element.querySelector("a[href]");
+    if (!(target instanceof HTMLAnchorElement)) return;
+    const parentItem = element.closest(".dropdown");
 
     const isActive = isSidebarMenuItemActive({
       targetPathname: target.pathname,
@@ -65,8 +64,8 @@ export function extractTocFromContent(content: string): TocItem[] {
     const text = match[2].trim();
     const id = text
       .toLowerCase()
-      .replace(/[^\w\u4E00-\u9FA5]+/g, "-")
-      .replace(/^-+|-+$/g, "");
+      .replaceAll(/[^\w\u4E00-\u9FA5]+/g, "-")
+      .replaceAll(/^-+|-+$/g, "");
 
     toc.push({
       id,

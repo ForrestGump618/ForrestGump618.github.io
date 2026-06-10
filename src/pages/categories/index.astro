@@ -22,7 +22,7 @@ publishedPosts.forEach((post) => {
 
   // Build hierarchy from category array
   categories.forEach((cat, index) => {
-    const catId = cat.toLowerCase().replace(/\s+/g, "-");
+    const catId = cat.toLowerCase().replaceAll(/\s+/g, "-");
 
     if (!categoryMap.has(catId)) {
       categoryMap.set(catId, {
@@ -36,7 +36,7 @@ publishedPosts.forEach((post) => {
     // Set parent relationship (previous category in array is parent)
     if (index > 0) {
       const parentCat = categories[index - 1];
-      const parentId = parentCat.toLowerCase().replace(/\s+/g, "-");
+      const parentId = parentCat.toLowerCase().replaceAll(/\s+/g, "-");
       categoryMap.get(catId)!.parent = parentId;
     }
 

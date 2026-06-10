@@ -6,6 +6,20 @@
 import type { EncryptedData, EncryptionConfig, TocItem } from "./types";
 import { DEFAULT_ENCRYPTION_CONFIG } from "./types";
 
+/** 运行时类型守卫：验证值是否为 TocItem[] */
+function isTocItemArray(v: unknown): v is TocItem[] {
+  return (
+    Array.isArray(v) &&
+    v.every(
+      (item) =>
+        typeof item === "object" &&
+        item !== null &&
+        typeof item.id === "string" &&
+        typeof item.text === "string",
+    )
+  );
+}
+
 // 获取加密 API（兼容 Node.js 和浏览器）
 async function getSubtle(): Promise<SubtleCrypto> {
   // 浏览器环境
@@ -13,9 +27,8 @@ async function getSubtle(): Promise<SubtleCrypto> {
     return window.crypto.subtle;
   }
   // Node.js / Bun 环境
-  // @ts-ignore - Node.js 全局
+  // Node.js 全局
   if (typeof globalThis !== "undefined" && globalThis.crypto?.subtle) {
-    // @ts-ignore
     return globalThis.crypto.subtle;
   }
   throw new Error("Web Crypto API not available");
@@ -32,7 +45,7 @@ function arrayToBase64(array: Uint8Array): string {
   // 浏览器环境
   let binary = "";
   for (let i = 0; i < array.length; i++) {
-    binary += String.fromCharCode(array[i]);
+    binary += String.fromCodePoint(array[i]);
   }
   return btoa(binary);
 }
@@ -49,7 +62,7 @@ function base64ToArray(base64: string): Uint8Array {
   const binary = atob(base64);
   const array = new Uint8Array(binary.length);
   for (let i = 0; i < binary.length; i++) {
-    array[i] = binary.charCodeAt(i);
+    array[i] = binary.codePointAt(i) ?? 0;
   }
   return array;
 }
@@ -78,6 +91,7 @@ export async function deriveKey(
   return subtle.deriveKey(
     {
       name: "PBKDF2",
+      // eslint-disable-next-line no-unsafe-type-assertion
       salt: salt as unknown as BufferSource,
       iterations,
       hash: "SHA-256",
@@ -133,6 +147,7 @@ export async function encryptContent(
   const encrypted = await subtle.encrypt(
     {
       name: "AES-GCM",
+      // eslint-disable-next-line no-unsafe-type-assertion
       iv: iv as unknown as BufferSource,
     },
     key,
@@ -172,9 +187,11 @@ export async function decryptContent(
   const decrypted = await subtle.decrypt(
     {
       name: "AES-GCM",
+      // eslint-disable-next-line no-unsafe-type-assertion
       iv: iv as unknown as BufferSource,
     },
     key,
+    // eslint-disable-next-line no-unsafe-type-assertion
     ciphertext as unknown as BufferSource,
   );
 
@@ -221,7 +238,8 @@ export async function decryptPost(
   let toc: TocItem[] | undefined;
   if (encryptedData.toc) {
     const tocJson = await decryptContent(encryptedData.toc, password);
-    toc = JSON.parse(tocJson) as TocItem[];
+    const parsed: unknown = JSON.parse(tocJson);
+    toc = isTocItemArray(parsed) ? parsed : [];
   }
 
   return { content, toc };

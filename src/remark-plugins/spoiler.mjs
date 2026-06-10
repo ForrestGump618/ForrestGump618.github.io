@@ -19,7 +19,7 @@ export default function spoiler(options = {}) {
       if (parent.type === "math" || parent.type === "inlineMath") return;
 
       const value = node.value;
-      if (typeof value !== "string" || value.indexOf("!!") === -1) return;
+      if (typeof value !== "string" || !value.includes("!!")) return;
 
       const parts = [];
       let i = 0;
@@ -71,7 +71,8 @@ export default function spoiler(options = {}) {
       }
 
       parent.children.splice(index, 1, ...parts);
-      return index + parts.length;
+      // eslint-disable-next-line consistent-return
+      return index + parts.length - 1;
     });
   };
 }

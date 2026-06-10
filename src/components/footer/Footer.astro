@@ -37,8 +37,8 @@ const posts = allPosts.filter((post) => !post.data.draft);
 const wordCounts = posts.map((post) => {
   const content = post.body || "";
   // Simple word count: Chinese characters + English words
-  const chineseCount = (content.match(/[\u4e00-\u9fff]/g) || []).length;
-  const englishText = content.replace(/[\u4e00-\u9fff]/g, "");
+  const chineseCount = (content.match(/[\u4E00-\u9FFF]/g) || []).length;
+  const englishText = content.replaceAll(/[\u4E00-\u9FFF]/g, "");
   const englishCount = englishText
     .trim()
     .split(/\s+/)

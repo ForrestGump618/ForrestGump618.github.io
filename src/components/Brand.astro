@@ -117,7 +117,7 @@ function formatWordCount(count: number): string {
 <!-- 滚动监听脚本 -->
 <script>
   let isAffix = false;
-  const brandElement = document.getElementById("brand");
+  const brandElement = document.querySelector("#brand");
 
   function handleScroll() {
     const shouldAffix = window.scrollY > 0;

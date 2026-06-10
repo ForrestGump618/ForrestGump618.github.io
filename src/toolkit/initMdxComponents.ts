@@ -6,11 +6,10 @@ type QuizItem = HTMLElement;
 type TabsRoot = HTMLElement;
 type TabItem = HTMLElement;
 
-declare global {
-  interface Window {
-    __hyacineMdxInitBound?: boolean;
-  }
-}
+let mdxInitBound = false;
+
+const isValidQuizType = (v: string): v is QuizType =>
+  ["true", "false", "single", "multi", "fill"].includes(v);
 
 const getQuizTypeLabel = (quizType: QuizType) => {
   switch (quizType) {
@@ -58,7 +57,8 @@ const bindQuizItem = (quizItem: QuizItem) => {
     return;
   }
 
-  const quizType = (quizItem.dataset.quizType || "single") as QuizType;
+  const rawType = quizItem.dataset.quizType || "single";
+  const quizType: QuizType = isValidQuizType(rawType) ? rawType : "single";
   const question = quizItem.querySelector<HTMLElement>(":scope > .quiz-question");
   const firstQuestionParagraph =
     question?.querySelector<HTMLParagraphElement>(":scope > p:first-child");
@@ -266,7 +266,7 @@ const initMdxComponents = () => {
 };
 
 const setupMdxComponents = () => {
-  if (window.__hyacineMdxInitBound === true) {
+  if (mdxInitBound) {
     return;
   }
 
@@ -281,9 +281,7 @@ const setupMdxComponents = () => {
   }
 
   document.addEventListener("astro:page-load", onReady);
-  window.__hyacineMdxInitBound = true;
+  mdxInitBound = true;
 };
 
 setupMdxComponents();
-
-export {};

@@ -24,7 +24,7 @@
 
 <script>
   // 使用 IntersectionObserver 在元素离开视口时暂停动画，节省性能
-  const wavesEl = document.getElementById("waves");
+  const wavesEl = document.querySelector("#waves");
   if (wavesEl) {
     const parallaxEl = wavesEl.querySelector<HTMLElement>(".parallax");
     if (parallaxEl) {

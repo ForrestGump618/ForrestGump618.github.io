@@ -60,8 +60,8 @@
 
   function toPlainText(input: unknown): string {
     return String(input || "")
-      .replace(/<[^>]*>/g, "")
-      .replace(/\s+/g, " ")
+      .replaceAll(/<[^>]*>/g, "")
+      .replaceAll(/\s+/g, " ")
       .trim();
   }
 

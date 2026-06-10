@@ -53,7 +53,7 @@
       | undefined;
     if (!preElement) return "";
 
-    const language = preElement.getAttribute("data-language");
+    const language = preElement.dataset.language;
     return language ?? "";
   }
 
