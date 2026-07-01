@@ -21,7 +21,7 @@
 
   @media (min-width: 1024px) {
     #footer .inner {
-      width: 72.5rem;
+      width: min(72.5rem, calc(100% - 0.625rem));
     }
 
     body[data-layout-mode="two-column"] #footer .inner,
