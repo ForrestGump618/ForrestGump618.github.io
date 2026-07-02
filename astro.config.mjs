@@ -16,6 +16,7 @@ import UnoCSS from "@unocss/astro";
 
 import remarkMath from "remark-math";
 import rehypeKatex from "rehype-katex";
+import remarkGfm from "remark-gfm";
 import remarkIns from "remark-ins";
 import remarkDirective from "remark-directive";
 import remarkRubyDirective from "remark-ruby-directive";
@@ -129,8 +130,6 @@ export default defineConfig({
       ],
     },
     processor: unified({
-      gfm: true,
-      smartypants: true,
       remarkPlugins: [
         remarkMath,
         remarkBreaks,
@@ -139,11 +138,12 @@ export default defineConfig({
         remarkDirective,
         noteDirective,
         spanDirective,
+        remarkGfm,
         remarkEmoji,
         remarkExtendedTable,
         [spoiler, { title: "..." }],
       ],
       rehypePlugins: [rehypeKatex, rehypeAutoLinkHeadings],
     }),
-  },
+  }
 });

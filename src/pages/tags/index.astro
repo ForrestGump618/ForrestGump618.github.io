@@ -2,7 +2,6 @@
 import Layout from "../../layouts/Layout.astro";
 import { getCollection } from "astro:content";
 import { generateTagCloud } from "@/toolkit/posts/generateTagCloud";
-import { collectTagGroups } from "@/toolkit/posts/tags";
 import { toTagHref } from "@/toolkit/posts/url";
 import { t } from "@/i18n";
 import themeConfig from "@/theme.config";
@@ -12,14 +11,26 @@ import "../../styles/tags.css";
 const allPosts = await getCollection("posts");
 const publishedPosts = allPosts.filter((post) => !post.data.draft);
 
+// Collect all tags with their counts
 interface TagCount {
   name: string;
   count: number;
 }
 
-const tags: TagCount[] = collectTagGroups(
-  publishedPosts.flatMap((post) => post.data.tags || []),
-).map(({ name, count }) => ({ name, count }));
+const tagMap = new Map<string, number>();
+
+publishedPosts.forEach((post) => {
+  const tags = post.data.tags || [];
+  tags.forEach((tag) => {
+    tagMap.set(tag, (tagMap.get(tag) || 0) + 1);
+  });
+});
+
+// Convert to array and generate tag cloud
+const tags: TagCount[] = Array.from(tagMap.entries()).map(([name, count]) => ({
+  name,
+  count,
+}));
 
 // Generate tag cloud with colors and font sizes
 const tagCloud = generateTagCloud(tags, {

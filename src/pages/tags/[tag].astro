@@ -1,8 +1,7 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import { getCollection } from "astro:content";
-import { collectTagGroups, hasTagSlug } from "@/toolkit/posts/tags";
-import { toCategoryHref, toPostHref } from "@/toolkit/posts/url";
+import { toCategoryHref, toPostHref, toTagSlug } from "@/toolkit/posts/url";
 import { t } from "@/i18n";
 import "../../styles/collapse.css";
 
@@ -10,29 +9,35 @@ export async function getStaticPaths() {
   const allPosts = await getCollection("posts");
   const publishedPosts = allPosts.filter((post) => !post.data.draft);
 
-  const tagGroups = collectTagGroups(
-    publishedPosts.flatMap((post) => post.data.tags || []),
-  );
+  // Collect all unique tags
+  const tagSet = new Set<string>();
+  publishedPosts.forEach((post) => {
+    const tags = post.data.tags || [];
+    tags.forEach((tag) => tagSet.add(tag));
+  });
 
-  return tagGroups.map((tagGroup) => ({
-    params: { tag: tagGroup.slug },
-    props: { tag: tagGroup.name, tagSlug: tagGroup.slug },
+  // Generate paths for each tag
+  return Array.from(tagSet).map((tag) => ({
+    params: { tag: toTagSlug(tag) },
+    props: { tag },
   }));
 }
 
 interface Props {
   tag: string;
-  tagSlug: string;
 }
 
-const { tag, tagSlug } = Astro.props as Props;
+const { tag } = Astro.props;
 
 // Get all published posts
 const allPosts = await getCollection("posts");
 const publishedPosts = allPosts.filter((post) => !post.data.draft);
 
 // Filter posts that have this tag
-const postsWithTag = publishedPosts.filter((post) => hasTagSlug(post.data.tags, tagSlug));
+const postsWithTag = publishedPosts.filter((post) => {
+  const tags = post.data.tags || [];
+  return tags.includes(tag);
+});
 
 // Sort posts by date descending (newest first)
 const sortedPosts = postsWithTag.toSorted(
