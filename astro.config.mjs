@@ -145,11 +145,5 @@ export default defineConfig({
       ],
       rehypePlugins: [rehypeKatex, rehypeAutoLinkHeadings],
     }),
-  },
-  experimental: {
-    rustCompiler: true,
-    queuedRendering: {
-      enabled: true,
-    },
-  },
+  }
 });
