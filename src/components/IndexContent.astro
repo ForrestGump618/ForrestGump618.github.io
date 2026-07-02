@@ -45,9 +45,47 @@ const headerCovers = advancedCarousel
     })
   : [];
 
+const hycConfig = themeConfig.hyc || {};
+const aiSummaryConfig = hycConfig.aiSummary || {};
+const hycEnable = hycConfig.enable === true;
+const cardExcerptSource = aiSummaryConfig.cardExcerptSource ?? "default";
+
+// 当配置为 AI 摘要来源时，批量预取列表文章的 AI 摘要；失败或缺失则回退默认摘要
+const aiSummaries = new Map<string, string>();
+if (hycEnable && cardExcerptSource === "ai") {
+  try {
+    const { getPostSummary } = await import("@hyacine/cli/api");
+    const candidates = [...stickyPosts, ...posts].filter(
+      (post) => !post.data.encrypted,
+    );
+    const entries = await Promise.all(
+      candidates.map(async (post) => {
+        try {
+          const result = (await getPostSummary(post.id)) as {
+            summary?: { content?: string | null };
+          } | null;
+          const content = result?.summary?.content?.trim() ?? "";
+          return [post.id, content] as const;
+        } catch {
+          return [post.id, ""] as const;
+        }
+      }),
+    );
+    for (const [slug, content] of entries) {
+      if (content) {
+        aiSummaries.set(slug, content);
+      }
+    }
+  } catch {
+    // @hyacine/cli 不可用：保持空 Map，自动回退默认摘要
+  }
+}
+
 const transformOptions = {
   encryptedExcerpt: t("post.encryptedExcerpt"),
   resolveCover: (post: CollectionEntry<"posts">) => getPostCover(post, headerCovers),
+  excerptSource: cardExcerptSource,
+  aiSummaries,
 };
 
 const transformedStickyPosts = transformIndexPosts(stickyPosts, transformOptions);

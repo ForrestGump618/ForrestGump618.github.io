@@ -112,6 +112,7 @@ export const DEFAULT_THEME_CONFIG: ShokaXThemeConfig = {
       enable: true,
       title: "AI 摘要",
       showModel: true,
+      cardExcerptSource: "default",
     },
     aiRecommend: {
       enable: true,

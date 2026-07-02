@@ -480,6 +480,15 @@ interface HycAiSummaryConfig {
    * - 默认 false
    */
   showModel?: boolean;
+
+  /**
+   * 列表页文章卡片的摘要来源。
+   * - "default"：使用默认摘要（description || body 截取），与历史行为一致
+   * - "ai"：优先使用 AI 摘要，缺失时回退到默认摘要
+   * - 仅在 hyc.enable 为 true 时生效
+   * - 默认 "default"
+   */
+  cardExcerptSource?: "default" | "ai";
 }
 
 interface HycConfig {
