@@ -138,8 +138,8 @@ describe("theme helpers", () => {
     const { doc, attrs } = createDocumentMock();
 
     let transitionCalled = false;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
     (
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
       doc as Document & { startViewTransition: NonNullable<Document["startViewTransition"]> }
     ).startViewTransition =
       // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
