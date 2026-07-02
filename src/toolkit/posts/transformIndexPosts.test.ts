@@ -80,7 +80,7 @@ describe("transformIndexPosts", () => {
     const transformed = transformIndexPosts([post as any], {
       encryptedExcerpt: "[ENCRYPTED]",
       // eslint-disable-next-line no-unsafe-type-assertion
-      resolveCover: () => "cover://test" as any,
+      resolveCover: () => "cover://test",
     });
 
     expect(transformed).toHaveLength(1);

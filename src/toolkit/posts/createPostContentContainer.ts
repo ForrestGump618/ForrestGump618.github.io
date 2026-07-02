@@ -1,5 +1,5 @@
-import { getContainerRenderer as getMdxContainerRenderer } from "@astrojs/mdx";
-import { getContainerRenderer as getSvelteContainerRenderer } from "@astrojs/svelte";
+import { getContainerRenderer as getMdxContainerRenderer } from "@astrojs/mdx/container-renderer";
+import { getContainerRenderer as getSvelteContainerRenderer } from "@astrojs/svelte/container-renderer";
 import { experimental_AstroContainer } from "astro/container";
 import { loadRenderers } from "astro:container";
 
