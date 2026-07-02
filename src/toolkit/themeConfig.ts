@@ -388,6 +388,13 @@ interface FriendsConfig {
   title?: string;
   /** 友链页面描述 */
   description?: string;
+  /**
+   * 是否在友链页面开启评论区。
+   * - true：在友链列表下方挂载 Waline 评论组件
+   * - false（默认）：不显示评论区
+   * - 需要同时配置全局 comments.enable 与 comments.waline.serverURL 才会真正渲染
+   */
+  comments?: boolean;
   /** 友链配置示例使用的头像（可选） */
   avatar?: string;
   /** 友链配置示例使用的主题色（可选） */

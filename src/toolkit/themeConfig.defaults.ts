@@ -163,6 +163,7 @@ export const DEFAULT_THEME_CONFIG: ShokaXThemeConfig = {
   friends: {
     title: "友链",
     description: "卡片式展示，支持站点预览与主题色点缀。",
+    comments: false,
     links: [
       {
         url: "https://astro.build/",
