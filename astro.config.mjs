@@ -14,10 +14,6 @@ import {
 
 import UnoCSS from "@unocss/astro";
 
-// remark/rehype 社区插件已全部迁移到 satteri 插件
-
-// import AutoImport from "astro-auto-import";  // satteri 不兼容，改用 satteri-auto-import 插件
-
 import { hyacinePlugin } from "@hyacine/astro";
 import mdx from "@astrojs/mdx";
 
@@ -32,7 +28,6 @@ import satteriAutoImport from "./src/satteri-plugins/auto-import.ts";
 import satteriEmoji from "./src/satteri-plugins/emoji.ts";
 import satteriRubyDirective from "./src/satteri-plugins/ruby-directive.ts";
 
-// MDX 组件 auto-import 配置（原 astro-auto-import 的 imports 列表）
 const mdxAutoImports = [
   "@/components/mdx/Spoiler.astro",
   "@/components/mdx/Note.astro",
@@ -90,7 +85,6 @@ export default defineConfig({
     }),
     sitemap(),
     hyacinePlugin(),
-    // AutoImport 已移除：satteri 不兼容 remarkPlugins 注入方式，改用 satteri-auto-import mdast 插件
     mdx(),
     PlayformInline({
       Logger: 0,

@@ -26,7 +26,11 @@ const RUBY_REGEX = /^([^\s(（]+)([（(])([^）)]+)([）)])$/;
 
 // 转义 HTML 特殊字符
 function escapeHtml(s: string): string {
-  return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  return s
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
 }
 
 function buildRubyHtml(value: string, ruby: string): string {
