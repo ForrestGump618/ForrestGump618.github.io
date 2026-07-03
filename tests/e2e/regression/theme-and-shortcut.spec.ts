@@ -1,31 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { ROUTES } from "../support/routes";
-
-async function openSearchDialog(page: import("@playwright/test").Page) {
-  const openSearchButton = page.locator("#search");
-  const searchDialog = page.getByRole("dialog", { name: "Search" });
-
-  await expect(openSearchButton).toBeVisible();
-
-  if (await searchDialog.isVisible()) {
-    return searchDialog;
-  }
-
-  /* eslint-disable no-await-in-loop */
-  for (let attempt = 0; attempt < 6; attempt += 1) {
-    await openSearchButton.dispatchEvent("click");
-
-    if (await searchDialog.isVisible()) {
-      return searchDialog;
-    }
-
-    await page.waitForTimeout(150);
-  }
-  /* eslint-enable no-await-in-loop */
-
-  await expect(searchDialog).toBeVisible();
-  return searchDialog;
-}
+import { openSearchDialog } from "../support/search";
 
 test("@regression 主题切换后刷新仍保持", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });

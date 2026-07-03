@@ -77,8 +77,18 @@
     showSearch = !showSearch;
   }
 
-  function focusSearchInput() {
+  async function focusSearchInput() {
     if (typeof window === "undefined") return;
+    if (isDev) return;
+
+    // 等待 pagefind-input 自定义元素完成升级，
+    // 确保 focus() 能委托到 shadow DOM 内部的 input
+    if (
+      typeof customElements !== "undefined" &&
+      !customElements.get("pagefind-input")
+    ) {
+      await customElements.whenDefined("pagefind-input");
+    }
 
     window.requestAnimationFrame(() => {
       const inputComponent =

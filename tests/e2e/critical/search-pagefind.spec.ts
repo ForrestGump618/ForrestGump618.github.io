@@ -1,12 +1,10 @@
 import { expect, test } from "@playwright/test";
 import { POSTS, ROUTES, SEARCH_TERMS } from "../support/routes";
+import { openSearchDialog } from "../support/search";
 
 async function openSearchPanel(page: import("@playwright/test").Page) {
   await page.goto(ROUTES.home);
-  await page.getByRole("button", { name: "Search" }).click();
-
-  const searchDialog = page.getByRole("dialog", { name: "Search" });
-  await expect(searchDialog).toBeVisible();
+  await openSearchDialog(page);
 
   const searchInput = page.locator("pagefind-input input");
   await expect(searchInput).toBeVisible();
