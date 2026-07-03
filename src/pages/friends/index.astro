@@ -16,7 +16,7 @@ const pageDescription =
 const commentsConfig = themeConfig.comments || {};
 const walineConfig = commentsConfig.waline || {};
 const friendsPath = "/friends/";
-const siteUrl = Astro.site?.toString() ?? "";
+const siteUrl = import.meta.env.SITE?.toString() ?? "";
 const codeThemes = astroConfig.markdown?.shikiConfig?.themes;
 const friendsSnippet = {
   url: siteUrl,
