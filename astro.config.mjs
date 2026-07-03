@@ -1,6 +1,6 @@
 import svelte from "@astrojs/svelte";
 import { defineConfig } from "astro/config";
-import { unified } from "@astrojs/markdown-remark";
+import { satteri } from "@astrojs/markdown-satteri";
 import sitemap from "@astrojs/sitemap";
 import esToolkitPlugin from "vite-plugin-es-toolkit";
 import { transformerColorizedBrackets } from "@shikijs/colorized-brackets";
@@ -14,25 +14,47 @@ import {
 
 import UnoCSS from "@unocss/astro";
 
-import remarkMath from "remark-math";
-import rehypeKatex from "rehype-katex";
-import remarkGfm from "remark-gfm";
-import remarkIns from "remark-ins";
-import remarkDirective from "remark-directive";
-import remarkRubyDirective from "remark-ruby-directive";
-import rehypeAutoLinkHeadings from "rehype-autolink-headings";
-import remarkEmoji from "remark-emoji";
-import remarkExtendedTable from "remark-extended-table";
-import remarkBreaks from "remark-breaks";
+// remark/rehype 社区插件（satteri 迁移 PoC：暂跳过 emoji 和 ruby）
+// import remarkRubyDirective from "remark-ruby-directive";
+// import remarkEmoji from "remark-emoji";
 
-import AutoImport from "astro-auto-import";
+// import AutoImport from "astro-auto-import";  // satteri 不兼容，改用 satteri-auto-import 插件
 
 import { hyacinePlugin } from "@hyacine/astro";
 import mdx from "@astrojs/mdx";
 
-import spoiler from "./src/remark-plugins/spoiler.mjs";
-import noteDirective from "./src/remark-plugins/note-directive.mjs";
-import spanDirective from "./src/remark-plugins/span-directive.mjs";
+import spoiler from "./src/satteri-plugins/spoiler.mjs";
+import noteDirective from "./src/satteri-plugins/note-directive.mjs";
+import spanDirective from "./src/satteri-plugins/span-directive.mjs";
+import satteriBreaks from "./src/satteri-plugins/breaks.mjs";
+import satteriIns from "./src/satteri-plugins/ins.mjs";
+import satteriKatex from "./src/satteri-plugins/katex.mjs";
+import satteriAutolinkHeadings from "./src/satteri-plugins/autolink-headings.mjs";
+import satteriAutoImport from "./src/satteri-plugins/auto-import.mjs";
+
+// MDX 组件 auto-import 配置（原 astro-auto-import 的 imports 列表）
+const mdxAutoImports = [
+  "@/components/mdx/Spoiler.astro",
+  "@/components/mdx/Note.astro",
+  "@/components/mdx/Label.astro",
+  "@/components/mdx/Underline.astro",
+  "@/components/mdx/Strike.astro",
+  "@/components/mdx/Highlight.astro",
+  "@/components/mdx/Text.astro",
+  "@/components/mdx/Kbd.astro",
+  "@/components/mdx/Sup.astro",
+  "@/components/mdx/Sub.astro",
+  "@/components/mdx/Collapse.astro",
+  "@/components/mdx/QuizGroup.astro",
+  "@/components/mdx/Quiz.astro",
+  "@/components/mdx/QuizOptions.astro",
+  "@/components/mdx/QuizOption.astro",
+  "@/components/mdx/QuizAnswer.astro",
+  "@/components/mdx/QuizGap.astro",
+  "@/components/mdx/QuizMistake.astro",
+  "@/components/mdx/Tabs.astro",
+  "@/components/mdx/Tab.astro",
+];
 
 import Font from "vite-plugin-font";
 
@@ -68,30 +90,7 @@ export default defineConfig({
     }),
     sitemap(),
     hyacinePlugin(),
-    AutoImport({
-      imports: [
-        "@/components/mdx/Spoiler.astro",
-        "@/components/mdx/Note.astro",
-        "@/components/mdx/Label.astro",
-        "@/components/mdx/Underline.astro",
-        "@/components/mdx/Strike.astro",
-        "@/components/mdx/Highlight.astro",
-        "@/components/mdx/Text.astro",
-        "@/components/mdx/Kbd.astro",
-        "@/components/mdx/Sup.astro",
-        "@/components/mdx/Sub.astro",
-        "@/components/mdx/Collapse.astro",
-        "@/components/mdx/QuizGroup.astro",
-        "@/components/mdx/Quiz.astro",
-        "@/components/mdx/QuizOptions.astro",
-        "@/components/mdx/QuizOption.astro",
-        "@/components/mdx/QuizAnswer.astro",
-        "@/components/mdx/QuizGap.astro",
-        "@/components/mdx/QuizMistake.astro",
-        "@/components/mdx/Tabs.astro",
-        "@/components/mdx/Tab.astro",
-      ],
-    }),
+    // AutoImport 已移除：satteri 不兼容 remarkPlugins 注入方式，改用 satteri-auto-import mdast 插件
     mdx(),
     PlayformInline({
       Logger: 0,
@@ -129,21 +128,23 @@ export default defineConfig({
         transformerColorizedBrackets(),
       ],
     },
-    processor: unified({
-      remarkPlugins: [
-        remarkMath,
-        remarkBreaks,
-        remarkRubyDirective,
-        remarkIns,
-        remarkDirective,
-        noteDirective,
-        spanDirective,
-        remarkGfm,
-        remarkEmoji,
-        remarkExtendedTable,
+    processor: satteri({
+      features: {
+        gfm: true,
+        math: true,
+        directive: true,
+        headingAttributes: true,
+      },
+      mdastPlugins: [
+        satteriAutoImport(mdxAutoImports),
+        satteriBreaks(),
+        satteriIns(),
+        satteriKatex(),
+        noteDirective(),
+        spanDirective(),
         [spoiler, { title: "..." }],
       ],
-      rehypePlugins: [rehypeKatex, rehypeAutoLinkHeadings],
+      hastPlugins: [satteriAutolinkHeadings()],
     }),
   },
 });
