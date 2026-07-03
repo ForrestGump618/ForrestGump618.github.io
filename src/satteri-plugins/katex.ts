@@ -1,4 +1,4 @@
-import { defineMdastPlugin } from "satteri";
+import { defineMdastPlugin, type MdastPluginDefinition } from "satteri";
 
 /**
  * katex（satteri 版）：
@@ -7,15 +7,25 @@ import { defineMdastPlugin } from "satteri";
  * 等价于 remark 管线中的 remark-math + rehype-katex 组合
  * 需要 features.math: true 在 satteri 配置中开启解析
  */
-export default function katex(options = {}) {
+export interface KatexOptions {
+  /** KaTeX 渲染出错时是否抛出异常（默认 false，渲染为错误提示） */
+  throwOnError?: boolean;
+}
+
+interface RenderResult {
+  rawHtml: string;
+}
+
+export default function katex(options: KatexOptions = {}): MdastPluginDefinition {
   const throwOnError = options.throwOnError ?? false;
 
-  async function render(value, displayMode) {
+  async function render(value: string, displayMode: boolean): Promise<RenderResult> {
     const katexLib = (await import("katex")).default;
     try {
       return { rawHtml: katexLib.renderToString(value, { displayMode, throwOnError }) };
     } catch (e) {
-      return { rawHtml: `<span class="katex-error">${e.message}</span>` };
+      const message = e instanceof Error ? e.message : String(e);
+      return { rawHtml: `<span class="katex-error">${message}</span>` };
     }
   }
 

@@ -23,14 +23,14 @@ import UnoCSS from "@unocss/astro";
 import { hyacinePlugin } from "@hyacine/astro";
 import mdx from "@astrojs/mdx";
 
-import spoiler from "./src/satteri-plugins/spoiler.mjs";
-import noteDirective from "./src/satteri-plugins/note-directive.mjs";
-import spanDirective from "./src/satteri-plugins/span-directive.mjs";
-import satteriBreaks from "./src/satteri-plugins/breaks.mjs";
-import satteriIns from "./src/satteri-plugins/ins.mjs";
-import satteriKatex from "./src/satteri-plugins/katex.mjs";
-import satteriAutolinkHeadings from "./src/satteri-plugins/autolink-headings.mjs";
-import satteriAutoImport from "./src/satteri-plugins/auto-import.mjs";
+import spoiler from "./src/satteri-plugins/spoiler.ts";
+import noteDirective from "./src/satteri-plugins/note-directive.ts";
+import spanDirective from "./src/satteri-plugins/span-directive.ts";
+import satteriBreaks from "./src/satteri-plugins/breaks.ts";
+import satteriIns from "./src/satteri-plugins/ins.ts";
+import satteriKatex from "./src/satteri-plugins/katex.ts";
+import satteriAutolinkHeadings from "./src/satteri-plugins/autolink-headings.ts";
+import satteriAutoImport from "./src/satteri-plugins/auto-import.ts";
 
 // MDX 组件 auto-import 配置（原 astro-auto-import 的 imports 列表）
 const mdxAutoImports = [

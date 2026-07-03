@@ -1,4 +1,4 @@
-import { defineMdastPlugin } from "satteri";
+import { defineMdastPlugin, type MdastPluginDefinition, type MdastContent } from "satteri";
 
 /**
  * spoiler（satteri 版）：
@@ -8,7 +8,14 @@ import { defineMdastPlugin } from "satteri";
  * - 使用 text visitor 订阅文本节点
  * - 通过 ctx.insertBefore + ctx.removeNode 实现一对多节点替换
  */
-export default function spoiler(options = {}) {
+export interface SpoilerOptions {
+  /** Spoiler 组件的 title 属性值 */
+  title?: string;
+  /** 兼容旧参数名 */
+  spoilerTitle?: string;
+}
+
+export default function spoiler(options: SpoilerOptions = {}): MdastPluginDefinition {
   const title = options.title ?? options.spoilerTitle ?? "...";
 
   return defineMdastPlugin({
@@ -17,7 +24,7 @@ export default function spoiler(options = {}) {
       const value = node.value;
       if (typeof value !== "string" || !value.includes("!!")) return;
 
-      const parts = [];
+      const parts: MdastContent[] = [];
       let i = 0;
       while (i < value.length) {
         const open = value.indexOf("!!", i);
@@ -25,7 +32,8 @@ export default function spoiler(options = {}) {
 
         // 转义：\!! 视为普通文本 "!!"
         if (open > 0 && value[open - 1] === "\\") {
-          if (open - 1 > i) parts.push({ type: "text", value: value.slice(i, open - 1) });
+          if (open - 1 > i)
+            parts.push({ type: "text", value: value.slice(i, open - 1) });
           parts.push({ type: "text", value: "!!" });
           i = open + 2;
           continue;

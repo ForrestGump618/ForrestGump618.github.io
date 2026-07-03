@@ -1,4 +1,4 @@
-import { defineMdastPlugin } from "satteri";
+import { defineMdastPlugin, type MdastPluginDefinition, type MdastContent } from "satteri";
 
 /**
  * breaks（satteri 版）：
@@ -6,14 +6,14 @@ import { defineMdastPlugin } from "satteri";
  *
  * 策略：订阅 text visitor，将含 \n 的文本节点拆分为 text + break + text + ...
  */
-export default function breaks() {
+export default function breaks(): MdastPluginDefinition {
   return defineMdastPlugin({
     name: "breaks",
     text(node, ctx) {
       const value = node.value;
       if (typeof value !== "string" || !value.includes("\n")) return;
 
-      const parts = [];
+      const parts: MdastContent[] = [];
       const lines = value.split("\n");
       for (let i = 0; i < lines.length; i++) {
         if (lines[i].length > 0) {

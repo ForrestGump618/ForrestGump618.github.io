@@ -1,4 +1,4 @@
-import { defineMdastPlugin } from "satteri";
+import { defineMdastPlugin, type MdastPluginDefinition, type MdastContent } from "satteri";
 
 /**
  * ins（satteri 版）：
@@ -6,14 +6,14 @@ import { defineMdastPlugin } from "satteri";
  *
  * 策略与 spoiler 一致：订阅 text visitor，拆分文本并插入 mdxJsxTextElement
  */
-export default function ins() {
+export default function ins(): MdastPluginDefinition {
   return defineMdastPlugin({
     name: "ins",
     text(node, ctx) {
       const value = node.value;
       if (typeof value !== "string" || !value.includes("++")) return;
 
-      const parts = [];
+      const parts: MdastContent[] = [];
       let i = 0;
       while (i < value.length) {
         const open = value.indexOf("++", i);
@@ -21,7 +21,8 @@ export default function ins() {
 
         // 转义：\++ 视为普通文本
         if (open > 0 && value[open - 1] === "\\") {
-          if (open - 1 > i) parts.push({ type: "text", value: value.slice(i, open - 1) });
+          if (open - 1 > i)
+            parts.push({ type: "text", value: value.slice(i, open - 1) });
           parts.push({ type: "text", value: "++" });
           i = open + 2;
           continue;

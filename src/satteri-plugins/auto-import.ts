@@ -1,5 +1,10 @@
 import { parse, resolve } from "node:path";
-import { defineMdastPlugin } from "satteri";
+import {
+  defineMdastPlugin,
+  type MdastPluginDefinition,
+  type MdastVisitorContext,
+  type MdastNode,
+} from "satteri";
 
 /**
  * auto-import（satteri 版）：
@@ -15,21 +20,25 @@ import { defineMdastPlugin } from "satteri";
  * 获取 parent（root），再用 insertChildAt 在索引 0 处插入导入节点。
  */
 
-const resolveModulePath = (path) => {
+type NamedImport = string | [from: string, as: string];
+type ImportsConfigItem = string | Record<string, string[] | string>;
+type ImportsConfig = ImportsConfigItem[];
+
+const resolveModulePath = (path: string): string => {
   if (path.startsWith(".")) return resolve(path);
   return path;
 };
 
-function getDefaultImportName(path) {
+function getDefaultImportName(path: string): string {
   return parse(path).name.replaceAll(/[^\w\d]/g, "");
 }
 
-function formatImport(imported, module) {
+function formatImport(imported: string, module: string): string {
   return `import ${imported} from ${JSON.stringify(module)};`;
 }
 
-function formatNamedImports(namedImport) {
-  const imports = [];
+function formatNamedImports(namedImport: NamedImport[]): string {
+  const imports: string[] = [];
   for (const imp of namedImport) {
     if (typeof imp === "string") {
       imports.push(imp);
@@ -41,8 +50,8 @@ function formatNamedImports(namedImport) {
   return `{ ${imports.join(", ")} }`;
 }
 
-function processImportsConfig(config) {
-  const imports = [];
+function processImportsConfig(config: ImportsConfig): string[] {
+  const imports: string[] = [];
   for (const option of config) {
     if (typeof option === "string") {
       imports.push(formatImport(getDefaultImportName(option), resolveModulePath(option)));
@@ -61,23 +70,30 @@ function processImportsConfig(config) {
   return imports;
 }
 
-function generateImportsNode(config) {
+function generateImportsNode(config: ImportsConfig) {
   const imports = processImportsConfig(config);
   const value = imports.join("\n");
   // satteri 的 mdxjsEsm 节点只需 value 字段（import 语句字符串）
   return {
-    type: "mdxjsEsm",
+    type: "mdxjsEsm" as const,
     value,
   };
 }
 
+export interface SatteriAutoImportOptions {
+  /** 仅对 .mdx 文件注入（默认 true，.md 文件不编译 JSX） */
+  mdxOnly?: boolean;
+}
+
 /**
  * 创建 satteri auto-import 插件
- * @param {string[]} importsConfig - 与 astro-auto-import 相同的 imports 配置
- * @param {object} options - 选项
- * @param {boolean} options.mdxOnly - 仅对 .mdx 文件注入（默认 true）
+ * @param importsConfig - 与 astro-auto-import 相同的 imports 配置
+ * @param options - 选项
  */
-export default function satteriAutoImport(importsConfig, options = {}) {
+export default function satteriAutoImport(
+  importsConfig: ImportsConfig,
+  options: SatteriAutoImportOptions = {},
+): () => MdastPluginDefinition {
   const mdxOnly = options.mdxOnly ?? true;
   // 预生成 importsNode（import 语句字符串只拼接一次）
   const importsNode = generateImportsNode(importsConfig);
@@ -86,7 +102,7 @@ export default function satteriAutoImport(importsConfig, options = {}) {
   return () => {
     let injected = false;
 
-    function tryInject(node, ctx) {
+    function tryInject(node: Readonly<MdastNode>, ctx: MdastVisitorContext): void {
       if (injected) return;
       // 仅对 .mdx 文件注入（.md 文件不编译 JSX）
       if (mdxOnly) {

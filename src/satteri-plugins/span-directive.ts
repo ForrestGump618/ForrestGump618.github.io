@@ -1,4 +1,4 @@
-import { defineMdastPlugin } from "satteri";
+import { defineMdastPlugin, type MdastPluginDefinition, type MdxJsxAttributeNode } from "satteri";
 
 /**
  * span-directive（satteri 版）：
@@ -8,13 +8,13 @@ import { defineMdastPlugin } from "satteri";
  * - 订阅 textDirective visitor
  * - 通过 ctx.replaceNode 替换为 mdxJsxTextElement
  */
-export default function spanDirective() {
+export default function spanDirective(): MdastPluginDefinition {
   return defineMdastPlugin({
     name: "span-directive",
     textDirective(node, ctx) {
       if (node.name !== "span") return;
 
-      const jsxAttributes = [];
+      const jsxAttributes: MdxJsxAttributeNode[] = [];
 
       // class 属性（来自 {.class} 语法）
       if (node.attributes?.class) {
@@ -26,7 +26,7 @@ export default function spanDirective() {
       }
 
       // 其他属性
-      for (const [key, value] of Object.entries(node.attributes || {})) {
+      for (const [key, value] of Object.entries(node.attributes ?? {})) {
         if (key === "class") continue;
         jsxAttributes.push({ type: "mdxJsxAttribute", name: key, value: value });
       }
