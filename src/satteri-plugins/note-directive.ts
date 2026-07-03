@@ -11,7 +11,10 @@ import { defineMdastPlugin, type MdastPluginDefinition, type MdxJsxAttributeNode
  */
 const VALID_TYPES = new Set(["info", "warning", "success", "danger", "primary", "default"]);
 
-function buildAttributes(node: { name: string; attributes?: Record<string, string | null | undefined> | null }): MdxJsxAttributeNode[] {
+function buildAttributes(node: {
+  name: string;
+  attributes?: Record<string, string | null | undefined> | null;
+}): MdxJsxAttributeNode[] {
   const type = node.name;
   const attributes = node.attributes ?? {};
   const jsxAttributes: MdxJsxAttributeNode[] = [

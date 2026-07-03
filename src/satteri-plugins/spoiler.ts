@@ -32,8 +32,7 @@ export default function spoiler(options: SpoilerOptions = {}): MdastPluginDefini
 
         // 转义：\!! 视为普通文本 "!!"
         if (open > 0 && value[open - 1] === "\\") {
-          if (open - 1 > i)
-            parts.push({ type: "text", value: value.slice(i, open - 1) });
+          if (open - 1 > i) parts.push({ type: "text", value: value.slice(i, open - 1) });
           parts.push({ type: "text", value: "!!" });
           i = open + 2;
           continue;

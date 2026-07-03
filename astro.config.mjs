@@ -14,9 +14,7 @@ import {
 
 import UnoCSS from "@unocss/astro";
 
-// remark/rehype 社区插件（satteri 迁移 PoC：暂跳过 emoji 和 ruby）
-// import remarkRubyDirective from "remark-ruby-directive";
-// import remarkEmoji from "remark-emoji";
+// remark/rehype 社区插件已全部迁移到 satteri 插件
 
 // import AutoImport from "astro-auto-import";  // satteri 不兼容，改用 satteri-auto-import 插件
 
@@ -31,6 +29,8 @@ import satteriIns from "./src/satteri-plugins/ins.ts";
 import satteriKatex from "./src/satteri-plugins/katex.ts";
 import satteriAutolinkHeadings from "./src/satteri-plugins/autolink-headings.ts";
 import satteriAutoImport from "./src/satteri-plugins/auto-import.ts";
+import satteriEmoji from "./src/satteri-plugins/emoji.ts";
+import satteriRubyDirective from "./src/satteri-plugins/ruby-directive.ts";
 
 // MDX 组件 auto-import 配置（原 astro-auto-import 的 imports 列表）
 const mdxAutoImports = [
@@ -140,6 +140,8 @@ export default defineConfig({
         satteriBreaks(),
         satteriIns(),
         satteriKatex(),
+        satteriEmoji(),
+        satteriRubyDirective(),
         noteDirective(),
         spanDirective(),
         [spoiler, { title: "..." }],
