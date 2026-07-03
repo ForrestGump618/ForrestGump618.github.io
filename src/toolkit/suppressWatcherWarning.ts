@@ -33,7 +33,7 @@ export function installProcessWarningFilter() {
 
   const originalEmitWarning = process.emitWarning.bind(process);
 
-  process.emitWarning = ((warning: string | Error, ...args: unknown[]) => {
+  process.emitWarning = (warning: string | Error, ...args: unknown[]) => {
     // eslint-disable-next-line no-unsafe-type-assertion
     if (shouldSuppressProcessWarning(warning, args[0] as string | { type?: string } | undefined)) {
       return;
@@ -46,7 +46,7 @@ export function installProcessWarningFilter() {
         ? Rest
         : never),
     );
-  }) as typeof process.emitWarning;
+  };
 
   processWithFlag[FILTER_FLAG] = true;
 }

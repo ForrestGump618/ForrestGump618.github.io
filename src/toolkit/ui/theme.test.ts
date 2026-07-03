@@ -20,12 +20,15 @@ function createStorage(initial: Record<string, string> = {}) {
 function createDocumentMock() {
   const attrs = new Map<string, string>();
 
-  const dataset = new Proxy({} as Record<string, string>, {
-    set(_target, prop: string, value: string) {
-      attrs.set(`data-${prop}`, value);
-      return true;
+  const dataset = new Proxy(
+    {},
+    {
+      set(_target, prop: string, value: string) {
+        attrs.set(`data-${prop}`, value);
+        return true;
+      },
     },
-  });
+  );
 
   // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
   const doc = {
@@ -138,23 +141,20 @@ describe("theme helpers", () => {
     const { doc, attrs } = createDocumentMock();
 
     let transitionCalled = false;
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-    (
-      doc as Document & { startViewTransition: NonNullable<Document["startViewTransition"]> }
-    ).startViewTransition =
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-      ((callbackOrOptions?: Parameters<NonNullable<Document["startViewTransition"]>>[0]) => {
+    Object.assign(doc, {
+      startViewTransition: (
+        callbackOrOptions?: Parameters<NonNullable<Document["startViewTransition"]>>[0],
+      ) => {
         transitionCalled = true;
         if (typeof callbackOrOptions === "function") {
           callbackOrOptions();
         }
 
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
         return {
           finished: Promise.resolve(),
-        } as any;
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-      }) as any;
+        };
+      },
+    });
 
     const next = toggleThemeWithTransition(doc, win, "light");
     await Promise.resolve();

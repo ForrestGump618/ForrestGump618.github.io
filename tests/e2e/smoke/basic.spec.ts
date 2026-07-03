@@ -27,6 +27,7 @@ test("@smoke 搜索面板可打开并通过 Escape 关闭", async ({ page }) => 
 });
 
 test("@smoke 主题切换与 moments 页面可达", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto(ROUTES.home);
 
   const initialTheme = await page.evaluate(() => {

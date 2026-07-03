@@ -145,5 +145,5 @@ export default defineConfig({
       ],
       rehypePlugins: [rehypeKatex, rehypeAutoLinkHeadings],
     }),
-  }
+  },
 });
