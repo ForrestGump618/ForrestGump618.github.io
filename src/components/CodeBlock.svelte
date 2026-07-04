@@ -252,15 +252,7 @@
     box-shadow: none;
   }
 
-  /* 多 tab code-group 内：隐藏红黄绿圆点和语言文字（由 tab 栏承担语言标识） */
-  .codeblock.in-group.in-multi-tab .header {
-    padding-left: 1rem;
-  }
-
-  .codeblock.in-group.in-multi-tab .controls .dot {
-    display: none;
-  }
-
+  /* 多 tab code-group 内：保留红黄绿圆点，仅隐藏语言文字（由 tab 栏承担语言标识） */
   .codeblock.in-group.in-multi-tab .lang-text {
     display: none;
   }
