@@ -1,35 +1,37 @@
-import { visit } from "unist-util-visit";
+import { defineMdastPlugin, type MdastPluginDefinition, type MdastContent } from "satteri";
 
 /**
- * spoiler（Aether 兼容）：
+ * spoiler（satteri 版）：
  * 支持行内语法：!!spoiler!! -> <Spoiler title="...">spoiler</Spoiler>
  *
- * 说明：
- * - 只处理普通 text 节点，避免破坏 code/inlineCode/math 等节点。
- * - 支持转义：\!! 会被视为普通文本 "!!"。
+ * 与 remark 版逻辑一致，仅适配 satteri 插件 API：
+ * - 使用 text visitor 订阅文本节点
+ * - 通过 ctx.insertBefore + ctx.removeNode 实现一对多节点替换
  */
-export default function spoiler(options = {}) {
-  // 兼容旧参数名 spoilerTitle
+export interface SpoilerOptions {
+  /** Spoiler 组件的 title 属性值 */
+  title?: string;
+  /** 兼容旧参数名 */
+  spoilerTitle?: string;
+}
+
+export default function spoiler(options: SpoilerOptions = {}): MdastPluginDefinition {
   const title = options.title ?? options.spoilerTitle ?? "...";
 
-  return (tree) => {
-    visit(tree, "text", (node, index, parent) => {
-      if (!parent || typeof index !== "number") return;
-      if (parent.type === "code" || parent.type === "inlineCode") return;
-      if (parent.type === "math" || parent.type === "inlineMath") return;
-
+  return defineMdastPlugin({
+    name: "spoiler",
+    text(node, ctx) {
       const value = node.value;
       if (typeof value !== "string" || !value.includes("!!")) return;
 
-      const parts = [];
+      const parts: MdastContent[] = [];
       let i = 0;
       while (i < value.length) {
         const open = value.indexOf("!!", i);
         if (open === -1) break;
 
-        // 处理转义：\!! 视为普通文本 "!!"
+        // 转义：\!! 视为普通文本 "!!"
         if (open > 0 && value[open - 1] === "\\") {
-          // 把转义反斜杠去掉，继续向后找
           if (open - 1 > i) parts.push({ type: "text", value: value.slice(i, open - 1) });
           parts.push({ type: "text", value: "!!" });
           i = open + 2;
@@ -45,7 +47,6 @@ export default function spoiler(options = {}) {
 
         const content = value.slice(open + 2, close);
         if (content.length === 0) {
-          // 空内容：按字面输出
           parts.push({ type: "text", value: "!!!!" });
         } else {
           parts.push({
@@ -70,9 +71,9 @@ export default function spoiler(options = {}) {
         parts.push({ type: "text", value: value.slice(i) });
       }
 
-      parent.children.splice(index, 1, ...parts);
-      // eslint-disable-next-line consistent-return
-      return index + parts.length - 1;
-    });
-  };
+      // 一对多替换：先在原节点前插入所有片段，再移除原节点
+      ctx.insertBefore(node, parts);
+      ctx.removeNode(node);
+    },
+  });
 }

@@ -1,35 +1,12 @@
 import { expect, test } from "@playwright/test";
 import { ROUTES } from "../support/routes";
+import { openSearchDialog } from "../support/search";
 
 async function measureMainOffset(page: import("@playwright/test").Page) {
   return page.evaluate(() => {
     const target = document.querySelector("main article, main");
     return target?.getBoundingClientRect().left ?? 0;
   });
-}
-
-async function openSearchDialog(page: import("@playwright/test").Page) {
-  const openSearchButton = page.locator("#search");
-  const searchDialog = page.getByRole("dialog", { name: "Search" });
-
-  if (await searchDialog.isVisible()) {
-    return searchDialog;
-  }
-
-  /* eslint-disable no-await-in-loop */
-  for (let attempt = 0; attempt < 6; attempt += 1) {
-    await openSearchButton.click({ force: true });
-
-    if (await searchDialog.isVisible()) {
-      return searchDialog;
-    }
-
-    await page.waitForTimeout(150);
-  }
-  /* eslint-enable no-await-in-loop */
-
-  await expect(searchDialog).toBeVisible();
-  return searchDialog;
 }
 
 test("@regression 搜索面板支持按钮关闭并恢复页面滚动", async ({ page }) => {

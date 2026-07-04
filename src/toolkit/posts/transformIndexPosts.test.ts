@@ -80,7 +80,7 @@ describe("transformIndexPosts", () => {
     const transformed = transformIndexPosts([post as any], {
       encryptedExcerpt: "[ENCRYPTED]",
       // eslint-disable-next-line no-unsafe-type-assertion
-      resolveCover: () => "cover://test" as any,
+      resolveCover: () => "cover://test",
     });
 
     expect(transformed).toHaveLength(1);
@@ -114,5 +114,118 @@ describe("transformIndexPosts", () => {
 
     expect(transformed[0].category).toBeUndefined();
     expect(transformed[0].categoryUrl).toBeUndefined();
+  });
+
+  it("prefers AI summary over description and body when provided", () => {
+    const post: MockPost = {
+      id: "ai-post",
+      body: "body content",
+      data: {
+        title: "AI Post",
+        date: new Date("2025-01-01T00:00:00Z"),
+        description: "description text",
+      },
+    };
+
+    // eslint-disable-next-line no-unsafe-type-assertion
+    expect(getExcerpt(post as any, "[ENCRYPTED]", 300, "AI 摘要内容")).toBe("AI 摘要内容");
+  });
+
+  it("ignores blank AI summary and falls back to description", () => {
+    const post: MockPost = {
+      id: "blank-ai-post",
+      body: "body content",
+      data: {
+        title: "Blank AI",
+        date: new Date("2025-01-01T00:00:00Z"),
+        description: "description text",
+      },
+    };
+
+    // eslint-disable-next-line no-unsafe-type-assertion
+    expect(getExcerpt(post as any, "[ENCRYPTED]", 300, "   ")).toBe("description text");
+  });
+
+  it("still uses encrypted excerpt for encrypted posts even with AI summary", () => {
+    const post: MockPost = {
+      id: "encrypted-ai-post",
+      body: "secret",
+      data: {
+        title: "Encrypted AI",
+        date: new Date("2025-01-01T00:00:00Z"),
+        encrypted: true,
+        description: "should not show",
+      },
+    };
+
+    // eslint-disable-next-line no-unsafe-type-assertion
+    expect(getExcerpt(post as any, "[ENCRYPTED]", 300, "AI 摘要内容")).toBe("[ENCRYPTED]");
+  });
+
+  it("uses AI summary from aiSummaries map when excerptSource is ai", () => {
+    const post: MockPost = {
+      id: "ai-source-post",
+      body: "body content",
+      data: {
+        title: "AI Source",
+        date: new Date("2025-01-01T00:00:00Z"),
+        description: "description text",
+      },
+    };
+
+    const aiSummaries = new Map<string, string>([["ai-source-post", "AI 摘要内容"]]);
+
+    // eslint-disable-next-line no-unsafe-type-assertion
+    const transformed = transformIndexPosts([post as any], {
+      encryptedExcerpt: "[ENCRYPTED]",
+      excerptSource: "ai",
+      aiSummaries,
+    });
+
+    expect(transformed[0].excerpt).toBe("AI 摘要内容");
+  });
+
+  it("falls back to default excerpt when excerptSource is ai but no AI summary", () => {
+    const post: MockPost = {
+      id: "missing-ai-post",
+      body: "body content here",
+      data: {
+        title: "Missing AI",
+        date: new Date("2025-01-01T00:00:00Z"),
+        description: "description text",
+      },
+    };
+
+    // eslint-disable-next-line no-unsafe-type-assertion
+    const transformed = transformIndexPosts([post as any], {
+      encryptedExcerpt: "[ENCRYPTED]",
+      excerptSource: "ai",
+      aiSummaries: new Map(),
+    });
+
+    expect(transformed[0].excerpt).toBe("description text");
+  });
+
+  it("ignores aiSummaries when excerptSource is default", () => {
+    const post: MockPost = {
+      id: "default-source-post",
+      body: "body content",
+      data: {
+        title: "Default Source",
+        date: new Date("2025-01-01T00:00:00Z"),
+        description: "description text",
+      },
+    };
+
+    const aiSummaries = new Map<string, string>([["default-source-post", "AI 摘要内容"]]);
+
+    // eslint-disable-next-line no-unsafe-type-assertion
+    const transformed = transformIndexPosts([post as any], {
+      encryptedExcerpt: "[ENCRYPTED]",
+      excerptSource: "default",
+      aiSummaries,
+    });
+
+    expect(transformed[0].excerpt).toBe("description text");
   });
 });

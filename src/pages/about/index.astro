@@ -45,8 +45,8 @@ const updatedDate = frontmatter.updated
   : undefined;
 
 const postPath = "/about/";
-const permalink = Astro.site
-  ? new URL(postPath, Astro.site).toString()
+const permalink = import.meta.env.SITE
+  ? new URL(postPath, import.meta.env.SITE).toString()
   : postPath;
 
 const siteConfig = themeConfig.sidebar || {};

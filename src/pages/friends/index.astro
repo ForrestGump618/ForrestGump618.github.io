@@ -3,6 +3,8 @@ import { Code } from "astro:components";
 import Layout from "../../layouts/Layout.astro";
 import FriendLinks from "@/components/friends/FriendLinks.astro";
 import FriendRules from "@/content/friends-rules.md";
+import WalineComments from "@/components/post/WalineComments.svelte";
+import { currentLocale } from "@/i18n";
 import themeConfig from "@/theme.config";
 import astroConfig from "../../../astro.config.mjs";
 
@@ -11,7 +13,10 @@ const friendLinks = friendsConfig?.links ?? [];
 const pageTitle = friendsConfig?.title ?? "友链";
 const pageDescription =
   friendsConfig?.description ?? "卡片式展示，支持站点预览与主题色点缀。";
-const siteUrl = Astro.site?.toString() ?? "";
+const commentsConfig = themeConfig.comments || {};
+const walineConfig = commentsConfig.waline || {};
+const friendsPath = "/friends/";
+const siteUrl = import.meta.env.SITE?.toString() ?? "";
 const codeThemes = astroConfig.markdown?.shikiConfig?.themes;
 const friendsSnippet = {
   url: siteUrl,
@@ -53,6 +58,23 @@ const friendsJson = JSON.stringify(friendsSnippet, null, 2);
       <h3>友链列表</h3>
       <FriendLinks links={friendLinks} />
     </section>
+    {
+      friendsConfig?.comments && commentsConfig.enable !== false && (
+        <section class="friend-section friend-comments" id="comments">
+          <h3>评论区</h3>
+          <div class="comment">
+            <WalineComments
+              client:visible
+              serverURL={walineConfig.serverURL}
+              lang={walineConfig.lang || currentLocale}
+              dark={walineConfig.dark}
+              path={walineConfig.path}
+              pagePath={friendsPath}
+            />
+          </div>
+        </section>
+      )
+    }
   </div>
 </Layout>
 

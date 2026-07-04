@@ -20,6 +20,8 @@ import { createPostContentContainer } from "@/toolkit/posts/createPostContentCon
 import { toPostHref, toTagHref } from "@/toolkit/posts/url";
 import { wrapRenderedCodeBlocks } from "@/toolkit/wrapRenderedCodeBlocks";
 import { wrapRenderedImages } from "@/toolkit/wrapRenderedImages";
+import { wrapCodeGroups } from "@/toolkit/wrapCodeGroups";
+import { wrapExternalLinks } from "@/toolkit/wrapExternalLinks";
 
 import "@/styles/post.css";
 
@@ -72,15 +74,23 @@ export async function getStaticPaths() {
 
       const { Content, headings } = await render(post);
 
-      const renderedHtml = wrapRenderedImages(
-        wrapRenderedCodeBlocks(await container.renderToString(Content)),
+      const renderedHtml = wrapExternalLinks(
+        wrapRenderedImages(
+          wrapCodeGroups(
+            wrapRenderedCodeBlocks(await container.renderToString(Content)),
+          ),
+        ),
+        { siteUrl: import.meta.env.SITE },
       );
 
       if (post.data.encrypted && post.data.password) {
         isEncrypted = true;
 
         // 加密内容
-        encryptedContent = await encryptContent(renderedHtml, post.data.password);
+        encryptedContent = await encryptContent(
+          renderedHtml,
+          post.data.password,
+        );
 
         // 加密 TOC
         const tocData = headings.map((h) => ({
@@ -305,8 +315,8 @@ if (!isEncrypted && hycEnable && aiRecommendEnable) {
 const postPath = toPostHref(post.id);
 
 // Build permalink
-const permalink = Astro.site
-  ? new URL(postPath, Astro.site).toString()
+const permalink = import.meta.env.SITE
+  ? new URL(postPath, import.meta.env.SITE).toString()
   : postPath;
 
 // Build postMeta for Brand component
@@ -408,10 +418,7 @@ const postMeta = {
             !isEncrypted && post.data.tags && post.data.tags.length > 0 && (
               <div class="tags">
                 {post.data.tags.map((tag) => (
-                  <a
-                    href={toTagHref(tag)}
-                    rel="tag"
-                  >
+                  <a href={toTagHref(tag)} rel="tag">
                     <i class="icon i-ri-price-tag-3-line" />
                     {tag}
                   </a>

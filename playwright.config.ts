@@ -17,6 +17,8 @@ export default defineConfig({
   outputDir: "test-results",
   use: {
     baseURL: BASE_URL,
+    // 禁用 view transition，避免 cross-document 导航后 #loading 遮罩永不隐藏导致点击被遮挡
+    contextOptions: { reducedMotion: "reduce" },
     trace: "on-first-retry",
     screenshot: "only-on-failure",
     video: "retain-on-failure",

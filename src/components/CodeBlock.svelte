@@ -19,6 +19,8 @@
   let isFullscreen = $state(false);
   let isExiting = $state(false);
   let codeblockElement = $state<HTMLElement | null>(null);
+  let isInGroup = $state(false);
+  let isMultiTab = $state(false);
 
   const COLLAPSE_THRESHOLD = 15;
 
@@ -111,6 +113,20 @@
   onMount(async () => {
     codeLanguage = getCodeLanguage();
 
+    // 检测是否处于 code-group（tabs 容器）内，据此调整外观
+    // codeblockElement 位于 shadow DOM 内，需先取宿主元素再在 light DOM 中查找
+    const rootNode = codeblockElement?.getRootNode();
+    const host =
+      rootNode instanceof ShadowRoot ? rootNode.host : (codeblockElement ?? null);
+    const group = (host as HTMLElement | null)?.closest(".tabs.code-group");
+    if (group) {
+      isInGroup = true;
+      const tabCount = group.querySelectorAll(
+        ":scope > .tabs-panels > .tab-item",
+      ).length;
+      isMultiTab = tabCount > 1;
+    }
+
     // 延迟检查，确保内容已完全渲染
     setTimeout(() => {
       checkCodeLength();
@@ -154,7 +170,9 @@
   bind:this={codeblockElement}
   class="codeblock {isDark ? 'dark' : ''} {isFullscreen
     ? 'fullscreen'
-    : ''} {isExiting ? 'exiting' : ''}"
+    : ''} {isExiting ? 'exiting' : ''} {isInGroup
+    ? 'in-group'
+    : ''} {isMultiTab ? 'in-multi-tab' : ''}"
 >
   <div class="header">
     <div class="controls">
@@ -225,6 +243,18 @@
 
   .dark.codeblock {
     box-shadow: none;
+  }
+
+  /* 处于 code-group 内时：去掉独立卡片样式，与 tabs 容器融为一体 */
+  .codeblock.in-group {
+    margin: 0;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  /* 多 tab code-group 内：保留红黄绿圆点，仅隐藏语言文字（由 tab 栏承担语言标识） */
+  .codeblock.in-group.in-multi-tab .lang-text {
+    display: none;
   }
 
   /* Header 样式 */

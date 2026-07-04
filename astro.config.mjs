@@ -1,6 +1,6 @@
 import svelte from "@astrojs/svelte";
 import { defineConfig } from "astro/config";
-import { unified } from "@astrojs/markdown-remark";
+import { satteri } from "@astrojs/markdown-satteri";
 import sitemap from "@astrojs/sitemap";
 import esToolkitPlugin from "vite-plugin-es-toolkit";
 import { transformerColorizedBrackets } from "@shikijs/colorized-brackets";
@@ -14,25 +14,43 @@ import {
 
 import UnoCSS from "@unocss/astro";
 
-import remarkMath from "remark-math";
-import rehypeKatex from "rehype-katex";
-import remarkGfm from "remark-gfm";
-import remarkIns from "remark-ins";
-import remarkDirective from "remark-directive";
-import remarkRubyDirective from "remark-ruby-directive";
-import rehypeAutoLinkHeadings from "rehype-autolink-headings";
-import remarkEmoji from "remark-emoji";
-import remarkExtendedTable from "remark-extended-table";
-import remarkBreaks from "remark-breaks";
-
-import AutoImport from "astro-auto-import";
-
 import { hyacinePlugin } from "@hyacine/astro";
 import mdx from "@astrojs/mdx";
 
-import spoiler from "./src/remark-plugins/spoiler.mjs";
-import noteDirective from "./src/remark-plugins/note-directive.mjs";
-import spanDirective from "./src/remark-plugins/span-directive.mjs";
+import spoiler from "./src/satteri-plugins/spoiler.ts";
+import noteDirective from "./src/satteri-plugins/note-directive.ts";
+import spanDirective from "./src/satteri-plugins/span-directive.ts";
+import satteriBreaks from "./src/satteri-plugins/breaks.ts";
+import satteriIns from "./src/satteri-plugins/ins.ts";
+import satteriKatex from "./src/satteri-plugins/katex.ts";
+import satteriAutolinkHeadings from "./src/satteri-plugins/autolink-headings.ts";
+import satteriAutoImport from "./src/satteri-plugins/auto-import.ts";
+import satteriEmoji from "./src/satteri-plugins/emoji.ts";
+import satteriRubyDirective from "./src/satteri-plugins/ruby-directive.ts";
+import codeGroup from "./src/satteri-plugins/code-group.ts";
+
+const mdxAutoImports = [
+  "@/components/mdx/Spoiler.astro",
+  "@/components/mdx/Note.astro",
+  "@/components/mdx/Label.astro",
+  "@/components/mdx/Underline.astro",
+  "@/components/mdx/Strike.astro",
+  "@/components/mdx/Highlight.astro",
+  "@/components/mdx/Text.astro",
+  "@/components/mdx/Kbd.astro",
+  "@/components/mdx/Sup.astro",
+  "@/components/mdx/Sub.astro",
+  "@/components/mdx/Collapse.astro",
+  "@/components/mdx/QuizGroup.astro",
+  "@/components/mdx/Quiz.astro",
+  "@/components/mdx/QuizOptions.astro",
+  "@/components/mdx/QuizOption.astro",
+  "@/components/mdx/QuizAnswer.astro",
+  "@/components/mdx/QuizGap.astro",
+  "@/components/mdx/QuizMistake.astro",
+  "@/components/mdx/Tabs.astro",
+  "@/components/mdx/Tab.astro",
+];
 
 import Font from "vite-plugin-font";
 
@@ -68,30 +86,6 @@ export default defineConfig({
     }),
     sitemap(),
     hyacinePlugin(),
-    AutoImport({
-      imports: [
-        "@/components/mdx/Spoiler.astro",
-        "@/components/mdx/Note.astro",
-        "@/components/mdx/Label.astro",
-        "@/components/mdx/Underline.astro",
-        "@/components/mdx/Strike.astro",
-        "@/components/mdx/Highlight.astro",
-        "@/components/mdx/Text.astro",
-        "@/components/mdx/Kbd.astro",
-        "@/components/mdx/Sup.astro",
-        "@/components/mdx/Sub.astro",
-        "@/components/mdx/Collapse.astro",
-        "@/components/mdx/QuizGroup.astro",
-        "@/components/mdx/Quiz.astro",
-        "@/components/mdx/QuizOptions.astro",
-        "@/components/mdx/QuizOption.astro",
-        "@/components/mdx/QuizAnswer.astro",
-        "@/components/mdx/QuizGap.astro",
-        "@/components/mdx/QuizMistake.astro",
-        "@/components/mdx/Tabs.astro",
-        "@/components/mdx/Tab.astro",
-      ],
-    }),
     mdx(),
     PlayformInline({
       Logger: 0,
@@ -129,27 +123,26 @@ export default defineConfig({
         transformerColorizedBrackets(),
       ],
     },
-    processor: unified({
-      remarkPlugins: [
-        remarkMath,
-        remarkBreaks,
-        remarkRubyDirective,
-        remarkIns,
-        remarkDirective,
-        noteDirective,
-        spanDirective,
-        remarkGfm,
-        remarkEmoji,
-        remarkExtendedTable,
+    processor: satteri({
+      features: {
+        gfm: true,
+        math: true,
+        directive: true,
+        headingAttributes: true,
+      },
+      mdastPlugins: [
+        satteriAutoImport(mdxAutoImports),
+        satteriBreaks(),
+        satteriIns(),
+        satteriKatex(),
+        satteriEmoji(),
+        satteriRubyDirective(),
+        noteDirective(),
+        spanDirective(),
+        codeGroup(),
         [spoiler, { title: "..." }],
       ],
-      rehypePlugins: [rehypeKatex, rehypeAutoLinkHeadings],
+      hastPlugins: [satteriAutolinkHeadings()],
     }),
-  },
-  experimental: {
-    rustCompiler: true,
-    queuedRendering: {
-      enabled: true,
-    },
   },
 });

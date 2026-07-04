@@ -1,3 +1,5 @@
+import { langBadgeColor } from "./langBadge";
+
 const QUIZ_DATA_BOUND_KEY = "quizBound";
 const TABS_DATA_BOUND_KEY = "tabsBound";
 
@@ -187,6 +189,8 @@ const initTabs = (root: TabsRoot) => {
     return;
   }
 
+  root.dataset.tabCount = String(tabItems.length);
+
   const defaultValue = (root.dataset.defaultValue || "").trim();
   let activeIndex = 0;
 
@@ -235,7 +239,20 @@ const initTabs = (root: TabsRoot) => {
     button.id = buttonId;
     button.setAttribute("role", "tab");
     button.setAttribute("aria-controls", panelId);
-    button.textContent = tabLabel;
+
+    // 读取该 tab 内 code-block 的语言，注入语言徽标
+    const pre = item.querySelector("code-block pre[data-language]");
+    const lang = pre?.getAttribute("data-language") || "";
+    const badge = document.createElement("span");
+    badge.className = "lang-badge";
+    badge.setAttribute("aria-hidden", "true");
+    if (lang) {
+      badge.style.setProperty("--lang-color", langBadgeColor(lang));
+    }
+    button.append(badge);
+    const labelNode = document.createTextNode(tabLabel);
+    button.append(labelNode);
+
     button.addEventListener("click", () => {
       activate(index);
     });
@@ -248,6 +265,21 @@ const initTabs = (root: TabsRoot) => {
   if (tabItems.length <= 1) {
     nav?.setAttribute("hidden", "true");
   }
+
+  // 横向滚动阴影状态
+  const updateScrollState = () => {
+    const el = navList;
+    const atStart = el.scrollLeft <= 1;
+    const atEnd = el.scrollLeft + el.clientWidth >= el.scrollWidth - 1;
+    nav?.setAttribute("data-at-start", String(atStart));
+    nav?.setAttribute("data-at-end", String(atEnd));
+  };
+  nav?.setAttribute("data-at-start", "true");
+  nav?.setAttribute("data-at-end", "false");
+  updateScrollState();
+  navList.addEventListener("scroll", updateScrollState, { passive: true });
+  const ro = new ResizeObserver(updateScrollState);
+  ro.observe(navList);
 
   activate(activeIndex);
   root.dataset[TABS_DATA_BOUND_KEY] = "true";
