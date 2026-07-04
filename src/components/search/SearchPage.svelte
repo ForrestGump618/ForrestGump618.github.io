@@ -347,9 +347,7 @@
     align-items: flex-start;
     justify-content: center;
     padding: 4.5rem 1rem 1rem;
-    opacity: 0;
     pointer-events: none;
-    transition: opacity 0.3s ease;
   }
 
   .search-shell[hidden] {
@@ -357,7 +355,6 @@
   }
 
   .search-shell-visible {
-    opacity: 1;
     pointer-events: auto;
   }
 
@@ -371,7 +368,14 @@
       radial-gradient(circle at top, var(--grey-1-a3), transparent 55%),
       var(--search-overlay-bg);
     backdrop-filter: blur(14px) saturate(140%);
+    /* 透明度直接作用于 overlay 自身，使 backdrop-filter 能随 opacity 平滑插值，
+       避免父级 group opacity 导致模糊效果在动画末尾才突现的滞后感 */
+    opacity: 0;
     transition: opacity 0.3s ease;
+  }
+
+  .search-shell-visible .search-overlay {
+    opacity: 1;
   }
 
   .pagefind-panel {
@@ -392,13 +396,16 @@
     );
     box-shadow: var(--search-panel-shadow), var(--search-panel-inset);
     backdrop-filter: blur(20px) saturate(180%);
+    opacity: 0;
     transform: translateY(-1.5rem) scale(0.98);
     transition:
       transform 0.35s ease,
-      box-shadow 0.35s ease;
+      box-shadow 0.35s ease,
+      opacity 0.3s ease;
   }
 
   .search-shell-visible .pagefind-panel {
+    opacity: 1;
     transform: translateY(0) scale(1);
     box-shadow:
       var(--search-panel-shadow-active), var(--search-panel-inset-active);
