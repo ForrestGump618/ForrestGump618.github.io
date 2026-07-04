@@ -68,7 +68,33 @@ export function wrapExternalLinks(html: string, options: WrapExternalLinksOption
     if (HAS_EXTURL_ICON.test(text)) return match;
     if (!isExternalHref(href, siteOrigin)) return match;
 
-    const newAttrs = `${attrs} class="exturl" target="_blank" rel="noopener noreferrer"`;
+    let newAttrs = attrs;
+
+    const CLASS_ATTR = /\bclass=(?<q>["'])(?<v>[^"']*)\k<q>/i;
+    const classMatch = newAttrs.match(CLASS_ATTR);
+    if (classMatch?.groups) {
+      const q = classMatch.groups.q;
+      const classes = classMatch.groups.v.split(/\s+/).filter(Boolean);
+      if (!classes.includes("exturl")) classes.push("exturl");
+      newAttrs = newAttrs.replace(CLASS_ATTR, `class=${q}${classes.join(" ")}${q}`);
+    } else {
+      newAttrs = `${newAttrs} class="exturl"`;
+    }
+
+    const REL_ATTR = /\brel=(?<q>["'])(?<v>[^"']*)\k<q>/i;
+    const relMatch = newAttrs.match(REL_ATTR);
+    if (relMatch?.groups) {
+      const q = relMatch.groups.q;
+      const rels = relMatch.groups.v.split(/\s+/).filter(Boolean);
+      for (const token of ["noopener", "noreferrer"]) {
+        if (!rels.includes(token)) rels.push(token);
+      }
+      newAttrs = newAttrs.replace(REL_ATTR, `rel=${q}${rels.join(" ")}${q}`);
+    } else {
+      newAttrs = `${newAttrs} rel="noopener noreferrer"`;
+    }
+
+    newAttrs = `${newAttrs} target="_blank"`;
     return `<a${newAttrs}>${text}<i class="i-ri-external-link-line" aria-hidden="true"></i></a>`;
   });
 }
