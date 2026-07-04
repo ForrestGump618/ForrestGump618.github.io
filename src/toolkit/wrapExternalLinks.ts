@@ -61,10 +61,7 @@ function isExternalHref(href: string, siteOrigin: string): boolean {
   }
 }
 
-export function wrapExternalLinks(
-  html: string,
-  options: WrapExternalLinksOptions = {},
-): string {
+export function wrapExternalLinks(html: string, options: WrapExternalLinksOptions = {}): string {
   const siteOrigin = normalizeSiteOrigin(options.siteUrl);
   return html.replace(LINK_PATTERN, (match, attrs, _quote, href, text) => {
     if (HAS_TARGET.test(attrs)) return match;

@@ -10,7 +10,7 @@ describe("wrapExternalLinks", () => {
     expect(out).toContain('target="_blank"');
     expect(out).toContain('rel="noopener noreferrer"');
     expect(out).toContain('class="exturl"');
-    expect(out).toContain('i-ri-external-link-line');
+    expect(out).toContain("i-ri-external-link-line");
     expect(out).toContain("Astro<i");
   });
 
@@ -71,15 +71,11 @@ describe("wrapExternalLinks", () => {
 
   it("siteUrl 末尾斜杠被规范化", () => {
     const html = `<a href="https://example.com/x">x</a>`;
-    expect(wrapExternalLinks(html, { siteUrl: "https://example.com/" })).toBe(
-      html,
-    );
+    expect(wrapExternalLinks(html, { siteUrl: "https://example.com/" })).toBe(html);
   });
 
   it("siteUrl 含子路径时仍按 origin 比对", () => {
     const html = `<a href="https://example.com/posts/a">a</a>`;
-    expect(wrapExternalLinks(html, { siteUrl: "https://example.com/blog" })).toBe(
-      html,
-    );
+    expect(wrapExternalLinks(html, { siteUrl: "https://example.com/blog" })).toBe(html);
   });
 });
