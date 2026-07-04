@@ -27,6 +27,33 @@ describe("langBadgeIndex", () => {
     expect(langBadgeIndex("TS")).toBe(langBadgeIndex("ts"));
     expect(langBadgeIndex("TypeScript")).toBe(langBadgeIndex("typescript"));
   });
+
+  it("常用语言命中精选颜色表", () => {
+    // TypeScript / JS 系
+    expect(langBadgeIndex("ts")).toBe(3);
+    expect(langBadgeIndex("typescript")).toBe(3);
+    expect(langBadgeIndex("js")).toBe(1);
+    expect(langBadgeIndex("javascript")).toBe(1);
+    // Rust / Go / Python
+    expect(langBadgeIndex("rust")).toBe(0);
+    expect(langBadgeIndex("go")).toBe(5);
+    expect(langBadgeIndex("python")).toBe(3);
+    expect(langBadgeIndex("py")).toBe(3);
+    // 别名一致
+    expect(langBadgeIndex("c++")).toBe(langBadgeIndex("cpp"));
+    expect(langBadgeIndex("c#")).toBe(langBadgeIndex("csharp"));
+    expect(langBadgeIndex("cs")).toBe(langBadgeIndex("csharp"));
+    expect(langBadgeIndex("sh")).toBe(langBadgeIndex("bash"));
+    expect(langBadgeIndex("md")).toBe(langBadgeIndex("markdown"));
+  });
+
+  it("未命中精选表的语言回退到哈希且稳定", () => {
+    const exotic = "some-unknown-lang-xyz";
+    const idx = langBadgeIndex(exotic);
+    expect(idx).toBeGreaterThanOrEqual(0);
+    expect(idx).toBeLessThan(LANG_RING_COUNT);
+    expect(langBadgeIndex(exotic)).toBe(idx);
+  });
 });
 
 describe("langBadgeColor", () => {
