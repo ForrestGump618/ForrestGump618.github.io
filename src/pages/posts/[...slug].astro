@@ -80,7 +80,7 @@ export async function getStaticPaths() {
             wrapRenderedCodeBlocks(await container.renderToString(Content)),
           ),
         ),
-        { siteOrigin: import.meta.env.SITE?.origin ?? "" },
+        { siteUrl: import.meta.env.SITE },
       );
 
       if (post.data.encrypted && post.data.password) {

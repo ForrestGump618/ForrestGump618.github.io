@@ -2,8 +2,7 @@ import { describe, expect, it } from "bun:test";
 import { wrapCodeGroups } from "./wrapCodeGroups";
 const pre = (lang: string, body = "code") =>
   `<pre class="astro-code astro-code-themes" data-language="${lang}">${body}</pre>`;
-const codeBlock = (lang: string, body = "code") =>
-  `<code-block>${pre(lang, body)}</code-block>`;
+const codeBlock = (lang: string, body = "code") => `<code-block>${pre(lang, body)}</code-block>`;
 
 describe("wrapCodeGroups", () => {
   it("将 code-group 内的多个 code-block 重组为 Tabs 结构", () => {

@@ -16,8 +16,20 @@ const HAS_TARGET = /\btarget\s*=/i;
 const HAS_EXTURL_ICON = /i-ri-external-link-line/;
 
 export interface WrapExternalLinksOptions {
-  /** 站点源（如 https://example.com），用于识别同源绝对 URL */
-  siteOrigin?: string;
+  /** 站点 URL（如 https://example.com 或 https://example.com/sub），用于识别同源绝对 URL */
+  siteUrl?: string;
+}
+
+/**
+ * 从站点 URL 字符串安全提取 origin（兼容带/不带尾斜杠、空值等情况）
+ */
+function normalizeSiteOrigin(siteUrl?: string): string {
+  if (!siteUrl) return "";
+  try {
+    return new URL(siteUrl).origin;
+  } catch {
+    return siteUrl.replace(/\/$/, "");
+  }
 }
 
 /**
@@ -49,8 +61,11 @@ function isExternalHref(href: string, siteOrigin: string): boolean {
   }
 }
 
-export function wrapExternalLinks(html: string, options: WrapExternalLinksOptions = {}): string {
-  const siteOrigin = (options.siteOrigin ?? "").replace(/\/$/, "");
+export function wrapExternalLinks(
+  html: string,
+  options: WrapExternalLinksOptions = {},
+): string {
+  const siteOrigin = normalizeSiteOrigin(options.siteUrl);
   return html.replace(LINK_PATTERN, (match, attrs, _quote, href, text) => {
     if (HAS_TARGET.test(attrs)) return match;
     if (HAS_EXTURL_ICON.test(text)) return match;
