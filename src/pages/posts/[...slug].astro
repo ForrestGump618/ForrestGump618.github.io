@@ -22,6 +22,7 @@ import { wrapRenderedCodeBlocks } from "@/toolkit/wrapRenderedCodeBlocks";
 import { wrapRenderedImages } from "@/toolkit/wrapRenderedImages";
 import { wrapCodeGroups } from "@/toolkit/wrapCodeGroups";
 import { wrapExternalLinks } from "@/toolkit/wrapExternalLinks";
+import { wrapRenderedTables } from "@/toolkit/wrapRenderedTables";
 
 import "@/styles/post.css";
 
@@ -76,10 +77,12 @@ export async function getStaticPaths() {
 
       const renderedHtml = wrapExternalLinks(
         wrapRenderedImages(
-          wrapCodeGroups(
-            wrapRenderedCodeBlocks(await container.renderToString(Content)),
+            wrapRenderedTables(
+              wrapCodeGroups(
+                wrapRenderedCodeBlocks(await container.renderToString(Content)),
+              ),
+            ),
           ),
-        ),
         { siteUrl: import.meta.env.SITE },
       );
 

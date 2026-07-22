@@ -19,8 +19,10 @@ import "@/styles/palette.css";
 import "@/styles/style.css";
 import "@/styles/header-cover.css";
 import "@/styles/mdx-components.css";
+import "@/styles/icons.css";
 
 import Loading from "@/components/Loading.astro";
+import Icons from "@/components/Icons.svelte";
 import { covers, resolveFixedCover } from "@/components/Images.astro";
 import FloatingToolbar from "@/components/FloatingToolbar.svelte";
 import TwoColumnLayout from "@/layouts/TwoColumnLayout.astro";
@@ -189,9 +191,10 @@ import SearchPage from "@/components/search/SearchPage.svelte";
       navLinks={navLinks}
       clickToggleCallback={() => void 0}
     />
-    <SearchPage client:idle selector="#search" />
-    <Loading />
-    <div id="container">
+      <SearchPage client:idle selector="#search" />
+      <Loading />
+      <Icons />
+      <div id="container">
       <HeaderCover
         enable={coverConfig.enable}
         preload={coverConfig.preload}

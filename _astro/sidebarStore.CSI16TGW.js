@@ -1,0 +1,1 @@
+import{J as e}from"./client.Bq-f7rIf.js";var t=e(!1);function n(){t.update(e=>!e)}export{n,t};

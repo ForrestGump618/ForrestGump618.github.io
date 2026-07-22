@@ -3,13 +3,17 @@ import themeConfig from "./src/theme.config";
 import extractorSvelte from "@unocss/extractor-svelte";
 import { transformerDirectives } from "unocss";
 
-function normalizeIconName(icon: string): string {
-  return icon.startsWith("i-") ? icon : `i-ri-${icon}`;
+/**
+ * Removes the icon prefix to obtain the raw icon name.
+ * e.g. "i-ri-github-fill" → "github-fill"
+ */
+function stripIconPrefix(icon: string): string {
+  return icon.replace(/^i-[a-z]+-/, "");
 }
 
 function pushNormalizedIcon(target: string[], icon?: string) {
   if (!icon) return;
-  target.push(normalizeIconName(icon));
+  target.push(stripIconPrefix(icon));
 }
 
 function collectConfigIcons() {
@@ -34,10 +38,8 @@ function collectConfigIcons() {
     });
   }
 
-  // 预留：若未来在 friends.links 中引入 icon 字段，这里会自动纳入。
   if (themeConfig.friends?.links) {
     themeConfig.friends.links.forEach((link) => {
-      // eslint-disable-next-line no-unsafe-type-assertion
       const icon = (link as { icon?: string }).icon;
       pushNormalizedIcon(icons, icon);
     });
@@ -48,21 +50,28 @@ function collectConfigIcons() {
 
 const iconSafeList = [
   ...collectConfigIcons(),
-  // 页面内固定使用的图标（避免后续模板改造期间被裁剪）
-  "i-ri-flag-line",
-  "i-ri-file-line",
-  // 外链标识图标：由 wrapExternalLinks 在构建时动态注入 HTML，
-  // UnoCSS 静态扫描源文件无法发现，需显式 safelist
-  "i-ri-external-link-line",
-].map(normalizeIconName);
+  "flag-line",
+  "file-line",
+  "external-link-line",
+  "close-line",
+];
 
 export default defineConfig({
-  presets: [presetWind4(), presetIcons(), presetAttributify()],
+  presets: [
+    presetWind4(),
+    presetIcons({
+      extraProperties: {
+        display: "inline-block",
+        "vertical-align": "middle",
+      },
+    }),
+    presetAttributify(),
+  ],
   extractors: [extractorSvelte()],
+  safelist: [...new Set(iconSafeList.map((n) => `.i-ri-${n}`))],
   transformers: [transformerDirectives()],
   theme: {
     colors: {
-      // 灰阶：支持 text-grey-4 / border-grey-3 / bg-grey-1 等
       grey: {
         0: "var(--grey-0)",
         1: "var(--grey-1)",
@@ -75,8 +84,6 @@ export default defineConfig({
         8: "var(--grey-8)",
         9: "var(--grey-9)",
       },
-
-      // 语义色：支持 text-primary / text-color-link / bg-body-bg-shadow 等
       primary: "var(--primary-color)",
       "color-link": "var(--primary-color)",
       color: "var(--text-color)",
@@ -86,8 +93,6 @@ export default defineConfig({
       "body-bg-shadow": "var(--body-bg-shadow)",
       "box-bg-shadow": "var(--box-bg-shadow)",
       "border-muted": "var(--border-color-muted)",
-
-      // 调色盘原子色：支持 text-color-blue / bg-color-red 等
       "color-red": "var(--color-red)",
       "color-pink": "var(--color-pink)",
       "color-orange": "var(--color-orange)",
@@ -99,5 +104,4 @@ export default defineConfig({
       "color-grey": "var(--color-grey)",
     },
   },
-  safelist: [...new Set(iconSafeList)],
 });

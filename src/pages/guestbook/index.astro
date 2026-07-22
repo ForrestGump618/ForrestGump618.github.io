@@ -1,0 +1,131 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import WalineComments from "@/components/post/WalineComments.svelte";
+import { currentLocale } from "@/i18n";
+import themeConfig from "@/theme.config";
+
+const commentsConfig = themeConfig.comments || {};
+const walineConfig = commentsConfig.waline || {};
+const guestbookPath = "/guestbook/";
+const pageTitle = "留言板";
+---
+
+<Layout pageTitle={pageTitle}>
+  <div class="wrap guestbook-page">
+    <div class="guestbook-header">
+      <h2>📝 留言板</h2>
+      <p>欢迎来到这里 👋 如果你对本站有任何疑问、建议，或者只是想打个招呼，都非常欢迎留言。</p>
+      <div class="guestbook-tips">
+        <div class="tip-item">
+          <span class="tip-icon">📮</span>
+          <span>建议填写 <strong>昵称 + 邮箱</strong>，这样当我回复时你能第一时间收到通知。</span>
+        </div>
+        <div class="tip-item">
+          <span class="tip-icon">🔒</span>
+          <span>本站留言系统使用 <strong>Waline</strong>，不强制注册，请放心交流。</span>
+        </div>
+        <div class="tip-item">
+          <span class="tip-icon">🍀</span>
+          <span>据说在这里留言的人，都会悄悄收获一点好运 ✨</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="guestbook-map">
+      <h3>🌍 访客地图</h3>
+      <script type="text/javascript" id="clustrmaps" src="//clustrmaps.com/map_v2.js?d=WM017qayEgsM35ZHXkb2ZwUMtOGyEc19IGvI_C_dRPU&cl=ffffff&w=a">
+      </script>
+      <p class="map-sub"><sub>📍 世界很大，很高兴在这里与你相遇</sub></p>
+    </div>
+
+    <div class="guestbook-comments">
+      <h3>💬 评论</h3>
+      <div id="comments" class="comment">
+        <WalineComments
+          client:visible
+          serverURL={walineConfig.serverURL}
+          lang={walineConfig.lang || currentLocale}
+          dark={walineConfig.dark}
+          path={walineConfig.path}
+          pagePath={guestbookPath}
+        />
+      </div>
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .guestbook-page {
+    padding: 1.5rem 1.75rem 2.5rem;
+  }
+
+  .guestbook-header {
+    margin-bottom: 2rem;
+  }
+
+  .guestbook-header h2 {
+    margin: 0 0 0.75rem;
+    font-size: 1.75rem;
+    color: var(--grey-7);
+  }
+
+  .guestbook-header p {
+    margin: 0 0 1.25rem;
+    color: var(--grey-6);
+    line-height: 1.7;
+  }
+
+  .guestbook-tips {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1rem 1.25rem;
+    border-radius: 0.75rem;
+    background: linear-gradient(135deg, var(--grey-0), var(--grey-1));
+    border: 1px solid var(--grey-2);
+  }
+
+  .tip-item {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.5rem;
+    color: var(--grey-6);
+    line-height: 1.6;
+    font-size: 0.95rem;
+  }
+
+  .tip-icon {
+    flex-shrink: 0;
+    font-size: 1.1rem;
+  }
+
+  .guestbook-map {
+    margin: 2rem 0;
+  }
+
+  .guestbook-map h3 {
+    margin: 0 0 0.75rem;
+    color: var(--grey-7);
+  }
+
+  .map-sub {
+    text-align: center;
+    margin-top: 0.5rem;
+    color: var(--grey-5);
+  }
+
+  .guestbook-comments {
+    margin-top: 2rem;
+  }
+
+  .guestbook-comments h3 {
+    margin: 0 0 0.75rem;
+    color: var(--grey-7);
+  }
+
+  @media (max-width: 768px) {
+    .guestbook-page {
+      padding: 1.25rem 1rem 2rem;
+    }
+  }
+</style>

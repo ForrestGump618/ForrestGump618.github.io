@@ -1,0 +1,47 @@
+---
+// Icons.astro — 显式地静态引用所有需要的 UnoCSS 图标类，以确保 UnoCSS content scan 能发现它们。
+// 这些类原本仅在 Svelte 组件中通过动态插值使用（如 class={icon + "..."}），
+// 静态提取器无法捕获，因此需要在这里显式列出。
+// 使用 display:none 的 div 包裹，不影响页面布局。
+---
+
+<div style="display:none" aria-hidden="true">
+  <!-- Nav icons -->
+  <div class="i-ri-home-line"></div>
+  <div class="i-ri-user-3-line"></div>
+  <div class="i-ri-quill-pen-fill"></div>
+  <div class="i-ri-book-shelf-fill"></div>
+  <div class="i-ri-price-tag-3-fill"></div>
+  <div class="i-ri-archive-line"></div>
+  <div class="i-ri-link"></div>
+  <div class="i-ri-chat-quote-line"></div>
+  <div class="i-ri-message-2-line"></div>
+  <div class="i-ri-star-line"></div>
+  <div class="i-ri-sun-line"></div>
+  <div class="i-ri-bar-chart-box-line"></div>
+  <!-- Social icons -->
+  <div class="i-ri-github-fill"></div>
+  <div class="i-ri-mail-line"></div>
+  <!-- Fixed icons -->
+  <div class="i-ri-flag-line"></div>
+  <div class="i-ri-file-line"></div>
+  <div class="i-ri-external-link-line"></div>
+  <!-- Svelte component icons -->
+  <div class="i-ri-close-line"></div>
+  <div class="i-ri-search-line"></div>
+  <div class="i-ri-calendar-line"></div>
+  <div class="i-ri-time-line"></div>
+  <div class="i-ri-pencil-line"></div>
+  <div class="i-ri-dice-line"></div>
+  <div class="i-ri-shuffle-line"></div>
+  <div class="i-ri-layout-right-2-line"></div>
+  <div class="i-ri-line-chart-fill"></div>
+  <div class="i-ri-cup-fill"></div>
+  <div class="i-ri-megaphone-line"></div>
+  <div class="i-ri-arrow-right-line"></div>
+  <div class="i-ri-arrow-right-s-line"></div>
+  <div class="i-ri-arrow-up-line"></div>
+  <div class="i-ri-arrow-down-line"></div>
+  <div class="i-ri-arrow-drop-down-fill"></div>
+  <div class="i-ri-price-tag-3-line"></div>
+</div>

@@ -48,7 +48,7 @@
   --text-color-subtle: var(--grey-4);
   --header-text-color: var(--grey-0);
   --border-color-muted: var(--grey-4);
-  --primary-color: var(--color-red);
+  --primary-color: var(--color-blue);
   --surface-code: var(--grey-3);
   --surface-code-header: var(--grey-2);
   --surface-inline-code: oklch(0.965 0.008 15);

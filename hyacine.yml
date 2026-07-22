@@ -26,3 +26,19 @@ images:
   - path: src/assets/images/cover-4.avif
   - path: src/assets/images/cover-5.avif
   - path: src/assets/images/cover-6.avif
+
+
+embedding:
+  enabled: false
+  model: Xenova/paraphrase-multilingual-MiniLM-L12-v2
+  maxChunkChars: 512
+
+
+summary:
+  enabled: true
+  apiBaseUrl: https://api.deepseek.com
+  apiKey: sk-2ce0f8c2cea04dcf9b5c4d1977586614
+  model: deepseek-v4-flash
+  maxInputChars: 8000
+  maxOutputTokens: 256
+  temperature: 0.2

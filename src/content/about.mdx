@@ -1,8 +1,8 @@
 ---
 title: 关于
 description: 这里记录我是谁、这个博客在做什么，以及如何和我交流。
-date: 2026-03-29
-updated: 2026-03-29
+date: 2026-07-22
+published: true
 ---
 
 import AboutDialog from "@/components/AboutDialog.svelte";
@@ -15,7 +15,7 @@ export const aboutAuthorAvatar = avatar.src;
 export const aboutDialogNodes = [
   {
     id: "intro",
-    text: "你好，欢迎来到关于页面。想先了解哪一部分？",
+    text: "你好，欢迎来到我的博客。想先了解哪一部分？",
     options: [
       {
         label: "你是谁？",
@@ -41,7 +41,7 @@ export const aboutDialogNodes = [
   },
   {
     id: "identity",
-    text: "我是一名喜欢写作和折腾前端体验的开发者。这里主要记录实践、思考与长期维护过程中的经验。",
+    text: "我是一名临床医学专业的医学生，同时对生物信息学、深度学习充满热情。课余时间喜欢折腾技术和写作。",
     options: [
       {
         label: "继续：你平时最关注什么？",
@@ -57,7 +57,7 @@ export const aboutDialogNodes = [
   },
   {
     id: "focus",
-    text: "我更关注：可维护的内容结构、可读性高的代码、以及长期可演进的主题与组件设计。",
+    text: "我更关注：单细胞转录组学分析、GWAS 与多组学整合、深度学习的生物医学应用，以及医学生的成长与思考。",
     options: [
       {
         label: "返回话题菜单",
@@ -68,7 +68,7 @@ export const aboutDialogNodes = [
   },
   {
     id: "blog",
-    text: "内容会覆盖 Astro、Svelte、工程化实践、主题设计，以及一些开发过程中的踩坑和复盘。",
+    text: "内容覆盖生物信息学教程、深度学习笔记（基于《动手学深度学习》）、医学科目总结、文献阅读分享，以及一些生活随笔。",
     options: [
       {
         label: "返回话题菜单",
@@ -79,7 +79,7 @@ export const aboutDialogNodes = [
   },
   {
     id: "stack",
-    text: "当前站点使用 Astro + Svelte，运行时以 Bun 为主；并且会保持文章页面、搜索与组件交互体验的一致性。",
+    text: "当前站点使用 Astro + Svelte，基于 ShokaX 主题。之前从 Hexo 迁移而来，现在运行在 Bun 上。",
     options: [
       {
         label: "返回话题菜单",
@@ -90,7 +90,7 @@ export const aboutDialogNodes = [
   },
   {
     id: "contact",
-    text: "你可以通过评论区或社交链接联系我。通常我会优先回复和文章主题相关的问题与建议。",
+    text: "你可以通过以下方式联系我：QQ 2583990522，微信 ForrestGump202015。也可以在评论区留言，我会尽快回复。",
     options: [
       {
         label: "返回话题菜单",
@@ -101,27 +101,17 @@ export const aboutDialogNodes = [
   },
 ];
 
-你好，欢迎来到这里。
+你好，欢迎来到这里 👋
 
-这个页面会长期维护，主要包含三部分：
+我是一名临床医学专业的医学生，课余时间自学了生物信息学和深度学习。这个博客记录了我的学习笔记和实践心得，希望能对同样在这条路上的你有所帮助。
 
-1. 我是谁，以及我在持续关注什么。
-2. 这个博客会写什么、怎么写、为什么这样写。
-3. 如果你想交流，可以通过哪些方式联系我。
-
-为了减少“一次性介绍信息”带来的阅读负担，下面放了一个可交互的对话组件。你可以点击不同选项查看对应回复。
+如果你想交流，可以通过 QQ（2583990522）或微信（ForrestGump202015）联系我，当然也欢迎在下方评论区留言。
 
 <AboutDialog
   client:load
   title="快速对话"
-  intro="选择一个回复选项继续对话。你可以在 about.mdx 里预先定义分支与回复。"
+  intro="选择一个话题来了解我。"
   authorName={aboutAuthorName}
   authorAvatar={aboutAuthorAvatar}
   nodes={aboutDialogNodes}
 />
-
-你可以直接编辑 `src/content/about.mdx` 里的 `aboutDialogNodes` 来预先定义：
-
-- 对话内容（每个节点的文本）
-- 可选回复（每个按钮）
-- 对应回复（按钮跳转到哪个节点）

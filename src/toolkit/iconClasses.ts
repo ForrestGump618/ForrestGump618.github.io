@@ -1,0 +1,41 @@
+/**
+ * UnoCSS 图标类引用文件 — 这些 icon class 在 Svelte 组件中通过动态插值使用
+ * （如 class={icon + "..."}），静态提取器无法捕获。
+ * 此处通过数组字面量显式列出，让 UnoCSS content scan 能发现并生成对应 CSS 规则。
+ */
+export const ICON_CLASSES = [
+  "i-ri-home-line",
+  "i-ri-user-3-line",
+  "i-ri-quill-pen-fill",
+  "i-ri-book-shelf-fill",
+  "i-ri-price-tag-3-fill",
+  "i-ri-archive-line",
+  "i-ri-link",
+  "i-ri-chat-quote-line",
+  "i-ri-message-2-line",
+  "i-ri-star-line",
+  "i-ri-sun-line",
+  "i-ri-bar-chart-box-line",
+  "i-ri-github-fill",
+  "i-ri-mail-line",
+  "i-ri-flag-line",
+  "i-ri-file-line",
+  "i-ri-external-link-line",
+  "i-ri-close-line",
+  "i-ri-search-line",
+  "i-ri-calendar-line",
+  "i-ri-time-line",
+  "i-ri-pencil-line",
+  "i-ri-dice-line",
+  "i-ri-shuffle-line",
+  "i-ri-layout-right-2-line",
+  "i-ri-line-chart-fill",
+  "i-ri-cup-fill",
+  "i-ri-megaphone-line",
+  "i-ri-arrow-right-line",
+  "i-ri-arrow-right-s-line",
+  "i-ri-arrow-up-line",
+  "i-ri-arrow-down-line",
+  "i-ri-arrow-drop-down-fill",
+  "i-ri-price-tag-3-line",
+] as const;

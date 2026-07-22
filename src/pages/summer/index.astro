@@ -1,0 +1,106 @@
+---
+import Layout from "@/layouts/Layout.astro";
+
+const pageTitle = "医学推免信息汇总（持续更新）";
+---
+
+<Layout pageTitle={pageTitle}>
+  <div class="wrap summer-page">
+    <div class="summer-header">
+      <h2>🏥 医学推免信息汇总</h2>
+      <p>持续更新中，欢迎补充。</p>
+    </div>
+
+    <section class="summer-section">
+      <h3>医院排行</h3>
+      <ul>
+        <li><a href="https://rank.cn-healthcare.com/" target="_blank" rel="noopener noreferrer">2022年度复旦版中国医院排行榜</a></li>
+        <li><a href="https://rank.cn-healthcare.com/stem/medical-university" target="_blank" rel="noopener noreferrer">中国医院/中国医学院校科技量值</a></li>
+        <li><a href="https://research-hospital.cn-healthcare.com/result/hospitals" target="_blank" rel="noopener noreferrer">2023年研究型医院评价遴选结果</a></li>
+        <li><a href="https://innovation-rank.cn-healthcare.com/comprehensive-ranking" target="_blank" rel="noopener noreferrer">2022年度全国综合榜单-中国医院创新转化排行榜</a></li>
+        <li><a href="https://rank.cn-healthcare.com/nsfc" target="_blank" rel="noopener noreferrer">2022年度全国医院国家自然基金立项数据排行榜</a></li>
+      </ul>
+    </section>
+
+    <section class="summer-section">
+      <h3>导师相关信息查询</h3>
+      <ul>
+        <li><a href="http://www.globalauthorid.com/" target="_blank" rel="noopener noreferrer">全球学者库</a></li>
+        <li><a href="https://www.aminer.cn/" target="_blank" rel="noopener noreferrer">Aminer——学者大数据分析</a></li>
+        <li><a href="https://www.cnki.net/" target="_blank" rel="noopener noreferrer">CNKI（可查询公开的学位论文）</a></li>
+      </ul>
+    </section>
+
+    <section class="summer-section">
+      <h3>导师数据库</h3>
+      <ul>
+        <li><a href="http://202.195.181.96/gmis5/dsfc/w_dsfc" target="_blank" rel="noopener noreferrer">南京医科大学研究生院——导师风采</a></li>
+        <li><a href="https://med.nju.edu.cn/10649/list.htm" target="_blank" rel="noopener noreferrer">南京大学医学院——导师名单</a></li>
+        <li><a href="http://pumc.teacher.360eol.com/" target="_blank" rel="noopener noreferrer">北京协和医院——导师风采</a></li>
+      </ul>
+    </section>
+  </div>
+</Layout>
+
+<style>
+  .summer-page {
+    padding: 1.5rem 1.75rem 2.5rem;
+  }
+
+  .summer-header {
+    margin-bottom: 2rem;
+  }
+
+  .summer-header h2 {
+    margin: 0 0 0.5rem;
+    font-size: 1.75rem;
+    color: var(--grey-7);
+  }
+
+  .summer-header p {
+    margin: 0;
+    color: var(--grey-5);
+  }
+
+  .summer-section {
+    margin-bottom: 2rem;
+  }
+
+  .summer-section h3 {
+    margin: 0 0 0.75rem;
+    color: var(--grey-7);
+    font-size: 1.2rem;
+  }
+
+  .summer-section ul {
+    margin: 0;
+    padding-left: 1.5rem;
+    list-style: disc;
+    color: var(--grey-6);
+  }
+
+  .summer-section li {
+    margin: 0.4rem 0;
+    line-height: 1.7;
+  }
+
+  .summer-section li::marker {
+    color: var(--color-blue);
+  }
+
+  .summer-section a {
+    color: var(--grey-7);
+    text-decoration: none;
+    transition: color 0.2s ease;
+  }
+
+  .summer-section a:hover {
+    color: var(--primary-color);
+  }
+
+  @media (max-width: 768px) {
+    .summer-page {
+      padding: 1.25rem 1rem 2rem;
+    }
+  }
+</style>

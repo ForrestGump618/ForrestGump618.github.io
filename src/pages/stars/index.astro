@@ -1,0 +1,131 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { starCategories } from "@/data/stars";
+
+const pageTitle = "我的收藏";
+---
+
+<Layout pageTitle={pageTitle}>
+  <div class="wrap stars-page">
+    <div class="stars-header">
+      <h2>⭐ 我的收藏</h2>
+      <p>收集了一些有用的网站和工具，按类别整理如下。</p>
+    </div>
+
+    {
+      starCategories.map((category) => (
+        <section class="stars-section">
+          <h3 id={category.key}>{category.label}</h3>
+          <div class="stars-grid">
+            {category.items.map((item) => (
+              <a
+                href={item.site}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="star-card"
+              >
+                <div class="star-card-header">
+                  <span class="star-nickname">{item.nickname}</span>
+                </div>
+                <div class="star-card-content">
+                  <span>{item.content}</span>
+                </div>
+              </a>
+            ))}
+          </div>
+        </section>
+      ))
+    }
+  </div>
+</Layout>
+
+<style>
+  .stars-page {
+    padding: 1.5rem 1.75rem 2.5rem;
+  }
+
+  .stars-header {
+    margin-bottom: 2rem;
+  }
+
+  .stars-header h2 {
+    margin: 0 0 0.5rem;
+    font-size: 1.75rem;
+    color: var(--grey-7);
+  }
+
+  .stars-header p {
+    margin: 0;
+    color: var(--grey-5);
+  }
+
+  .stars-section {
+    margin-bottom: 2.5rem;
+  }
+
+  .stars-section h3 {
+    margin: 0 0 0.75rem;
+    color: var(--grey-7);
+    font-size: 1.2rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--grey-2);
+  }
+
+  .stars-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 0.75rem;
+  }
+
+  .star-card {
+    display: block;
+    padding: 0.75rem 1rem;
+    border-radius: 0.75rem;
+    background: var(--grey-0);
+    border: 1px solid var(--grey-2);
+    text-decoration: none;
+    transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+    box-shadow: 0 2px 8px var(--box-bg-shadow);
+  }
+
+  .star-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px var(--box-bg-shadow);
+    border-color: var(--primary-color);
+  }
+
+  .star-card-header {
+    margin-bottom: 0.25rem;
+  }
+
+  .star-nickname {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--grey-7);
+    transition: color 0.25s ease;
+  }
+
+  .star-card:hover .star-nickname {
+    color: var(--primary-color);
+  }
+
+  .star-card-content {
+    font-size: 0.8rem;
+    color: var(--grey-5);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  @media (max-width: 567px) {
+    .stars-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .stars-page {
+      padding: 1.25rem 1rem 2rem;
+    }
+  }
+</style>
