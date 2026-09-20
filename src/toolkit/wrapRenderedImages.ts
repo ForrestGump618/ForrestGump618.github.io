@@ -3,6 +3,9 @@ const IMAGE_TAG_PATTERN = /<img(?<attributes>[^>]*?)\s*\/?>/g;
 // 提取 title 属性（双引号或单引号，非空）
 const TITLE_PATTERN = /\btitle=(?<quote>["'])(?<title>[^"']+)\k<quote>/i;
 
+// 正文图片默认懒加载 + 异步解码，降低首屏与长文页面的加载压力
+const LAZY_ATTRS = ' loading="lazy" decoding="async"';
+
 /**
  * 图片后处理：
  * - 带 title 的图片渲染为 <figure class="md-figure"><image-zoom><img/></image-zoom><figcaption>title</figcaption></figure>
@@ -13,7 +16,10 @@ const TITLE_PATTERN = /\btitle=(?<quote>["'])(?<title>[^"']+)\k<quote>/i;
  */
 export function wrapRenderedImages(html: string): string {
   return html.replace(IMAGE_TAG_PATTERN, (_, attributes = "") => {
-    const img = `<img${attributes}>`;
+    // 已声明 loading 属性的图片不做二次处理
+    const needsLazy = !/\bloading=/i.test(attributes);
+    const lazyAttrs = needsLazy ? LAZY_ATTRS : "";
+    const img = `<img${attributes}${lazyAttrs}>`;
     const titleMatch = attributes.match(TITLE_PATTERN);
     if (!titleMatch) {
       return `<image-zoom>${img}</image-zoom>`;

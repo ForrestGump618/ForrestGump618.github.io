@@ -145,3 +145,42 @@ main {
 .body.md {
   text-autospace: normal;
 }
+
+/* ===== 视觉与可访问性增强 ===== */
+
+/* 明暗切换时背景/文字平滑过渡（尊重系统减少动效设置） */
+@media (prefers-reduced-motion: no-preference) {
+  body,
+  main,
+  #main {
+    transition:
+      background-color 0.3s ease,
+      color 0.3s ease;
+  }
+}
+
+/* 键盘导航焦点可见性 */
+:focus-visible {
+  outline: 0.125rem solid var(--primary-color);
+  outline-offset: 0.125rem;
+  border-radius: 0.25rem;
+}
+
+/* 跳转到主内容（键盘用户，获得焦点时出现） */
+.skip-link {
+  position: fixed;
+  top: -100%;
+  left: 1rem;
+  z-index: var(--z-fullscreen);
+  padding: 0.5rem 1rem;
+  background: var(--grey-0);
+  color: var(--text-color);
+  border-radius: 0.5rem;
+  box-shadow: var(--shadow-card-hover);
+  text-decoration: none;
+  transition: top 0.2s ease;
+}
+
+.skip-link:focus {
+  top: 1rem;
+}

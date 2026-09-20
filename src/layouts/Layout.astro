@@ -22,6 +22,7 @@ import "@/styles/mdx-components.css";
 import "@/styles/icons.css";
 
 import Loading from "@/components/Loading.astro";
+import SEO from "@/components/SEO.astro";
 import Icons from "@/components/Icons.svelte";
 import { covers, resolveFixedCover } from "@/components/Images.astro";
 import FloatingToolbar from "@/components/FloatingToolbar.svelte";
@@ -51,6 +52,16 @@ interface Props {
   postMeta?: PostMeta;
   indexPage?: boolean;
   pageCover?: ImageMetadata | string;
+  /** SEO：页面描述（og:description / twitter:description） */
+  description?: string;
+  /** SEO：覆盖 og:title（默认用 pageTitle；传空字符串回退到站点名） */
+  seoTitle?: string;
+  /** SEO：OG 类型，文章页传 "article" */
+  seoType?: "website" | "article";
+  /** SEO：文章发布/更新时间与标签 */
+  publishedTime?: string;
+  modifiedTime?: string;
+  tags?: string[];
 }
 
 const {
@@ -62,6 +73,12 @@ const {
   postMeta,
   indexPage = false,
   pageCover,
+  description,
+  seoTitle,
+  seoType = "website",
+  publishedTime,
+  modifiedTime,
+  tags,
 } = Astro.props;
 
 const navLinks = themeConfig.nav;
@@ -169,9 +186,38 @@ import SearchPage from "@/components/search/SearchPage.svelte";
 <html lang={currentLocale}>
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
+
+    <!-- 首屏渲染前同步主题，避免暗色用户闪白（FOUC） -->
+    <script is:inline>
+      (function () {
+        try {
+          var stored = localStorage.getItem("shokax-color-scheme");
+          var theme =
+            stored === "light" || stored === "dark"
+              ? stored
+              : window.matchMedia &&
+                  window.matchMedia("(prefers-color-scheme: dark)").matches
+                ? "dark"
+                : "light";
+          document.documentElement.dataset.theme = theme;
+        } catch (e) {
+          /* 存储不可用时保持默认亮色 */
+        }
+      })();
+    </script>
+
+    <SEO
+      title={seoTitle !== undefined ? seoTitle : pageTitle || undefined}
+      description={description}
+      image={resolvedHeaderCover}
+      type={seoType}
+      publishedTime={publishedTime}
+      modifiedTime={modifiedTime}
+      tags={tags}
+    />
 
     <Analytics />
 
@@ -185,6 +231,7 @@ import SearchPage from "@/components/search/SearchPage.svelte";
     data-visibility-title-config={JSON.stringify(visibilityTitleConfig)}
     data-layout-mode={layoutMode}
   >
+    <a class="skip-link" href="#main">跳转到主要内容</a>
     <NavBar
       client:load
       name={siteName}

@@ -11,6 +11,27 @@
   overflow-wrap: break-word;
 }
 
+/* 排版微调：标题避免孤行断行，段落优化换行位置（渐进增强） */
+.md h1,
+.md h2,
+.md h3,
+.md h4,
+.md h5,
+.md h6 {
+  text-wrap: balance;
+}
+
+.md p {
+  text-wrap: pretty;
+}
+
+/* 正文图片：圆角与柔和投影，与灯箱交互一致 */
+.md .md-figure img,
+.md > image-zoom > img {
+  border-radius: 0.5rem;
+  box-shadow: var(--shadow-card-soft);
+}
+
 .md :not(pre) > code,
 .md li code,
 .md td code,

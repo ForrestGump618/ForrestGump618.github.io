@@ -7,6 +7,7 @@ date: 2024-05-03
 categories:
   - 生物信息学
 description: LINGER（LIfelong neural Network for GEne Regulation，即终生基因调控神经网络）是一种新颖的方法，用于从单细胞多组学数据中推断基因调控网络（GRN）。
+cover: ./LINGER.png
 ---
 # 前言
 

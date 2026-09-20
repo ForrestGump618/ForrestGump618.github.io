@@ -328,6 +328,10 @@ const postMeta = {
   wordCount,
   readTime,
 };
+
+// SEO：文章描述（与 meta description 同源）
+const postDescription =
+  post.data.description || post.body?.slice(0, 150).replace(/\s+/g, " ");
 ---
 
 <Layout
@@ -338,6 +342,13 @@ const postMeta = {
   pageTitle={post.data.title}
   postMeta={postMeta}
   pageCover={post.data.cover}
+  description={postDescription}
+  seoType="article"
+  publishedTime={new Date(post.data.date).toISOString()}
+  modifiedTime={post.data.updated
+    ? new Date(post.data.updated).toISOString()
+    : undefined}
+  tags={post.data.tags}
 >
   <Fragment slot="head">
     <meta

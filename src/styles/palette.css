@@ -1,4 +1,7 @@
 :root {
+  /* 原生控件（滚动条/表单）跟随明暗模式 */
+  color-scheme: light;
+
   --grey-0: oklch(1 0 0);
   --grey-1: oklch(0.995 0 0);
   --grey-2: oklch(0.975 0 0);
@@ -185,6 +188,9 @@
 }
 
 :root[data-theme="dark"] {
+  /* 原生控件（滚动条/表单）跟随明暗模式 */
+  color-scheme: dark;
+
   --grey-0: oklch(0.252 0 0);
   --grey-1: oklch(0.283 0.011 264);
   --grey-2: oklch(0.361 0 0);
