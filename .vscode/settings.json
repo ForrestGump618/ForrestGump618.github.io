@@ -1,0 +1,7 @@
+{
+  "i18n-ally.localesPaths": [
+    "src/i18n",
+    "old_project/hexo-theme-shokaX/languages",
+    "src/i18n/locales"
+  ]
+}

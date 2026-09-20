@@ -1,0 +1,1 @@
+var e=[],t=new Set,n={get(){return e},set(n){e=n,t.forEach(e=>{e(n)})},clear(){e=[],t.forEach(e=>{e([])})},subscribe(n){return t.add(n),n(e),()=>t.delete(n)}};export{n as t};
