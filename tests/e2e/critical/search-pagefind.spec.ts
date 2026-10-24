@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { POSTS, ROUTES, SEARCH_TERMS } from "../support/routes";
+import { ROUTES, SEARCH_TERMS } from "../support/routes";
 import { openSearchDialog } from "../support/search";
 
 async function openSearchPanel(page: import("@playwright/test").Page) {
@@ -15,35 +15,38 @@ async function openSearchPanel(page: import("@playwright/test").Page) {
 test("@critical 搜索可命中公开文章", async ({ page }) => {
   const searchInput = await openSearchPanel(page);
 
-  await searchInput.fill(SEARCH_TERMS.publicPostTitle);
+  await searchInput.fill(SEARCH_TERMS.heart);
 
-  await expect
-    .poll(async () => {
-      return page
-        .locator("pagefind-results a", {
-          hasText: SEARCH_TERMS.publicPostTitle,
-        })
-        .count();
-    })
-    .toBeGreaterThan(0);
+  const results = page.locator("pagefind-results a");
+  await expect.poll(async () => results.count()).toBeGreaterThan(0);
+  await expect(results.first()).toContainText(SEARCH_TERMS.heart);
 });
 
-test("@critical 搜索结果排除加密文章", async ({ page }) => {
+test("@critical 搜索结果不包含草稿文章", async ({ page }) => {
   const searchInput = await openSearchPanel(page);
 
-  await searchInput.fill(SEARCH_TERMS.encryptedPostTitle);
+  await searchInput.fill(SEARCH_TERMS.draftTitle);
 
-  await expect
-    .poll(async () => {
-      return page.locator(`pagefind-results a[href*="${POSTS.encryptedTest}"]`).count();
-    })
-    .toBe(0);
+  const draftResult = page.locator('pagefind-results a[href*="深度学习笔记九"]');
+  await expect.poll(async () => draftResult.count()).toBe(0);
+});
 
-  await searchInput.fill(SEARCH_TERMS.encryptedOnlyText);
+test("@critical 搜索结果可点击进入文章", async ({ page }) => {
+  const searchInput = await openSearchPanel(page);
 
-  await expect
-    .poll(async () => {
-      return page.locator(`pagefind-results a[href*="${POSTS.encryptedTest}"]`).count();
-    })
-    .toBe(0);
+  await searchInput.fill(SEARCH_TERMS.heart);
+
+  const firstResult = page.locator("pagefind-results a").first();
+  await expect(firstResult).toBeVisible();
+
+  const href = await firstResult.getAttribute("href");
+  expect(href).toBeTruthy();
+
+  if (!href) {
+    return;
+  }
+
+  await firstResult.click();
+  await expect(page).toHaveURL(/\/posts\//);
+  await expect(page.locator("article.post h1").first()).toBeVisible();
 });

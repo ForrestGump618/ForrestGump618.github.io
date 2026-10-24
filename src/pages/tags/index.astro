@@ -1,84 +1,169 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import { getCollection } from "astro:content";
-import { generateTagCloud } from "@/toolkit/posts/generateTagCloud";
 import { toTagHref } from "@/toolkit/posts/url";
 import { t } from "@/i18n";
-import themeConfig from "@/theme.config";
-import "../../styles/tags.css";
 
-// Get all published posts
 const allPosts = await getCollection("posts");
 const publishedPosts = allPosts.filter((post) => !post.data.draft);
 
-// Collect all tags with their counts
-interface TagCount {
+// 统计标签出现次数，并记录每个标签最近的一篇文章，便于浏览
+interface TagEntry {
   name: string;
   count: number;
+  latestTitle: string;
+  latestHref: string;
 }
 
-const tagMap = new Map<string, number>();
+const tagMap = new Map<string, { count: number; latest?: (typeof allPosts)[number] }>();
 
-publishedPosts.forEach((post) => {
-  const tags = post.data.tags || [];
-  tags.forEach((tag) => {
-    tagMap.set(tag, (tagMap.get(tag) || 0) + 1);
-  });
-});
+for (const post of publishedPosts) {
+  for (const tag of post.data.tags || []) {
+    const entry = tagMap.get(tag) ?? { count: 0 };
+    entry.count += 1;
+    if (
+      !entry.latest ||
+      entry.latest.data.date.getTime() < post.data.date.getTime()
+    ) {
+      entry.latest = post;
+    }
+    tagMap.set(tag, entry);
+  }
+}
 
-// Convert to array and generate tag cloud
-const tags: TagCount[] = Array.from(tagMap.entries()).map(([name, count]) => ({
-  name,
-  count,
-}));
+const tags: TagEntry[] = Array.from(tagMap.entries())
+  .map(([name, entry]) => ({
+    name,
+    count: entry.count,
+    latestTitle: entry.latest?.data.title ?? "",
+    latestHref: entry.latest ? `/posts/${entry.latest.id.split("/").map(encodeURIComponent).join("/")}/` : "/",
+  }))
+  .toSorted((a, b) => b.count - a.count || a.name.localeCompare(b.name, "zh"));
 
-// Generate tag cloud with colors and font sizes
-const tagCloud = generateTagCloud(tags, {
-  minFontSize: 12,
-  maxFontSize: 30,
-  startColor: themeConfig.tagCloud?.startColor,
-  endColor: themeConfig.tagCloud?.endColor,
-  limit: 200,
-});
-
-// Sort tag cloud alphabetically for display
-const sortedTagCloud = [...tagCloud].toSorted((a, b) =>
-  a.name.localeCompare(b.name),
-);
-
-// Total tag count
 const totalTags = tags.length;
-
+const maxCount = Math.max(1, ...tags.map((tag) => tag.count));
 ---
 
-<Layout pageTitle={t("tag.title")}>
-  <div class="wrap">
-    <div class="tag-cloud-container">
-      <h2 class="item header">
-        <a href="/">{t("nav.home")}</a>
-        <small>/</small>
-        {t("common.total")}
-        {totalTags}
-        {t("tag.title")}
-      </h2>
+<Layout
+  pageTitle={t("tag.title")}
+  description={`Echo 的 ${totalTags} 个标签，按使用频次排列。`}
+>
+  <div class="wrap tags-page">
+    <p class="tags-summary">
+      {t("common.total")} <strong>{totalTags}</strong> 个标签，覆盖 {publishedPosts.length} 篇文章。
+    </p>
 
-      <div class="tag-cloud">
-        {
-          sortedTagCloud.map((tag) => (
-            <a
-              href={toTagHref(tag.name)}
-              aria-label={`${tag.name} 标签`}
-              class="tag-cloud-item"
-              style={`font-size: ${tag.fontSize}px; color: ${tag.color};`}
-              title={`${tag.name} (${tag.count})`}
-            >
-              <i class="i-ri-price-tag-3-line" />
-              {tag.name}
-              <span class="tag-count">({tag.count})</span>
+    <ul class="tag-list">
+      {
+        tags.map((tag) => (
+          <li class="tag-list__item">
+            <a class="tag-list__link" href={toTagHref(tag.name)}>
+              <span class="tag-list__name">{tag.name}</span>
+              <span class="tag-list__count">{tag.count}</span>
+              <span class="tag-list__bar" aria-hidden="true">
+                <span style={`--tag-weight: ${(tag.count / maxCount) * 100}%`} />
+              </span>
+              {tag.latestTitle && (
+                <span class="tag-list__latest">{tag.latestTitle}</span>
+              )}
             </a>
-          ))
-        }
-      </div>
-    </div>
+          </li>
+        ))
+      }
+    </ul>
   </div>
 </Layout>
+
+<style>
+  .tags-page {
+    padding-top: clamp(1rem, 3vw, 2rem);
+  }
+
+  .tags-summary {
+    margin: 0 0 1.75rem;
+    font-family: var(--font-sans, system-ui, sans-serif);
+    font-size: 0.82rem;
+    color: var(--text-color-subtle, #8a857c);
+  }
+
+  .tags-summary strong {
+    font-weight: 600;
+    color: var(--text-color, #23211d);
+  }
+
+  .tag-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr));
+    gap: 0.75rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .tag-list__link {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: baseline;
+    gap: 0.1rem 0.75rem;
+    padding: 1rem 1.15rem 1.1rem;
+    overflow: hidden;
+    border: 1px solid var(--hairline, rgb(0 0 0 / 8%));
+    border-radius: var(--radius-sm, 4px);
+    background: var(--surface-raised, #fff);
+    text-decoration: none;
+    color: inherit;
+    transition:
+      border-color 0.18s ease,
+      background-color 0.18s ease;
+  }
+
+  .tag-list__link:hover {
+    border-color: color-mix(in oklab, var(--primary-color, #7c3b52) 35%, transparent);
+    background: var(--surface-subtle, #faf8f4);
+  }
+
+  .tag-list__name {
+    font-family: var(--font-serif, Georgia, "Noto Serif SC", serif);
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.5;
+    color: var(--text-color, #23211d);
+    overflow-wrap: break-word;
+  }
+
+  .tag-list__count {
+    font-family: var(--font-sans, system-ui, sans-serif);
+    font-size: 0.72rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--primary-color, #7c3b52);
+  }
+
+  .tag-list__bar {
+    grid-column: 1 / -1;
+    display: block;
+    height: 2px;
+    margin-top: 0.35rem;
+    background: var(--hairline, rgb(0 0 0 / 8%));
+  }
+
+  .tag-list__bar > span {
+    display: block;
+    width: var(--tag-weight, 0%);
+    height: 100%;
+    background: color-mix(in oklab, var(--primary-color, #7c3b52) 55%, transparent);
+  }
+
+  .tag-list__latest {
+    grid-column: 1 / -1;
+    margin-top: 0.3rem;
+    overflow: hidden;
+    font-family: var(--font-sans, system-ui, sans-serif);
+    font-size: 0.72rem;
+    line-height: 1.6;
+    color: var(--text-color-subtle, #8a857c);
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+  }
+</style>

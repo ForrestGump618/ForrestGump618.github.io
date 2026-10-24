@@ -1,22 +1,20 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+import PostList from "@/components/post/PostList.astro";
 import { getCollection } from "astro:content";
-import { toCategoryHref, toPostHref, toTagSlug } from "@/toolkit/posts/url";
+import { toTagSlug } from "@/toolkit/posts/url";
 import { t } from "@/i18n";
-import "../../styles/collapse.css";
 
 export async function getStaticPaths() {
   const allPosts = await getCollection("posts");
   const publishedPosts = allPosts.filter((post) => !post.data.draft);
 
-  // Collect all unique tags
   const tagSet = new Set<string>();
   publishedPosts.forEach((post) => {
     const tags = post.data.tags || [];
     tags.forEach((tag) => tagSet.add(tag));
   });
 
-  // Generate paths for each tag
   return Array.from(tagSet).map((tag) => ({
     params: { tag: toTagSlug(tag) },
     props: { tag },
@@ -29,86 +27,58 @@ interface Props {
 
 const { tag } = Astro.props;
 
-// Get all published posts
 const allPosts = await getCollection("posts");
 const publishedPosts = allPosts.filter((post) => !post.data.draft);
 
-// Filter posts that have this tag
-const postsWithTag = publishedPosts.filter((post) => {
-  const tags = post.data.tags || [];
-  return tags.includes(tag);
-});
-
-// Sort posts by date descending (newest first)
-const sortedPosts = postsWithTag.toSorted(
-  (a, b) => b.data.date.getTime() - a.data.date.getTime(),
-);
-
-// Helper to format date
-function formatDate(date: Date): string {
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
-}
-
-// Get last category name for display
-function getLastCategory(categories: string[]): string | undefined {
-  return categories.length > 0 ? categories.at(-1) : undefined;
-}
+const postsWithTag = publishedPosts
+  .filter((post) => (post.data.tags || []).includes(tag))
+  .toSorted((a, b) => b.data.date.getTime() - a.data.date.getTime());
 ---
 
-<Layout pageTitle={tag}>
-  <div class="wrap">
-    <div class="timeline">
-      <h2 class="item header">
-        <a href="/tags/">{t("tags.allTags")}</a>
-        <small>/</small>
-        {tag}
-        <small>{t("tags.tagged")}</small>
-      </h2>
+<Layout
+  pageTitle={tag}
+  eyebrow="标签"
+  description={`带有「${tag}」标签的 ${postsWithTag.length} 篇文章。`}
+>
+  <div class="wrap taxonomy-page">
+    <nav class="taxonomy-nav" aria-label="标签路径">
+      <a href="/tags/">{t("tags.allTags")}</a>
+      <span aria-hidden="true">/</span>
+      <span class="taxonomy-nav__current">#{tag}</span>
+    </nav>
 
-      {
-        sortedPosts.map((post) => {
-          const lastCategory = getLastCategory(post.data.categories || []);
-
-          return (
-            <article
-              class="item normal"
-              itemscope
-              itemtype="http://schema.org/Article"
-            >
-              <div class="meta">
-                <time
-                  itemprop="dateCreated"
-                  datetime={post.data.date.toISOString()}
-                >
-                  {formatDate(post.data.date)}
-                </time>
-              </div>
-
-              {lastCategory && (
-                <div class="meta">
-                  <span>
-                    <a href={toCategoryHref(lastCategory)}>{lastCategory}</a>
-                  </span>
-                </div>
-              )}
-
-              <div class="title">
-                <a
-                  href={toPostHref(post.id)}
-                  itemprop="url"
-                >
-                  <span itemprop="name">
-                    {post.data.title || t("post.noContent")}
-                  </span>
-                </a>
-              </div>
-            </article>
-          );
-        })
-      }
-    </div>
+    <PostList posts={postsWithTag} />
   </div>
 </Layout>
+
+<style>
+  .taxonomy-page {
+    max-width: 56rem;
+    padding-top: clamp(1rem, 3vw, 2rem);
+  }
+
+  .taxonomy-nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.45rem;
+    margin-bottom: 1.75rem;
+    font-family: var(--font-sans, system-ui, sans-serif);
+    font-size: 0.76rem;
+    color: var(--text-color-subtle, #8a857c);
+  }
+
+  .taxonomy-nav a {
+    border: 0;
+    color: var(--text-color-muted, #6b675f);
+    text-decoration: none;
+  }
+
+  .taxonomy-nav a:hover {
+    color: var(--primary-color, #7c3b52);
+  }
+
+  .taxonomy-nav__current {
+    color: var(--text-color, #23211d);
+  }
+</style>

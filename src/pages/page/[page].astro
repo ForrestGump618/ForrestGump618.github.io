@@ -1,7 +1,9 @@
 ---
+/**
+ * 首页分页（/page/2..N）：复用首页的编辑式列表。
+ */
 import Layout from "@/layouts/Layout.astro";
-import IndexContent from "@/components/IndexContent.astro";
-import Pagination from "@/components/Pagination.astro";
+import HomeContent from "@/components/home/HomeContent.astro";
 import { getCollection } from "astro:content";
 import themeConfig from "@/theme.config";
 import type { CollectionEntry } from "astro:content";
@@ -18,10 +20,9 @@ export const getStaticPaths = (async ({ paginate }) => {
         new Date(b.data.date).getTime() - new Date(a.data.date).getTime(),
     );
 
-  const pageSize = themeConfig.home?.pageSize ?? 10;
+  const pageSize = themeConfig.home?.pageSize ?? 9;
 
-  // Astro 原生分页：生成 /page/1, /page/2 ...
-  // 但我们只输出 /page/2..N，第一页交给 src/pages/index.astro（输出 index.html）
+  // 第 1 页由 src/pages/index.astro 输出，这里只生成 /page/2..N
   const pages = paginate(regularPosts, { pageSize });
   return pages.filter((p) => p.params.page !== "1");
 }) satisfies GetStaticPaths;
@@ -34,42 +35,28 @@ const { page } = Astro.props as {
   };
 };
 
-const pageTitle = `${themeConfig.brand?.logo || ""} = ${themeConfig.brand?.title || ""} = ${themeConfig.brand?.subtitle || ""} - 第${page.currentPage}页`;
-
-// Build pagination navigation
-const paginationNavigation = {
-  prevUrl:
-    page.currentPage > 1
-      ? page.currentPage === 2
-        ? "/"
-        : `/page/${page.currentPage - 1}/`
-      : undefined,
-  nextUrl:
-    page.currentPage < page.lastPage
-      ? `/page/${page.currentPage + 1}/`
-      : undefined,
-};
+const brandConfig = themeConfig.brand ?? {};
+const pageTitle = `${brandConfig.title || "Echo"} — ${brandConfig.subtitle || "Learn-Record"} · 第 ${page.currentPage} 页`;
 ---
 
-<Layout
-  pageTitle={pageTitle}
-  indexPage={true}
-  navigation={paginationNavigation}
->
+<Layout pageTitle={pageTitle} indexPage={true} seoTitle={pageTitle}>
   <Fragment slot="head">
     <meta name="description" content={themeConfig.sidebar?.description} />
   </Fragment>
 
-  <IndexContent
-    posts={page.data}
-    stickyPosts={[]}
-    categories={[]}
-    isFirstPage={false}
-  />
-  <Pagination
-    currentPage={page.currentPage}
-    lastPage={page.lastPage}
-    firstPageHref="/"
-    routePrefix="/page"
-  />
+  <div class="home wrap">
+    <HomeContent
+      posts={page.data}
+      stickyPosts={[]}
+      categories={[]}
+      pageInfo={{ currentPage: page.currentPage, lastPage: page.lastPage }}
+      isFirstPage={false}
+    />
+  </div>
 </Layout>
+
+<style>
+  .home {
+    padding-top: clamp(2.5rem, 6vw, 4rem);
+  }
+</style>

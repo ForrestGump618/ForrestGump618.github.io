@@ -7,14 +7,16 @@ tags:
   - Docker
 categories:
   - 开源
-description: "Ciphey 旨在成为一种工具，用于自动执行许多解密和解码，例如多种基本编码，经典密码，哈希或更高级的加密技术。\r\r如果您对密码学不太了解，或者想在自己进行密文处理之前快速检查密文，那么 Ciphey 会是一个有用的工具。"
+description: "Ciphey 旨在成为一种工具，用于自动执行许多解密和解码，例如多种基本编码，经典密码，哈希或更高级的加密技术。如果您对密码学不太了解，或者想在自己进行密文处理之前快速检查密文，那么 Ciphey 会是一个有用的工具。"
 cover: ./index.gif
 ---
+
 # 前言
 
 Ciphey是一款自动化的解密和解码工具，它可以帮助用户快速识别和解密被加密的数据。Ciphey 使用一个带有密文检测接口(_Cipher Detection Interface_)的定制 AI 模型(_AuSearch_)来估测一个东西是用什么方式加密的。以及一个定制过的自然语言处理接口(_Language Checker Interface_)来检测给定文本何时变为纯文本。
 
 ![使用示例](./index.gif)
+
 # Docker安装和使用
 
 ## 安装Docker Engine
@@ -27,15 +29,15 @@ Ciphey是一款自动化的解密和解码工具，它可以帮助用户快速�
 
 ### 支持的平台
 
-| 平台              | x86_64 / amd64 | arm64 / aarch64 | arm (32-bit) | ppc64le | s390x |
+| 平台            | x86_64 / amd64 | arm64 / aarch64 | arm (32-bit) | ppc64le | s390x |
 | --------------- | -------------- | --------------- | ------------ | ------- | ----- |
-| CentOS          | ✅              | ✅               |              | ✅       |       |
-| Debian          | ✅              | ✅               | ✅            | ✅       |       |
-| Fedora          | ✅              | ✅               |              | ✅       |       |
-| Raspberry Pi OS |                |                 | ✅            |         |       |
-| RHEL            |                |                 |              |         | ✅     |
-| SLES            |                |                 |              |         | ✅     |
-| Ubuntu          | ✅              | ✅               | ✅            | ✅       | ✅     |
+| CentOS          | ✅             | ✅              |              | ✅      |       |
+| Debian          | ✅             | ✅              | ✅           | ✅      |       |
+| Fedora          | ✅             | ✅              |              | ✅      |       |
+| Raspberry Pi OS |                |                 | ✅           |         |       |
+| RHEL            |                |                 |              |         | ✅    |
+| SLES            |                |                 |              |         | ✅    |
+| Ubuntu          | ✅             | ✅              | ✅           | ✅      | ✅    |
 
 对于其他Linux发行版，Docker提供了二进制文件供手动安装。这些二进制文件是静态链接的，可以在任何Linux发行版上使用。
 

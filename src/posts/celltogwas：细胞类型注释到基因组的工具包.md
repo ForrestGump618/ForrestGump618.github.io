@@ -8,11 +8,13 @@ categories:
   - 生物信息学
 description: 本工具包用于从基因组注释文件中提取基因信息，合并基因区间，基于细胞类型和窗口大小生成基因组范围，以及注释GWAS（全基因组关联研究）数据。
 ---
+
 ## celltogwas
 
 This code is a toolkit for genomic analysis. It includes several functions and helper functions to extract gene information from a genomic annotation file, merge gene intervals, generate genomic ranges based on cell types and window size, and annotate GWAS (Genome-Wide Association Study) data.
 
 ## Explanation of each function
+
 **extract_gene_info(gtf_file)**: Extracts gene information from a genomic annotation file. It opens a gzip-compressed file, reads it line by line, and extracts gene name, chromosome, start position, and end position from each line. The extracted data is then stored in a Pandas DataFrame and returned.
 
 **merge_intervals(intervals)**: Merges overlapping intervals. This function takes a list of intervals as input and merges overlapping intervals into larger intervals. It first sorts the intervals based on their start positions, then iterates through the intervals. If the current interval does not overlap with the merged interval, it adds the current interval to the merged list. Otherwise, it updates the end position of the merged interval. Finally, it returns the merged interval list.

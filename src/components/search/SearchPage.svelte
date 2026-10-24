@@ -281,20 +281,21 @@
     aria-modal="true"
     aria-label="Search"
   >
-    <div class="search-panel__ornament" aria-hidden="true">
-      <span class="search-panel__icon i-ri-search-line"></span>
-      <span class="search-panel__glow"></span>
+    <div class="search-panel__bar">
+      <span class="search-panel__label">
+        <span class="search-panel__icon i-ri-search-line" aria-hidden="true"></span>
+        全站搜索
+      </span>
+      <button
+        type="button"
+        class="search-panel__close"
+        onclick={closeSearch}
+        aria-label="Close search"
+        aria-controls="pagefind-results-region"
+      >
+        <span class="i-ri-close-line" aria-hidden="true"></span>
+      </button>
     </div>
-
-    <button
-      type="button"
-      class="search-panel__close"
-      onclick={closeSearch}
-      aria-label="Close search"
-      aria-controls="pagefind-results-region"
-    >
-      <span class="i-ri-close-line"></span>
-    </button>
 
     <div class="search-panel__body">
       {#if isDev}
@@ -313,7 +314,10 @@
           ></pagefind-config>
 
           <div class="pagefind-component-header">
-            <pagefind-input instance={pagefindInstanceName} debounce={200}
+            <pagefind-input
+              instance={pagefindInstanceName}
+              debounce={200}
+              placeholder="搜索标题、摘要或正文…"
             ></pagefind-input>
           </div>
 
@@ -339,340 +343,237 @@
 </div>
 
 <style>
+.search-shell {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-search-overlay);
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: clamp(1rem, 7vh, 4.5rem) 1rem 1.5rem;
+  pointer-events: none;
+}
+
+.search-shell[hidden] {
+  display: none;
+}
+
+.search-shell-visible {
+  pointer-events: auto;
+}
+
+.search-overlay {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  padding: 0;
+  background: color-mix(in oklab, var(--grey-9) 34%, transparent);
+  opacity: 0;
+  cursor: default;
+  transition: opacity var(--dur-2) var(--ease-out);
+}
+
+.search-shell-visible .search-overlay {
+  opacity: 1;
+}
+
+.pagefind-panel {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  width: min(100%, 46rem);
+  max-height: min(82vh, 54rem);
+  overflow: hidden;
+  background: var(--surface-raised);
+  border: 1px solid var(--border-color-muted);
+  border-radius: var(--radius-lg);
+  box-shadow:
+    0 32px 80px -44px rgb(28 24 20 / 42%),
+    0 6px 20px -12px rgb(28 24 20 / 16%);
+  opacity: 0;
+  transform: translateY(0.6rem);
+  transition:
+    opacity var(--dur-2) var(--ease-out),
+    transform var(--dur-2) var(--ease-out);
+}
+
+.search-shell-visible .pagefind-panel {
+  opacity: 1;
+  transform: none;
+}
+
+.search-panel__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.7rem 0.75rem 0.7rem 1.2rem;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.search-panel__label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-color-muted);
+  font-size: var(--text-2xs);
+  letter-spacing: var(--tracking-wider);
+  text-transform: uppercase;
+}
+
+.search-panel__icon {
+  font-size: 0.95rem;
+  color: var(--text-color-subtle);
+}
+
+.search-panel__close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--text-color-muted);
+  font-size: 1.05rem;
+  cursor: pointer;
+  transition:
+    background-color var(--dur-1) var(--ease-out),
+    color var(--dur-1) var(--ease-out);
+}
+
+.search-panel__close:hover {
+  background: var(--surface-subtle);
+  color: var(--text-color);
+}
+
+.search-panel__close:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+.search-panel__body {
+  display: flex;
+  flex-direction: column;
+  padding: 1rem 1.2rem 1.15rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
+
+.dev-tip {
+  padding: 0.85rem 1rem;
+  border: 1px dashed var(--border-color-muted);
+  border-radius: var(--radius-sm);
+  color: var(--text-color-muted);
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+}
+
+.pagefind-component-shell {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  --pf-text: var(--text-color);
+  --pf-text-secondary: var(--text-color-muted);
+  --pf-text-muted: var(--text-color-subtle);
+  --pf-background: var(--surface-raised);
+  --pf-border: var(--border-color-muted);
+  --pf-border-focus: var(--primary-color);
+  --pf-skeleton: var(--surface-subtle);
+  --pf-skeleton-shine: var(--surface-page);
+  --pf-hover: var(--surface-subtle);
+  --pf-mark: inherit;
+  --pf-scroll-shadow: transparent;
+  --pf-shadow-sm: var(--shadow-card-base);
+  --pf-shadow-md: var(--shadow-card-hover);
+  --pf-shadow-lg: var(--shadow-lg);
+  --pf-outline-focus: var(--primary-color);
+  --pf-outline-width: 2px;
+  --pf-outline-offset: 2px;
+  --pf-font: var(--font-sans);
+  --pf-input-height: 2.75rem;
+  --pf-input-font-size: 1rem;
+  --pf-summary-font-size: 0.8rem;
+  --pf-result-title-font-size: 0.98rem;
+  --pf-result-excerpt-font-size: 0.84rem;
+  --pf-results-gap: 0.45rem;
+  --pf-border-radius: var(--radius-md);
+  --pf-modal-backdrop: rgb(20 18 16 / 40%);
+}
+
+.pagefind-component-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.pagefind-component-results {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-height: min(48vh, 32rem);
+  overflow-y: auto;
+  padding-right: 0.15rem;
+  overscroll-behavior: contain;
+}
+
+.pagefind-component-footer {
+  padding-top: 0.6rem;
+  border-top: 1px solid var(--hairline);
+  color: var(--text-color-subtle);
+  font-size: var(--text-2xs);
+}
+
+.pagefind-component-shell :global(pagefind-keyboard-hints) {
+  display: block;
+  color: var(--text-color-subtle);
+  font-size: 0.72rem;
+}
+
+.pagefind-component-shell :global(pagefind-results a) {
+  border-radius: var(--radius-sm);
+}
+
+.pagefind-component-shell :global(pagefind-results a:focus-visible) {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+.pagefind-component-shell :global(pagefind-results mark) {
+  background: transparent;
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+@media (max-width: 1023px) {
   .search-shell {
-    position: fixed;
-    inset: 0;
-    z-index: var(--z-search-overlay);
-    display: flex;
-    align-items: flex-start;
-    justify-content: center;
-    padding: 4.5rem 1rem 1rem;
-    pointer-events: none;
-  }
-
-  .search-shell[hidden] {
-    display: none !important;
-  }
-
-  .search-shell-visible {
-    pointer-events: auto;
-  }
-
-  .search-overlay {
-    position: absolute;
-    inset: 0;
-    border: 0;
-    padding: 0;
-    cursor: pointer;
-    background:
-      radial-gradient(circle at top, var(--grey-1-a3), transparent 55%),
-      var(--search-overlay-bg);
-    backdrop-filter: blur(14px) saturate(140%);
-    /* 透明度直接作用于 overlay 自身，使 backdrop-filter 能随 opacity 平滑插值，
-       避免父级 group opacity 导致模糊效果在动画末尾才突现的滞后感 */
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-
-  .search-shell-visible .search-overlay {
-    opacity: 1;
+    padding: 0.85rem 0.75rem 1rem;
   }
 
   .pagefind-panel {
-    position: relative;
-    z-index: var(--z-content);
-    display: flex;
-    min-height: min(32rem, calc(100vh - 6rem));
-    max-height: calc(100vh - 6rem);
-    width: min(100%, 72rem);
-    flex-direction: column;
-    overflow: hidden;
-    border: 1px solid color-mix(in srgb, var(--grey-4) 20%, transparent);
-    border-radius: 1.25rem;
-    background: linear-gradient(
-      145deg,
-      color-mix(in srgb, var(--grey-1) 94%, var(--color-cyan-light) 6%),
-      color-mix(in srgb, var(--grey-2) 92%, var(--color-pink-light) 8%)
-    );
-    box-shadow: var(--search-panel-shadow), var(--search-panel-inset);
-    backdrop-filter: blur(20px) saturate(180%);
-    opacity: 0;
-    transform: translateY(-1.5rem) scale(0.98);
-    transition:
-      transform 0.35s ease,
-      box-shadow 0.35s ease,
-      opacity 0.3s ease;
-  }
-
-  .search-shell-visible .pagefind-panel {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-    box-shadow:
-      var(--search-panel-shadow-active), var(--search-panel-inset-active);
-  }
-
-  .search-panel__ornament {
-    position: absolute;
-    left: 1.5rem;
-    top: 1.25rem;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    color: var(--color-red);
-    pointer-events: none;
-  }
-
-  .search-panel__icon {
-    display: inline-flex;
-    font-size: 1.1rem;
-    opacity: 0.95;
-  }
-
-  .search-panel__glow {
-    height: 0.625rem;
-    width: 4.5rem;
-    border-radius: 999px;
-    background: linear-gradient(90deg, var(--color-red), transparent);
-    opacity: 0.5;
-  }
-
-  .search-panel__close {
-    position: absolute;
-    right: 1rem;
-    top: 1rem;
-    z-index: var(--z-elevated);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    height: 2.75rem;
-    width: 2.75rem;
-    border: 1px solid color-mix(in srgb, var(--grey-4) 24%, transparent);
-    border-radius: 999px;
-    background: color-mix(in srgb, var(--grey-1) 82%, transparent);
-    color: var(--text-color);
-    cursor: pointer;
-    transition:
-      transform 0.2s ease,
-      color 0.2s ease,
-      border-color 0.2s ease,
-      background 0.2s ease,
-      box-shadow 0.2s ease;
-  }
-
-  .search-panel__close:hover,
-  .search-panel__close:focus-visible {
-    transform: translateY(-1px) scale(1.03);
-    border-color: color-mix(in srgb, var(--color-red) 30%, var(--grey-4));
-    background: color-mix(in srgb, var(--color-red-a1) 55%, var(--grey-1));
-    color: var(--color-red);
-    box-shadow: var(--search-accent-shadow);
-    outline: none;
+    max-height: min(88vh, 60rem);
   }
 
   .search-panel__body {
-    display: flex;
-    flex: 1;
-    min-height: 0;
-    padding: 1rem;
-    padding-top: 3.75rem;
+    padding: 0.85rem 0.95rem 1rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .pagefind-panel {
+    max-height: calc(100dvh - 2rem);
+    border-radius: var(--radius-md);
   }
 
-  .dev-tip {
-    display: grid;
-    flex: 1;
-    place-items: center;
-    border: 1px dashed color-mix(in srgb, var(--grey-4) 35%, transparent);
-    border-radius: 1rem;
-    background: linear-gradient(
-      145deg,
-      color-mix(in srgb, var(--grey-0) 84%, transparent),
-      color-mix(in srgb, var(--grey-2) 90%, transparent)
-    );
-    color: var(--text-color);
-    line-height: 1.9;
-    padding: 2rem;
-    text-align: center;
-  }
-
-  .pagefind-component-shell {
-    display: flex;
-    flex: 1;
-    min-height: 0;
-    flex-direction: column;
-    width: 100%;
-  }
-
-  .pagefind-component-shell {
-    --pagefind-ui-scale: 1;
-    --pagefind-ui-primary: var(--color-red);
-    --pagefind-ui-text: var(--text-color);
-    --pagefind-ui-secondary: var(--grey-6);
-    --pagefind-ui-accent: color-mix(in srgb, var(--color-red) 24%, transparent);
-    --pagefind-ui-background: color-mix(
-      in srgb,
-      var(--grey-0) 92%,
-      transparent
-    );
-    --pagefind-ui-background-alt: color-mix(
-      in srgb,
-      var(--grey-1) 92%,
-      transparent
-    );
-    --pagefind-ui-border: color-mix(in srgb, var(--grey-4) 25%, transparent);
-    --pagefind-ui-border-focus: color-mix(
-      in srgb,
-      var(--color-red) 34%,
-      var(--grey-4)
-    );
-    --pagefind-ui-tag: color-mix(in srgb, var(--grey-2) 90%, transparent);
-    --pagefind-ui-link: var(--text-color);
-    --pagefind-ui-link-hover: var(--color-red);
-    --pagefind-ui-border-width: 1px;
-    --pagefind-ui-border-radius: 0.9rem;
-    --pagefind-ui-font: inherit;
-    --pagefind-ui-muted: var(--grey-5);
-    --pagefind-ui-overlay: transparent;
-    --pagefind-ui-backdrop: transparent;
-    overflow: hidden;
-  }
-
-  :global(:root[data-theme="dark"]) .pagefind-component-shell {
-    --pagefind-ui-primary: color-mix(
-      in srgb,
-      var(--color-red) 88%,
-      #ffffff 12%
-    );
-    --pagefind-ui-text: var(--grey-8);
-    --pagefind-ui-secondary: var(--grey-6);
-    --pagefind-ui-accent: color-mix(in srgb, var(--color-red) 35%, transparent);
-    --pagefind-ui-background: color-mix(
-      in srgb,
-      var(--grey-2) 86%,
-      #000000 14%
-    );
-    --pagefind-ui-background-alt: color-mix(
-      in srgb,
-      var(--grey-3) 82%,
-      #000000 18%
-    );
-    --pagefind-ui-border: color-mix(in srgb, var(--grey-5) 56%, transparent);
-    --pagefind-ui-border-focus: color-mix(
-      in srgb,
-      var(--color-red) 52%,
-      var(--grey-5)
-    );
-    --pagefind-ui-tag: color-mix(in srgb, var(--grey-3) 75%, transparent);
-    --pagefind-ui-link: var(--grey-8);
-    --pagefind-ui-link-hover: color-mix(
-      in srgb,
-      var(--color-red) 84%,
-      #fff 16%
-    );
-    --pagefind-ui-muted: var(--grey-6);
-  }
-
-  .pagefind-component-header {
-    flex: 0 0 auto;
+  .search-panel__bar {
+    padding: 0.6rem 0.6rem 0.6rem 1rem;
   }
 
   .pagefind-component-results {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    min-height: 0;
-    margin-top: 1rem;
-    overflow: auto;
-    overscroll-behavior: contain;
-    scrollbar-width: thin;
-    scrollbar-color: color-mix(in srgb, var(--grey-4) 80%, transparent)
-      transparent;
+    max-height: min(56vh, 30rem);
   }
-
-  .pagefind-component-footer {
-    flex: 0 0 auto;
-    margin-top: 0.8rem;
-    opacity: 0.8;
-  }
-
-  .pagefind-component-shell :global(pagefind-input),
-  .pagefind-component-shell :global(pagefind-summary),
-  .pagefind-component-shell :global(pagefind-results),
-  .pagefind-component-shell :global(pagefind-keyboard-hints) {
-    width: 100%;
-  }
-
-  .pagefind-component-shell :global(pagefind-results a) {
-    color: var(--pagefind-ui-link);
-    transition: color 0.2s ease;
-  }
-
-  .pagefind-component-shell :global(pagefind-results a:hover),
-  .pagefind-component-shell :global(pagefind-results a:focus-visible) {
-    color: var(--pagefind-ui-link-hover);
-  }
-
-  .pagefind-component-shell :global(mark) {
-    border-radius: 0.35rem;
-    background: color-mix(in srgb, var(--color-yellow) 30%, transparent);
-    color: inherit;
-    padding: 0.05rem 0.25rem;
-  }
-
-  @media (max-width: 1023px) {
-    .search-shell {
-      padding-top: 4rem;
-    }
-
-    .pagefind-panel {
-      min-height: min(30rem, calc(100vh - 5rem));
-      max-height: calc(100vh - 5rem);
-      border-radius: 1rem;
-    }
-
-    .search-panel__body {
-      padding: 0.875rem;
-      padding-top: 3.5rem;
-    }
-  }
-
-  @media (max-width: 768px) {
-    .search-shell {
-      padding: 3.5rem 0.75rem 0.75rem;
-    }
-
-    .search-overlay {
-      backdrop-filter: blur(10px) saturate(125%);
-    }
-
-    .pagefind-panel {
-      min-height: calc(100vh - 4.25rem);
-      max-height: calc(100vh - 4.25rem);
-      width: 100%;
-      border-radius: 0.9rem;
-    }
-
-    .search-panel__ornament {
-      left: 1rem;
-      top: 1rem;
-    }
-
-    .search-panel__glow {
-      width: 3rem;
-    }
-
-    .search-panel__close {
-      right: 0.75rem;
-      top: 0.75rem;
-      height: 2.5rem;
-      width: 2.5rem;
-    }
-
-    .search-panel__body {
-      padding-top: 3.25rem;
-    }
-
-    .pagefind-component-footer {
-      margin-top: 0.65rem;
-    }
-  }
+}
 </style>

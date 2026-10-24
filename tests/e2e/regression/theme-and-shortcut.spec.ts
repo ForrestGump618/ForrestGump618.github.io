@@ -1,28 +1,15 @@
 import { expect, test } from "@playwright/test";
 import { ROUTES } from "../support/routes";
 import { openSearchDialog } from "../support/search";
+import { readTheme, toggleTheme } from "../support/theme";
 
 test("@regression 主题切换后刷新仍保持", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto(ROUTES.home);
 
-  const initialTheme = await page.evaluate(() => {
-    return document.documentElement.dataset.theme;
-  });
-
-  await page.getByRole("button", { name: "Toggle theme" }).click();
-
-  await expect
-    .poll(async () => {
-      return page.evaluate(() => {
-        return document.documentElement.dataset.theme;
-      });
-    })
-    .not.toBe(initialTheme);
-
-  const toggledTheme = await page.evaluate(() => {
-    return document.documentElement.dataset.theme;
-  });
+  const initialTheme = await readTheme(page);
+  const toggledTheme = await toggleTheme(page);
+  expect(toggledTheme).not.toBe(initialTheme);
 
   await expect
     .poll(async () => {
@@ -38,14 +25,6 @@ test("@regression 主题切换后刷新仍保持", async ({ page }) => {
     .poll(async () => {
       return page.evaluate(() => {
         return document.documentElement.dataset.theme;
-      });
-    })
-    .toBe(toggledTheme);
-
-  await expect
-    .poll(async () => {
-      return page.evaluate(() => {
-        return window.localStorage.getItem("shokax-color-scheme");
       });
     })
     .toBe(toggledTheme);

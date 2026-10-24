@@ -5,44 +5,40 @@ import Pagination from "@/components/Pagination.astro";
 import { getCollection } from "astro:content";
 import themeConfig from "@/theme.config";
 
-// 获取所有动态
 const allMoments = await getCollection("moments");
-
-// 按时间倒序排序
 const sortedMoments = allMoments.toSorted(
   (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime(),
 );
 
-// 分页设置
 const pageSize = themeConfig.home?.pageSize ?? 10;
 const lastPage = Math.max(1, Math.ceil(sortedMoments.length / pageSize));
-const currentPage = 1;
 const pageMoments = sortedMoments.slice(0, pageSize);
 
-// 分页导航
 const paginationNavigation = {
   prevUrl: undefined,
   nextUrl: lastPage > 1 ? "/moments/page/2/" : undefined,
 };
 
-// 页面标题
-const pageTitle = "动态";
+const description = `记录生活的点滴，共 ${sortedMoments.length} 条动态。`;
 ---
 
 <Layout
-  pageTitle={pageTitle}
-  indexPage={true}
+  pageTitle="动态"
+  eyebrow="Moments"
+  description={description}
   navigation={paginationNavigation}
 >
   <Fragment slot="head">
-    <meta name="description" content="动态 - 记录生活的点滴" />
+    <meta name="description" content={description} />
   </Fragment>
 
-  <MomentsContent moments={pageMoments} />
-  <Pagination
-    currentPage={currentPage}
-    lastPage={lastPage}
-    firstPageHref="/moments/"
-    routePrefix="/moments"
-  />
+  <div class="wrap">
+    <MomentsContent moments={pageMoments} />
+    <Pagination
+      currentPage={1}
+      lastPage={lastPage}
+      firstPageHref="/moments/"
+      routePrefix="/moments"
+    />
+  </div>
 </Layout>

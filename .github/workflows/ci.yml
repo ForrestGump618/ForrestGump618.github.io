@@ -1,4 +1,4 @@
-﻿name: CI
+name: CI
 
 on:
   pull_request:
@@ -14,17 +14,19 @@ permissions:
 jobs:
   quality-and-build:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
 
       - name: Cache Bun dependencies
-        uses: actions/cache@v5
+        uses: actions/cache@v4
         with:
           path: |
             ~/.bun/install/cache
@@ -34,12 +36,10 @@ jobs:
             ${{ runner.os }}-bun-
 
       - name: Install dependencies
-        run: |
-          sudo snap install lychee
-          bun install --frozen-lockfile
+        run: bun install --frozen-lockfile
 
       - name: Cache Playwright browsers
-        uses: actions/cache@v5
+        uses: actions/cache@v4
         with:
           path: ~/.cache/ms-playwright
           key: ${{ runner.os }}-playwright-${{ hashFiles('bun.lock') }}
@@ -61,15 +61,19 @@ jobs:
       - name: Run unit tests
         run: bun run test
 
-      - name: Restore lychee cache
-        uses: actions/cache@v5
+      - name: Cache lychee
+        uses: actions/cache@v4
         with:
           path: .lycheecache
           key: cache-lychee-${{ github.sha }}
           restore-keys: cache-lychee-
 
       - name: Check for broken links
-        run: bun run check-links
+        uses: lycheeverse/lychee-action@v2
+        with:
+          args: ./dist --root-dir ./dist --offline --exclude favicon.svg --cache
+          fail: true
+          cache: true
 
       - name: Run E2E smoke tests
         run: bun run e2e:smoke
@@ -85,7 +89,7 @@ jobs:
 
       - name: Upload Playwright artifacts on failure
         if: failure()
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v4
         with:
           name: playwright-artifacts
           path: |

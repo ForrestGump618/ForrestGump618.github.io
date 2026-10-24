@@ -39,3 +39,6 @@ playwright-report/
 .playwright-mcp
 .lycheecache
 /src/generated/prisma
+
+# local scratch (audit reports, screenshots, logs)
+.scratch/

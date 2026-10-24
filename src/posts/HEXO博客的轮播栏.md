@@ -8,10 +8,10 @@ categories:
   - 开源
 description: HEXO博客的轮播栏的CSS实现。
 ---
+
 ## CSS样式设计
 
 在\\Blog\\themes\\next\\layout\\\_marco下新建carousel.swig，填入这些代码：
-
 
 ```css
 {% if theme.carousel.enable %}
@@ -339,7 +339,7 @@ description: HEXO博客的轮播栏的CSS实现。
 在\\Blog\\themes\\next\\layout下的index.swig，找到`{% block content %}` ;在下方填入：
 
 ```css
-<!--轮播图-->  
+<!--轮播图-->
 {% include '_macro/carousel.swig' %}
 ```
 

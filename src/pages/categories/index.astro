@@ -5,22 +5,20 @@ import {
   formatCategories,
   type Category,
 } from "@/toolkit/posts/formatCategories";
-import { toCategoryHref } from "@/toolkit/posts/url";
+import { toCategoryHref, toPostHref } from "@/toolkit/posts/url";
+import { formatDateShort } from "@/toolkit/posts/formatDate";
 import { t } from "@/i18n";
-import "../../styles/collapse.css";
 
-// Get all published posts
+// 读取全部已发布文章
 const allPosts = await getCollection("posts");
 const publishedPosts = allPosts.filter((post) => !post.data.draft);
 
-// Create a map to track category hierarchy
-// Categories format: ["Parent", "Child", "Grandchild"] - array represents path
+// 建立分类层级（categories 数组表示路径：父 / 子 / 孙）
 const categoryMap = new Map<string, Category>();
 
 publishedPosts.forEach((post) => {
   const categories = post.data.categories || [];
 
-  // Build hierarchy from category array
   categories.forEach((cat, index) => {
     const catId = cat.toLowerCase().replaceAll(/\s+/g, "-");
 
@@ -33,14 +31,13 @@ publishedPosts.forEach((post) => {
       });
     }
 
-    // Set parent relationship (previous category in array is parent)
     if (index > 0) {
       const parentCat = categories[index - 1];
       const parentId = parentCat.toLowerCase().replaceAll(/\s+/g, "-");
       categoryMap.get(catId)!.parent = parentId;
     }
 
-    // Add post to the deepest category only
+    // 文章只计入最深层分类
     if (index === categories.length - 1) {
       const catData = categoryMap.get(catId)!;
       catData.posts.push(post);
@@ -49,7 +46,7 @@ publishedPosts.forEach((post) => {
   });
 });
 
-// Update length counts for parent categories
+// 父分类累加子分类篇数
 categoryMap.forEach((cat) => {
   if (cat.parent) {
     const parent = categoryMap.get(cat.parent);
@@ -59,71 +56,225 @@ categoryMap.forEach((cat) => {
   }
 });
 
-// Convert to array and format with depth 3
-const categoriesArray = Array.from(categoryMap.values());
-const hierarchicalCategories = formatCategories(categoriesArray, { depth: 3 });
-
 type CategoryWithChildren = Category & { children?: CategoryWithChildren[] };
+
+// 展平层级树，用于卡片网格
+function flatten(
+  nodes: CategoryWithChildren[],
+  depth = 0,
+): { cat: CategoryWithChildren; depth: number }[] {
+  const result: { cat: CategoryWithChildren; depth: number }[] = [];
+  for (const node of nodes) {
+    result.push({ cat: node, depth });
+    if (node.children?.length) {
+      result.push(...flatten(node.children, depth + 1));
+    }
+  }
+  return result;
+}
+
+const categoryTree = formatCategories(Array.from(categoryMap.values()), {
+  depth: 3,
+}) as CategoryWithChildren[];
+
+const entries = flatten(categoryTree)
+  .map(({ cat, depth }) => {
+    const recent = cat.posts
+      .toSorted((a, b) => b.data.date.getTime() - a.data.date.getTime())
+      .slice(0, 3)
+      .map((post) => ({
+        title: post.data.title,
+        href: toPostHref(post.id),
+        date: formatDateShort(post.data.date),
+      }));
+
+    return {
+      name: cat.name,
+      href: toCategoryHref(cat.name),
+      count: cat.length,
+      depth,
+      recent,
+    };
+  })
+  .filter((entry) => entry.count > 0)
+  .toSorted((a, b) => b.count - a.count || a.name.localeCompare(b.name, "zh"));
+
+const totalPosts = publishedPosts.length;
 ---
 
-<Layout pageTitle={t("category.title")}>
-  <div class="wrap">
-    <div class="timeline">
-      {
-        hierarchicalCategories.map((cat: CategoryWithChildren) => (
-          <div>
-            <h2 class="item header">
-              <a href={toCategoryHref(cat.name)} itemprop="url">
-                {cat.name}
+<Layout
+  pageTitle={t("category.title")}
+  description={`按主题浏览 Echo 的全部 ${totalPosts} 篇文章，共 ${entries.length} 个分类。`}
+>
+  <div class="wrap categories-page">
+    {
+      entries.length > 0 ? (
+        <ul class="cat-grid">
+          {entries.map((entry) => (
+            <li class="cat-card" data-depth={entry.depth}>
+              <a class="cat-card__link" href={entry.href}>
+                <span class="cat-card__head">
+                  <span class="cat-card__name">{entry.name}</span>
+                  <span class="cat-card__meta">
+                    <span class="cat-card__count">{entry.count}</span>
+                    <span class="cat-card__unit">篇文章</span>
+                  </span>
+                </span>
               </a>
-              <small>( {cat.length} )</small>
-            </h2>
-
-            {cat.children &&
-              cat.children.map((child: CategoryWithChildren) => (
-                <>
-                  <h3 class="item section">
-                    <a href={toCategoryHref(child.name)} itemprop="url">
-                      {child.name}
-                    </a>
-                    <small>( {child.length} )</small>
-                  </h3>
-
-                  {child.children &&
-                    child.children.map((grandchild: CategoryWithChildren) => (
-                      <div class="item normal">
-                        <div class="title">
-                          <a
-                            href={toCategoryHref(grandchild.name)}
-                            itemprop="url"
-                          >
-                            {grandchild.name}
-                          </a>
-                          <small>( {grandchild.length} )</small>
-                        </div>
-                      </div>
-                    ))}
-                </>
-              ))}
-          </div>
-        ))
-      }
-
-      {
-        hierarchicalCategories.length === 0 && (
-          <div class="empty-state">
-            <p>{t("post.noContent")}</p>
-          </div>
-        )
-      }
-    </div>
+              {entry.recent.length > 0 && (
+                <ul class="cat-card__posts">
+                  {entry.recent.map((post) => (
+                    <li>
+                      <a href={post.href}>
+                        <time>{post.date}</time>
+                        <span>{post.title}</span>
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p class="empty-state">{t("post.noContent")}</p>
+      )
+    }
   </div>
 </Layout>
 
 <style>
+  .categories-page {
+    padding-top: clamp(1rem, 3vw, 2rem);
+  }
+
+  .cat-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 20rem), 1fr));
+    gap: 1rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .cat-card {
+    display: flex;
+    flex-direction: column;
+    padding: 1.35rem 1.5rem 1rem;
+    border: 1px solid var(--hairline, rgb(0 0 0 / 8%));
+    border-radius: var(--radius-md, 6px);
+    background: var(--surface-raised, #fff);
+    transition:
+      border-color 0.18s ease,
+      box-shadow 0.18s ease;
+  }
+
+  .cat-card:hover {
+    border-color: var(--line-color, rgb(0 0 0 / 14%));
+    box-shadow: var(--shadow-card-base, 0 1px 2px rgb(0 0 0 / 4%));
+  }
+
+  .cat-card[data-depth="1"] {
+    background: var(--surface-subtle, #f7f5f1);
+  }
+
+  .cat-card__link {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    border: 0;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .cat-card__head {
+    display: flex;
+    align-items: baseline;
+    gap: 0.65rem;
+    width: 100%;
+    min-width: 0;
+  }
+
+  .cat-card__meta {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.28rem;
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+
+  .cat-card__name {
+    font-family: var(--font-serif, Georgia, "Noto Serif SC", serif);
+    font-size: 1.28rem;
+    font-weight: 600;
+    line-height: 1.4;
+    color: var(--text-color, #23211d);
+    transition: color 0.18s ease;
+  }
+
+  .cat-card__link:hover .cat-card__name {
+    color: var(--primary-color, #7c3b52);
+  }
+
+  .cat-card__count {
+    font-family: var(--font-sans, system-ui, sans-serif);
+    font-size: 0.82rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--primary-color, #7c3b52);
+  }
+
+  .cat-card__unit {
+    font-family: var(--font-sans, system-ui, sans-serif);
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    color: var(--text-color-subtle, #8a857c);
+    white-space: nowrap;
+  }
+
+  .cat-card__posts {
+    margin: 1rem 0 0;
+    padding: 0.85rem 0 0;
+    list-style: none;
+    border-top: 1px solid var(--hairline, rgb(0 0 0 / 8%));
+  }
+
+  .cat-card__posts li + li {
+    margin-top: 0.45rem;
+  }
+
+  .cat-card__posts a {
+    display: flex;
+    gap: 0.6rem;
+    border: 0;
+    font-family: var(--font-sans, system-ui, sans-serif);
+    font-size: 0.78rem;
+    line-height: 1.6;
+    color: var(--text-color-muted, #6b675f);
+    text-decoration: none;
+  }
+
+  .cat-card__posts a:hover span {
+    color: var(--primary-color, #7c3b52);
+  }
+
+  .cat-card__posts time {
+    flex-shrink: 0;
+    font-variant-numeric: tabular-nums;
+    color: var(--text-color-subtle, #8a857c);
+  }
+
+  .cat-card__posts span {
+    overflow: hidden;
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    transition: color 0.18s ease;
+  }
+
   .empty-state {
-    text-align: center;
     padding: 3rem;
-    color: var(--grey-5);
+    text-align: center;
+    color: var(--text-color-subtle, #8a857c);
   }
 </style>

@@ -29,9 +29,8 @@ const { page } = Astro.props as {
   };
 };
 
-const pageTitle = `动态 - 第${page.currentPage}页`;
+const pageTitle = `动态 - 第 ${page.currentPage} 页`;
 
-// 分页导航
 const paginationNavigation = {
   prevUrl:
     page.currentPage > 1
@@ -48,18 +47,21 @@ const paginationNavigation = {
 
 <Layout
   pageTitle={pageTitle}
-  indexPage={true}
+  eyebrow="Moments"
+  description="记录生活的点滴"
   navigation={paginationNavigation}
 >
   <Fragment slot="head">
     <meta name="description" content="动态 - 记录生活的点滴" />
   </Fragment>
 
-  <MomentsContent moments={page.data} />
-  <Pagination
-    currentPage={page.currentPage}
-    lastPage={page.lastPage}
-    firstPageHref="/moments/"
-    routePrefix="/moments"
-  />
+  <div class="wrap">
+    <MomentsContent moments={page.data} />
+    <Pagination
+      currentPage={page.currentPage}
+      lastPage={page.lastPage}
+      firstPageHref="/moments/"
+      routePrefix="/moments"
+    />
+  </div>
 </Layout>

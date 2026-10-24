@@ -1,0 +1,114 @@
+---
+/**
+ * 内页页头：统一的编辑式标题区（分类 / 标签 / 归档 / 关于 / 留言板等）。
+ * 文章页使用自己的 PostHeader，不复用本组件。
+ */
+interface Props {
+  title: string;
+  eyebrow?: string;
+  description?: string;
+  meta?: string[];
+  /** 右侧对齐的辅助信息（如统计数字） */
+  aside?: string;
+}
+
+const { title, eyebrow, description, meta = [], aside } = Astro.props;
+---
+
+<header class="page-header">
+  <div class="page-header__row">
+    <div class="page-header__main">
+      {eyebrow && <p class="page-header__eyebrow">{eyebrow}</p>}
+      <h1 class="page-header__title">{title}</h1>
+      {description && <p class="page-header__description">{description}</p>}
+      {meta.length > 0 && (
+        <p class="page-header__meta">
+          {meta.map((item, index) => (
+            <span>
+              {index > 0 && <span class="page-header__dot" aria-hidden="true">·</span>}
+              {item}
+            </span>
+          ))}
+        </p>
+      )}
+    </div>
+    {aside && <p class="page-header__aside">{aside}</p>}
+  </div>
+</header>
+
+<style>
+  .page-header {
+    padding: clamp(2.5rem, 7vw, 4.75rem) 0 clamp(1.5rem, 3.5vw, 2.5rem);
+    border-bottom: 1px solid var(--hairline, rgb(0 0 0 / 8%));
+  }
+
+  .page-header__row {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 1.5rem;
+  }
+
+  .page-header__main {
+    max-width: 46rem;
+  }
+
+  .page-header__eyebrow {
+    margin: 0 0 0.9rem;
+    font-family: var(--font-sans, system-ui, sans-serif);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--primary-color, #7c3b52);
+  }
+
+  .page-header__title {
+    margin: 0;
+    font-family: var(--font-serif, Georgia, "Noto Serif SC", serif);
+    font-size: clamp(1.8rem, 3.6vw, 2.7rem);
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    text-wrap: balance;
+    color: var(--text-color, #23211d);
+  }
+
+  .page-header__description {
+    margin: 0.9rem 0 0;
+    max-width: 38rem;
+    font-family: var(--font-sans, system-ui, sans-serif);
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: var(--text-color-muted, #55524c);
+  }
+
+  .page-header__meta {
+    margin: 1.1rem 0 0;
+    font-family: var(--font-sans, system-ui, sans-serif);
+    font-size: 0.78rem;
+    letter-spacing: 0.02em;
+    color: var(--text-color-subtle, #8a857c);
+  }
+
+  .page-header__dot {
+    margin: 0 0.5rem;
+  }
+
+  .page-header__aside {
+    margin: 0;
+    flex-shrink: 0;
+    font-family: var(--font-serif, Georgia, "Noto Serif SC", serif);
+    font-size: 0.95rem;
+    color: var(--text-color-subtle, #8a857c);
+    font-variant-numeric: tabular-nums;
+  }
+
+  @media (max-width: 640px) {
+    .page-header__row {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+  }
+</style>

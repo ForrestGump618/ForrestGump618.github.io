@@ -10,72 +10,28 @@ interface Props {
 const { moments } = Astro.props;
 ---
 
-<div class="moments-wrapper">
-  <div class="moments-timeline">
-    {
-      moments.length > 0 ? (
-        moments.map((moment) => <MomentCard moment={moment} />)
-      ) : (
-        <div class="no-moments text-grey-5 bg-grey-0">
-          <p>{t("moments.noContent")}</p>
-        </div>
-      )
-    }
-  </div>
+<div class="moments">
+  {
+    moments.length > 0 ? (
+      moments.map((moment) => <MomentCard moment={moment} />)
+    ) : (
+      <p class="moments__empty">{t("moments.noContent")}</p>
+    )
+  }
 </div>
 
 <style>
-  .moments-wrapper {
-    position: relative;
-    padding: 1.25rem;
+  .moments {
+    max-width: 44rem;
+    padding-top: 0.25rem;
   }
 
-  .moments-timeline {
-    position: relative;
-    padding-left: 1.5rem;
-  }
-
-  /* 时间线竖线 */
-  .moments-timeline::before {
-    content: "";
-    position: absolute;
-    left: 0.25rem;
-    top: 0;
-    bottom: 0;
-    width: 2px;
-    background: linear-gradient(
-      to bottom,
-      var(--color-pink),
-      var(--color-orange)
-    );
-    border-radius: 1px;
-  }
-
-  .no-moments {
-    text-align: center;
-    padding: 3rem 2rem;
-    border-radius: 0.75rem;
-    margin-left: -1.5rem;
-  }
-
-  .no-moments p {
-    font-size: 1.125rem;
+  .moments__empty {
     margin: 0;
-  }
-
-  @media (max-width: 768px) {
-    .moments-wrapper {
-      padding: 0.625rem;
-    }
-  }
-
-  @media (max-width: 480px) {
-    .moments-wrapper {
-      padding: 0.5rem;
-    }
-
-    .moments-timeline {
-      padding-left: 1rem;
-    }
+    padding: 3rem 0;
+    font-family: var(--font-sans, system-ui, sans-serif);
+    font-size: 0.9rem;
+    color: var(--text-color-subtle, #8a857c);
+    text-align: center;
   }
 </style>

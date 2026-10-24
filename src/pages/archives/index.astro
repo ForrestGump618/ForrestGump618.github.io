@@ -6,137 +6,260 @@ import { buildArchiveTimeline } from "@/toolkit/posts/buildArchiveTimeline";
 import { toCategoryHref, toPostHref } from "@/toolkit/posts/url";
 import { fmtNum } from "@/toolkit/tools/fmtNum";
 import { t } from "@/i18n";
-import "../../styles/collapse.css";
 
-// Get all published posts sorted by date
+// 已发布文章按日期倒序
 const allPosts = await getCollection("posts");
 const publishedPosts = allPosts
   .filter((post) => !post.data.draft)
   .toSorted((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
-// Structure posts by date
 const structuredPosts = structurePostsByDate(publishedPosts, { daily: false });
 
-// Get all years in descending order
 const years = Object.keys(structuredPosts)
   .map(Number)
   .toSorted((a, b) => b - a);
 
-// Total post count for cheers message
 const totalPosts = publishedPosts.length;
-let cheers = "um";
-if (totalPosts > 210) cheers = "excellent";
-else if (totalPosts > 130) cheers = "great";
-else if (totalPosts > 80) cheers = "good";
-else if (totalPosts > 50) cheers = "nice";
-else if (totalPosts > 30) cheers = "ok";
 
-// Helper to format date
-function formatDate(date: Date): string {
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${month}-${day}`;
-}
+// 按年分组生成归档条目
+const archiveYears = years.map((year) => {
+  const timelineItems = buildArchiveTimeline(
+    structuredPosts[year].yearlySummary,
+  );
+
+  const months = new Map<
+    number,
+    {
+      label: string;
+      count: number;
+      posts: {
+        title: string;
+        href: string;
+        day: string;
+        dateTime: string;
+        category?: string;
+      }[];
+    }
+  >();
+
+  for (const item of timelineItems) {
+    const { post, month, monthPostCount } = item;
+    const postDate = post.data.date;
+    const monthEntry = months.get(month) ?? {
+      label: `${year} 年 ${month} 月`,
+      count: monthPostCount,
+      posts: [],
+    };
+
+    monthEntry.posts.push({
+      title: post.data.title || t("post.noContent"),
+      href: toPostHref(post.id),
+      day: `${fmtNum(month)}-${fmtNum(postDate.getDate())}`,
+      dateTime: postDate.toISOString(),
+      category: post.data.categories?.at(-1),
+    });
+
+    months.set(month, monthEntry);
+  }
+
+  return {
+    year,
+    href: `/archives/${year}/`,
+    count: timelineItems.length,
+    months: Array.from(months.entries())
+      .toSorted((a, b) => b[0] - a[0])
+      .map(([month, entry]) => ({
+        month,
+        href: `/archives/${year}/${fmtNum(month)}/`,
+        ...entry,
+      })),
+  };
+});
 ---
 
-<Layout pageTitle={t("archive.title")}>
-  <div class="wrap">
-    <div class="timeline">
-      <h2 class="item header">
-        <a href="/">{t("nav.home")}</a>
-        <small>/</small>
-        {t("common.total")}
-        {totalPosts}
-        {t("category.posts")}。
-        <small class="cheers"
-          >{
-            cheers === "excellent"
-              ? t("archive.excellent")
-              : cheers === "great"
-                ? t("archive.great")
-                : cheers === "good"
-                  ? t("archive.good")
-                  : cheers === "nice"
-                    ? t("archive.nice")
-                    : cheers === "ok"
-                      ? t("archive.ok")
-                      : t("archive.emh")
-          }
-          {t("archive.keepTrying")}。</small
-        >
-      </h2>
+<Layout
+  pageTitle={t("archive.title")}
+  description={`Echo 全部 ${totalPosts} 篇文章的时间归档，跨 ${years.length} 个年份。`}
+>
+  <div class="wrap archive-page">
+    <p class="archive-summary">
+      {t("common.total")} <strong>{totalPosts}</strong> 篇文章，跨 {years.length} 年。
+    </p>
 
-      {
-        years.map((year) => {
-          const timelineItems = buildArchiveTimeline(
-            structuredPosts[year].yearlySummary,
-          );
+    {
+      archiveYears.map((yearEntry) => (
+        <section class="archive-year">
+          <header class="archive-year__head">
+            <h2>
+              <a href={yearEntry.href}>{yearEntry.year}</a>
+            </h2>
+            <span class="archive-year__count">{yearEntry.count} 篇</span>
+          </header>
 
-          return timelineItems.map(
-            ({ post, month, showMonthSection, monthPostCount }) => {
-              const postDate = post.data.date;
-              const lastCategory =
-                post.data.categories?.[post.data.categories.length - 1];
-
-              return (
-                <>
-                  {showMonthSection && (
-                    <h3 class="item section">
-                      <a href={`/archives/${year}/`}>
-                        {year} {t("archive.year")}
-                      </a>
-                      <small>/</small>
-                      <a href={`/archives/${year}/${fmtNum(month)}/`}>
-                        {month} {t("archive.month")}
-                      </a>
-                      <small>({monthPostCount})</small>
-                    </h3>
-                  )}
-
-                  <article
-                    class="item normal"
-                    itemscope
-                    itemtype="http://schema.org/Article"
-                  >
-                    <div class="meta">
-                      <time
-                        itemprop="dateCreated"
-                        datetime={postDate.toISOString()}
-                      >
-                        {formatDate(postDate)}
-                      </time>
-                    </div>
-
-                    {lastCategory && (
-                      <div class="meta">
-                        <span>
-                          <a href={toCategoryHref(lastCategory)}>{lastCategory}</a>
-                        </span>
-                      </div>
-                    )}
-
-                    <div class="title">
-                      <a href={toPostHref(post.id)} itemprop="url">
-                        <span itemprop="name">
-                          {post.data.title || t("post.noContent")}
-                        </span>
-                      </a>
-                    </div>
-                  </article>
-                </>
-              );
-            },
-          );
-        })
-      }
-    </div>
+          {yearEntry.months.map((month) => (
+            <div class="archive-month">
+              <h3 class="archive-month__title">
+                <a href={month.href}>{month.label}</a>
+                <span class="archive-month__count">{month.count} 篇</span>
+              </h3>
+              <ul class="archive-list">
+                {month.posts.map((post) => (
+                  <li>
+                    <a class="archive-item" href={post.href}>
+                      <time datetime={post.dateTime}>{post.day}</time>
+                      <span class="archive-item__title">{post.title}</span>
+                      {post.category && (
+                        <span class="archive-item__cat">{post.category}</span>
+                      )}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </section>
+      ))
+    }
   </div>
 </Layout>
 
 <style>
-  .wrap {
-    max-width: 60rem;
-    margin: 0 auto;
-    padding: 2rem 1rem;
+  .archive-page {
+    max-width: 56rem;
+    padding-top: clamp(1rem, 3vw, 2rem);
+  }
+
+  .archive-summary {
+    margin: 0 0 2.5rem;
+    font-family: var(--font-sans, system-ui, sans-serif);
+    font-size: 0.82rem;
+    color: var(--text-color-subtle, #8a857c);
+  }
+
+  .archive-summary strong {
+    font-weight: 600;
+    color: var(--text-color, #23211d);
+  }
+
+  .archive-year + .archive-year {
+    margin-top: 3rem;
+  }
+
+  .archive-year__head {
+    display: flex;
+    align-items: baseline;
+    gap: 0.85rem;
+    padding-bottom: 0.85rem;
+    border-bottom: 1px solid var(--line-color, rgb(0 0 0 / 14%));
+  }
+
+  .archive-year__head h2 {
+    margin: 0;
+    font-family: var(--font-serif, Georgia, "Noto Serif SC", serif);
+    font-size: clamp(1.6rem, 3vw, 2rem);
+    font-weight: 600;
+    line-height: 1.2;
+  }
+
+  .archive-year__head a {
+    border: 0;
+    text-decoration: none;
+    color: var(--text-color, #23211d);
+  }
+
+  .archive-year__head a:hover {
+    color: var(--primary-color, #7c3b52);
+  }
+
+  .archive-year__count {
+    font-family: var(--font-sans, system-ui, sans-serif);
+    font-size: 0.72rem;
+    color: var(--text-color-subtle, #8a857c);
+  }
+
+  .archive-month {
+    margin-top: 1.75rem;
+  }
+
+  .archive-month__title {
+    margin: 0 0 0.65rem;
+    font-family: var(--font-sans, system-ui, sans-serif);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text-color-subtle, #8a857c);
+  }
+
+  .archive-month__title a {
+    border: 0;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .archive-month__title a:hover {
+    color: var(--primary-color, #7c3b52);
+  }
+
+  .archive-month__count {
+    margin-left: 0.45rem;
+    font-weight: 400;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  .archive-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .archive-item {
+    display: grid;
+    grid-template-columns: 3.4rem minmax(0, 1fr) auto;
+    gap: 0.9rem;
+    align-items: baseline;
+    padding: 0.55rem 0.1rem;
+    border: 0;
+    border-bottom: 1px solid var(--hairline, rgb(0 0 0 / 8%));
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .archive-item time {
+    font-family: var(--font-sans, system-ui, sans-serif);
+    font-size: 0.72rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--text-color-subtle, #8a857c);
+  }
+
+  .archive-item__title {
+    font-family: var(--font-serif, Georgia, "Noto Serif SC", serif);
+    font-size: 0.98rem;
+    line-height: 1.55;
+    color: var(--text-color, #23211d);
+    overflow-wrap: break-word;
+    transition: color 0.18s ease;
+  }
+
+  .archive-item:hover .archive-item__title {
+    color: var(--primary-color, #7c3b52);
+  }
+
+  .archive-item__cat {
+    font-family: var(--font-sans, system-ui, sans-serif);
+    font-size: 0.7rem;
+    color: var(--primary-color, #7c3b52);
+    white-space: nowrap;
+  }
+
+  @media (max-width: 560px) {
+    .archive-item {
+      grid-template-columns: 3rem minmax(0, 1fr);
+    }
+
+    .archive-item__cat {
+      display: none;
+    }
   }
 </style>

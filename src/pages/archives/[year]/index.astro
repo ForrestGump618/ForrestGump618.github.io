@@ -1,12 +1,11 @@
 ---
 import Layout from "../../../layouts/Layout.astro";
+import PostList from "@/components/post/PostList.astro";
 import { getCollection } from "astro:content";
 import { structurePostsByDate } from "@/toolkit/posts/structurePostsByDate";
-import { buildArchiveTimeline } from "@/toolkit/posts/buildArchiveTimeline";
-import { toCategoryHref, toPostHref } from "@/toolkit/posts/url";
 import { fmtNum } from "@/toolkit/tools/fmtNum";
 import { t } from "@/i18n";
-import "../../../styles/collapse.css";
+import type { CollectionEntry } from "astro:content";
 
 export async function getStaticPaths() {
   const allPosts = await getCollection("posts");
@@ -18,8 +17,9 @@ export async function getStaticPaths() {
     daily: false,
   });
 
-  const years = Object.keys(structuredPosts).map(Number);
-  const sortedYears = [...years].toSorted((a, b) => b - a);
+  const sortedYears = Object.keys(structuredPosts)
+    .map(Number)
+    .toSorted((a, b) => b - a);
 
   return sortedYears.map((year) => ({
     params: { year: String(year) },
@@ -31,92 +31,175 @@ export async function getStaticPaths() {
   }));
 }
 
-import type { CollectionEntry } from "astro:content";
-
-const { year, posts } = Astro.props as {
+const { year, posts, allYears } = Astro.props as {
   year: number;
   posts: CollectionEntry<"posts">[];
+  allYears: number[];
 };
 
-// Helper to format date
-function formatDate(date: Date): string {
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${month}-${day}`;
-}
+const yearIndex = allYears.indexOf(year);
+const prevYear = allYears[yearIndex + 1];
+const nextYear = allYears[yearIndex - 1];
+
+const sortedPosts = posts.toSorted(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime(),
+);
+
+// 月份子导航
+const months = Array.from(
+  new Set(sortedPosts.map((post) => post.data.date.getMonth() + 1)),
+).toSorted((a, b) => b - a);
 ---
 
-<Layout pageTitle={`${year} 年归档`}>
-  <div class="wrap">
-    <div class="timeline">
-      <h2 class="item header">
-        <a href="/archives/">{t("archive.all")}</a>
-        <small>/</small>
-        {year} 年
-        <small>归档</small>
-      </h2>
+<Layout
+  pageTitle={`${year} 年归档`}
+  eyebrow="归档"
+  description={`${year} 年共 ${sortedPosts.length} 篇文章。`}
+>
+  <div class="wrap archive-page">
+    <nav class="archive-nav" aria-label="归档导航">
+      <a href="/archives/">{t("archive.all")}</a>
+      <span aria-hidden="true">/</span>
+      <span class="archive-nav__current">{year} 年</span>
+    </nav>
 
+    <ul class="year-list">
       {
-        buildArchiveTimeline(posts).map(
-          ({ post, month, showMonthSection, monthPostCount }) => {
-            const postDate = post.data.date;
-            const lastCategory =
-              post.data.categories?.[post.data.categories.length - 1];
-
-            return (
-              <>
-                {showMonthSection && (
-                  <h3 class="item section">
-                    <a href={`/archives/${year}/${fmtNum(month)}/`}>
-                      {month} 月
-                    </a>
-                    <small>({monthPostCount})</small>
-                  </h3>
-                )}
-
-                <article
-                  class="item normal"
-                  itemscope
-                  itemtype="http://schema.org/Article"
-                >
-                  <div class="meta">
-                    <time
-                      itemprop="dateCreated"
-                      datetime={postDate.toISOString()}
-                    >
-                      {formatDate(postDate)}
-                    </time>
-                  </div>
-
-                  {lastCategory && (
-                    <div class="meta">
-                      <span>
-                        <a href={toCategoryHref(lastCategory)}>{lastCategory}</a>
-                      </span>
-                    </div>
-                  )}
-
-                  <div class="title">
-                    <a href={toPostHref(post.id)} itemprop="url">
-                      <span itemprop="name">
-                        {post.data.title || t("post.noContent")}
-                      </span>
-                    </a>
-                  </div>
-                </article>
-              </>
-            );
-          },
-        )
+        allYears.map((item) => (
+          <li>
+            <a
+              href={`/archives/${item}/`}
+              class:list={{ "is-current": item === year }}
+            >
+              {item}
+            </a>
+          </li>
+        ))
       }
-    </div>
+    </ul>
+
+    {
+      months.length > 1 && (
+        <p class="month-links">
+          {months.map((month) => (
+            <a href={`/archives/${year}/${fmtNum(month)}/`}>
+              {month} 月
+            </a>
+          ))}
+        </p>
+      )
+    }
+
+    <PostList posts={sortedPosts} />
+
+    <nav class="year-pager" aria-label="年份翻页">
+      {prevYear ? <a href={`/archives/${prevYear}/`}>← {prevYear} 年</a> : <span />}
+      {nextYear ? <a href={`/archives/${nextYear}/`}>{nextYear} 年 →</a> : <span />}
+    </nav>
   </div>
 </Layout>
 
 <style>
-  .wrap {
-    max-width: 60rem;
-    margin: 0 auto;
-    padding: 2rem 1rem;
+  .archive-page {
+    max-width: 56rem;
+    padding-top: clamp(1rem, 3vw, 2rem);
+  }
+
+  .archive-nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.45rem;
+    font-family: var(--font-sans, system-ui, sans-serif);
+    font-size: 0.76rem;
+    color: var(--text-color-subtle, #8a857c);
+  }
+
+  .archive-nav a {
+    border: 0;
+    color: var(--text-color-muted, #6b675f);
+    text-decoration: none;
+  }
+
+  .archive-nav a:hover {
+    color: var(--primary-color, #7c3b52);
+  }
+
+  .archive-nav__current {
+    color: var(--text-color, #23211d);
+  }
+
+  .year-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    margin: 1.25rem 0 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .year-list a {
+    display: inline-flex;
+    align-items: center;
+    height: 1.9rem;
+    padding: 0 0.7rem;
+    border: 1px solid transparent;
+    border-radius: var(--radius-xs, 2px);
+    font-family: var(--font-sans, system-ui, sans-serif);
+    font-size: 0.76rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--text-color-muted, #6b675f);
+    text-decoration: none;
+  }
+
+  .year-list a:hover {
+    background: var(--surface-subtle, #f4f2ee);
+    color: var(--text-color, #23211d);
+  }
+
+  .year-list a.is-current {
+    border-color: var(--line-color, rgb(0 0 0 / 14%));
+    background: var(--text-color, #23211d);
+    color: var(--surface-page, #fdfcfa);
+  }
+
+  .month-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.9rem;
+    margin: 1.35rem 0 1.75rem;
+    font-family: var(--font-sans, system-ui, sans-serif);
+    font-size: 0.76rem;
+  }
+
+  .month-links a {
+    border: 0;
+    color: var(--text-color-muted, #6b675f);
+    text-decoration: none;
+  }
+
+  .month-links a:hover {
+    color: var(--primary-color, #7c3b52);
+  }
+
+  .year-pager {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 2rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--hairline, rgb(0 0 0 / 8%));
+    font-family: var(--font-sans, system-ui, sans-serif);
+    font-size: 0.8rem;
+  }
+
+  .year-pager a {
+    border: 0;
+    color: var(--text-color-muted, #6b675f);
+    text-decoration: none;
+  }
+
+  .year-pager a:hover {
+    color: var(--primary-color, #7c3b52);
   }
 </style>

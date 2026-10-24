@@ -1,106 +1,147 @@
 ---
 import Layout from "@/layouts/Layout.astro";
 
-const pageTitle = "医学推免信息汇总（持续更新）";
+const pageTitle = "医学推免信息汇总";
+const description = "医学推免相关资源：医院排行、导师信息查询与导师数据库，持续更新。";
+
+const sections = [
+  {
+    title: "医院排行",
+    links: [
+      {
+        href: "https://rank.cn-healthcare.com/",
+        label: "2022 年度复旦版中国医院排行榜",
+      },
+      {
+        href: "https://rank.cn-healthcare.com/stem/medical-university",
+        label: "中国医院 / 中国医学院校科技量值",
+      },
+      {
+        href: "https://research-hospital.cn-healthcare.com/result/hospitals",
+        label: "2023 年研究型医院评价遴选结果",
+      },
+      {
+        href: "https://innovation-rank.cn-healthcare.com/comprehensive-ranking",
+        label: "2022 年度全国综合榜单 · 中国医院创新转化排行榜",
+      },
+      {
+        href: "https://rank.cn-healthcare.com/nsfc",
+        label: "2022 年度全国医院国家自然基金立项数据排行榜",
+      },
+    ],
+  },
+  {
+    title: "导师相关信息查询",
+    links: [
+      { href: "http://www.globalauthorid.com/", label: "全球学者库" },
+      { href: "https://www.aminer.cn/", label: "Aminer · 学者大数据分析" },
+      { href: "https://www.cnki.net/", label: "CNKI（可查询公开的学位论文）" },
+    ],
+  },
+  {
+    title: "导师数据库",
+    links: [
+      {
+        href: "http://202.195.181.96/gmis5/dsfc/w_dsfc",
+        label: "南京医科大学研究生院 · 导师风采",
+      },
+      {
+        href: "https://med.nju.edu.cn/10649/list.htm",
+        label: "南京大学医学院 · 导师名单",
+      },
+      {
+        href: "http://pumc.teacher.360eol.com/",
+        label: "北京协和医院 · 导师风采",
+      },
+    ],
+  },
+];
 ---
 
-<Layout pageTitle={pageTitle}>
-  <div class="wrap summer-page">
-    <div class="summer-header">
-      <h2>🏥 医学推免信息汇总</h2>
-      <p>持续更新中，欢迎补充。</p>
-    </div>
-
-    <section class="summer-section">
-      <h3>医院排行</h3>
-      <ul>
-        <li><a href="https://rank.cn-healthcare.com/" target="_blank" rel="noopener noreferrer">2022年度复旦版中国医院排行榜</a></li>
-        <li><a href="https://rank.cn-healthcare.com/stem/medical-university" target="_blank" rel="noopener noreferrer">中国医院/中国医学院校科技量值</a></li>
-        <li><a href="https://research-hospital.cn-healthcare.com/result/hospitals" target="_blank" rel="noopener noreferrer">2023年研究型医院评价遴选结果</a></li>
-        <li><a href="https://innovation-rank.cn-healthcare.com/comprehensive-ranking" target="_blank" rel="noopener noreferrer">2022年度全国综合榜单-中国医院创新转化排行榜</a></li>
-        <li><a href="https://rank.cn-healthcare.com/nsfc" target="_blank" rel="noopener noreferrer">2022年度全国医院国家自然基金立项数据排行榜</a></li>
-      </ul>
-    </section>
-
-    <section class="summer-section">
-      <h3>导师相关信息查询</h3>
-      <ul>
-        <li><a href="http://www.globalauthorid.com/" target="_blank" rel="noopener noreferrer">全球学者库</a></li>
-        <li><a href="https://www.aminer.cn/" target="_blank" rel="noopener noreferrer">Aminer——学者大数据分析</a></li>
-        <li><a href="https://www.cnki.net/" target="_blank" rel="noopener noreferrer">CNKI（可查询公开的学位论文）</a></li>
-      </ul>
-    </section>
-
-    <section class="summer-section">
-      <h3>导师数据库</h3>
-      <ul>
-        <li><a href="http://202.195.181.96/gmis5/dsfc/w_dsfc" target="_blank" rel="noopener noreferrer">南京医科大学研究生院——导师风采</a></li>
-        <li><a href="https://med.nju.edu.cn/10649/list.htm" target="_blank" rel="noopener noreferrer">南京大学医学院——导师名单</a></li>
-        <li><a href="http://pumc.teacher.360eol.com/" target="_blank" rel="noopener noreferrer">北京协和医院——导师风采</a></li>
-      </ul>
-    </section>
+<Layout pageTitle={pageTitle} eyebrow="Resources" description={description}>
+  <div class="wrap summer">
+    {
+      sections.map((section) => (
+        <section class="summer__section">
+          <h2 class="summer__title">{section.title}</h2>
+          <ul class="summer__list">
+            {section.links.map((link) => (
+              <li>
+                <a
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {link.label}
+                  <i class="i-ri-arrow-right-up-line" aria-hidden="true" />
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))
+    }
+    <p class="summer__note">持续更新中，欢迎补充。</p>
   </div>
 </Layout>
 
 <style>
-  .summer-page {
-    padding: 1.5rem 1.75rem 2.5rem;
+  .summer__section {
+    margin-bottom: 2.25rem;
   }
 
-  .summer-header {
-    margin-bottom: 2rem;
-  }
-
-  .summer-header h2 {
-    margin: 0 0 0.5rem;
-    font-size: 1.75rem;
-    color: var(--grey-7);
-  }
-
-  .summer-header p {
-    margin: 0;
-    color: var(--grey-5);
-  }
-
-  .summer-section {
-    margin-bottom: 2rem;
-  }
-
-  .summer-section h3 {
+  .summer__title {
     margin: 0 0 0.75rem;
-    color: var(--grey-7);
-    font-size: 1.2rem;
+    padding-bottom: 0.55rem;
+    border-bottom: 1px solid var(--hairline, rgb(0 0 0 / 8%));
+    font-family: var(--font-serif, serif);
+    font-size: 1.02rem;
+    font-weight: 600;
+    color: var(--text-color, #23211d);
   }
 
-  .summer-section ul {
+  .summer__list {
     margin: 0;
-    padding-left: 1.5rem;
-    list-style: disc;
-    color: var(--grey-6);
+    padding: 0;
+    list-style: none;
   }
 
-  .summer-section li {
-    margin: 0.4rem 0;
-    line-height: 1.7;
+  .summer__list li {
+    border-bottom: 1px solid var(--hairline, rgb(0 0 0 / 6%));
   }
 
-  .summer-section li::marker {
-    color: var(--color-blue);
+  .summer__list li:last-child {
+    border-bottom: 0;
   }
 
-  .summer-section a {
-    color: var(--grey-7);
+  .summer__list a {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.62rem 0;
+    font-family: var(--font-sans, system-ui, sans-serif);
+    font-size: 0.92rem;
+    line-height: 1.6;
+    color: var(--text-color, #23211d);
     text-decoration: none;
-    transition: color 0.2s ease;
+    transition: color 0.2s var(--ease-out, ease);
   }
 
-  .summer-section a:hover {
-    color: var(--primary-color);
+  .summer__list a:hover {
+    color: var(--primary-color, #7c3b52);
   }
 
-  @media (max-width: 768px) {
-    .summer-page {
-      padding: 1.25rem 1rem 2rem;
-    }
+  .summer__list a i {
+    flex: none;
+    font-size: 0.85rem;
+    color: var(--text-color-subtle, #8a857c);
+  }
+
+  .summer__note {
+    margin: 0;
+    font-family: var(--font-sans, system-ui, sans-serif);
+    font-size: 0.8rem;
+    color: var(--text-color-subtle, #8a857c);
   }
 </style>

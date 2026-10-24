@@ -1,0 +1,166 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import { getCollection } from "astro:content";
+import { toCategoryHref } from "@/toolkit/posts/url";
+
+const posts = await getCollection("posts");
+const published = posts.filter((post) => !post.data.draft);
+const categoryCount = new Set(published.flatMap((post) => post.data.categories ?? [])).size;
+const tagCount = new Set(published.flatMap((post) => post.data.tags ?? [])).size;
+const recentPosts = published
+  .toSorted((a, b) => b.data.date.getTime() - a.data.date.getTime())
+  .slice(0, 5)
+  .map((post) => ({
+    title: post.data.title,
+    href: `/posts/${post.id}/`,
+    category: post.data.categories?.[0],
+    categoryHref: post.data.categories?.[0]
+      ? toCategoryHref(post.data.categories[0])
+      : undefined,
+  }));
+
+const categoryNames = [...new Set(published.flatMap((post) => post.data.categories ?? []))]
+  .slice(0, 6)
+  .map((name) => ({ name, href: toCategoryHref(name) }));
+---
+
+<Layout pageTitle="页面不存在" description="你访问的页面不存在，可能已被移动或删除。">
+  <Fragment slot="head">
+    <meta name="robots" content="noindex" />
+  </Fragment>
+
+  <div class="wrap">
+    <div class="notfound">
+      <p class="notfound__code" aria-hidden="true">404</p>
+      <h1 class="notfound__title">这一页没有留下记录</h1>
+      <p class="notfound__desc">
+        你访问的地址可能已经被移动、重命名，或者从来没有存在过。可以从下面的入口重新出发。
+      </p>
+      <div class="notfound__actions">
+        <a class="btn btn-solid" href="/">回到首页</a>
+        <a class="btn" href="/archives/">浏览归档</a>
+      </div>
+
+      {
+        recentPosts.length > 0 && (
+          <section class="notfound__section" aria-labelledby="notfound-recent">
+            <h2 class="notfound__section-title" id="notfound-recent">最近更新</h2>
+            <ul class="notfound__list">
+              {recentPosts.map((post) => (
+                <li>
+                  <a href={post.href}>{post.title}</a>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )
+      }
+
+      {
+        categoryNames.length > 0 && (
+          <section class="notfound__section" aria-labelledby="notfound-categories">
+            <h2 class="notfound__section-title" id="notfound-categories">按专题浏览</h2>
+            <div class="notfound__chips">
+              {categoryNames.map((category) => (
+                <a class="chip" href={category.href}>
+                  {category.name}
+                </a>
+              ))}
+            </div>
+          </section>
+        )
+      }
+    </div>
+  </div>
+</Layout>
+
+<style>
+  .notfound {
+    max-width: 40rem;
+    padding: 1rem 0 3rem;
+  }
+
+  .notfound__code {
+    margin: 0 0 0.6rem;
+    font-family: var(--font-serif, serif);
+    font-size: clamp(3.2rem, 9vw, 5.4rem);
+    font-weight: 600;
+    line-height: 1;
+    letter-spacing: -0.03em;
+    color: var(--border-color, rgb(0 0 0 / 16%));
+    font-variant-numeric: tabular-nums;
+  }
+
+  .notfound__title {
+    margin: 0 0 0.7rem;
+    font-family: var(--font-serif, serif);
+    font-size: clamp(1.5rem, 3.4vw, 2rem);
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--text-color, #23211d);
+  }
+
+  .notfound__desc {
+    margin: 0 0 1.4rem;
+    font-family: var(--font-sans, system-ui, sans-serif);
+    font-size: 0.94rem;
+    line-height: 1.8;
+    color: var(--text-color-subtle, #8a857c);
+  }
+
+  .notfound__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .notfound__section {
+    margin-top: 2.2rem;
+  }
+
+  .notfound__section-title {
+    margin: 0 0 0.75rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--hairline, rgb(0 0 0 / 8%));
+    font-family: var(--font-sans, system-ui, sans-serif);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-color-subtle, #8a857c);
+  }
+
+  .notfound__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .notfound__list li {
+    border-bottom: 1px solid var(--hairline, rgb(0 0 0 / 6%));
+  }
+
+  .notfound__list li:last-child {
+    border-bottom: 0;
+  }
+
+  .notfound__list a {
+    display: block;
+    padding: 0.55rem 0;
+    font-family: var(--font-serif, serif);
+    font-size: 0.98rem;
+    line-height: 1.5;
+    color: var(--text-color, #23211d);
+    text-decoration: none;
+  }
+
+  .notfound__list a:hover {
+    color: var(--primary-color, #7c3b52);
+  }
+
+  .notfound__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+</style>

@@ -1,0 +1,178 @@
+---
+/**
+ * 文章列表（编辑式行式排版）
+ * ------------------------------------------------------------
+ * 用于分类页、标签页、归档页、随机页等需要「按条目浏览文章」的场景。
+ * 统一视觉：日期 / 标题 / 可选摘要 / 可选分类，行间发丝线分隔。
+ */
+import type { CollectionEntry } from "astro:content";
+import { getReadingStats } from "@/toolkit/posts/readingStats";
+import { formatDateShort } from "@/toolkit/posts/formatDate";
+import { toPostHref } from "@/toolkit/posts/url";
+
+interface Props {
+  posts: CollectionEntry<"posts">[];
+  /** 是否显示摘要（默认只在条目较多时省略更紧凑） */
+  showDescription?: boolean;
+  /** 是否显示分类列 */
+  showCategory?: boolean;
+  /** 空状态文案 */
+  emptyText?: string;
+}
+
+const {
+  posts,
+  showDescription = true,
+  showCategory = true,
+  emptyText = "这里还没有文章。",
+} = Astro.props;
+
+const items = posts.map((post) => {
+  const stats = getReadingStats(post.body ?? "");
+  const description = post.data.description?.trim();
+  const category = post.data.categories?.at(-1);
+
+  return {
+    href: toPostHref(post.id),
+    title: post.data.title,
+    date: formatDateShort(post.data.date),
+    dateTime: post.data.date.toISOString(),
+    description: description && description.length > 0 ? description : "",
+    category,
+    readTime: stats.readTime,
+  };
+});
+---
+
+{
+  items.length > 0 ? (
+    <ul class="post-list">
+      {items.map((item) => (
+        <li class="post-list__item">
+          <a class="post-list__link" href={item.href}>
+            <time class="post-list__date" datetime={item.dateTime}>
+              {item.date}
+            </time>
+            <span class="post-list__main">
+              <span class="post-list__title">{item.title}</span>
+              {showDescription && item.description && (
+                <span class="post-list__desc">{item.description}</span>
+              )}
+            </span>
+            <span class="post-list__side">
+              {showCategory && item.category && (
+                <span class="post-list__cat">{item.category}</span>
+              )}
+              <span class="post-list__time">{item.readTime} 分钟</span>
+            </span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  ) : (
+    <p class="post-list__empty">{emptyText}</p>
+  )
+}
+
+<style>
+  .post-list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    border-top: 1px solid var(--hairline, rgb(0 0 0 / 8%));
+  }
+
+  .post-list__item {
+    border-bottom: 1px solid var(--hairline, rgb(0 0 0 / 8%));
+  }
+
+  .post-list__link {
+    display: grid;
+    grid-template-columns: 5.5rem minmax(0, 1fr) auto;
+    gap: 1.25rem;
+    align-items: baseline;
+    padding: 1rem 0.15rem;
+    border: 0;
+    text-decoration: none;
+    color: inherit;
+    transition: color 0.18s ease;
+  }
+
+  .post-list__date {
+    font-family: var(--font-sans, system-ui, sans-serif);
+    font-size: 0.72rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--text-color-subtle, #8a857c);
+  }
+
+  .post-list__main {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 0;
+  }
+
+  .post-list__title {
+    font-family: var(--font-serif, Georgia, "Noto Serif SC", serif);
+    font-size: 1.02rem;
+    font-weight: 600;
+    line-height: 1.5;
+    color: var(--text-color, #23211d);
+    overflow-wrap: break-word;
+    transition: color 0.18s ease;
+  }
+
+  .post-list__desc {
+    font-family: var(--font-sans, system-ui, sans-serif);
+    font-size: 0.82rem;
+    line-height: 1.7;
+    color: var(--text-color-subtle, #8a857c);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .post-list__side {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.25rem;
+    font-family: var(--font-sans, system-ui, sans-serif);
+    font-size: 0.7rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--text-color-subtle, #8a857c);
+    white-space: nowrap;
+  }
+
+  .post-list__cat {
+    color: var(--primary-color, #7c3b52);
+  }
+
+  .post-list__link:hover .post-list__title {
+    color: var(--primary-color, #7c3b52);
+  }
+
+  .post-list__empty {
+    margin: 0;
+    padding: 3rem 0;
+    border-top: 1px solid var(--hairline, rgb(0 0 0 / 8%));
+    font-family: var(--font-sans, system-ui, sans-serif);
+    font-size: 0.9rem;
+    color: var(--text-color-subtle, #8a857c);
+    text-align: center;
+  }
+
+  @media (max-width: 640px) {
+    .post-list__link {
+      grid-template-columns: 1fr;
+      gap: 0.35rem;
+    }
+
+    .post-list__side {
+      flex-direction: row;
+      align-items: center;
+      gap: 0.75rem;
+    }
+  }
+</style>

@@ -83,11 +83,11 @@
   }
 
   function createMonthlyOption(): ChartOption {
-    const lineColor = resolveThemeColor("--color-purple");
-    const pointColor = resolveThemeColor("--color-red");
-    const titleColor = resolveThemeColor("--color-purple");
-    const xAxisColor = resolveThemeColor("--color-aqua");
-    const yAxisColor = resolveThemeColor("--color-purple");
+    const lineColor = resolveThemeColor("--primary-color");
+    const pointColor = resolveThemeColor("--primary-color");
+    const titleColor = resolveThemeColor("--text-color");
+    const xAxisColor = resolveThemeColor("--text-color-subtle");
+    const yAxisColor = resolveThemeColor("--text-color-subtle");
     return {
       title: {
         text: t("statistics.monthlyPosts"),
@@ -101,7 +101,7 @@
       tooltip: {
         trigger: "axis",
         backgroundColor: "color-mix(in srgb, var(--grey-1) 94%, transparent)",
-        borderColor: "color-mix(in srgb, var(--color-purple) 30%, var(--grey-4))",
+        borderColor: "color-mix(in srgb, var(--primary-color) 26%, var(--grey-4))",
         textStyle: {
           color: "var(--grey-7)",
         },
@@ -144,7 +144,7 @@
           smooth: true,
           data: monthlyPostCounts.map((item) => item.count),
           lineStyle: {
-            width: 3,
+            width: 2,
             color: lineColor,
           },
           itemStyle: {
@@ -152,8 +152,7 @@
             opacity: 1,
           },
           areaStyle: {
-            color:
-              "color-mix(in srgb, var(--color-purple) 26%, var(--color-pink) 18%)",
+            color: "color-mix(in srgb, var(--primary-color) 14%, transparent)",
             opacity: 1,
           },
           emphasis: {
@@ -187,18 +186,18 @@
   function createCategoryOption(): ChartOption {
     const topCategories = categoryCounts.slice(0, 10);
     const palette = [
-      resolveThemeColor("--color-red"),
-      resolveThemeColor("--color-orange"),
-      resolveThemeColor("--color-yellow"),
-      resolveThemeColor("--color-pink"),
-      resolveThemeColor("--color-purple"),
-      resolveThemeColor("--color-blue"),
-      resolveThemeColor("--color-aqua"),
-      resolveThemeColor("--color-green"),
+      "color-mix(in srgb, var(--primary-color) 88%, var(--grey-1))",
+      "color-mix(in srgb, var(--primary-color) 76%, var(--grey-1))",
+      "color-mix(in srgb, var(--primary-color) 64%, var(--grey-1))",
+      "color-mix(in srgb, var(--primary-color) 54%, var(--grey-1))",
+      "color-mix(in srgb, var(--primary-color) 46%, var(--grey-1))",
+      "color-mix(in srgb, var(--primary-color) 38%, var(--grey-1))",
+      "color-mix(in srgb, var(--primary-color) 30%, var(--grey-1))",
+      "color-mix(in srgb, var(--primary-color) 22%, var(--grey-1))",
     ];
-    const titleColor = resolveThemeColor("--color-red");
-    const xAxisColor = resolveThemeColor("--color-orange");
-    const yAxisColor = resolveThemeColor("--color-pink");
+    const titleColor = resolveThemeColor("--text-color");
+    const xAxisColor = resolveThemeColor("--text-color-subtle");
+    const yAxisColor = resolveThemeColor("--text-color-subtle");
     return {
       color: palette,
       title: {
@@ -216,7 +215,7 @@
           type: "shadow",
         },
         backgroundColor: "color-mix(in srgb, var(--grey-1) 94%, transparent)",
-        borderColor: "color-mix(in srgb, var(--color-orange) 34%, var(--grey-4))",
+        borderColor: "color-mix(in srgb, var(--primary-color) 26%, var(--grey-4))",
         textStyle: {
           color: "var(--grey-7)",
         },
@@ -281,18 +280,18 @@
   function createTagOption(): ChartOption {
     const topTags = tagCounts.slice(0, 16);
     const palette = [
-      resolveThemeColor("--color-blue"),
-      resolveThemeColor("--color-aqua"),
-      resolveThemeColor("--color-green"),
-      resolveThemeColor("--color-yellow"),
-      resolveThemeColor("--color-orange"),
-      resolveThemeColor("--color-red"),
-      resolveThemeColor("--color-pink"),
-      resolveThemeColor("--color-purple"),
+      "color-mix(in srgb, var(--text-color) 78%, var(--grey-1))",
+      "color-mix(in srgb, var(--text-color) 68%, var(--grey-1))",
+      "color-mix(in srgb, var(--text-color) 58%, var(--grey-1))",
+      "color-mix(in srgb, var(--text-color) 48%, var(--grey-1))",
+      "color-mix(in srgb, var(--primary-color) 62%, var(--grey-1))",
+      "color-mix(in srgb, var(--primary-color) 52%, var(--grey-1))",
+      "color-mix(in srgb, var(--primary-color) 42%, var(--grey-1))",
+      "color-mix(in srgb, var(--primary-color) 32%, var(--grey-1))",
     ];
-    const titleColor = resolveThemeColor("--color-blue");
-    const xAxisColor = resolveThemeColor("--color-aqua");
-    const yAxisColor = resolveThemeColor("--color-blue");
+    const titleColor = resolveThemeColor("--text-color");
+    const xAxisColor = resolveThemeColor("--text-color-subtle");
+    const yAxisColor = resolveThemeColor("--text-color-subtle");
     return {
       color: palette,
       title: {
@@ -310,7 +309,7 @@
           type: "shadow",
         },
         backgroundColor: "color-mix(in srgb, var(--grey-1) 94%, transparent)",
-        borderColor: "color-mix(in srgb, var(--color-blue) 34%, var(--grey-4))",
+        borderColor: "color-mix(in srgb, var(--primary-color) 26%, var(--grey-4))",
         textStyle: {
           color: "var(--grey-7)",
         },

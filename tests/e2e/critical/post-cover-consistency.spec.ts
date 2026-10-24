@@ -1,52 +1,58 @@
 import { expect, test } from "@playwright/test";
 import { POSTS } from "../support/routes";
 
-function extractUrlFromBackgroundImage(style: string | null): string | null {
-  if (!style) {
-    return null;
-  }
-
-  const matched = /url\((?:"|')?(.*?)(?:"|')?\)/.exec(style);
-  return matched?.[1] ?? null;
-}
-
-test("@critical 文章内页头图应优先使用当前文章 cover", async ({ page }) => {
-  const response = await page.goto(POSTS.helloWorld);
+test("@critical 文章页封面应展示文章真实配图与来源", async ({ page }) => {
+  const response = await page.goto(POSTS.suwen);
   expect(response?.ok()).toBeTruthy();
 
-  const headerCover = page.locator("#imgs .single-image");
-  await expect(headerCover).toBeVisible();
+  const cover = page.locator("figure.post-cover img").first();
+  await expect(cover).toBeVisible();
 
-  const headerCoverSrc = await headerCover.evaluate((element) => {
-    if (element instanceof HTMLImageElement) {
-      return element.currentSrc || element.src;
-    }
-
-    const style = window.getComputedStyle(element);
-    return style.backgroundImage;
+  const naturalWidth = await cover.evaluate((element) => {
+    return element instanceof HTMLImageElement ? element.naturalWidth : 0;
   });
+  expect(naturalWidth).toBeGreaterThan(0);
 
-  const headerCoverUrl = headerCoverSrc.startsWith("url(")
-    ? extractUrlFromBackgroundImage(headerCoverSrc)
-    : headerCoverSrc;
+  const alt = await cover.getAttribute("alt");
+  expect(alt).toContain("素问");
 
-  expect(headerCoverUrl).not.toBeNull();
-  expect(headerCoverUrl).toContain("cover-1");
+  // 正文图的图注需要标明来源，避免把学术图当装饰图使用
+  await expect(page.locator(".article-body figcaption").first()).toContainText("来源");
 });
 
-test("@critical 文章内页下一页封面应与目标文章 cover 一致", async ({ page }) => {
-  const response = await page.goto(POSTS.helloWorld);
+test("@critical 科研图表封面应完整展示而非裁切", async ({ page }) => {
+  const response = await page.goto(POSTS.heart);
   expect(response?.ok()).toBeTruthy();
 
-  const nextLink = page.locator(`.post-nav a[rel="next"][href="${POSTS.gettingStarted}"]`);
-  await expect(nextLink).toBeVisible();
+  const fitCover = page.locator(".cover-media--fit").first();
+  await expect(fitCover).toBeVisible();
 
-  const nextBackgroundImage = await nextLink.evaluate((element) => {
-    return window.getComputedStyle(element).backgroundImage;
+  const fitImage = fitCover.locator("img").first();
+  await expect(fitImage).toBeVisible();
+
+  const naturalWidth = await fitImage.evaluate((element) => {
+    return element instanceof HTMLImageElement ? element.naturalWidth : 0;
   });
+  expect(naturalWidth).toBeGreaterThan(0);
+});
 
-  const nextCoverUrl = extractUrlFromBackgroundImage(nextBackgroundImage);
+test("@critical 文章上下篇导航可跳转", async ({ page }) => {
+  await page.goto(POSTS.suwen);
 
-  expect(nextCoverUrl).not.toBeNull();
-  expect(nextCoverUrl).toContain("cover-2");
+  const nav = page.locator(".post-nav");
+  await expect(nav).toBeVisible();
+
+  const links = nav.locator("a");
+  expect(await links.count()).toBeGreaterThan(0);
+
+  const href = await links.first().getAttribute("href");
+  expect(href).toBeTruthy();
+
+  if (!href) {
+    return;
+  }
+
+  const response = await page.goto(href);
+  expect(response?.ok()).toBeTruthy();
+  await expect(page.locator("h1").first()).toBeVisible();
 });

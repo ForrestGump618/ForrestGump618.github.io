@@ -27,12 +27,10 @@ images:
   - path: src/assets/images/cover-5.avif
   - path: src/assets/images/cover-6.avif
 
-
 embedding:
   enabled: false
   model: Xenova/paraphrase-multilingual-MiniLM-L12-v2
   maxChunkChars: 512
-
 
 summary:
   enabled: true

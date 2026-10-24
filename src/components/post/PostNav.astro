@@ -1,23 +1,23 @@
 ---
+/**
+ * 上一篇 / 下一篇（编辑式纯文字，不使用随机配图）
+ */
 import { currentLocale, getT } from "@/i18n";
-import { generateRandomBrightColor } from "@/toolkit/tools/generateRandomBrightColor";
-import { covers } from "../Images.astro";
-import { sample } from "es-toolkit";
 
 interface NavPost {
   title: string;
   slug: string;
   category?: string;
-  cover?: string;
 }
 
 interface Props {
   prevPost?: NavPost;
   nextPost?: NavPost;
+  /** 兼容旧调用方，已不生效 */
   nextGradientCover?: boolean;
 }
 
-const { prevPost, nextPost, nextGradientCover = false } = Astro.props;
+const { prevPost, nextPost } = Astro.props;
 const t = getT(currentLocale);
 ---
 
@@ -25,24 +25,9 @@ const t = getT(currentLocale);
   <div class="item left">
     {
       prevPost && (
-        <a
-          href={`/posts/${prevPost.slug}/`}
-          itemprop="url"
-          rel="prev"
-          title={prevPost.title}
-          style={
-            nextGradientCover
-              ? `background-image: linear-gradient(to bottom right, ${generateRandomBrightColor()}, ${generateRandomBrightColor()});`
-              : `background-image: url(${prevPost.cover || sample(covers ?? []).src});`
-          }
-        >
+        <a href={`/posts/${prevPost.slug}/`} itemprop="url" rel="prev" title={prevPost.title}>
           <span class="type">{t("post.previousPost")}</span>
-          {prevPost.category && (
-            <span class="category">
-              <i class="ic i-ri-flag-line" />
-              {prevPost.category}
-            </span>
-          )}
+          {prevPost.category && <span class="category">{prevPost.category}</span>}
           <span class="post-nav-title">{prevPost.title}</span>
         </a>
       )
@@ -52,27 +37,27 @@ const t = getT(currentLocale);
   <div class="item right">
     {
       nextPost && (
-        <a
-          href={`/posts/${nextPost.slug}/`}
-          itemprop="url"
-          rel="next"
-          title={nextPost.title}
-          style={
-            nextGradientCover
-              ? `background-image: linear-gradient(to bottom right, ${generateRandomBrightColor()}, ${generateRandomBrightColor()});`
-              : `background-image: url(${nextPost.cover || sample(covers ?? []).src});`
-          }
-        >
+        <a href={`/posts/${nextPost.slug}/`} itemprop="url" rel="next" title={nextPost.title}>
           <span class="type">{t("post.nextPost")}</span>
-          {nextPost.category && (
-            <span class="category">
-              <i class="ic i-ri-flag-line" />
-              {nextPost.category}
-            </span>
-          )}
+          {nextPost.category && <span class="category">{nextPost.category}</span>}
           <span class="post-nav-title">{nextPost.title}</span>
         </a>
       )
     }
   </div>
 </div>
+
+<style>
+  .post-nav {
+    max-width: var(--reading-width, 43rem);
+  }
+
+  .post-nav .category {
+    display: inline-block;
+    margin-bottom: 0.2rem;
+    font-family: var(--font-sans, system-ui, sans-serif);
+    font-size: 0.68rem;
+    letter-spacing: 0.04em;
+    color: var(--primary-color, #7c3b52);
+  }
+</style>

@@ -5,6 +5,11 @@ export default defineConfig({
   siteName: "Echo",
   locale: "zh-CN",
 
+  // 首页：每页文章数按编辑式版式确定（首屏 9 篇）
+  home: {
+    pageSize: 9,
+  },
+
   brand: {
     title: "Echo",
     subtitle: "Learn-Record",
@@ -149,10 +154,10 @@ export default defineConfig({
       },
     ],
   },
-  
+
   hyc: {
     enable: true,
-    aiSummary: { enable: true, title: "AI 摘要", showModel: true},
+    aiSummary: { enable: true, title: "AI 摘要", showModel: true },
     aiRecommend: { enable: true, limit: 3, minSimilarity: 0.4 },
   },
 
@@ -166,4 +171,3 @@ export default defineConfig({
     powered: true,
   },
 });
-

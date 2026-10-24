@@ -1,112 +1,108 @@
 ---
-import Layout from "../layouts/Layout.astro";
-import IndexContent from "../components/IndexContent.astro";
-import Pagination from "../components/Pagination.astro";
+/**
+ * 首页：个人 Hero + 编辑式内容区。
+ * 只使用真实内容图片（精选封面、科研图表），不再随机取风景图填充。
+ */
+import Layout from "@/layouts/Layout.astro";
+import HomeHero from "@/components/shell/HomeHero.astro";
+import HomeContent from "@/components/home/HomeContent.astro";
+import { avatar } from "@/components/Images.astro";
 import { getCollection } from "astro:content";
 import themeConfig from "@/theme.config";
+import { toCategoryHref, toPostHref } from "@/toolkit/posts/url";
 
-// Fetch all posts
 const allPosts = await getCollection("posts");
-
-// Filter out drafts
 const publishedPosts = allPosts.filter((post) => !post.data.draft);
 
-// Separate sticky posts and regular posts
-const stickyPosts = publishedPosts
-  .filter((post) => post.data.sticky === true)
-  .toSorted(
-    (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime(),
-  );
+const byDateDesc = (a: (typeof publishedPosts)[number], b: (typeof publishedPosts)[number]) =>
+  new Date(b.data.date).getTime() - new Date(a.data.date).getTime();
 
-const regularPosts = publishedPosts
-  .filter((post) => !post.data.sticky)
-  .toSorted(
-    (a, b) => new Date(b.data.date).getTime() - new Date(a.data.date).getTime(),
-  );
+const stickyPosts = publishedPosts.filter((post) => post.data.sticky === true).toSorted(byDateDesc);
+const regularPosts = publishedPosts.filter((post) => !post.data.sticky).toSorted(byDateDesc);
 
-const pageSize = themeConfig.home?.pageSize ?? 10;
+const pageSize = themeConfig.home?.pageSize ?? 9;
 const lastPage = Math.max(1, Math.ceil(regularPosts.length / pageSize));
-const currentPage = 1;
 const pagePosts = regularPosts.slice(0, pageSize);
 
-// Build pagination navigation
-const paginationNavigation = {
-  prevUrl: undefined,
-  nextUrl: lastPage > 1 ? "/page/2/" : undefined,
-};
-
-// Build category list with post counts
-const categoryMap = new Map<
-  string,
-  {
-    name: string;
-    posts: Array<{ title: string; slug: string }>;
+// 专题：按真实分类聚合，附带最近三篇（分类内按日期倒序）
+const categoryCounts = new Map<string, number>();
+for (const post of publishedPosts) {
+  for (const category of post.data.categories ?? []) {
+    categoryCounts.set(category, (categoryCounts.get(category) ?? 0) + 1);
   }
->();
-
-publishedPosts.forEach((post) => {
-  const categories = post.data.categories || [];
-  categories.forEach((cat) => {
-    if (!categoryMap.has(cat)) {
-      categoryMap.set(cat, {
-        name: cat,
-        posts: [],
-      });
-    }
-    categoryMap.get(cat)!.posts.push({
-      title: post.data.title,
-      slug: post.id,
-    });
-  });
-});
-
-// Transform categories for CategoryCards component
-const categories = Array.from(categoryMap.entries())
-  .filter(([name, _]) =>
-    themeConfig.home?.selectedCategories?.some((cat) => cat.name === name),
-  )
-  .map(([name, data]) => ({
-    name,
-    cover: themeConfig.home?.selectedCategories?.find(
-      (cat) => cat.name === name,
-    )?.cover,
-    url: `/categories/${name}/`,
-    postCount: data.posts.length,
-    posts: data.posts.slice(0, 6).map((p) => ({
-      title: p.title,
-      url: `/posts/${p.slug}/`,
-    })),
-  }))
-  .toSorted((a, b) => b.postCount - a.postCount);
-
-let pageTitle = themeConfig.home?.title?.customTitle ?? "";
-
-if (themeConfig.home?.title?.behavior === "default") {
-  pageTitle =
-    `${themeConfig.brand?.logo || ""} = ${themeConfig.brand?.title || ""} = ${themeConfig.brand?.subtitle || ""}`.trim();
 }
+
+const categories = [...categoryCounts.entries()]
+  .toSorted((a, b) => b[1] - a[1] || a[0].localeCompare(b[0], "zh-CN"))
+  .map(([name, count]) => ({
+    name,
+    count,
+    href: toCategoryHref(name),
+    recent: publishedPosts
+      .filter((post) => post.data.categories?.includes(name))
+      .slice(0, 3)
+      .map((post) => ({ title: post.data.title, href: toPostHref(post.id) })),
+  }));
+
+const tagCount = new Set(publishedPosts.flatMap((post) => post.data.tags ?? [])).size;
+const latestPost = [...stickyPosts, ...regularPosts][0];
+
+const brandConfig = themeConfig.brand ?? {};
+const sidebarConfig = themeConfig.sidebar ?? {};
+const footerConfig = themeConfig.footer ?? {};
+
+const social = Object.entries(sidebarConfig.social ?? {}).map(([key, value]) => ({
+  label: key === "github" ? "GitHub" : key === "email" ? "Email" : key,
+  href: value.url,
+}));
+
+const pageTitle = `${brandConfig.title || "Echo"} — ${brandConfig.subtitle || "Learn-Record"}`;
 ---
 
 <Layout
   pageTitle={pageTitle}
   indexPage={true}
-  navigation={paginationNavigation}
   seoTitle=""
+  description={sidebarConfig.description}
 >
-  <Fragment slot="head">
-    <meta name="description" content={themeConfig.sidebar?.description} />
-  </Fragment>
+  <div class="home wrap">
+    <HomeHero
+      title={brandConfig.title || "Echo"}
+      subtitle={brandConfig.subtitle || "Learn-Record"}
+      author={sidebarConfig.author || ""}
+      description={sidebarConfig.description || ""}
+      avatar={avatar}
+      stats={{
+        posts: publishedPosts.length,
+        categories: categoryCounts.size,
+        tags: tagCount,
+        since: footerConfig.since ?? 2023,
+      }}
+      latest={
+        latestPost
+          ? {
+              title: latestPost.data.title,
+              href: toPostHref(latestPost.id),
+              date: new Date(latestPost.data.date),
+            }
+          : undefined
+      }
+      social={social}
+    />
 
-  <IndexContent
-    posts={pagePosts}
-    stickyPosts={stickyPosts}
-    categories={categories}
-    isFirstPage={true}
-  />
-  <Pagination
-    currentPage={currentPage}
-    lastPage={lastPage}
-    firstPageHref="/"
-    routePrefix="/page"
-  />
+    <HomeContent
+      posts={pagePosts}
+      pool={publishedPosts}
+      stickyPosts={stickyPosts}
+      categories={categories}
+      pageInfo={{ currentPage: 1, lastPage }}
+      isFirstPage={true}
+    />
+  </div>
 </Layout>
+
+<style>
+  .home {
+    padding-top: 0.5rem;
+  }
+</style>

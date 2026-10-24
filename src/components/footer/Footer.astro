@@ -1,192 +1,220 @@
 ---
+/**
+ * 全站页脚：细版编辑式页脚。
+ * 左侧为站点署名与建站年份，中间为知识入口，右侧为写作统计。
+ */
 import { getCollection } from "astro:content";
-import { currentLocale, getT } from "@/i18n";
-import { sanitizeThemeColor, type ThemeColorValue } from "@/toolkit/themeColor";
-import "./footer.css";
+import themeConfig from "@/theme.config.ts";
+import { getReadingStats } from "@/toolkit/posts/readingStats";
+
+interface FooterConfig {
+  since?: number;
+  icon?: { name?: string; color?: string };
+  count?: boolean;
+  powered?: boolean;
+  icp?: {
+    enable?: boolean;
+    icpnumber?: string;
+    icpurl?: string;
+  };
+}
 
 interface Props {
-  config?: {
-    since?: number;
-    icon?: {
-      name?: string;
-      color?: ThemeColorValue;
-    };
-    count?: boolean;
-    powered?: boolean;
-    icp?: {
-      enable?: boolean;
-      icon?: string;
-      icpnumber?: string;
-      icpurl?: string;
-      beian?: string;
-      recordcode?: string;
-    };
-  };
-  siteName?: string;
+  config?: FooterConfig;
+  siteName: string;
   author?: string;
 }
 
-const { config = {}, siteName = "ShokaX", author = "Author" } = Astro.props;
-const t = getT(currentLocale);
+const { config = {}, siteName, author = "" } = Astro.props;
 
-// Get all posts for statistics
-const allPosts = await getCollection("posts");
-const posts = allPosts.filter((post) => !post.data.draft);
-
-// Calculate statistics
-const wordCounts = posts.map((post) => {
-  const content = post.body || "";
-  // Simple word count: Chinese characters + English words
-  const chineseCount = (content.match(/[\u4E00-\u9FFF]/g) || []).length;
-  const englishText = content.replaceAll(/[\u4E00-\u9FFF]/g, "");
-  const englishCount = englishText
-    .trim()
-    .split(/\s+/)
-    .filter((word) => word.length > 0).length;
-  return chineseCount + englishCount;
-});
-const totalWords = wordCounts.reduce((a, b) => a + b, 0);
-
-// Calculate reading time (using 300 WPM as baseline for mixed content)
-const avgWordsPerMinute = 300;
-const readingMinutes = Math.ceil(totalWords / avgWordsPerMinute);
-const readingTimeStr =
-  readingMinutes === 1
-    ? `1 ${t("post.minutes")}`
-    : `${readingMinutes} ${t("post.minutes")}`;
-
-// Get current year for copyright
 const currentYear = new Date().getFullYear();
-const since = config.since || currentYear;
+const since = config.since ?? currentYear;
+const yearRange = since >= currentYear ? `${currentYear}` : `${since}–${currentYear}`;
 
-const iconName = config.icon?.name || "sakura rotate";
-const iconColor = sanitizeThemeColor(
-  config.icon?.color,
-  "var(--color-pink)",
-  "footer.icon.color(runtime)",
+const posts = (await getCollection("posts")).filter((post) => !post.data.draft);
+
+// 与文章卡片、文章页共用同一字数与阅读时长口径
+const siteStats = posts.reduce(
+  (total, post) => {
+    const stats = getReadingStats(post.body ?? "");
+    return {
+      words: total.words + stats.wordCount,
+      minutes: total.minutes + stats.readTime,
+    };
+  },
+  { words: 0, minutes: 0 },
 );
+
+const totalWords = siteStats.words;
+const readingMinutes = Math.max(1, siteStats.minutes);
+const readingTimeLabel =
+  readingMinutes >= 60
+    ? `${Math.floor(readingMinutes / 60)} 小时 ${readingMinutes % 60} 分`
+    : `${readingMinutes} 分钟`;
+
+const entries = [
+  { href: "/categories/", label: "分类" },
+  { href: "/tags/", label: "标签" },
+  { href: "/archives/", label: "归档" },
+  { href: "/about/", label: "关于" },
+  { href: "/rss.xml", label: "RSS" },
+];
+
+const social = themeConfig.sidebar?.social ?? {};
+const socialLinks = Object.entries(social)
+  .map(([key, value]) => ({
+    key,
+    href: typeof value === "string" ? value : value?.url,
+    label: key === "github" ? "GitHub" : key === "email" ? "邮箱" : key,
+  }))
+  .filter((item): item is { key: string; href: string; label: string } => Boolean(item.href));
+
+const icp = config.icp;
+const showIcp = Boolean(icp?.enable && icp.icpnumber);
 ---
 
-<footer
-  id="footer"
-  class="text-grey-5 text-sm bg-body-bg-shadow mt-4 py-2"
->
-  <div class="inner mx-auto w-full max-w-3xl px-4">
-    <div class="status text-center w-full">
-      <!-- Copyright Section -->
-      <div class="copyright block my-2">
-        {since !== currentYear && <span>&copy; {since} -</span>}
-        <span>{currentYear}</span>
-        <span
-          class="with-love inline-block mx-0.5 ml-0.5"
-          style={`color: ${iconColor}`}
-        >
-          <i class={`${iconName}`}></i>
-        </span>
-        <span class="author">{author} @ {siteName}</span>
-      </div>
+<footer class="site-footer">
+  <div class="site-footer__inner">
+    <div class="site-footer__brand">
+      <p class="site-footer__name">{siteName}</p>
+      <p class="site-footer__note">
+        {author ? `${author} · ` : ""}Learn, record, and keep asking better questions.
+      </p>
+    </div>
 
-      <!-- Statistics Section -->
-      {
-        config.count && (
-          <div class="count block my-2">
-            <span class="post-meta-item-icon mr-0 inline">
-              <div class="i-ri-line-chart-fill inline-block align-text-bottom text-1rem" />
-            </span>
-            <span title={t("footer.totalWordsTitle")}>
-              {totalWords} {t("post.words")}
-            </span>
-            <span class="post-meta-divider mx-2"> | </span>
-            <span class="post-meta-item-icon mr-0 inline">
-              <div class="i-ri-cup-fill inline-block align-text-bottom text-1rem" />
-            </span>
-            <span title={t("footer.estimatedReadingTimeTitle")}>{readingTimeStr}</span>
-          </div>
-        )
-      }
+    <nav class="site-footer__nav" aria-label="页脚导航">
+      {entries.map((entry) => <a href={entry.href}>{entry.label}</a>)}
+      {socialLinks.map((link) => (
+        <a href={link.href} rel="me noopener" target={link.key === "email" ? undefined : "_blank"}>
+          {link.label}
+        </a>
+      ))}
+    </nav>
 
-      <!-- Powered By Section -->
-      {
-        config.powered && (
-          <div class="powered-by block my-2 text-xs">
-            {t("footer.poweredBy")}{" "}
-            <a
-              href="https://astro.build"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="hover:opacity-80 border-b border-dashed"
-            >
-              Astro
-            </a>{" "}
-            {t("footer.and")}{" "}
-            <a
-              href="https://github.com/theme-shoka-x/astro-blog-shokax"
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="ShokaX GitHub 项目"
-              class="hover:opacity-80 border-b border-dashed"
-            >
-              ShokaX
-            </a>{" "}
-            {t("footer.poweredSuffix")}
-          </div>
-        )
-      }
-
-      <!-- ICP Section -->
-      {
-        config.icp?.enable && (
-          <div class="icp block text-xs leading-loose mt-4">
-            <a
-              href={config.icp.icpurl || "https://beian.miit.gov.cn/"}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="text-grey-5 hover:opacity-80 border-b border-dashed"
-            >
-              {config.icp.icpnumber}
-            </a>
-            {config.icp.beian && config.icp.recordcode && (
-              <>
-                <br />
-                <a
-                  target="_blank"
-                  href={`https://beian.mps.gov.cn/#/query/webSearch?code=${config.icp.recordcode}`}
-                  rel="noopener noreferrer"
-                  class="inline-block text-grey-5 hover:opacity-80 border-b border-dashed"
-                >
-                  {config.icp.icon && (
-                    <img
-                      src={config.icp.icon}
-                      alt="ICP"
-                      class="max-w-8 inline align-middle"
-                    />
-                  )}
-                  {config.icp.beian}
-                </a>
-              </>
-            )}
-          </div>
-        )
-      }
+    <div class="site-footer__stats">
+      {config.count !== false && (
+        <p>
+          <span class="site-footer__stat">{posts.length}</span> 篇笔记 ·{" "}
+          <span class="site-footer__stat">{totalWords.toLocaleString("zh-CN")}</span> 字 · 约{" "}
+          <span class="site-footer__stat">{readingTimeLabel}</span>
+        </p>
+      )}
+      <p class="site-footer__meta">
+        © {yearRange} {author || siteName}
+        {config.powered !== false && (
+          <span class="site-footer__powered">
+            {" · "}由 <a href="https://astro.build/" rel="noopener" target="_blank">Astro</a> 与{" "}
+            <a href="https://github.com/theme-shoka-x/hexo-theme-shokaX" rel="noopener" target="_blank">ShokaX</a> 驱动
+          </span>
+        )}
+      </p>
+      {showIcp && (
+        <p class="site-footer__meta">
+          <a href={icp?.icpurl ?? "https://beian.miit.gov.cn/"} rel="noopener" target="_blank">
+            {icp?.icpnumber}
+          </a>
+        </p>
+      )}
     </div>
   </div>
 </footer>
 
 <style>
-  .inner {
-    margin: 0 auto 0.625rem;
-    position: relative;
+  .site-footer {
+    margin-top: var(--rhythm-section, 5rem);
+    border-top: 1px solid var(--hairline, rgb(0 0 0 / 8%));
+    background: var(--surface-subtle, #f4f2ee);
   }
 
-  @media (min-width: 1024px) {
-    .inner {
-      max-width: 1160px;
+  .site-footer__inner {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    max-width: var(--container-wide, 84rem);
+    margin: 0 auto;
+    padding: clamp(2rem, 5vw, 3.25rem) var(--gutter, clamp(1.25rem, 4vw, 2.75rem));
+  }
+
+  .site-footer__name {
+    margin: 0 0 0.35rem;
+    font-family: var(--font-serif, Georgia, "Noto Serif SC", serif);
+    font-size: 1.05rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    color: var(--text-color, #23211d);
+  }
+
+  .site-footer__note {
+    margin: 0;
+    max-width: 26rem;
+    font-family: var(--font-sans, system-ui, sans-serif);
+    font-size: 0.78rem;
+    line-height: 1.7;
+    color: var(--text-color-muted, #6b675f);
+  }
+
+  .site-footer__nav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem 1.1rem;
+    align-content: flex-start;
+  }
+
+  .site-footer__nav a {
+    font-family: var(--font-sans, system-ui, sans-serif);
+    font-size: 0.8rem;
+    letter-spacing: 0.02em;
+    color: var(--text-color-muted, #6b675f);
+    text-decoration: none;
+  }
+
+  .site-footer__nav a:hover {
+    color: var(--text-color, #23211d);
+  }
+
+  .site-footer__stats {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    font-family: var(--font-sans, system-ui, sans-serif);
+    font-size: 0.75rem;
+    line-height: 1.7;
+    color: var(--text-color-muted, #6b675f);
+  }
+
+  .site-footer__stats p {
+    margin: 0;
+  }
+
+  .site-footer__stat {
+    font-variant-numeric: tabular-nums;
+    color: var(--text-color, #23211d);
+  }
+
+  .site-footer__meta {
+    font-size: 0.72rem;
+    color: var(--text-color-subtle, #8a857c);
+  }
+
+  .site-footer__meta a {
+    color: inherit;
+    text-decoration-color: color-mix(in oklab, currentColor 45%, transparent);
+  }
+
+  .site-footer__meta a:hover {
+    color: var(--text-color, #23211d);
+  }
+
+  @media (min-width: 768px) {
+    .site-footer__inner {
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr) minmax(0, 1fr);
+      align-items: start;
+      gap: 2rem;
     }
-  }
 
-  @media (min-width: 1440px) {
-    .inner {
-      max-width: 1340px;
+    .site-footer__stats {
+      align-items: flex-end;
+      text-align: right;
     }
   }
 </style>

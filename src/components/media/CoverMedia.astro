@@ -1,0 +1,326 @@
+---
+/**
+ * 统一封面渲染组件（图片体系渲染层）
+ * - photograph / illustration / scientific：构建期优化后的响应式图片
+ * - typographic：由标题/分类稳定派生的文字封面（不生成二进制图）
+ * - none：不渲染（由父级布局处理无封面版式）
+ *
+ * 摄影默认裁切填充（cover）；科研图表/信息型图像默认完整展示（contain），
+ * 保证坐标轴、图例与标注不被裁掉。
+ */
+import { Image } from "astro:assets";
+import type { ResolvedCover } from "@/toolkit/covers";
+
+interface Props {
+  cover: ResolvedCover;
+  title: string;
+  /** card：列表卡片；hero：文章页头图；wide：首页精选大图 */
+  variant?: "card" | "hero" | "wide";
+  eager?: boolean;
+  sizes?: string;
+  widths?: number[];
+  showCaption?: boolean;
+  class?: string;
+}
+
+const {
+  cover,
+  title,
+  variant = "card",
+  eager = false,
+  sizes,
+  widths,
+  // 文章头图与首页精选大图都需要展示图注/来源；卡片列表保持简洁不显示
+  showCaption = variant === "hero" || variant === "wide",
+  class: className = "",
+} = Astro.props;
+
+const isTypographic = cover.kind === "typographic";
+const imageWidths =
+  widths ??
+  (variant === "card"
+    ? [320, 480, 640, 960]
+    : [640, 960, 1280, 1600, 1920]);
+const imageSizes =
+  sizes ??
+  (variant === "card"
+    ? "(max-width: 640px) 92vw, (max-width: 1024px) 46vw, 32rem"
+    : "(max-width: 768px) 100vw, min(92vw, 72rem)");
+const mode = cover.kind === "scientific" || cover.kind === "illustration"
+  ? cover.mode
+  : cover.mode;
+const objectPosition = cover.focus || "50% 50%";
+
+const tonesStyle = isTypographic
+  ? `--cover-paper:${cover.tones[0]};--cover-ink:${cover.tones[1]}`
+  : undefined;
+---
+
+{cover.kind === "none" ? null : isTypographic ? (
+  <div
+    class:list={["cover-media", "cover-media--type", `cover-media--${variant}`, className]}
+    data-pattern={cover.pattern}
+    style={tonesStyle}
+    role="img"
+    aria-label={cover.alt || `《${title}》文字封面`}
+  >
+    <span class="cover-media__mark" aria-hidden="true">Echo</span>
+    {cover.kicker && <span class="cover-media__kicker">{cover.kicker}</span>}
+    <span class="cover-media__ornament" aria-hidden="true" />
+    <span class="cover-media__index" aria-hidden="true">Learn · Record</span>
+  </div>
+) : (
+  <figure class:list={["cover-media", `cover-media--${variant}`, `cover-media--${mode}`, className]}>
+    <div class="cover-media__frame">
+      {
+        cover.Image ? (
+          <Image
+            src={cover.Image}
+            alt={cover.alt}
+            widths={imageWidths}
+            sizes={imageSizes}
+            loading={eager ? "eager" : "lazy"}
+            fetchpriority={eager ? "high" : undefined}
+            decoding="async"
+            class="cover-media__img"
+            style={`object-position:${objectPosition}`}
+          />
+        ) : (
+          <img
+            src={cover.src}
+            alt={cover.alt}
+            loading={eager ? "eager" : "lazy"}
+            fetchpriority={eager ? "high" : undefined}
+            decoding="async"
+            class="cover-media__img"
+            style={`object-position:${objectPosition}`}
+          />
+        )
+      }
+    </div>
+    {
+      showCaption && (cover.caption || cover.credit) && (
+        <figcaption class="cover-media__caption">
+          {cover.caption}
+          {cover.caption && cover.credit ? " · " : ""}
+          {cover.credit && <span class="cover-media__credit">图源：{cover.credit}</span>}
+        </figcaption>
+      )
+    }
+  </figure>
+)}
+
+<style>
+  .cover-media {
+    position: relative;
+    margin: 0;
+    overflow: hidden;
+    border-radius: var(--radius-md, 0.5rem);
+    background: var(--surface-subtle, #f2f0ec);
+    isolation: isolate;
+  }
+
+  /* ---------- 摄影 / 科研图表 ---------- */
+  .cover-media__frame {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .cover-media--card .cover-media__frame {
+    aspect-ratio: 16 / 9;
+  }
+
+  .cover-media--wide .cover-media__frame {
+    aspect-ratio: 16 / 9;
+  }
+
+  .cover-media--hero .cover-media__frame {
+    aspect-ratio: 21 / 9;
+  }
+
+  .cover-media__img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* 科研图表与截图：完整展示，用纸色留白承接比例差异 */
+  .cover-media--fit .cover-media__frame {
+    aspect-ratio: auto;
+    max-height: 34rem;
+    padding: clamp(0.75rem, 2vw, 1.5rem);
+    background:
+      linear-gradient(
+        to bottom,
+        color-mix(in oklab, var(--surface-subtle, #f2f0ec) 88%, transparent),
+        color-mix(in oklab, var(--surface-raised, #fff) 92%, transparent)
+      );
+    border: 1px solid var(--hairline, rgb(0 0 0 / 8%));
+    border-radius: inherit;
+  }
+
+  .cover-media--fit .cover-media__img {
+    height: auto;
+    max-height: 31rem;
+    object-fit: contain;
+  }
+
+  .cover-media--card.cover-media--fit .cover-media__frame {
+    aspect-ratio: 16 / 9;
+    padding: clamp(0.5rem, 1.6vw, 1rem);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .cover-media--card.cover-media--fit .cover-media__img {
+    height: auto;
+    max-height: 100%;
+    width: auto;
+    max-width: 100%;
+  }
+
+  .cover-media--hero.cover-media--fit .cover-media__frame {
+    aspect-ratio: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .cover-media--hero.cover-media--fit .cover-media__img {
+    max-height: 36rem;
+  }
+
+  .cover-media__caption {
+    margin-top: 0.75rem;
+    font-family: var(--font-sans, system-ui, sans-serif);
+    font-size: var(--text-xs, 0.8125rem);
+    line-height: 1.6;
+    color: var(--text-color-muted, #6b675f);
+  }
+
+  .cover-media__credit {
+    color: var(--text-color-subtle, #8a857c);
+  }
+
+  /* ---------- 文字封面 ---------- */
+  .cover-media--type {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: clamp(1rem, 3.2vw, 1.75rem);
+    color: var(--cover-ink, #2f2d29);
+    background:
+      radial-gradient(
+        120% 90% at 88% 12%,
+        color-mix(in oklab, var(--cover-ink, #2f2d29) 7%, transparent) 0%,
+        transparent 58%
+      ),
+      var(--cover-paper, #f2f0ec);
+    border: 1px solid
+      color-mix(in oklab, var(--cover-ink, #2f2d29) 12%, transparent);
+    box-shadow: none;
+  }
+
+  .cover-media--card.cover-media--type {
+    aspect-ratio: 16 / 9;
+  }
+
+  .cover-media--wide.cover-media--type {
+    aspect-ratio: 16 / 9;
+  }
+
+  .cover-media--hero.cover-media--type {
+    aspect-ratio: 21 / 9;
+  }
+
+  .cover-media__mark {
+    font-family: var(--font-serif, Georgia, serif);
+    font-size: clamp(0.95rem, 1.6vw, 1.2rem);
+    font-style: italic;
+    letter-spacing: 0.02em;
+    opacity: 0.82;
+  }
+
+  .cover-media__kicker {
+    position: relative;
+    z-index: 1;
+    align-self: flex-start;
+    max-width: 78%;
+    padding: 0.2rem 0;
+    font-family: var(--font-sans, system-ui, sans-serif);
+    font-size: clamp(0.68rem, 1.1vw, 0.78rem);
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--cover-ink, #2f2d29);
+    border-bottom: 1px solid
+      color-mix(in oklab, var(--cover-ink, #2f2d29) 32%, transparent);
+  }
+
+  .cover-media__index {
+    font-family: var(--font-sans, system-ui, sans-serif);
+    font-size: 0.62rem;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    opacity: 0.55;
+  }
+
+  /* 纹样：全部由 CSS 绘制，稳定对应 pattern 字段 */
+  .cover-media__ornament {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    opacity: 0.5;
+  }
+
+  [data-pattern="rules"] .cover-media__ornament {
+    background-image: repeating-linear-gradient(
+      to bottom,
+      color-mix(in oklab, var(--cover-ink, #2f2d29) 13%, transparent) 0 1px,
+      transparent 1px 14%
+    );
+    mask-image: linear-gradient(to bottom, transparent 6%, #000 32%, #000 74%, transparent 96%);
+  }
+
+  [data-pattern="grid"] .cover-media__ornament {
+    background-image:
+      linear-gradient(
+        to right,
+        color-mix(in oklab, var(--cover-ink, #2f2d29) 9%, transparent) 1px,
+        transparent 1px
+      ),
+      linear-gradient(
+        to bottom,
+        color-mix(in oklab, var(--cover-ink, #2f2d29) 9%, transparent) 1px,
+        transparent 1px
+      );
+    background-size: 12% 24%;
+    mask-image: radial-gradient(85% 80% at 82% 18%, #000 0%, transparent 78%);
+  }
+
+  [data-pattern="orbit"] .cover-media__ornament {
+    background: radial-gradient(
+      circle at 82% 26%,
+      transparent 27%,
+      color-mix(in oklab, var(--cover-ink, #2f2d29) 16%, transparent) 27.4%,
+      transparent 28%,
+      transparent 34%,
+      color-mix(in oklab, var(--cover-ink, #2f2d29) 10%, transparent) 34.3%,
+      transparent 35%
+    );
+    mask-image: radial-gradient(90% 90% at 82% 26%, #000 0%, transparent 80%);
+  }
+
+  [data-pattern="stack"] .cover-media__ornament {
+    background-image: repeating-linear-gradient(
+      135deg,
+      color-mix(in oklab, var(--cover-ink, #2f2d29) 7%, transparent) 0 1px,
+      transparent 1px 18px
+    );
+    mask-image: linear-gradient(120deg, transparent 22%, #000 62%);
+  }
+</style>

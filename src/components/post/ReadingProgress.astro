@@ -1,0 +1,129 @@
+---
+/**
+ * 阅读进度：顶部 2px 发丝条 + 右下角克制的返回顶部按钮。
+ * 只在文章页渲染；不遮挡正文，不使用大面积悬浮面板。
+ */
+---
+
+<div class="reading-progress" aria-hidden="true">
+  <span class="reading-progress__bar" data-reading-progress-bar></span>
+</div>
+
+<button class="back-to-top" type="button" data-back-to-top aria-label="返回顶部">
+  <svg viewBox="0 0 24 24" width="16" height="16" aria-hidden="true" focusable="false">
+    <path
+      d="M12 19V5M5.5 11.5 12 5l6.5 6.5"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="1.6"
+      stroke-linecap="round"
+      stroke-linejoin="round"></path>
+  </svg>
+</button>
+
+<script>
+  const progressBar = document.querySelector<HTMLElement>("[data-reading-progress-bar]");
+  const backToTop = document.querySelector<HTMLButtonElement>("[data-back-to-top]");
+  const article = document.querySelector<HTMLElement>(".post-content");
+
+  if (progressBar && article) {
+    let ticking = false;
+
+    const update = () => {
+      ticking = false;
+      const start = article.offsetTop;
+      const total = article.offsetHeight - window.innerHeight * 0.6;
+      const scrolled = window.scrollY - start;
+      const ratio = total > 0 ? Math.min(1, Math.max(0, scrolled / total)) : 0;
+
+      progressBar.style.transform = `scaleX(${ratio.toFixed(4)})`;
+    };
+
+    const onScroll = () => {
+      if (!ticking) {
+        ticking = true;
+        window.requestAnimationFrame(update);
+      }
+    };
+
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll, { passive: true });
+  }
+
+  if (backToTop) {
+    const toggleBackToTop = () => {
+      backToTop.classList.toggle("is-visible", window.scrollY > 720);
+    };
+
+    backToTop.addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    toggleBackToTop();
+    window.addEventListener("scroll", toggleBackToTop, { passive: true });
+  }
+</script>
+
+<style>
+  .reading-progress {
+    position: fixed;
+    inset: 0 0 auto;
+    z-index: calc(var(--z-dropdown, 50) + 1);
+    height: 2px;
+    pointer-events: none;
+  }
+
+  .reading-progress__bar {
+    display: block;
+    height: 100%;
+    background: var(--primary-color, #7c3b52);
+    transform: scaleX(0);
+    transform-origin: 0 50%;
+    opacity: 0.75;
+  }
+
+  .back-to-top {
+    position: fixed;
+    right: 1.25rem;
+    bottom: 1.5rem;
+    z-index: var(--z-dropdown, 50);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.4rem;
+    height: 2.4rem;
+    padding: 0;
+    border: 1px solid var(--line-color, rgb(0 0 0 / 12%));
+    border-radius: 50%;
+    background: var(--surface-raised, #fff);
+    color: var(--text-color-muted, #6b675f);
+    cursor: pointer;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(0.4rem);
+    transition:
+      opacity 0.24s ease,
+      transform 0.24s ease,
+      visibility 0.24s;
+    box-shadow: var(--shadow-xs, 0 1px 2px rgb(0 0 0 / 6%));
+  }
+
+  .back-to-top.is-visible {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+
+  .back-to-top:hover {
+    color: var(--primary-color, #7c3b52);
+    border-color: color-mix(in oklab, var(--primary-color, #7c3b52) 40%, transparent);
+  }
+
+  @media (min-width: 1100px) {
+    .back-to-top {
+      right: 2rem;
+      bottom: 2rem;
+    }
+  }
+</style>

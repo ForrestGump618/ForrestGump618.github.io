@@ -1,6 +1,6 @@
 ---
 import { Code } from "astro:components";
-import Layout from "../../layouts/Layout.astro";
+import Layout from "@/layouts/Layout.astro";
 import FriendLinks from "@/components/friends/FriendLinks.astro";
 import FriendRules from "@/content/friends-rules.md";
 import WalineComments from "@/components/post/WalineComments.svelte";
@@ -12,7 +12,7 @@ const friendsConfig = themeConfig.friends;
 const friendLinks = friendsConfig?.links ?? [];
 const pageTitle = friendsConfig?.title ?? "友链";
 const pageDescription =
-  friendsConfig?.description ?? "卡片式展示，支持站点预览与主题色点缀。";
+  friendsConfig?.description ?? "欢迎交换友链，一起记录与分享。";
 const commentsConfig = themeConfig.comments || {};
 const walineConfig = commentsConfig.waline || {};
 const friendsPath = "/friends/";
@@ -30,38 +30,39 @@ const friendsSnippet = {
 const friendsJson = JSON.stringify(friendsSnippet, null, 2);
 ---
 
-<Layout pageTitle={pageTitle}>
-  <div class="wrap friend-page">
-    <div class="friend-header">
-      <h2>{pageTitle}</h2>
-      <p>{pageDescription}</p>
-    </div>
-    <section class="friend-section friend-rules">
-      <h3>友链规则</h3>
-      <div class="friend-rules-content">
+<Layout pageTitle={pageTitle} eyebrow="Friends" description={pageDescription}>
+  <div class="wrap friends">
+    <section class="friends__section">
+      <h2 class="friends__title">友链规则</h2>
+      <div class="friends__rules">
         <FriendRules />
       </div>
     </section>
-    <section class="friend-section friend-snippet">
-      <h3>友链配置示例</h3>
-      <p>添加本站时，请将下面内容追加到自己的 links 配置中。</p>
+
+    <section class="friends__section">
+      <h2 class="friends__title">友链配置示例</h2>
+      <p class="friends__hint">
+        添加本站时，请将下面内容追加到自己的 links 配置中。
+      </p>
       <code-block>
         <Code
           code={friendsJson}
           lang="json"
           themes={codeThemes}
-          class="friend-code"
+          class="friends__code"
         />
       </code-block>
     </section>
-    <section class="friend-section friend-links-section">
-      <h3>友链列表</h3>
+
+    <section class="friends__section">
+      <h2 class="friends__title">友链列表</h2>
       <FriendLinks links={friendLinks} />
     </section>
+
     {
       friendsConfig?.comments && commentsConfig.enable !== false && (
-        <section class="friend-section friend-comments" id="comments">
-          <h3>评论区</h3>
+        <section class="friends__section" id="comments">
+          <h2 class="friends__title">评论区</h2>
           <div class="comment">
             <WalineComments
               client:visible
@@ -79,99 +80,62 @@ const friendsJson = JSON.stringify(friendsSnippet, null, 2);
 </Layout>
 
 <style>
-  .friend-page {
-    padding: 1.5rem 1.75rem 2.5rem;
+  .friends__section {
+    margin-bottom: 2.25rem;
   }
 
-  .friend-header {
-    margin-bottom: 1.5rem;
+  .friends__title {
+    margin: 0 0 0.9rem;
+    padding-bottom: 0.55rem;
+    border-bottom: 1px solid var(--hairline, rgb(0 0 0 / 8%));
+    font-family: var(--font-serif, serif);
+    font-size: 1.02rem;
+    font-weight: 600;
+    color: var(--text-color, #23211d);
   }
 
-  .friend-section {
-    margin-top: 2rem;
-  }
-
-  .friend-header h2 {
-    margin: 0 0 0.35rem;
-    font-size: 1.75rem;
-    color: var(--grey-7);
-  }
-
-  .friend-header p {
-    margin: 0;
-    color: var(--grey-6);
-  }
-
-  .friend-rules h3 {
-    margin: 0 0 0.75rem;
-    color: var(--grey-7);
-  }
-
-  .friend-rules-content {
-    padding: 1rem 1.1rem;
-    border-radius: 0.75rem;
-    background: linear-gradient(135deg, var(--grey-0), var(--grey-1));
-    border: 1px solid var(--grey-2);
-    color: var(--grey-7);
-    box-shadow: 0 0.6rem 1.2rem var(--box-bg-shadow);
-  }
-
-  .friend-rules-content :global(p) {
-    margin: 0 0 0.75rem;
-    color: var(--grey-6);
+  .friends__hint {
+    margin: 0 0 0.9rem;
+    font-family: var(--font-sans, system-ui, sans-serif);
+    font-size: 0.88rem;
     line-height: 1.7;
+    color: var(--text-color-subtle, #8a857c);
   }
 
-  .friend-rules-content :global(ul) {
+  .friends__rules {
+    font-family: var(--font-sans, system-ui, sans-serif);
+    font-size: 0.9rem;
+    line-height: 1.8;
+    color: var(--text-color, #23211d);
+  }
+
+  .friends__rules :global(p) {
+    margin: 0 0 0.7rem;
+  }
+
+  .friends__rules :global(ul) {
     margin: 0;
     padding-left: 1.2rem;
-    color: var(--grey-6);
   }
 
-  .friend-rules-content :global(li) {
-    margin: 0.4rem 0;
-    line-height: 1.7;
+  .friends__rules :global(li) {
+    margin: 0.35rem 0;
   }
 
-  .friend-rules-content :global(li::marker) {
-    color: var(--color-blue);
+  .friends__rules :global(li::marker) {
+    color: var(--primary-color, #7c3b52);
   }
 
-  .friend-rules-content :global(strong) {
-    color: var(--grey-7);
+  .friends__rules :global(strong) {
+    color: var(--text-color, #23211d);
   }
 
-  .friend-snippet h3 {
-    margin: 0 0 0.5rem;
-    color: var(--grey-7);
+  .friends__rules :global(a) {
+    color: var(--link-color, var(--primary-color, #7c3b52));
   }
 
-  .friend-links-section h3 {
-    margin: 0 0 0.75rem;
-    color: var(--grey-7);
-  }
-
-  .friend-snippet p {
-    margin: 0 0 1rem;
-    color: var(--grey-6);
-  }
-
-  .friend-code :global(pre) {
+  .friends__code :global(pre) {
     margin: 0;
-    padding: 1rem 1.1rem;
-    border-radius: 0.75rem;
-    background: var(--grey-2);
-    border: 1px solid var(--grey-3);
-    color: var(--grey-7);
-    font-size: 0.9rem;
-    line-height: 1.6;
     overflow-x: auto;
-    white-space: pre;
-  }
-
-  @media (max-width: 768px) {
-    .friend-page {
-      padding: 1.25rem 1rem 2rem;
-    }
   }
 </style>

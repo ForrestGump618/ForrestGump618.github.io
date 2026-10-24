@@ -1,23 +1,29 @@
 ---
+/**
+ * 文章详情页：编辑式长文阅读。
+ * 结构：面包屑 → 标题区 → 封面（真实图片才显示）→ 正文 + 右侧目录 → 标签 → 相关阅读 → 版权 → 上下篇 → 评论。
+ */
 import Layout from "@/layouts/Layout.astro";
 import Breadcrumb from "@/components/post/Breadcrumb.astro";
-import PostHeader from "@/components/post/PostHeader.astro";
 import PostFooter from "@/components/post/PostFooter.astro";
 import PostNav from "@/components/post/PostNav.astro";
-import AiSimilarPosts from "@/components/post/AiSimilarPosts.astro";
 import AiSummaryCard from "@/components/post/AiSummaryCard.astro";
+import ArticleToc from "@/components/post/ArticleToc.astro";
+import ReadingProgress from "@/components/post/ReadingProgress.astro";
 import WalineComments from "@/components/post/WalineComments.svelte";
+import CoverMedia from "@/components/media/CoverMedia.astro";
+import { avatar } from "@/components/Images.astro";
 import { currentLocale } from "@/i18n";
 import { getCollection, render } from "astro:content";
 import themeConfig from "@/theme.config";
-import type {
-  TocItem,
-  QuickNavigation,
-} from "@/components/sidebar/SidebarTypes";
+import type { TocItem } from "@/components/sidebar/SidebarTypes";
 import type { EncryptedData } from "@/toolkit/encryption/types";
 import { encryptContent } from "@/toolkit/encryption/crypto";
 import { createPostContentContainer } from "@/toolkit/posts/createPostContentContainer";
+import { formatDateLong, formatDateShort } from "@/toolkit/posts/formatDate";
+import { getReadingStats, toReadableText } from "@/toolkit/posts/readingStats";
 import { toPostHref, toTagHref } from "@/toolkit/posts/url";
+import { resolvePostCover } from "@/toolkit/covers";
 import { wrapRenderedCodeBlocks } from "@/toolkit/wrapRenderedCodeBlocks";
 import { wrapRenderedImages } from "@/toolkit/wrapRenderedImages";
 import { wrapCodeGroups } from "@/toolkit/wrapCodeGroups";
@@ -25,13 +31,9 @@ import { wrapExternalLinks } from "@/toolkit/wrapExternalLinks";
 import { wrapRenderedTables } from "@/toolkit/wrapRenderedTables";
 
 import "@/styles/post.css";
-
 import "katex/dist/katex-swap.min.css";
-import { avatar } from "@/components/Images.astro";
-
 import "@/styles/spoiler.css";
 
-// 加密文章内容组件
 import EncryptedPostContent from "@/components/encrypted/EncryptedPost.svelte";
 
 export async function getStaticPaths() {
@@ -48,17 +50,16 @@ export async function getStaticPaths() {
       const nextPost =
         index < sortedPosts.length - 1 ? sortedPosts[index + 1] : undefined;
 
-      // Get related posts from the same category
-      const categories = post.data.categories || [];
+      const categories = post.data.categories ?? [];
       const relatedPosts =
         categories.length > 0
           ? sortedPosts
               .filter(
                 (p) =>
                   p.id !== post.id &&
-                  p.data.categories?.some((c) => categories.includes(c)),
+                  p.data.categories?.some((category) => categories.includes(category)),
               )
-              .slice(0, 10)
+              .slice(0, 6)
               .map((p) => ({
                 slug: p.id,
                 title: p.data.title,
@@ -67,7 +68,6 @@ export async function getStaticPaths() {
               }))
           : [];
 
-      // 处理加密文章
       let encryptedContent: EncryptedData | undefined;
       let encryptedToc: EncryptedData | undefined;
       let renderedContentHtml: string | undefined;
@@ -77,35 +77,25 @@ export async function getStaticPaths() {
 
       const renderedHtml = wrapExternalLinks(
         wrapRenderedImages(
-            wrapRenderedTables(
-              wrapCodeGroups(
-                wrapRenderedCodeBlocks(await container.renderToString(Content)),
-              ),
-            ),
+          wrapRenderedTables(
+            wrapCodeGroups(wrapRenderedCodeBlocks(await container.renderToString(Content))),
           ),
+        ),
         { siteUrl: import.meta.env.SITE },
       );
 
       if (post.data.encrypted && post.data.password) {
         isEncrypted = true;
+        encryptedContent = await encryptContent(renderedHtml, post.data.password);
 
-        // 加密内容
-        encryptedContent = await encryptContent(
-          renderedHtml,
-          post.data.password,
-        );
-
-        // 加密 TOC
-        const tocData = headings.map((h) => ({
-          id: h.slug,
-          text: h.text,
-          level: h.depth,
+        const tocData = headings.map((heading) => ({
+          id: heading.slug,
+          text: heading.text,
+          level: heading.depth,
         }));
+
         if (tocData.length > 0) {
-          encryptedToc = await encryptContent(
-            JSON.stringify(tocData),
-            post.data.password,
-          );
+          encryptedToc = await encryptContent(JSON.stringify(tocData), post.data.password);
         }
       } else {
         renderedContentHtml = renderedHtml;
@@ -120,10 +110,6 @@ export async function getStaticPaths() {
                 title: prevPost.data.title,
                 slug: prevPost.id,
                 category: prevPost.data.categories?.[0],
-                cover:
-                  typeof prevPost.data.cover === "string"
-                    ? prevPost.data.cover
-                    : prevPost.data.cover?.src,
               }
             : undefined,
           nextPost: nextPost
@@ -131,10 +117,6 @@ export async function getStaticPaths() {
                 title: nextPost.data.title,
                 slug: nextPost.id,
                 category: nextPost.data.categories?.[0],
-                cover:
-                  typeof nextPost.data.cover === "string"
-                    ? nextPost.data.cover
-                    : nextPost.data.cover?.src,
               }
             : undefined,
           relatedPosts,
@@ -155,13 +137,11 @@ interface Props {
     title: string;
     slug: string;
     category?: string;
-    cover?: string;
   };
   nextPost?: {
     title: string;
     slug: string;
     category?: string;
-    cover?: string;
   };
   relatedPosts: {
     slug: string;
@@ -188,92 +168,46 @@ const {
   headings,
 } = Astro.props as Props;
 
-// Build TOC from headings (加密文章的 TOC 在前端解密后更新)
 const toc: TocItem[] = isEncrypted
   ? []
-  : headings.map((h) => ({
-      id: h.slug,
-      text: h.text,
-      level: h.depth,
+  : headings.map((heading) => ({
+      id: heading.slug,
+      text: heading.text,
+      level: heading.depth,
     }));
 
-// Build quick navigation
-const navigation: QuickNavigation = {
-  prevUrl: prevPost ? toPostHref(prevPost.slug) : undefined,
-  prevTitle: prevPost?.title,
-  nextUrl: nextPost ? toPostHref(nextPost.slug) : undefined,
-  nextTitle: nextPost?.title,
-};
+const stats = getReadingStats(post.body ?? "");
 
-// Calculate word count from content
-const plainText = (post.body || "")
-  .replaceAll(/[#*`_[\]()]/g, "")
-  .replaceAll(/\s+/g, " ");
-const wordCount = plainText.length;
+const siteConfig = themeConfig.sidebar ?? {};
+const author = siteConfig.author ?? "";
+const siteName = themeConfig.siteName ?? "Echo";
+const commentsConfig = themeConfig.comments ?? {};
+const walineConfig = commentsConfig.waline ?? {};
+const commentsEnabled = commentsConfig.enable !== false;
 
-// Calculate read time (assume 300 words per minute)
-const readTime = Math.ceil(wordCount / 300);
-
-// Get site info from config
-const siteConfig = themeConfig.sidebar || {};
-const author = siteConfig.author || "Author";
-const siteName = themeConfig.siteName || "Site";
-const commentsConfig = themeConfig.comments || {};
-const walineConfig = commentsConfig.waline || {};
-
-const hycConfig = themeConfig.hyc || {};
-const aiRecommendConfig = hycConfig.aiRecommend || {};
-const aiSummaryConfig = hycConfig.aiSummary || {};
-const hycEnable = hycConfig.enable === true;
-const aiRecommendEnable = aiRecommendConfig.enable !== false;
+const hycConfig = themeConfig.hyc ?? {};
+const aiSummaryConfig = hycConfig.aiSummary ?? {};
 const aiSummaryEnable = aiSummaryConfig.enable !== false;
-const aiSummaryTitle = aiSummaryConfig.title || "AI 摘要";
+const aiSummaryTitle = aiSummaryConfig.title ?? "AI 摘要";
 const aiSummaryShowModel = aiSummaryConfig.showModel === true;
-const aiRecommendLimit = Math.max(
-  1,
-  Math.min(10, aiRecommendConfig.limit ?? 3),
-);
-const aiRecommendMinSimilarityRaw = aiRecommendConfig.minSimilarity ?? 0.4;
-const aiRecommendMinSimilarity = Math.min(
-  1,
-  Math.max(
-    0,
-    aiRecommendMinSimilarityRaw > 1
-      ? aiRecommendMinSimilarityRaw / 100
-      : aiRecommendMinSimilarityRaw,
-  ),
-);
-
-interface AiRecommendPost {
-  slug: string;
-  title: string;
-  score: number;
-}
 
 interface PostAiSummary {
   content: string | null;
   model: string | null;
 }
 
-let aiRecommendPosts: AiRecommendPost[] = [];
 let aiSummary: PostAiSummary | null = null;
 
-// 加密文章不获取 AI 摘要和推荐
-if (!isEncrypted && hycEnable && aiSummaryEnable) {
+if (!isEncrypted && hycConfig.enable === true && aiSummaryEnable) {
   try {
     const { getPostSummary } = await import("@hyacine/cli/api");
 
     if (typeof getPostSummary !== "function") {
-      throw new TypeError(
-        "getPostSummary is not available in current @hyacine/cli",
-      );
+      throw new TypeError("getPostSummary is not available in current @hyacine/cli");
     }
 
     const summaryResult = (await getPostSummary(post.id)) as {
-      summary?: {
-        content?: string | null;
-        model?: string | null;
-      };
+      summary?: { content?: string | null; model?: string | null };
     } | null;
 
     if (summaryResult?.summary?.content) {
@@ -287,203 +221,209 @@ if (!isEncrypted && hycEnable && aiSummaryEnable) {
   }
 }
 
-if (!isEncrypted && hycEnable && aiRecommendEnable) {
-  try {
-    const { findSimilarPosts } = await import("@hyacine/cli/api");
-    const similarResult = await findSimilarPosts({
-      query: post.id,
-      limit: aiRecommendLimit,
-    });
-
-    aiRecommendPosts = (similarResult.items || [])
-      .filter((item) => item.slug && item.slug !== post.id)
-      .filter(
-        (item) =>
-          typeof item.score === "number" &&
-          item.score >= aiRecommendMinSimilarity,
-      )
-      .toSorted((a, b) => b.score - a.score)
-      .slice(0, aiRecommendLimit)
-      .map((item) => ({
-        slug: item.slug,
-        title: item.title,
-        score: item.score,
-      }));
-  } catch {
-    aiRecommendPosts = [];
-  }
-}
-
-// Current post path (trailing slash required by project routing)
 const postPath = toPostHref(post.id);
-
-// Build permalink
 const permalink = import.meta.env.SITE
   ? new URL(postPath, import.meta.env.SITE).toString()
   : postPath;
 
-// Build postMeta for Brand component
-const postMeta = {
-  date: post.data.date,
-  wordCount,
-  readTime,
-};
-
-// SEO：文章描述（与 meta description 同源）
 const postDescription =
-  post.data.description || post.body?.slice(0, 150).replace(/\s+/g, " ");
+  post.data.description || toReadableText(post.body ?? "").slice(0, 150);
+
+const cover = resolvePostCover({
+  id: post.id,
+  title: post.data.title,
+  categories: post.data.categories,
+  tags: post.data.tags,
+  cover: post.data.cover,
+  description: post.data.description,
+});
+const hasHeroImage =
+  (cover.kind === "photograph" || cover.kind === "scientific" || cover.kind === "illustration") &&
+  Boolean(cover.Image || cover.src);
+
+const seoImage = cover.Image ?? cover.src ?? undefined;
 ---
 
 <Layout
-  toc={toc}
-  relatedPosts={relatedPosts}
-  currentSlug={post.id}
-  navigation={navigation}
   pageTitle={post.data.title}
-  postMeta={postMeta}
-  pageCover={post.data.cover}
+  hidePageHeader={true}
+  pageCover={seoImage}
   description={postDescription}
   seoType="article"
   publishedTime={new Date(post.data.date).toISOString()}
-  modifiedTime={post.data.updated
-    ? new Date(post.data.updated).toISOString()
-    : undefined}
-  tags={post.data.tags}
+  modifiedTime={post.data.updated ? new Date(post.data.updated).toISOString() : undefined}
+  tags={post.data.tags ?? undefined}
 >
   <Fragment slot="head">
-    <meta
-      name="description"
-      content={post.data.description ||
-        post.body?.slice(0, 150).replace(/\s+/g, " ")}
-    />
-    {/* 加密文章添加 noindex */}
+    <meta name="description" content={postDescription} />
     {isEncrypted && <meta name="robots" content="noindex, nofollow" />}
   </Fragment>
 
-  <Fragment>
-    <div
-      class="article wrap"
-      data-pagefind-ignore={isEncrypted ? "all" : undefined}
+  <ReadingProgress />
+
+  <div class="article wrap" data-pagefind-ignore={isEncrypted ? "all" : undefined}>
+    <Breadcrumb categories={post.data.categories ?? undefined} />
+
+    <article
+      itemscope
+      itemtype="http://schema.org/Article"
+      class="post"
+      data-pagefind-body={!isEncrypted}
+      lang={currentLocale}
     >
-      <Breadcrumb categories={post.data.categories ?? undefined} />
+      <link itemprop="mainEntityOfPage" href={permalink} />
 
-      <article
-        itemscope
-        itemtype="http://schema.org/Article"
-        class="post block"
-        data-pagefind-body={!isEncrypted}
-        lang={currentLocale}
-      >
-        <link itemprop="mainEntityOfPage" href={permalink} />
+      <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <meta itemprop="image" content={avatar.src} />
+        <meta itemprop="name" content={author} />
+        <meta itemprop="description" content={siteName} />
+      </span>
 
-        <span
-          hidden
-          itemprop="author"
-          itemscope
-          itemtype="http://schema.org/Person"
-        >
-          <meta itemprop="image" content={avatar.src} />
-          <meta itemprop="name" content={author} />
-          <meta itemprop="description" content={`${siteName}`} />
-        </span>
+      <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+        <meta itemprop="name" content={siteName} />
+      </span>
 
-        <span
-          hidden
-          itemprop="publisher"
-          itemscope
-          itemtype="http://schema.org/Organization"
-        >
-          <meta itemprop="name" content={siteName} />
-        </span>
+      <header class="post-head">
+        {post.data.categories && post.data.categories.length > 0 && (
+          <p class="post-head__eyebrow">
+            {post.data.categories.map((category) => (
+              <a href={`/categories/${encodeURIComponent(category)}/`}>{category}</a>
+            ))}
+          </p>
+        )}
 
-        <PostHeader
-          title={post.data.title}
-          date={post.data.date}
-          updated={post.data.updated}
-          wordCount={wordCount}
-        />
+        <h1 class="post-head__title" itemprop="headline">{post.data.title}</h1>
 
-        {
-          !isEncrypted && (
-            <AiSummaryCard
-              summary={aiSummary?.content}
-              model={aiSummary?.model}
-              title={aiSummaryTitle}
-              showModel={aiSummaryShowModel}
-            />
-          )
-        }
+        <p class="post-head__meta">
+          <time datetime={new Date(post.data.date).toISOString()} itemprop="datePublished">
+            {formatDateLong(new Date(post.data.date))}
+          </time>
+          {post.data.updated && (
+            <>
+              <span class="post-head__dot" aria-hidden="true">·</span>
+              <span>更新于 {formatDateShort(new Date(post.data.updated))}</span>
+            </>
+          )}
+          {stats.readTime > 0 && (
+            <>
+              <span class="post-head__dot" aria-hidden="true">·</span>
+              <span>约 {stats.readTime} 分钟</span>
+            </>
+          )}
+          {stats.wordCount > 0 && (
+            <>
+              <span class="post-head__dot" aria-hidden="true">·</span>
+              <span>{stats.wordCount.toLocaleString("zh-CN")} 字</span>
+            </>
+          )}
+        </p>
+      </header>
 
-        <div class="body md" itemprop="articleBody">
-          {
-            isEncrypted && encryptedContent ? (
-              <EncryptedPostContent
-                client:load
-                encryptedContent={encryptedContent}
-                encryptedToc={encryptedToc}
-                title={post.data.title}
-              />
-            ) : (
-              <div class="post-content" set:html={renderedContentHtml ?? ""} />
-            )
-          }
-
-          {
-            !isEncrypted && post.data.tags && post.data.tags.length > 0 && (
-              <div class="tags">
-                {post.data.tags.map((tag) => (
-                  <a href={toTagHref(tag)} rel="tag">
-                    <i class="icon i-ri-price-tag-3-line" />
-                    {tag}
-                  </a>
-                ))}
-              </div>
-            )
-          }
-        </div>
-
-        {
-          !isEncrypted && (
-            <AiSimilarPosts
-              posts={aiRecommendPosts}
-              minSimilarity={aiRecommendMinSimilarity}
-            />
-          )
-        }
-
-        <PostFooter
-          date={post.data.date}
-          updated={post.data.updated}
-          permalink={permalink}
-          title={post.data.title}
-          author={author}
-          siteName={siteName}
-          showCopyright={true}
-          showReward={false}
-          license={post.data.license}
-        />
-      </article>
-    </div>
-
-    <PostNav
-      prevPost={prevPost}
-      nextPost={nextPost}
-      nextGradientCover={themeConfig.cover?.nextGradientCover}
-    />
-
-    {
-      !isEncrypted && commentsConfig.enable !== false && (
-        <div id="comments" class="comment">
-          <WalineComments
-            client:visible
-            serverURL={walineConfig.serverURL}
-            lang={walineConfig.lang || currentLocale}
-            dark={walineConfig.dark}
-            path={walineConfig.path}
-            pagePath={postPath}
+      {hasHeroImage && (
+        <figure class="post-cover">
+          <CoverMedia
+            cover={cover}
+            title={post.data.title}
+            variant="wide"
+            eager={true}
+            sizes="(max-width: 900px) 92vw, 60rem"
           />
+        </figure>
+      )}
+
+      {!isEncrypted && aiSummary?.content && (
+        <AiSummaryCard
+          summary={aiSummary.content}
+          model={aiSummary.model}
+          title={aiSummaryTitle}
+          showModel={aiSummaryShowModel}
+        />
+      )}
+
+      <ArticleToc toc={toc} variant="mobile" />
+
+      <div class="article-layout">
+        <div class="article-body">
+          <div
+            class="body md"
+            itemprop="articleBody"
+            id="article-body"
+          >
+            {
+              isEncrypted && encryptedContent ? (
+                <EncryptedPostContent
+                  client:load
+                  encryptedContent={encryptedContent}
+                  encryptedToc={encryptedToc}
+                  title={post.data.title}
+                />
+              ) : (
+                <div class="post-content" set:html={renderedContentHtml ?? ""} />
+              )
+            }
+          </div>
+
+          {!isEncrypted && post.data.tags && post.data.tags.length > 0 && (
+            <div class="tags">
+              {post.data.tags.map((tag) => (
+                <a href={toTagHref(tag)} rel="tag">
+                  <i class="icon i-ri-price-tag-3-line" aria-hidden="true" />
+                  {tag}
+                </a>
+              ))}
+            </div>
+          )}
         </div>
-      )
-    }
-  </Fragment>
+
+        {!isEncrypted && <ArticleToc toc={toc} variant="desktop" />}
+      </div>
+
+      {relatedPosts.length > 0 && (
+        <section class="related" aria-labelledby="related-heading">
+          <h2 class="related__title" id="related-heading">相关阅读</h2>
+          <ul class="related__list">
+            {relatedPosts.map((related) => (
+              <li>
+                <a href={toPostHref(related.slug)}>
+                  <span class="related__date">{formatDateShort(new Date(related.date))}</span>
+                  <span class="related__text">{related.title}</span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      <PostFooter
+        date={post.data.date}
+        updated={post.data.updated}
+        permalink={permalink}
+        title={post.data.title}
+        author={author}
+        siteName={siteName}
+        showCopyright={true}
+        showReward={false}
+        license={post.data.license}
+      />
+    </article>
+  </div>
+
+  <div class="wrap">
+    <PostNav prevPost={prevPost} nextPost={nextPost} />
+  </div>
+
+  {
+    !isEncrypted && commentsEnabled && (
+      <div id="comments" class="comment wrap">
+        <WalineComments
+          client:visible
+          serverURL={walineConfig.serverURL}
+          lang={walineConfig.lang || currentLocale}
+          dark={walineConfig.dark}
+          path={walineConfig.path}
+          pagePath={postPath}
+        />
+      </div>
+    )
+  }
 </Layout>

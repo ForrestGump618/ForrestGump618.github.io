@@ -1,0 +1,114 @@
+/*
+ * Design Tokens · 排版 / 间距 / 圆角 / 阴影 / 动效 / 版心
+ * ------------------------------------------------------------
+ * 全站唯一的设计尺度来源。组件里不要再写魔法数字，优先引用这里的变量。
+ * 命名保持 kebab-case，尺寸统一 rem（1rem = 16px）。
+ */
+
+:root {
+  /* ---------- Typography ---------- */
+  /* 正文：系统 UI 无衬线，中英混排优先保证中文黑体的可读性 */
+  --font-sans:
+    -apple-system, BlinkMacSystemFont, "Segoe UI Variable Text", "Segoe UI", "PingFang SC",
+    "Hiragino Sans GB", "Noto Sans SC", "Source Han Sans SC", "Microsoft YaHei", "Helvetica Neue",
+    Arial, sans-serif;
+  /* 标题：衬线，构建编辑式层次；中文回退到系统宋体 */
+  --font-serif:
+    "Source Serif 4", "Iowan Old Style", "Palatino Linotype", Georgia, "Noto Serif SC",
+    "Source Han Serif SC", "Songti SC", "SimSun", serif;
+  /* 手写体只用于个人化点缀（引文、格言、签名），不承担正文 */
+  --font-kai: "LXGW WenKai", "Kaiti SC", "STKaiti", "KaiTi", var(--font-serif);
+  --font-mono:
+    "Maple Mono", ui-monospace, "SFMono-Regular", "Cascadia Code", "JetBrains Mono", Menlo,
+    Consolas, monospace;
+
+  --text-display: clamp(2.35rem, 1.55rem + 3.4vw, 4rem);
+  --text-h1: clamp(1.85rem, 1.4rem + 1.9vw, 2.6rem);
+  --text-h2: clamp(1.5rem, 1.28rem + 0.9vw, 1.85rem);
+  --text-h3: clamp(1.28rem, 1.16rem + 0.5vw, 1.45rem);
+  --text-h4: 1.1875rem;
+  --text-lead: clamp(1.075rem, 1rem + 0.35vw, 1.25rem);
+  --text-body: 1.0625rem;
+  --text-sm: 0.9375rem;
+  --text-xs: 0.8125rem;
+  --text-2xs: 0.75rem;
+
+  --leading-tight: 1.2;
+  --leading-snug: 1.42;
+  --leading-normal: 1.72;
+  --leading-body: 1.88;
+
+  --tracking-tight: -0.012em;
+  --tracking-normal: 0;
+  --tracking-wide: 0.06em;
+  --tracking-wider: 0.14em;
+
+  --weight-normal: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  /* ---------- Spacing（4px 基准） ---------- */
+  --space-3xs: 0.25rem;
+  --space-2xs: 0.5rem;
+  --space-xs: 0.75rem;
+  --space-sm: 1rem;
+  --space-md: 1.5rem;
+  --space-lg: 2rem;
+  --space-xl: 3rem;
+  --space-2xl: 4rem;
+  --space-3xl: 6rem;
+  --space-4xl: 8rem;
+
+  /* 垂直节奏：区块之间 / 标题与正文之间 */
+  --rhythm-section: clamp(3.5rem, 2.4rem + 4vw, 6rem);
+  --rhythm-block: clamp(2rem, 1.5rem + 1.6vw, 3rem);
+  --rhythm-heading: 2.4em;
+  --rhythm-paragraph: 1.15em;
+
+  /* ---------- Radius ---------- */
+  --radius-xs: 4px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-full: 999px;
+
+  /* ---------- Shadows（克制、暖灰投影） ---------- */
+  --shadow-xs: 0 1px 2px oklch(0.3 0.01 92 / 0.06);
+  --shadow-sm: 0 2px 6px -2px oklch(0.3 0.01 92 / 0.1);
+  --shadow-md: 0 10px 24px -16px oklch(0.3 0.01 92 / 0.32);
+  --shadow-lg: 0 24px 56px -24px oklch(0.3 0.01 92 / 0.34);
+
+  /* ---------- Motion ---------- */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --dur-1: 120ms;
+  --dur-2: 200ms;
+  --dur-3: 320ms;
+  --dur-4: 480ms;
+
+  /* ---------- 版心 ---------- */
+  --container: 72rem;
+  --container-wide: 84rem;
+  --container-narrow: 52rem;
+  --reading-width: 43rem;
+  --aside-width: 15rem;
+  --gutter: clamp(1.25rem, 0.6rem + 3.2vw, 2.75rem);
+  --nav-height: 4rem;
+}
+
+:root[data-theme="dark"] {
+  --shadow-xs: 0 1px 2px oklch(0 0 0 / 0.3);
+  --shadow-sm: 0 2px 6px -2px oklch(0 0 0 / 0.4);
+  --shadow-md: 0 12px 28px -18px oklch(0 0 0 / 0.7);
+  --shadow-lg: 0 28px 60px -28px oklch(0 0 0 / 0.75);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --dur-1: 0ms;
+    --dur-2: 0ms;
+    --dur-3: 0ms;
+    --dur-4: 0ms;
+  }
+}

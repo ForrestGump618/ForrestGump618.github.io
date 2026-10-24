@@ -1,0 +1,213 @@
+---
+/**
+ * 文章目录：移动端折叠在正文上方，桌面端固定在右侧。
+ * 当前章节高亮由组件内的 IntersectionObserver 完成（无第三方依赖）。
+ */
+import type { TocItem } from "@/components/sidebar/SidebarTypes";
+
+interface Props {
+  toc: TocItem[];
+  /** desktop 固定在右栏，mobile 折叠在正文上方 */
+  variant?: "desktop" | "mobile";
+}
+
+const { toc, variant = "desktop" } = Astro.props;
+// 只保留正文层级（h2/h3），避免目录过长
+const items = toc.filter((item) => item.level >= 2 && item.level <= 3);
+---
+
+{
+  items.length > 1 && (
+    <div class:list={["toc", `toc--${variant}`]} data-toc>
+      {variant === "mobile" ? (
+        <details class="toc__details">
+          <summary class="toc__summary">本文目录</summary>
+          <ol class="toc__list">
+            {items.map((item) => (
+              <li class:list={["toc__item", `toc__item--h${Math.min(item.level, 3)}`]}>
+                <a href={`#${item.id}`}>{item.text}</a>
+              </li>
+            ))}
+          </ol>
+        </details>
+      ) : (
+        <nav class="toc__nav" aria-label="本文目录">
+          <p class="toc__title">目录</p>
+          <ol class="toc__list">
+            {items.map((item) => (
+              <li class:list={["toc__item", `toc__item--h${Math.min(item.level, 3)}`]}>
+                <a href={`#${item.id}`}>{item.text}</a>
+              </li>
+            ))}
+          </ol>
+        </nav>
+      )}
+    </div>
+  )
+}
+
+<script>
+  const initToc = () => {
+    const roots = document.querySelectorAll<HTMLElement>("[data-toc]");
+    if (roots.length === 0) {
+      return;
+    }
+
+    const links = [...roots].flatMap((root) =>
+      [...root.querySelectorAll<HTMLAnchorElement>('a[href^="#"]')].map((link) => ({
+        link,
+        targetId: decodeURIComponent(link.hash.slice(1)),
+      })),
+    );
+
+    if (links.length === 0) {
+      return;
+    }
+
+    const headings = links
+      .map(({ targetId }) => document.getElementById(targetId))
+      .filter((el): el is HTMLElement => el !== null);
+
+    if (headings.length === 0) {
+      return;
+    }
+
+    const setActive = (id: string) => {
+      for (const { link, targetId } of links) {
+        link.classList.toggle("is-active", targetId === id);
+      }
+    };
+
+    // 视口上方 40% 之内、最靠近顶部的标题即当前章节
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries
+          .filter((entry) => entry.isIntersecting)
+          .toSorted((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
+
+        if (visible.length > 0) {
+          setActive(visible[0].target.id);
+        }
+      },
+      { rootMargin: "-12% 0px -72% 0px", threshold: [0, 1] },
+    );
+
+    for (const heading of headings) {
+      observer.observe(heading);
+    }
+  };
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initToc, { once: true });
+  } else {
+    initToc();
+  }
+</script>
+
+<style>
+  .toc--mobile {
+    display: block;
+    margin: 0 0 2rem;
+  }
+
+  .toc--desktop {
+    display: none;
+  }
+
+  .toc__details {
+    border-top: 1px solid var(--hairline, rgb(0 0 0 / 8%));
+    border-bottom: 1px solid var(--hairline, rgb(0 0 0 / 8%));
+    padding: 0.85rem 0;
+  }
+
+  .toc__summary {
+    cursor: pointer;
+    font-family: var(--font-sans, system-ui, sans-serif);
+    font-size: 0.74rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text-color-muted, #6b675f);
+    list-style: none;
+  }
+
+  .toc__summary::-webkit-details-marker {
+    display: none;
+  }
+
+  .toc__summary::after {
+    content: "＋";
+    float: right;
+    color: var(--text-color-subtle, #8a857c);
+  }
+
+  .toc__details[open] .toc__summary::after {
+    content: "－";
+  }
+
+  .toc__nav {
+    position: sticky;
+    top: calc(var(--nav-height, 4rem) + 2rem);
+    max-height: calc(100vh - var(--nav-height, 4rem) - 4rem);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding-left: 1.15rem;
+    border-left: 1px solid var(--hairline, rgb(0 0 0 / 8%));
+  }
+
+  .toc__title {
+    margin: 0 0 0.9rem;
+    font-family: var(--font-sans, system-ui, sans-serif);
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--text-color-subtle, #8a857c);
+  }
+
+  .toc__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+  }
+
+  .toc__item a {
+    display: block;
+    padding: 0.22rem 0;
+    border: 0;
+    font-family: var(--font-sans, system-ui, sans-serif);
+    font-size: 0.8rem;
+    line-height: 1.55;
+    color: var(--text-color-muted, #6b675f);
+    text-decoration: none;
+    transition: color 0.18s ease;
+  }
+
+  .toc__item--h3 a {
+    padding-left: 0.85rem;
+    font-size: 0.76rem;
+    color: var(--text-color-subtle, #8a857c);
+  }
+
+  .toc__item a:hover,
+  .toc__item a.is-active {
+    color: var(--primary-color, #7c3b52);
+  }
+
+  .toc__item a.is-active {
+    font-weight: 500;
+  }
+
+  @media (min-width: 1100px) {
+    .toc--mobile {
+      display: none;
+    }
+
+    .toc--desktop {
+      display: block;
+    }
+  }
+</style>

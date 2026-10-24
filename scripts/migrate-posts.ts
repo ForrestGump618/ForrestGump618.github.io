@@ -1,6 +1,6 @@
 // Migration script: transforms Hexo frontmatter to ShokaX Astro format
 import { readFileSync, writeFileSync, readdirSync, mkdirSync, existsSync, statSync } from "node:fs";
-import { join, basename } from "node:path";
+import { join } from "node:path";
 import { parse as parseYaml, stringify as stringifyYaml } from "yaml";
 
 const SOURCE = "source/_posts";
@@ -19,7 +19,7 @@ function migrateFrontmatter(raw: string): string {
   try {
     fm = parseYaml(fmRaw) || {};
   } catch (e) {
-    console.log(`  ERROR parsing YAML: ${e}`);
+    console.log(`  ERROR parsing YAML: ${String(e)}`);
     return raw;
   }
 
@@ -70,7 +70,6 @@ function migratePosts() {
   }
 
   const entries = readdirSync(SOURCE, { withFileTypes: true });
-  const dirNames = new Set(entries.filter(e => e.isDirectory()).map(e => e.name));
   let migrated = 0;
   let skipped = 0;
 
@@ -81,9 +80,9 @@ function migratePosts() {
     if (entry.name.startsWith(".") && entry.name !== ".obsidian") continue;
 
     if (entry.isDirectory()) {
-      const dirContents = readdirSync(srcPath).filter(f => !f.startsWith("."));
-      const mdFiles = dirContents.filter(f => f.endsWith(".md"));
-      const assets = dirContents.filter(f => !f.endsWith(".md"));
+      const dirContents = readdirSync(srcPath).filter((f) => !f.startsWith("."));
+      const mdFiles = dirContents.filter((f) => f.endsWith(".md"));
+      const assets = dirContents.filter((f) => !f.endsWith(".md"));
 
       if (mdFiles.length === 0 && assets.length === 0) {
         console.log(`SKIP (empty dir): ${entry.name}`);
@@ -94,9 +93,6 @@ function migratePosts() {
       // This is an asset-only directory (like "LINGER：从单细胞多组学数据推断基因调控网络/")
       // If there's a same-named .md file at the root, we'll handle it there.
       // If there's no matching .md file, this is a post dir where the .md is inside.
-      const hasStandaloneMd = dirNames.has(entry.name)
-        ? existsSync(join(SOURCE, `${entry.name}.md`))
-        : false;
 
       // We handle this when processing the standalone .md file
       // But if the .md is INSIDE this directory, we process it here
@@ -143,7 +139,7 @@ function migratePosts() {
         }
 
         // Copy any existing assets
-        const dirContents = readdirSync(assetDir).filter(f => !f.startsWith("."));
+        const dirContents = readdirSync(assetDir).filter((f) => !f.startsWith("."));
         for (const asset of dirContents) {
           if (!asset.endsWith(".md")) {
             const srcAsset = join(assetDir, asset);

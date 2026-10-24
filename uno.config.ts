@@ -38,12 +38,7 @@ function collectConfigIcons() {
     });
   }
 
-  if (themeConfig.friends?.links) {
-    themeConfig.friends.links.forEach((link) => {
-      const icon = (link as { icon?: string }).icon;
-      pushNormalizedIcon(icons, icon);
-    });
-  }
+  // 友链使用头像而非图标，因此不参与图标 safeList 收集
 
   return icons;
 }

@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from "astro:content";
-import { currentLocale, t } from "@/i18n";
+import { t } from "@/i18n";
+import { formatDateLong } from "@/toolkit/posts/formatDate";
 
 interface Props {
   moment: CollectionEntry<"moments">;
@@ -8,23 +9,10 @@ interface Props {
 
 const { moment } = Astro.props;
 
-// 格式化日期
-function formatDate(date: Date): string {
-  return date.toLocaleDateString(currentLocale, {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
-}
-
-// 解析图片路径
 function resolveImageSrc(image: unknown): string | undefined {
   if (typeof image === "string") {
     return image;
   }
-  // 如果是 Astro 的 Image 类型，返回 src
   if (image && typeof image === "object" && "src" in image) {
     return (image as { src: string }).src;
   }
@@ -35,209 +23,189 @@ const images =
   moment.data.images
     ?.map(resolveImageSrc)
     .filter((src): src is string => Boolean(src)) || [];
-const content = moment.body || "";
+const content = (moment.body || "").trim();
 ---
 
-<article class="moment-card bg-grey-0">
-  <div class="timeline-dot"></div>
+<article class="moment">
+  <header class="moment__head">
+    <time datetime={moment.data.date.toISOString()}>
+      {formatDateLong(moment.data.date)}
+    </time>
+  </header>
 
-  <div class="moment-header">
-    <span class="moment-date text-grey-5">
-      <i class="i-ri-calendar-line"></i>
-      {formatDate(moment.data.date)}
-    </span>
-  </div>
+  {
+    content && (
+      <div class="moment__content">
+        <div class="moment__text" set:html={content} />
+      </div>
+    )
+  }
 
-  <div class="moment-content text-color">
-    {content && <div class="moment-text" set:html={content} />}
-
-    {
-      images.length > 0 && (
-        <div class="moment-images" data-count={images.length} data-image-zoom-gallery>
-          {images.map((src, index) => (
-            <div class="image-wrapper bg-grey-2">
-              <image-zoom>
-                <img
-                  src={src}
-                  alt={t("moments.imageAlt", { index: index + 1 })}
-                  loading="lazy"
-                  decoding="async"
-                  class="moment-image"
-                />
-              </image-zoom>
-            </div>
-          ))}
-        </div>
-      )
-    }
-  </div>
+  {
+    images.length > 0 && (
+      <div class="moment__images" data-count={images.length} data-image-zoom-gallery>
+        {images.map((src, index) => (
+          <div class="moment__image-wrap">
+            <image-zoom>
+              <img
+                src={src}
+                alt={t("moments.imageAlt", { index: index + 1 })}
+                loading="lazy"
+                decoding="async"
+                class="moment__image"
+              />
+            </image-zoom>
+          </div>
+        ))}
+      </div>
+    )
+  }
 </article>
 
 <style>
-  .moment-card {
+  .moment {
     position: relative;
-    padding: 1.5rem;
-    padding-left: 2rem;
-    border-radius: 0.75rem;
-    box-shadow: var(--shadow-card-soft);
-    margin-bottom: 1.5rem;
-    transition: all 0.3s ease;
-    animation: slideUpIn 0.4s ease-out forwards;
-    opacity: 0;
+    padding: 0 0 2rem 1.75rem;
   }
 
-  .moment-card:hover {
-    transform: translateX(0.5rem);
-    box-shadow: var(--shadow-card-soft-hover);
-  }
-
-  @keyframes slideUpIn {
-    from {
-      opacity: 0;
-      transform: translateY(1rem);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  .timeline-dot {
+  .moment::before {
+    content: "";
     position: absolute;
-    left: -1.575rem;
-    top: 1.75rem;
-    width: 0.75rem;
-    height: 0.75rem;
+    left: 0;
+    top: 0.5rem;
+    width: 5px;
+    height: 5px;
     border-radius: 50%;
-    background: linear-gradient(135deg, var(--color-pink), var(--color-orange));
-    box-shadow: 0 0 0 0.25rem var(--grey-0);
-    z-index: var(--z-elevated);
+    background: var(--primary-color, #7c3b52);
   }
 
-  .moment-header {
-    margin-bottom: 0.75rem;
+  .moment:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    left: 2px;
+    top: 1.15rem;
+    bottom: 0.4rem;
+    width: 1px;
+    background: var(--hairline, rgb(0 0 0 / 8%));
   }
 
-  .moment-date {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.25rem;
-    font-size: 0.875rem;
+  .moment__head {
+    margin: 0 0 0.55rem;
   }
 
-  .moment-date i {
-    font-size: 0.75rem;
+  .moment__head time {
+    font-family: var(--font-sans, system-ui, sans-serif);
+    font-size: 0.72rem;
+    letter-spacing: 0.02em;
+    font-variant-numeric: tabular-nums;
+    color: var(--text-color-subtle, #8a857c);
   }
 
-  .moment-text {
-    font-size: 1rem;
-    line-height: 1.75;
+  .moment__text {
+    font-family: var(--font-sans, system-ui, sans-serif);
+    font-size: 0.96rem;
+    line-height: 1.85;
+    color: var(--text-color, #23211d);
     word-break: break-word;
     white-space: pre-wrap;
   }
 
-  .moment-text :global(p) {
+  .moment__text :global(p) {
     margin: 0 0 0.5rem;
   }
 
-  .moment-text :global(p:last-child) {
+  .moment__text :global(p:last-child) {
     margin-bottom: 0;
   }
 
-  .moment-text :global(a) {
-    color: var(--color-pink);
-    text-decoration: none;
-  }
-
-  .moment-text :global(a:hover) {
+  .moment__text :global(a) {
+    color: var(--link-color, var(--primary-color, #7c3b52));
     text-decoration: underline;
+    text-underline-offset: 0.16em;
   }
 
-  .moment-images {
+  .moment__text :global(img) {
+    max-width: 100%;
+    border-radius: var(--radius-sm, 4px);
+  }
+
+  .moment__images {
     display: grid;
-    gap: 0.5rem;
-    margin-top: 1rem;
+    gap: 0.4rem;
+    margin-top: 0.9rem;
     max-width: 100%;
   }
 
-  /* 单图样式 */
-  .moment-images[data-count="1"] {
+  .moment__images[data-count="1"] {
     grid-template-columns: 1fr;
-    max-width: 24rem;
+    max-width: 26rem;
   }
 
-  /* 双图样式 */
-  .moment-images[data-count="2"] {
+  .moment__images[data-count="2"] {
     grid-template-columns: repeat(2, 1fr);
+    max-width: 34rem;
   }
 
-  /* 多图样式 */
-  .moment-images[data-count="3"] {
+  .moment__images[data-count="3"] {
     grid-template-columns: repeat(3, 1fr);
+    max-width: 40rem;
   }
 
-  .moment-images[data-count="4"],
-  .moment-images[data-count="5"],
-  .moment-images[data-count="6"] {
+  .moment__images[data-count="4"] {
     grid-template-columns: repeat(2, 1fr);
+    max-width: 34rem;
   }
 
-  .moment-images[data-count="7"],
-  .moment-images[data-count="8"],
-  .moment-images[data-count="9"] {
+  .moment__images[data-count="5"],
+  .moment__images[data-count="6"],
+  .moment__images[data-count="7"],
+  .moment__images[data-count="8"],
+  .moment__images[data-count="9"] {
     grid-template-columns: repeat(3, 1fr);
+    max-width: 40rem;
   }
 
-  .image-wrapper {
-    aspect-ratio: 1;
+  .moment__image-wrap {
     overflow: hidden;
-    border-radius: 0.5rem;
+    border-radius: var(--radius-sm, 4px);
+    background: var(--surface-subtle, #f4f2ee);
+    line-height: 0;
   }
 
-  .image-wrapper :global(image-zoom) {
+  .moment__image-wrap :global(image-zoom) {
     display: block;
-    position: relative;
     width: 100%;
     height: 100%;
-    max-width: none;
-    margin: 0;
     overflow: hidden;
     border-radius: inherit;
     line-height: 0;
   }
 
-  .image-wrapper :global(image-zoom > img) {
+  .moment__image {
     display: block;
     width: 100%;
     height: 100%;
+    max-height: 22rem;
     object-fit: cover;
-    aspect-ratio: 1;
+    transition: opacity 0.25s ease;
   }
 
-  .moment-image {
-    width: 100%;
-    height: 100%;
-    display: block;
-    object-fit: cover;
-    transition: transform 0.3s ease;
-  }
-
-  .image-wrapper:hover .moment-image {
-    transform: scale(1.05);
+  .moment__image-wrap:hover .moment__image {
+    opacity: 0.92;
   }
 
   @media (max-width: 480px) {
-    .moment-card {
-      padding: 1rem;
-      padding-left: 1.5rem;
+    .moment {
+      padding-left: 1.25rem;
     }
 
-    .moment-images {
-      grid-template-columns: repeat(2, 1fr) !important;
-    }
-
-    .moment-images[data-count="1"] {
-      grid-template-columns: 1fr !important;
+    .moment__images[data-count="3"],
+    .moment__images[data-count="5"],
+    .moment__images[data-count="6"],
+    .moment__images[data-count="7"],
+    .moment__images[data-count="8"],
+    .moment__images[data-count="9"] {
+      grid-template-columns: repeat(2, 1fr);
     }
   }
 </style>

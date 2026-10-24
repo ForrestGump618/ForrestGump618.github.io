@@ -1,42 +1,33 @@
 ---
-import NavBar from "@/components/navbar/NavBar.svelte";
+/**
+ * 站点外壳：主题引导、SEO、导航、页面标题区、页脚与全局脚本。
+ *
+ * 设计取向：编辑式极简。裁掉首页巨幅头图、波浪、加载动画、悬浮工具栏与三栏侧栏，
+ * 只保留阅读需要的东西；页面自身负责正文容器与内容排版。
+ */
 import Analytics from "@/components/Analytics.astro";
-import Brand from "@/components/Brand.astro";
-import HeaderCover from "@/components/HeaderCover.astro";
-import Waves from "@/components/Waves.astro";
-import { getCollection } from "astro:content";
-import type {
-  TocItem,
-  RelatedPost,
-  QuickNavigation,
-} from "@/components/sidebar/SidebarTypes";
-import "@/styles/view-transition.css";
-import "@vtbag/element-crossing?url";
-
+import CodeBlock from "@/components/CodeBlock.svelte";
+import Footer from "@/components/footer/Footer.astro";
+import Icons from "@/components/Icons.svelte";
+import ImageZoom from "@/components/ImageZoom.svelte";
+import NavBar from "@/components/navbar/NavBar.svelte";
+import SearchPage from "@/components/search/SearchPage.svelte";
+import SEO from "@/components/SEO.astro";
+import PageHeader from "@/components/shell/PageHeader.astro";
+import type { RelatedPost, TocItem, QuickNavigation } from "@/components/sidebar/SidebarTypes";
+import { currentLocale } from "@/i18n";
 import themeConfig from "@/theme.config.ts";
 
+import "@vtbag/element-crossing?url";
+import "@/styles/view-transition.css";
 import "@/styles/palette.css";
+import "@/styles/tokens.css";
 import "@/styles/style.css";
-import "@/styles/header-cover.css";
 import "@/styles/mdx-components.css";
 import "@/styles/icons.css";
 
-import Loading from "@/components/Loading.astro";
-import SEO from "@/components/SEO.astro";
-import Icons from "@/components/Icons.svelte";
-import { covers, resolveFixedCover } from "@/components/Images.astro";
-import FloatingToolbar from "@/components/FloatingToolbar.svelte";
-import TwoColumnLayout from "@/layouts/TwoColumnLayout.astro";
-import ThreeColumnLayout from "@/layouts/ThreeColumnLayout.astro";
-import { generateTagCloud } from "@/toolkit/posts/generateTagCloud";
-import { createWidgetPosts } from "@/toolkit/posts/createWidgetPosts";
-import { toTagHref } from "@/toolkit/posts/url";
-import { resolveHeaderCovers } from "@/toolkit/headerCover";
-import Footer from "@/components/footer/Footer.astro";
 import type { ImageMetadata } from "astro";
-import { currentLocale } from "@/i18n";
 
-// Accept sidebar props from child pages
 interface PostMeta {
   date: Date;
   wordCount: number;
@@ -51,6 +42,8 @@ interface Props {
   pageTitle?: string;
   postMeta?: PostMeta;
   indexPage?: boolean;
+  /** 文章页自己渲染标题，避免与自动标题区重复 */
+  hidePageHeader?: boolean;
   pageCover?: ImageMetadata | string;
   /** SEO：页面描述（og:description / twitter:description） */
   description?: string;
@@ -62,16 +55,14 @@ interface Props {
   publishedTime?: string;
   modifiedTime?: string;
   tags?: string[];
+  /** 标题区的栏目名（不传时按路径推断） */
+  eyebrow?: string;
 }
 
 const {
-  toc = [],
-  relatedPosts = [],
-  currentSlug = "",
-  navigation = {},
   pageTitle = "",
-  postMeta,
   indexPage = false,
+  hidePageHeader = false,
   pageCover,
   description,
   seoTitle,
@@ -79,107 +70,46 @@ const {
   publishedTime,
   modifiedTime,
   tags,
+  eyebrow,
 } = Astro.props;
 
+// 旧布局参数（toc/relatedPosts/currentSlug/navigation/postMeta）仍然允许传入，
+// 但新版外壳不再使用侧栏，保留签名是为了让既有页面无需一次性改完。
 const navLinks = themeConfig.nav;
 const siteName = themeConfig.siteName;
 const sidebarConfig = themeConfig.sidebar || {};
-const brandConfig = themeConfig.brand || {};
-const coverConfig = themeConfig.cover || {};
 const footerConfig = themeConfig.footer || {};
-const widgetsConfig = themeConfig.widgets || {};
-const commentsConfig = themeConfig.comments || {};
-const commentsEnabled = Boolean(themeConfig.comments?.enable);
-const walineConfig = commentsConfig.waline || {};
-const tagCloudConfig = themeConfig.tagCloud || {};
 const visibilityTitleConfig = themeConfig.visibilityTitle || {};
-const layoutConfig = themeConfig.layout || {};
-const rightSidebarConfig = layoutConfig.rightSidebar || {};
-const layoutMode = layoutConfig.mode || "two-column";
-const enableThirdColumn = layoutMode === "three-column";
-const shouldComputeRightSidebarRandomPosts =
-  enableThirdColumn && rightSidebarConfig.randomPosts === true;
-const shouldComputeRightSidebarRecentMoments =
-  enableThirdColumn && rightSidebarConfig.recentMoments === true;
-const shouldComputeRightSidebarTagCloud =
-  enableThirdColumn && rightSidebarConfig.tagCloud === true;
-const ActiveLayout = enableThirdColumn ? ThreeColumnLayout : TwoColumnLayout;
 
-// fixedCover：通过 Images.astro 统一解析（静态导入走 <Image />，字符串走 <img> 兜底）
-const fixedCover = coverConfig.fixedCover?.enable
-  ? resolveFixedCover(coverConfig.fixedCover.url)
-  : undefined;
-const advancedCarousel = coverConfig.advancedCarousel === true;
-const headerCovers = advancedCarousel
-  ? await resolveHeaderCovers({
-      coverUrls: coverConfig.coverUrls,
-      fallbackCovers: covers,
-    })
-  : [];
-const resolvedHeaderCover = pageCover ?? fixedCover;
-
-// Get all posts for widgets
-const allPosts = await getCollection("posts");
-const posts = allPosts.filter((post) => !post.data.draft);
-const moments = shouldComputeRightSidebarRecentMoments
-  ? (await getCollection("moments")).toSorted(
-      (a, b) =>
-        new Date(b.data.date).getTime() - new Date(a.data.date).getTime(),
-    )
-  : [];
-const rightSidebarPosts = shouldComputeRightSidebarRandomPosts
-  ? posts.filter((post) => !post.data.encrypted)
-  : [];
-const rightSidebarTagCloud = shouldComputeRightSidebarTagCloud
-  ? (() => {
-      const rightSidebarTagCounts = posts.reduce((acc, post) => {
-        post.data.tags?.forEach((tag) => {
-          acc.set(tag, (acc.get(tag) || 0) + 1);
-        });
-
-        return acc;
-      }, new Map<string, number>());
-
-      return generateTagCloud(
-        Array.from(rightSidebarTagCounts.entries()).map(([name, count]) => ({
-          name,
-          count,
-        })),
-        {
-          minFontSize: 12,
-          maxFontSize: 20,
-          startColor: tagCloudConfig.startColor,
-          endColor: tagCloudConfig.endColor,
-          limit: 16,
-        },
-      ).map((tag) => ({
-        name: tag.name,
-        count: tag.count,
-        fontSize: tag.fontSize,
-        color: tag.color,
-        href: toTagHref(tag.name),
-      }));
-    })()
-  : [];
-
-const siteState = {
-  categories: allPosts.reduce((acc, post) => {
-    post.data.categories?.forEach((category) => acc.add(category));
-    return acc;
-  }, new Set()).size,
-  posts: posts.length,
-  tags: allPosts.reduce((acc, post) => {
-    post.data.tags?.forEach((tag) => acc.add(tag));
-    return acc;
-  }, new Set()).size,
+const sectionLabels: Record<string, string> = {
+  "/about/": "About",
+  "/archives/": "Archive",
+  "/categories/": "Topics",
+  "/tags/": "Tags",
+  "/friends/": "Friends",
+  "/moments/": "Moments",
+  "/guestbook/": "Guestbook",
+  "/stars/": "Stars",
+  "/summer/": "Summer",
+  "/statistics/": "Statistics",
+  "/random/": "Random",
+  "/search/": "Search",
 };
 
-const widgetPosts = createWidgetPosts(posts);
+const pathname = Astro.url.pathname;
+const inferredEyebrow = sectionLabels[pathname] ?? (pathname.startsWith("/archives/") ? "Archive" : "");
+const pageEyebrow = eyebrow ?? inferredEyebrow;
+const showPageHeader = !indexPage && !hidePageHeader && Boolean(pageTitle);
 
-// Import custom elements definitions
-import CodeBlock from "@/components/CodeBlock.svelte";
-import ImageZoom from "@/components/ImageZoom.svelte";
-import SearchPage from "@/components/search/SearchPage.svelte";
+// 文档标题：首页用站点名 + 副标题，内页追加站点名
+const brandTitle = themeConfig.brand?.title ?? siteName ?? "Echo";
+const brandSubtitle = themeConfig.brand?.subtitle ?? "";
+const siteLabel = brandSubtitle ? `${brandTitle} · ${brandSubtitle}` : brandTitle;
+const documentTitle = pageTitle
+  ? pageTitle.includes(brandTitle)
+    ? pageTitle
+    : `${pageTitle} · ${siteLabel}`
+  : siteLabel;
 ---
 
 <!doctype html>
@@ -212,7 +142,7 @@ import SearchPage from "@/components/search/SearchPage.svelte";
     <SEO
       title={seoTitle !== undefined ? seoTitle : pageTitle || undefined}
       description={description}
-      image={resolvedHeaderCover}
+      image={pageCover}
       type={seoType}
       publishedTime={publishedTime}
       modifiedTime={modifiedTime}
@@ -225,78 +155,45 @@ import SearchPage from "@/components/search/SearchPage.svelte";
 
     <meta http-equiv="X-Content-Type-Options" content="nosniff" />
 
-    <title>{pageTitle}</title>
+    <title>{documentTitle}</title>
   </head>
-  <body
-    data-visibility-title-config={JSON.stringify(visibilityTitleConfig)}
-    data-layout-mode={layoutMode}
-  >
+  <body data-visibility-title-config={JSON.stringify(visibilityTitleConfig)}>
     <a class="skip-link" href="#main">跳转到主要内容</a>
+
     <NavBar
       client:load
       name={siteName}
       navLinks={navLinks}
       clickToggleCallback={() => void 0}
     />
-      <SearchPage client:idle selector="#search" />
-      <Loading />
-      <Icons />
-      <div id="container">
-      <HeaderCover
-        enable={coverConfig.enable}
-        preload={coverConfig.preload}
-        fixedCover={resolvedHeaderCover}
-        gradient={coverConfig.gradient}
-        covers={advancedCarousel ? headerCovers : covers}
-        advancedCarousel={advancedCarousel}
-        title={brandConfig.title}
-      />
-      <Brand
-        title={brandConfig.title}
-        subtitle={brandConfig.subtitle}
-        logo={brandConfig.logo}
-        pageTitle={indexPage ? "" : pageTitle}
-        postMeta={postMeta}
-      />
-      <Waves />
-      <main>
-        <ActiveLayout
-          widgetPosts={widgetPosts}
-          widgetsConfig={widgetsConfig}
-          commentsEnabled={commentsEnabled}
-          walineServerURL={walineConfig.serverURL || ""}
-          sidebarConfig={sidebarConfig}
-          rightSidebarConfig={rightSidebarConfig}
-          rightSidebarPosts={rightSidebarPosts}
-          rightSidebarMoments={moments}
-          rightSidebarTagCloud={rightSidebarTagCloud}
-          navLinks={navLinks}
-          toc={toc}
-          relatedPosts={relatedPosts}
-          currentSlug={currentSlug}
-          navigation={navigation}
-          siteState={siteState}
-        >
-          <slot />
-        </ActiveLayout>
+    <SearchPage client:idle selector="#search" />
+    <Icons />
+
+    <div id="container">
+      <main id="main" class="site-main">
+        {showPageHeader && (
+          <div class="wrap">
+            <PageHeader
+              title={pageTitle}
+              eyebrow={pageEyebrow}
+              description={description}
+            />
+          </div>
+        )}
+        <slot />
       </main>
-      <Footer config={footerConfig} {siteName} author={sidebarConfig.author || ""} />
+
+      <Footer
+        config={footerConfig}
+        {siteName}
+        author={sidebarConfig.author || ""}
+      />
     </div>
+
     <script>
       import "@/toolkit/initMdxComponents";
     </script>
-    <script>
-      import { css } from "@/assets/fonts/LXGWWenKai-Regular.ttf?subsets";
 
-      document.addEventListener("pagereveal", () => {
-        document.body.style.fontFamily = css.family as string;
-        document.documentElement.style.setProperty("--pf-font", css.family as string);
-      });
-      document.addEventListener("DOMContentLoaded", () => {
-        document.body.style.fontFamily = css.family as string;
-        document.documentElement.style.setProperty("--pf-font", css.family as string);
-      });
-    </script>
     <script>
       type VisibilityTitleScriptConfig = {
         enable: boolean;
@@ -375,18 +272,25 @@ import SearchPage from "@/components/search/SearchPage.svelte";
         document.addEventListener("visibilitychange", onVisibilityChange);
       }
     </script>
+
+    <!-- 文章代码复制与图片灯箱依赖这两个自定义元素，必须保留 -->
     <div class="hidden">
       <CodeBlock client:idle />
       <ImageZoom client:idle />
     </div>
-    <FloatingToolbar client:idle nyxPlayer={themeConfig.nyxPlayer} />
   </body>
 </html>
 
 <style>
-  body {
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-rendering: optimizeLegibility;
+  .site-main {
+    display: block;
+    width: 100%;
+    padding-bottom: var(--rhythm-section, 4.5rem);
+  }
+
+  #container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
   }
 </style>

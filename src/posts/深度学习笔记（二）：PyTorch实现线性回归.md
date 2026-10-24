@@ -9,8 +9,7 @@ categories:
   - 深度学习
 ---
 
-## 导入所需的库  
-
+## 导入所需的库
 
 ```python
 import torch
@@ -91,6 +90,7 @@ b = torch.zeros(1, requires_grad=True)
 def linreg(X, w, b):
     return torch.matmul(X, w) + b
 ```
+
 这部分定义了线性回归模型。给定输入特征 `X`、权重参数 `w` 和偏置参数 `b`，该函数返回预测结果。
 
 ## 定义平方损失函数
@@ -111,6 +111,7 @@ def sgd(params, lr, batch_size):
             param -= lr * param.grad / batch_size
             param.grad.zero_()
 ```
+
 这部分定义了随机梯度下降（SGD）优化算法，用于更新模型参数。其中 `params` 是需要更新的参数列表，`lr` 是学习率，`batch_size` 是批量大小。在函数中，首先通过 `torch.no_grad()` 禁用梯度计算，然后对参数进行更新，更新规则为参数减去学习率乘以梯度除以批量大小，并清零梯度。
 
 ## 设置学习率和训练轮数
@@ -119,6 +120,7 @@ def sgd(params, lr, batch_size):
 lr = 0.001
 num_epochs = 100
 ```
+
 这里设置了学习率 `lr` 和训练轮数 `num_epochs`。
 
 ## 训练模型
@@ -152,7 +154,7 @@ true_w = torch.tensor([2, -3.4])  # 真实权重
 true_b = torch.tensor(2.0)        # 真实偏置
 
 # 使用真实的权重和偏置生成合成数据
-features, labels = d2l.synthetic_data(true_w, true_b, 10000) 
+features, labels = d2l.synthetic_data(true_w, true_b, 10000)
 
 # 加载数据到DataLoader的函数
 def load_array(data_arrays, batch_size, is_train=True):

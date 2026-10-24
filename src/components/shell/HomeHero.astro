@@ -1,0 +1,334 @@
+---
+/**
+ * 首页 Hero：编辑式个人介绍。
+ * 视觉中心是文字与排版，而非大图；头像作为个人标识小尺度出现。
+ */
+import { Image } from "astro:assets";
+import type { ImageMetadata } from "astro";
+
+interface Props {
+  title: string;
+  subtitle: string;
+  author: string;
+  description: string;
+  avatar?: ImageMetadata;
+  stats: {
+    posts: number;
+    categories: number;
+    tags: number;
+    since: number;
+  };
+  latest?: {
+    title: string;
+    href: string;
+    date: Date;
+  };
+  social?: { label: string; href: string }[];
+}
+
+const {
+  title,
+  subtitle,
+  author,
+  description,
+  avatar,
+  stats,
+  latest,
+  social = [],
+} = Astro.props;
+
+const latestDate = latest
+  ? new Intl.DateTimeFormat("zh-CN", { month: "long", day: "numeric", year: "numeric" }).format(latest.date)
+  : null;
+---
+
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero__main">
+    <p class="hero__eyebrow">
+      <span class="hero__eyebrow-line" aria-hidden="true"></span>
+      {subtitle}
+    </p>
+
+    <h1 class="hero__title" id="hero-title">
+      把学习留下痕迹，<br />
+      把问题问得更好。
+    </h1>
+
+    <p class="hero__lead">{description}</p>
+
+    <div class="hero__meta">
+      <span class="hero__author">{author}</span>
+      {social.map((link) => (
+        <a class="hero__social" href={link.href} rel="me noopener" target="_blank">{link.label}</a>
+      ))}
+      <a class="hero__social" href="/about/">关于我</a>
+    </div>
+
+    {latest && (
+      <p class="hero__latest">
+        <span class="hero__latest-label">最近更新</span>
+        <a href={latest.href}>{latest.title}</a>
+        <span class="hero__latest-date">{latestDate}</span>
+      </p>
+    )}
+  </div>
+
+  <aside class="hero__aside" aria-label="站点信息">
+    {avatar && (
+      <div class="hero__portrait">
+        <Image
+          src={avatar}
+          alt={`${author} 的头像`}
+          widths={[96, 160, 240]}
+          sizes="(max-width: 900px) 5rem, 7.5rem"
+          loading="eager"
+          decoding="async"
+        />
+      </div>
+    )}
+
+    <dl class="hero__stats">
+      <div class="hero__stat">
+        <dt>笔记</dt>
+        <dd>{stats.posts}</dd>
+      </div>
+      <div class="hero__stat">
+        <dt>分类</dt>
+        <dd>{stats.categories}</dd>
+      </div>
+      <div class="hero__stat">
+        <dt>标签</dt>
+        <dd>{stats.tags}</dd>
+      </div>
+      <div class="hero__stat">
+        <dt>始于</dt>
+        <dd>{stats.since}</dd>
+      </div>
+    </dl>
+
+    <p class="hero__signature">
+      {title} — {subtitle}
+    </p>
+  </aside>
+</section>
+
+<style>
+  .hero {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(2rem, 6vw, 4.5rem);
+    padding: clamp(3rem, 9vw, 6.5rem) 0 clamp(2.25rem, 5vw, 3.5rem);
+  }
+
+  .hero__main {
+    max-width: 44rem;
+  }
+
+  .hero__eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    margin: 0 0 1.5rem;
+    font-family: var(--font-sans, system-ui, sans-serif);
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--text-color-muted, #6b675f);
+  }
+
+  .hero__eyebrow-line {
+    display: inline-block;
+    width: 1.75rem;
+    height: 1px;
+    background: color-mix(in oklab, var(--primary-color, #7c3b52) 60%, transparent);
+  }
+
+  .hero__title {
+    margin: 0 0 1.35rem;
+    font-family: var(--font-serif, Georgia, "Noto Serif SC", serif);
+    font-size: clamp(2.15rem, 4.6vw, 3.6rem);
+    font-weight: 600;
+    line-height: 1.22;
+    letter-spacing: -0.012em;
+    text-wrap: balance;
+    color: var(--text-color, #23211d);
+  }
+
+  .hero__lead {
+    margin: 0 0 1.75rem;
+    max-width: 34rem;
+    font-family: var(--font-sans, system-ui, sans-serif);
+    font-size: clamp(1rem, 1.35vw, 1.12rem);
+    line-height: 1.8;
+    color: var(--text-color-muted, #55524c);
+  }
+
+  .hero__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem 1.1rem;
+    margin-bottom: 1.9rem;
+    font-family: var(--font-sans, system-ui, sans-serif);
+    font-size: 0.82rem;
+  }
+
+  .hero__author {
+    font-weight: 600;
+    color: var(--text-color, #23211d);
+    letter-spacing: 0.02em;
+  }
+
+  .hero__social {
+    position: relative;
+    color: var(--text-color-muted, #6b675f);
+    text-decoration: none;
+  }
+
+  .hero__social::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -0.15rem;
+    height: 1px;
+    background: currentColor;
+    opacity: 0.35;
+    transition: opacity 0.2s ease;
+  }
+
+  .hero__social:hover {
+    color: var(--text-color, #23211d);
+  }
+
+  .hero__social:hover::after {
+    opacity: 0.8;
+  }
+
+  .hero__latest {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 0.35rem 0.75rem;
+    margin: 0;
+    padding-top: 1.35rem;
+    border-top: 1px solid var(--hairline, rgb(0 0 0 / 8%));
+    font-family: var(--font-sans, system-ui, sans-serif);
+    font-size: 0.85rem;
+    line-height: 1.7;
+  }
+
+  .hero__latest-label {
+    font-size: 0.68rem;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--primary-color, #7c3b52);
+  }
+
+  .hero__latest a {
+    color: var(--text-color, #23211d);
+    text-decoration: none;
+    border-bottom: 1px solid color-mix(in oklab, var(--text-color, #23211d) 22%, transparent);
+    transition: border-color 0.2s ease;
+  }
+
+  .hero__latest a:hover {
+    border-bottom-color: var(--text-color, #23211d);
+  }
+
+  .hero__latest-date {
+    color: var(--text-color-subtle, #8a857c);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .hero__aside {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.6rem;
+    align-self: end;
+  }
+
+  .hero__portrait {
+    width: clamp(4.5rem, 12vw, 7.5rem);
+    aspect-ratio: 1;
+    overflow: hidden;
+    border-radius: 50%;
+    background: var(--surface-subtle, #f2f0ec);
+    border: 1px solid var(--hairline, rgb(0 0 0 / 8%));
+  }
+
+  .hero__portrait :global(img) {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .hero__stats {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, auto));
+    gap: 1.6rem;
+    margin: 0;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--hairline, rgb(0 0 0 / 8%));
+    width: 100%;
+  }
+
+  .hero__stat {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+  }
+
+  .hero__stat dt {
+    font-family: var(--font-sans, system-ui, sans-serif);
+    font-size: 0.66rem;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--text-color-subtle, #8a857c);
+  }
+
+  .hero__stat dd {
+    margin: 0;
+    font-family: var(--font-serif, Georgia, "Noto Serif SC", serif);
+    font-size: 1.28rem;
+    font-variant-numeric: tabular-nums;
+    color: var(--text-color, #23211d);
+  }
+
+  .hero__signature {
+    margin: 0;
+    font-family: var(--font-kai, var(--font-serif, Georgia, serif));
+    font-size: 0.85rem;
+    letter-spacing: 0.06em;
+    color: var(--text-color-muted, #6b675f);
+  }
+
+  @media (min-width: 900px) {
+    .hero {
+      grid-template-columns: minmax(0, 1.55fr) minmax(14rem, 0.45fr);
+      align-items: end;
+    }
+
+    .hero__aside {
+      align-items: flex-end;
+      text-align: right;
+      padding-bottom: 0.35rem;
+    }
+
+    .hero__stats {
+      grid-template-columns: repeat(2, minmax(0, auto));
+      justify-content: end;
+      gap: 1.1rem 2rem;
+      width: auto;
+    }
+
+    .hero__stat {
+      align-items: flex-end;
+    }
+  }
+</style>

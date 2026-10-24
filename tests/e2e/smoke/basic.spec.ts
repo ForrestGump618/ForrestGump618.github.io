@@ -1,5 +1,7 @@
 import { expect, test } from "@playwright/test";
 import { POSTS, ROUTES } from "../support/routes";
+import { openSearchDialog } from "../support/search";
+import { readTheme, toggleTheme } from "../support/theme";
 
 test("@smoke 首页、分页与文章页面可访问", async ({ page }) => {
   const homeResponse = await page.goto(ROUTES.home);
@@ -12,14 +14,13 @@ test("@smoke 首页、分页与文章页面可访问", async ({ page }) => {
 
   const postResponse = await page.goto(POSTS.helloWorld);
   expect(postResponse?.ok()).toBeTruthy();
-  await expect(page.locator("article.post h1.title")).toHaveText("Hello World!");
+  await expect(page.locator("article.post .post-head__title")).toHaveText("Hello World！");
 });
 
 test("@smoke 搜索面板可打开并通过 Escape 关闭", async ({ page }) => {
   await page.goto(ROUTES.home);
 
-  await page.getByRole("button", { name: "Search" }).click();
-  const searchDialog = page.getByRole("dialog", { name: "Search" });
+  const searchDialog = await openSearchDialog(page);
   await expect(searchDialog).toBeVisible();
 
   await page.keyboard.press("Escape");
@@ -30,20 +31,11 @@ test("@smoke 主题切换与 moments 页面可达", async ({ page }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto(ROUTES.home);
 
-  const initialTheme = await page.evaluate(() => {
-    return document.documentElement.dataset.theme;
-  });
-
-  await page.getByRole("button", { name: "Toggle theme" }).click();
-  await expect
-    .poll(async () => {
-      return page.evaluate(() => {
-        return document.documentElement.dataset.theme;
-      });
-    })
-    .not.toBe(initialTheme);
+  const initialTheme = await readTheme(page);
+  const toggledTheme = await toggleTheme(page);
+  expect(toggledTheme).not.toBe(initialTheme);
 
   await page.goto(ROUTES.moments);
   await expect(page).toHaveURL(ROUTES.moments);
-  await expect(page.locator(".moment-card").first()).toBeVisible();
+  await expect(page.locator(".moment").first()).toBeVisible();
 });

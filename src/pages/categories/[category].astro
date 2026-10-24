@@ -1,22 +1,20 @@
 ---
 import Layout from "../../layouts/Layout.astro";
+import PostList from "@/components/post/PostList.astro";
 import { getCollection } from "astro:content";
 import { currentLocale, getT } from "@/i18n";
-import { toCategoryHref, toPostHref } from "@/toolkit/posts/url";
-import "../../styles/collapse.css";
+import { toCategoryHref } from "@/toolkit/posts/url";
 
 export async function getStaticPaths() {
   const allPosts = await getCollection("posts");
   const publishedPosts = allPosts.filter((post) => !post.data.draft);
 
-  // Collect all unique categories
   const categorySet = new Set<string>();
   publishedPosts.forEach((post) => {
     const categories = post.data.categories || [];
     categories.forEach((cat) => categorySet.add(cat));
   });
 
-  // Generate paths for each category
   return Array.from(categorySet).map((category) => ({
     params: { category },
     props: { category },
@@ -26,29 +24,21 @@ export async function getStaticPaths() {
 const { category } = Astro.props as { category: string };
 const t = getT(currentLocale);
 
-// Get all published posts
 const allPosts = await getCollection("posts");
 const publishedPosts = allPosts.filter((post) => !post.data.draft);
 
-// Filter posts that belong to this category (at any level in hierarchy)
-const postsInCategory = publishedPosts.filter((post) => {
-  const categories = post.data.categories || [];
-  return categories.includes(category);
-});
+// 该分类下的文章（含子分类）
+const postsInCategory = publishedPosts
+  .filter((post) => (post.data.categories || []).includes(category))
+  .toSorted((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
-// Sort posts by date ascending (older first, matching old project)
-const sortedPosts = postsInCategory.toSorted(
-  (a, b) => new Date(a.data.date).getTime() - new Date(b.data.date).getTime(),
-);
-
-// Build parent categories breadcrumb
+// 上级分类（用于面包屑）
 function getParentCategories(categoryName: string): string[] {
   const parents: string[] = [];
   for (const post of publishedPosts) {
     const categories = post.data.categories || [];
     const index = categories.indexOf(categoryName);
     if (index > 0) {
-      // Found the category, get all parents
       for (let i = 0; i < index; i++) {
         if (!parents.includes(categories[i])) {
           parents.push(categories[i]);
@@ -60,125 +50,60 @@ function getParentCategories(categoryName: string): string[] {
 }
 
 const parentCategories = getParentCategories(category);
-
-// Group posts by their full subcategory path for rendering sections
-interface PostDisplay {
-  post: (typeof sortedPosts)[0];
-  subcategoryPath: string[];
-  subcategorySlug: string;
-}
-
-const postDisplays: PostDisplay[] = [];
-
-sortedPosts.forEach((post) => {
-  const categories = post.data.categories || [];
-  const currentIndex = categories.indexOf(category);
-
-  if (currentIndex >= 0) {
-    // Build subcategory path (categories after current one)
-    const subcategoryPath = categories.slice(currentIndex + 1);
-    const subcategorySlug = subcategoryPath
-      .map((c) => c.toLowerCase().replaceAll(/\s+/g, "-"))
-      .join("-");
-
-    postDisplays.push({
-      post,
-      subcategoryPath,
-      subcategorySlug,
-    });
-  }
-});
-
-function formatDate(date: Date): string {
-  const month = String(date.getMonth() + 1).padStart(2, "0");
-  const day = String(date.getDate()).padStart(2, "0");
-  return `${month}-${day}`;
-}
-
-// Track current subcategory slug to insert section headers
-let currentSlug = "c";
 ---
 
-<Layout pageTitle={category}>
-  <div class="wrap">
-    <div class="timeline">
-      <h2 class="item header">
-        <a href="/categories/">{t("category.all")}</a>
-        {
-          parentCategories.map((parent) => (
-            <>
-              <small>/</small>
-              <a href={toCategoryHref(parent)}>{parent}</a>
-            </>
-          ))
-        }
-        <small>/</small>
-        {category}
-        <small>{t("category.label")}</small>
-      </h2>
-
+<Layout
+  pageTitle={category}
+  eyebrow="分类"
+  description={`${category} 分类下的 ${postsInCategory.length} 篇文章。`}
+>
+  <div class="wrap taxonomy-page">
+    <nav class="taxonomy-nav" aria-label="分类路径">
+      <a href="/categories/">{t("category.all")}</a>
       {
-        postDisplays.map((display) => {
-          const { post, subcategoryPath, subcategorySlug } = display;
-          const needsHeader =
-            subcategoryPath.length > 0 && subcategorySlug !== currentSlug;
-
-          if (needsHeader) {
-            currentSlug = subcategorySlug;
-          }
-
-          return (
-            <>
-              {needsHeader && (
-                <h3 class="item section">
-                  {subcategoryPath.map((cat, index) => (
-                    <>
-                      <a href={toCategoryHref(cat)}>{cat}</a>
-                      {index < subcategoryPath.length - 1 && <small>/</small>}
-                    </>
-                  ))}
-                </h3>
-              )}
-
-              <article
-                class="item normal"
-                itemscope
-                itemtype="http://schema.org/Article"
-              >
-                <div class="meta">
-                  <time
-                    itemprop="dateCreated"
-                    datetime={post.data.date.toISOString()}
-                  >
-                    {formatDate(post.data.date)}
-                  </time>
-                </div>
-                <div class="title">
-                  <a href={toPostHref(post.id)} itemprop="url">
-                    <span itemprop="name">{post.data.title || t("category.untitled")}</span>
-                  </a>
-                </div>
-              </article>
-            </>
-          );
-        })
+        parentCategories.map((parent) => (
+          <>
+            <span aria-hidden="true">/</span>
+            <a href={toCategoryHref(parent)}>{parent}</a>
+          </>
+        ))
       }
+      <span aria-hidden="true">/</span>
+      <span class="taxonomy-nav__current">{category}</span>
+    </nav>
 
-      {
-        sortedPosts.length === 0 && (
-          <div class="empty-state">
-            <p>{t("category.noContent")}</p>
-          </div>
-        )
-      }
-    </div>
+    <PostList posts={postsInCategory} showCategory={false} />
   </div>
 </Layout>
 
 <style>
-  .empty-state {
-    text-align: center;
-    padding: 3rem;
-    color: var(--grey-5);
+  .taxonomy-page {
+    max-width: 56rem;
+    padding-top: clamp(1rem, 3vw, 2rem);
+  }
+
+  .taxonomy-nav {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.45rem;
+    margin-bottom: 1.75rem;
+    font-family: var(--font-sans, system-ui, sans-serif);
+    font-size: 0.76rem;
+    color: var(--text-color-subtle, #8a857c);
+  }
+
+  .taxonomy-nav a {
+    border: 0;
+    color: var(--text-color-muted, #6b675f);
+    text-decoration: none;
+  }
+
+  .taxonomy-nav a:hover {
+    color: var(--primary-color, #7c3b52);
+  }
+
+  .taxonomy-nav__current {
+    color: var(--text-color, #23211d);
   }
 </style>

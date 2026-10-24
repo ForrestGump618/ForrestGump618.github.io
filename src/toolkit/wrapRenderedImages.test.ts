@@ -43,9 +43,7 @@ describe("wrapRenderedImages", () => {
   it("已有 loading 属性的图片不重复添加", () => {
     const html = `<img src="/a.png" loading="eager"/>`;
     const out = wrapRenderedImages(html);
-    expect(out).toBe(
-      `<image-zoom><img src="/a.png" loading="eager"></image-zoom>`,
-    );
+    expect(out).toBe(`<image-zoom><img src="/a.png" loading="eager"></image-zoom>`);
   });
 
   it("处理多张图片", () => {

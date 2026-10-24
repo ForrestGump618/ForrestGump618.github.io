@@ -1,7 +1,13 @@
 ---
 title: Hello World！
 date: 2023-08-10
+tags:
+  - 随笔
+categories:
+  - 随笔
+description: 记录我学习医学、统计和流行病学的一些收获，以及一些生活碎片。
 ---
+
 # 欢迎来到我的主页 🏡
 
 <div style="color: #2c3e50; font-size: 18px;">
