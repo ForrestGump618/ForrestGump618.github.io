@@ -120,6 +120,35 @@ const documentTitle = pageTitle
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
 
+    <!-- 首屏关键样式：在外部样式表到达前固定导航高度，避免导航先展开后收起造成 CLS -->
+    <style is:inline>
+      .site-header {
+        position: sticky;
+        top: 0;
+        display: block;
+        height: 4rem;
+        z-index: 40;
+      }
+      .site-header__inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        height: 4rem;
+        padding-inline: 1.25rem;
+        gap: 1rem;
+      }
+      .site-nav {
+        display: flex;
+        align-items: center;
+        gap: 1.25rem;
+      }
+      @media (max-width: 900px) {
+        .site-nav {
+          display: none;
+        }
+      }
+    </style>
+
     <!-- 首屏渲染前同步主题，避免暗色用户闪白（FOUC） -->
     <script is:inline>
       (function () {
