@@ -5,7 +5,7 @@
     "paths": {
       "@/*": ["./src/*"]
     },
-    "types": ["vite-plugin-font/src/font", "@types/bun"],
+    "types": ["@types/bun"],
     "noFallthroughCasesInSwitch": true,
     "noImplicitOverride": true,
     "plugins": [

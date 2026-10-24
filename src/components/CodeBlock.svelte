@@ -2,7 +2,6 @@
 
 <script lang="ts">
   import { onDestroy, onMount } from "svelte";
-  import { css } from "../assets/fonts/MapleMono-CN-Regular.ttf?subsets";
   import ArrowDownSLine from "@/assets/icons/arrow-down-s-line.svg";
   import ArrowUpSLine from "@/assets/icons/arrow-up-s-line.svg";
   import CheckFill from "@/assets/icons/check-fill.svg";
@@ -211,7 +210,7 @@
     <div
       bind:this={container}
       class="content-wrapper"
-      style="font-family: {css.family};"
+      style="font-family: var(--font-mono);"
     >
       <slot />
     </div>
