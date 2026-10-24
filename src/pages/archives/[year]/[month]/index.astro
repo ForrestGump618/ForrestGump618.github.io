@@ -53,7 +53,7 @@ const sortedPosts = posts.toSorted(
   (a, b) => b.data.date.getTime() - a.data.date.getTime(),
 );
 
-// 同年其它月份，便于切换
+// 同年其它月份，便于切换；翻页只在真实存在的月份之间跳转，避免产生死链
 const allPosts = await getCollection("posts");
 const monthsInYear = Array.from(
   new Set(
@@ -62,6 +62,9 @@ const monthsInYear = Array.from(
       .map((post) => post.data.date.getMonth() + 1),
   ),
 ).toSorted((a, b) => a - b);
+const monthIndex = monthsInYear.indexOf(month);
+const prevMonth = monthsInYear[monthIndex - 1];
+const nextMonth = monthsInYear[monthIndex + 1];
 ---
 
 <Layout
@@ -95,15 +98,15 @@ const monthsInYear = Array.from(
 
     <nav class="month-pager" aria-label="月份翻页">
       {
-        month > 1 ? (
-          <a href={`/archives/${year}/${fmtNum(month - 1)}/`}>← 上一月</a>
+        prevMonth ? (
+          <a href={`/archives/${year}/${fmtNum(prevMonth)}/`}>← 上一月</a>
         ) : (
           <span />
         )
       }
       {
-        month < 12 ? (
-          <a href={`/archives/${year}/${fmtNum(month + 1)}/`}>下一月 →</a>
+        nextMonth ? (
+          <a href={`/archives/${year}/${fmtNum(nextMonth)}/`}>下一月 →</a>
         ) : (
           <span />
         )
