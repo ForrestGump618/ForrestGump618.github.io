@@ -9,6 +9,22 @@ draft: false
 
 Eve 是一个面向科研工作的桌面智能体。它把文献、实验、数据和计算环境放在同一条工作流里，适合处理需要多步执行和结果核对的任务。
 
+<p>
+  <a href="https://github.com/ForrestGump618/suwen/releases"><img alt="Eve 1.0.0" src="https://img.shields.io/badge/Eve-1.0.0-202020" /></a>
+  <a href="https://github.com/ForrestGump618/suwen/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/ForrestGump618/suwen?style=flat&logo=github" /></a>
+  <a href="https://github.com/ForrestGump618/suwen"><img alt="Windows" src="https://img.shields.io/badge/platform-Windows-202020" /></a>
+</p>
+
+<details>
+<summary>打开功能导航</summary>
+
+- [深度调研](#eve-能做什么)
+- [实验设计](#eve-能做什么)
+- [多组学处理](#eve-能做什么)
+- [图表批注](#怎么使用)
+
+</details>
+
 ## Eve 能做什么
 
 Eve 可以检索网页、PubMed、Europe PMC 和 UniProt，阅读论文与补充材料，整理研究主张和证据。对于需要复现的工作，它会记录数据版本、代码版本、参数和运行结果，再把复现结果与论文中的数值和图表进行比较。
