@@ -85,7 +85,7 @@ Windows 安装与卸载共六个页面已统一为 Eve 自有界面：欢迎、�
     alt="Eve 1.5.0 自定义 Windows 安装欢迎页"
     loading="lazy"
   />
-  <figcaption>Eve 1.5.0 安装欢迎页：逐用户安装，可选择目录。</figcaption>
+  <figcaption>来源：Eve 1.5.0 安装欢迎页，逐用户安装并可选择目录。</figcaption>
 </figure>
 
 <figure class="md-figure">
@@ -94,7 +94,7 @@ Windows 安装与卸载共六个页面已统一为 Eve 自有界面：欢迎、�
     alt="Eve 1.5.0 自定义 Windows 安装完成页"
     loading="lazy"
   />
-  <figcaption>安装完成页可直接打开 Eve；卸载时保留科研项目、技能、记忆和设置。</figcaption>
+  <figcaption>来源：Eve 1.5.0 安装完成页；卸载时保留科研项目、技能、记忆和设置。</figcaption>
 </figure>
 
 安装器底层仍由 NSIS 和 Win32 API 承载窗口、文件写入与卸载流程；这里替换的是用户可见的标准向导外观和原生按钮。它不等于零 Win32，也不是对安装包签名或 SmartScreen 的替代。
