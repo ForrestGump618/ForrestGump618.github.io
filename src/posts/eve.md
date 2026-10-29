@@ -5,35 +5,40 @@ date: 2026-10-27
 tags: [科研, Agent, 生物信息学]
 categories: [工具]
 draft: false
-updated: 2026-10-28
+updated: 2026-10-29
 ---
 
 Eve 是一个面向科研工作的桌面智能体。它把文献、实验、数据和计算环境放在同一条可追溯的工作流里，帮助研究者从问题出发，完成资料整理、分析执行、结果核验和报告交付。
 
-[![Release](https://img.shields.io/badge/release-1.0.0-202020)](https://github.com/ForrestGump618/suwen/releases)
-[![Windows](https://img.shields.io/badge/platform-Windows-202020)](https://github.com/ForrestGump618/suwen/releases)
-[![License](https://img.shields.io/badge/license-Apache--2.0-202020)](https://github.com/ForrestGump618/suwen/blob/codex/eve-1.0-science/LICENSE)
-[![GitHub stars](https://img.shields.io/github/stars/ForrestGump618/suwen?style=flat&logo=github)](https://github.com/ForrestGump618/suwen/stargazers)
-[![Latest commit](https://img.shields.io/github/last-commit/ForrestGump618/suwen?style=flat)](https://github.com/ForrestGump618/suwen/commits/codex/eve-1.0-science)
+<div class="eve-badges">
+  <a href="https://github.com/ForrestGump618/suwen/releases/tag/eve-v1.3.0"><img alt="Release 1.3.0" src="https://img.shields.io/badge/release-1.3.0-202020"></a>
+  <a href="https://github.com/ForrestGump618/suwen/releases"><img alt="Windows x64" src="https://img.shields.io/badge/platform-Windows_x64-202020"></a>
+  <a href="https://github.com/ForrestGump618/suwen/blob/codex/eve-1.0-science/LICENSE"><img alt="License" src="https://img.shields.io/badge/license-MIT_/_Apache--2.0-202020"></a>
+  <a href="https://github.com/ForrestGump618/suwen/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/ForrestGump618/suwen?style=flat&logo=github"></a>
+</div>
 
-> 当前更新提供源码，暂不上传新的 EXE。已有桌面版用户应核对构建标识，避免启动旧安装包；源码运行方法见下文。
+> Eve 1.3.0 已提供 Windows x64 安装包。安装包未签名，Windows SmartScreen 可能提示；下载后请用 Release 中的 SHA-256 校验。
 
-| 深度调研 | 实验设计 | 多组学 | 工作区 | 图表批注 |
-| --- | --- | --- | --- | --- |
-| 论文、数据、代码、复现、核验 | 引物、载体、对照、验证 | RNA、ATAC、蛋白、空间 | 本地、SSH、PowerShell | 勾画、批注、局部修改 |
+| 研究总览 | 许愿式科研 | 深度调研 | 实验设计 | 多组学 | 工作区 | 图表批注 |
+| --- | --- | --- | --- | --- | --- | --- |
+| 进度、Token、耗时、计划 | 证据链推进与人工复核 | 论文、数据、代码、复现 | 引物、载体、对照、验证 | RNA、ATAC、蛋白、空间 | 本地、SSH、PowerShell | 勾画、批注、局部修改 |
 
-<p align="center">
-  <a href="#深度调研"><img alt="深度调研" src="https://img.shields.io/badge/深度调研-论文复现-202020" /></a>
-  <a href="#实验设计"><img alt="实验设计" src="https://img.shields.io/badge/实验设计-引物与载体-202020" /></a>
-  <a href="#多组学数据处理"><img alt="多组学" src="https://img.shields.io/badge/多组学-QC与整合-202020" /></a>
-  <a href="#7-图表批注"><img alt="图表批注" src="https://img.shields.io/badge/图表-可勾画批注-202020" /></a>
-</p>
+<div class="eve-quick-links">
+  <a href="#研究总览">研究总览</a>
+  <a href="#许愿式科研">许愿式科研</a>
+  <a href="#深度调研">深度调研</a>
+  <a href="#实验设计">实验设计</a>
+  <a href="#多组学数据处理">多组学</a>
+  <a href="#7-图表批注">图表批注</a>
+</div>
 
 <details>
 <summary>快速选择入口</summary>
 
 | 我想做什么 | 从哪里开始 |
 | --- | --- |
+| 看课题、运行、Token 和后续计划 | [研究总览](#研究总览) |
+| 从一句研究目标建立持久项目 | [许愿式科研](#许愿式科研) |
 | 读懂并复现一篇论文 | [深度调研](#深度调研) |
 | 设计 PCR、qPCR 或克隆方案 | [实验设计](#实验设计) |
 | 分析 RNA、ATAC、蛋白或空间数据 | [多组学数据处理](#多组学数据处理) |
@@ -59,15 +64,53 @@ flowchart LR
 <details>
 <summary>30 秒上手清单</summary>
 
-- [ ] 下载并安装 Eve 1.0.0
+- [ ] 从 [Eve 1.3.0 Release](https://github.com/ForrestGump618/suwen/releases/tag/eve-v1.3.0) 下载并安装 Windows x64 安装包
 - [ ] 在“设置 → 模型连接”保存一个可用模型
 - [ ] 选择本地目录或 SSH 工作区
+- [ ] 在研究总览查看课题、运行与后续计划
 - [ ] 在输入框发送一个只读任务
 - [ ] 在“运行轨迹”检查工具结果和证据
 
 </details>
 
 ## 能做什么
+
+### 研究总览
+
+启动后先进入「研究总览」。首页把当前课题、运行质量、Token 与耗时趋势、最近会话、最近运行、后续计划和待确认经验建议放在同一页，不暴露原始 JSON。
+
+![Eve 研究总览](https://raw.githubusercontent.com/ForrestGump618/suwen/eve-v1.3.0/docs/verification/eve-1.3.0/dashboard-desktop.png)
+
+趋势图支持 7 天与 30 天切换，以及 Token、请求数、平均耗时和估算成本四种指标。鼠标悬停或键盘聚焦数据点可查看当天数值；课题卡显示阶段完成比例、当前阶段、阻塞数和下一步，并可进入对应科研愿望。
+
+<details>
+<summary>研究总览的数据从哪里来</summary>
+
+页面只读取现有运行、会话、科研愿望和模型用量的聚合投影，不会因为打开首页而启动任务。没有记录的日期显示为零；没有配置模型价格时，成本保持“未配置”，不伪造估算值。
+
+</details>
+
+### 许愿式科研
+
+在聊天中直接说出研究目标，或进入「科研与证据 → 许愿式科研」。Eve 会建立持久项目，按证据依赖推进资源侦察、证据矩阵、可证伪假设、预注册、分析、实验设计和图表。
+
+```text
+我想研究肿瘤微环境中的细胞通讯如何影响免疫治疗响应。
+请先盘点可用公共数据与文献证据，再提出可以证伪的假设和实施计划。
+```
+
+每个愿望使用独立工作区，数据、分析代码、实验设计、图表、报告和溯源记录分开归档。模型只有在真实产物落盘后才会登记阶段；最终结题必须由用户复核，模型不能代替用户结题。连续推进运行在现有持久任务内，失败、阻塞、审批或人工复核会停止。
+
+### 做梦与经验整理
+
+「设置 → 做梦与经验整理」默认关闭。用户主动开启后，Eve 可以回顾当前工作区的脱敏会话与记忆，提取重复出现的错误、有效工作流和团队偏好，形成待审候选：
+
+- 记忆候选进入可检索知识库。
+- 技能草稿保持停用，需用户确认后再测试。
+- 后续课题保持未启动，由用户决定是否推进。
+- 每条候选保留证据和适用范围，不接受无来源的“经验”。
+
+经验整理只生成建议，不会在后台修改主任务，也不会把一次会话中的偶然做法自动升级为长期规则。
 
 ### 科学工作台
 
@@ -155,7 +198,7 @@ flowchart LR
 - 本地目录和 SSH 远程目录使用同一套文件、搜索、编辑和终端能力。
 - 任务绑定工作区，连接失败不会偷偷切换到本地。
 - 支持 PowerShell、远程终端、后台任务、任务恢复和多个独立会话。
-- 支持团队成员、依赖关系、独立模型、持久信箱和运行中引导。
+- 主智能体按任务需要创建子智能体团队，在侧边栏查看成员、进度、依赖和讨论；用户可以直接与子智能体对话。
 - 图库支持放大、下载、删除和勾画批注；批注可以作为后续任务的指导。
 
 ### 科学工具
@@ -195,28 +238,28 @@ flowchart LR
 
 | 项目 | 当前值 |
 | --- | --- |
-| 版本 | `1.0.0` |
+| 版本 | `1.3.0` |
 | 平台 | Windows x64 |
-| 当前交付 | 源码更新；本次不上传 EXE |
-| 默认界面 | 浅色工作台 |
+| 当前交付 | 源码、Windows x64 安装包、SBOM 与校验清单 |
+| 默认界面 | 研究总览 |
 | 任务执行 | 本地目录或 SSH 工作区 |
 | 数据策略 | 结果、轨迹和证据保存在本机工作区 |
 
-<p align="center">
-  <a href="https://github.com/ForrestGump618/suwen/releases">查看 Release</a> ·
-  <a href="https://github.com/ForrestGump618/suwen/issues">提交问题</a> ·
+<div class="eve-quick-links">
+  <a href="https://github.com/ForrestGump618/suwen/releases/tag/eve-v1.3.0">下载 1.3.0</a>
+  <a href="https://github.com/ForrestGump618/suwen/issues">提交问题</a>
   <a href="https://github.com/ForrestGump618/suwen/discussions">参与讨论</a>
-</p>
+</div>
 
 ## 使用方法
 
 ### 1. 连接模型
 
-打开正式工作台，进入“设置 → 模型连接”，添加供应商，填写 API 地址和凭据。点击「获取模型列表」，勾选要保留的模型，指定首选模型，再点击「保存」。同一供应商可以保存多个模型，供应商之间独立保存连接信息；会话或团队成员可以分别选择模型。
+打开正式工作台，进入“设置 → 模型连接”，添加供应商，填写 API 地址和凭据。点击「获取模型列表」，勾选要保留的模型，指定首选模型，再点击「保存」。同一供应商可以保存多个模型，供应商之间独立保存连接信息；会话或团队成员可以分别选择模型。模型配置支持温度、上下文窗口、最大输出、Token 参数和输入模态。
 
 如果供应商不支持模型列表接口，可以手动添加模型名称。获取失败会显示原因，保留之前保存的列表。凭据输入框默认遮蔽内容。
 
-默认权限为“请求批准”。只读分析可以使用“帮我审核”；只有在理解风险时才使用“完全权限”。
+权限默认开放，便于本地科研工具直接运行；可在设置中按文件、终端、网络、技能和 Agent 操作逐项收窄。涉及凭据、远程主机或不可逆写入时，仍建议保留确认步骤。
 
 ### 2. 创建工作区
 
@@ -318,7 +361,9 @@ npm start
 
 ## 安装与运行
 
-Eve 面向 Windows 桌面环境。发布包和版本信息见 GitHub Releases；源码开发需要 Node.js、Python 和项目依赖。
+Eve 面向 Windows x64 桌面环境。发布包、SBOM、校验清单和版本说明见 [GitHub Release eve-v1.3.0](https://github.com/ForrestGump618/suwen/releases/tag/eve-v1.3.0)。安装包未签名，Windows SmartScreen 可能提示；部署前请核对 SHA-256。
+
+源码开发需要 Node.js、Python 和项目依赖。完整功能、安装包体量、真实 Edge 验证与未验证边界见 [1.3.0 验收报告](https://github.com/ForrestGump618/suwen/blob/codex/eve-1.0-science/docs/verification/eve-1.3.0/README.md)。
 
 ## 许可
 

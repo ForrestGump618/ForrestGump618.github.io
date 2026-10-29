@@ -428,6 +428,58 @@
   border-radius: var(--radius-sm, 4px);
 }
 
+.body.md .eve-badges,
+.body.md .eve-quick-links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.65rem;
+  margin: 1.25rem 0 1.75rem;
+}
+
+.body.md .eve-badges a,
+.body.md .eve-quick-links a {
+  display: inline-flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.body.md .eve-badges img {
+  display: block;
+  width: auto;
+  margin: 0;
+  border-radius: 999px;
+}
+
+.body.md .eve-quick-links a {
+  padding: 0.35rem 0.7rem;
+  border: 1px solid var(--hairline, rgb(0 0 0 / 8%));
+  border-radius: 999px;
+  color: var(--text-color);
+  font-size: 0.82rem;
+  line-height: 1.4;
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease,
+    transform 160ms ease;
+}
+
+.body.md .eve-quick-links a:hover {
+  border-color: var(--text-color-muted);
+  background: var(--grey-1);
+  transform: translateY(-1px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .body.md .eve-quick-links a {
+    transition: none;
+  }
+
+  .body.md .eve-quick-links a:hover {
+    transform: none;
+  }
+}
+
 .body.md .md-figure {
   margin: 2.25em 0;
   text-align: left;
