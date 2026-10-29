@@ -14,7 +14,7 @@ test("@critical 文章页封面应展示文章真实配图与来源", async ({ p
   expect(naturalWidth).toBeGreaterThan(0);
 
   const alt = await cover.getAttribute("alt");
-  expect(alt).toContain("素问");
+  expect(alt).toContain("Eve");
 
   // 正文图的图注需要标明来源，避免把学术图当装饰图使用
   await expect(page.locator(".article-body figcaption").first()).toContainText("来源");

@@ -5,7 +5,7 @@ test("@regression CodeBlock 支持复制与全屏", async ({ page }) => {
   const response = await page.goto(POSTS.suwen);
   expect(response?.ok()).toBeTruthy();
 
-  const codeBlock = page.locator("code-block").first();
+  const codeBlock = page.locator(".post-content > code-block").first();
   await codeBlock.scrollIntoViewIfNeeded();
   await expect(codeBlock).toBeVisible();
 

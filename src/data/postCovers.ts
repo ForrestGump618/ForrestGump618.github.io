@@ -50,6 +50,16 @@ export const postCovers: Record<string, CoverSpec> = {
     credit: "素问仓库截图（Apache-2.0）",
     mode: "fit",
   },
+  "Eve：科研工作台与使用方法": {
+    kind: "scientific",
+    image:
+      "https://raw.githubusercontent.com/ForrestGump618/suwen/eve-v1.3.0/docs/verification/eve-1.3.0/dashboard-desktop.png",
+    alt: "Eve 科研工作台研究总览：课题进度、运行质量、Token 趋势与后续计划",
+    caption: "Eve 1.3.0 研究总览：课题、运行、资源用量与后续计划",
+    credit: "Eve 1.3.0 验收截图",
+    mode: "fit",
+    band: true,
+  },
   "【转载文章】影像组学的研究思路": {
     kind: "typographic",
     kicker: "转载 · 影像组学",

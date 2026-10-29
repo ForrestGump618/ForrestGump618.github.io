@@ -33,18 +33,21 @@ test("@critical 阅读进度、返回顶部与代码块全屏可用", async ({ p
     window.scrollTo(0, document.body.scrollHeight * 0.4);
   });
 
-  const progressScale = await page.evaluate(() => {
-    const bar = document.querySelector("[data-reading-progress-bar]");
-    if (!bar) {
-      return 0;
-    }
+  await expect
+    .poll(async () => {
+      return page.evaluate(() => {
+        const bar = document.querySelector("[data-reading-progress-bar]");
+        if (!bar) {
+          return 0;
+        }
 
-    const transform = window.getComputedStyle(bar).transform;
-    const matrix = /matrix\(([^)]+)\)/.exec(transform);
+        const transform = window.getComputedStyle(bar).transform;
+        const matrix = /matrix\(([^)]+)\)/.exec(transform);
 
-    return matrix ? Number(matrix[1].split(",")[0]) : 0;
-  });
-  expect(progressScale).toBeGreaterThan(0);
+        return matrix ? Number(matrix[1].split(",")[0]) : 0;
+      });
+    })
+    .toBeGreaterThan(0);
 
   const backToTop = page.locator("button[data-back-to-top]");
   await expect(backToTop).toBeVisible();
@@ -57,7 +60,7 @@ test("@critical 阅读进度、返回顶部与代码块全屏可用", async ({ p
     })
     .toBeLessThan(80);
 
-  const codeBlock = page.locator("code-block").first();
+  const codeBlock = page.locator(".post-content > code-block").first();
   await codeBlock.scrollIntoViewIfNeeded();
   await expect(codeBlock).toBeVisible();
 

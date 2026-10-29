@@ -79,7 +79,14 @@ flowchart LR
 
 启动后先进入「研究总览」。首页把当前课题、运行质量、Token 与耗时趋势、最近会话、最近运行、后续计划和待确认经验建议放在同一页，不暴露原始 JSON。
 
-![Eve 研究总览](https://raw.githubusercontent.com/ForrestGump618/suwen/eve-v1.3.0/docs/verification/eve-1.3.0/dashboard-desktop.png)
+<figure class="md-figure">
+  <img
+    src="https://raw.githubusercontent.com/ForrestGump618/suwen/eve-v1.3.0/docs/verification/eve-1.3.0/dashboard-desktop.png"
+    alt="Eve 科研工作台研究总览：课题进度、运行质量、Token 趋势与后续计划"
+    loading="lazy"
+  />
+  <figcaption>来源：Eve 1.3.0 真实 Edge 验收截图，数据来自本地测试 fixture，不代表真实科研运行。</figcaption>
+</figure>
 
 趋势图支持 7 天与 30 天切换，以及 Token、请求数、平均耗时和估算成本四种指标。鼠标悬停或键盘聚焦数据点可查看当天数值；课题卡显示阶段完成比例、当前阶段、阻塞数和下一步，并可进入对应科研愿望。
 

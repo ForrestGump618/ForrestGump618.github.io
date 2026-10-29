@@ -16,7 +16,7 @@ export const ROUTES = {
  */
 export const POSTS = {
   helloWorld: "/posts/hello-world/",
-  suwen: "/posts/suwen-2-1-0/suwen-2-1-0/",
+  suwen: "/posts/eve/",
   linger:
     "/posts/linger从单细胞多组学数据推断基因调控网络/linger从单细胞多组学数据推断基因调控网络/",
   heart: "/posts/心脏听诊总结/心脏听诊总结/",
