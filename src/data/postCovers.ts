@@ -53,10 +53,10 @@ export const postCovers: Record<string, CoverSpec> = {
   "Eve：科研工作台与使用方法": {
     kind: "scientific",
     image:
-      "https://raw.githubusercontent.com/ForrestGump618/suwen/eve-v1.4.0/docs/verification/literature-1.4.0/dashboard-desktop.png",
+      "https://raw.githubusercontent.com/ForrestGump618/suwen/eve-v1.5.0/docs/verification/wet-lab-1.5.0/dashboard-desktop.png",
     alt: "Eve 科研工作台研究总览：课题进度、运行质量、Token 趋势与后续计划",
-    caption: "Eve 1.4.0 研究总览：课题、运行、资源用量与后续计划",
-    credit: "Eve 1.4.0 验收截图",
+    caption: "Eve 1.5.0 研究总览：课题、运行、资源用量与后续计划",
+    credit: "Eve 1.5.0 验收截图",
     mode: "fit",
     band: true,
   },
