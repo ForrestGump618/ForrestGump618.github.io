@@ -11,20 +11,21 @@ updated: 2026-10-29
 Eve 是一个面向科研工作的桌面智能体。它把文献、实验、数据和计算环境放在同一条可追溯的工作流里，帮助研究者从问题出发，完成资料整理、分析执行、结果核验和报告交付。
 
 <div class="eve-badges">
-  <a href="https://github.com/ForrestGump618/suwen/releases/tag/eve-v1.3.0"><img alt="Release 1.3.0" src="https://img.shields.io/badge/release-1.3.0-202020"></a>
+  <a href="https://github.com/ForrestGump618/suwen/releases/tag/eve-v1.4.0"><img alt="Release 1.4.0" src="https://img.shields.io/badge/release-1.4.0-202020"></a>
   <a href="https://github.com/ForrestGump618/suwen/releases"><img alt="Windows x64" src="https://img.shields.io/badge/platform-Windows_x64-202020"></a>
-  <a href="https://github.com/ForrestGump618/suwen/blob/codex/eve-1.0-science/LICENSE"><img alt="License" src="https://img.shields.io/badge/license-MIT_/_Apache--2.0-202020"></a>
+  <a href="https://github.com/ForrestGump618/suwen/blob/eve-v1.4.0/LICENSE"><img alt="License" src="https://img.shields.io/badge/license-MIT_/_Apache--2.0-202020"></a>
   <a href="https://github.com/ForrestGump618/suwen/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/ForrestGump618/suwen?style=flat&logo=github"></a>
 </div>
 
-> Eve 1.3.0 已提供 Windows x64 安装包。安装包未签名，Windows SmartScreen 可能提示；下载后请用 Release 中的 SHA-256 校验。
+> Eve 1.4.0 已提供 Windows x64 安装包。安装包未签名，Windows SmartScreen 可能提示；下载后请用 Release 中的 SHA-256 校验。
 
-| 研究总览 | 许愿式科研 | 深度调研 | 实验设计 | 多组学 | 工作区 | 图表批注 |
-| --- | --- | --- | --- | --- | --- | --- |
-| 进度、Token、耗时、计划 | 证据链推进与人工复核 | 论文、数据、代码、复现 | 引物、载体、对照、验证 | RNA、ATAC、蛋白、空间 | 本地、SSH、PowerShell | 勾画、批注、局部修改 |
+| 研究总览 | 文献雷达 | 许愿式科研 | 深度调研 | 实验设计 | 多组学 | 工作区 | 图表批注 |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 进度、Token、耗时、计划 | 检索、评分、反思、技能候选 | 证据链推进与人工复核 | 论文、数据、代码、复现 | 引物、载体、对照、验证 | RNA、ATAC、蛋白、空间 | 本地、SSH、PowerShell | 勾画、批注、局部修改 |
 
 <div class="eve-quick-links">
   <a href="#研究总览">研究总览</a>
+  <a href="#文献雷达">文献雷达</a>
   <a href="#许愿式科研">许愿式科研</a>
   <a href="#深度调研">深度调研</a>
   <a href="#实验设计">实验设计</a>
@@ -38,6 +39,7 @@ Eve 是一个面向科研工作的桌面智能体。它把文献、实验、数�
 | 我想做什么 | 从哪里开始 |
 | --- | --- |
 | 看课题、运行、Token 和后续计划 | [研究总览](#研究总览) |
+| 检索文献、投喂 PDF 或审核方法候选 | [文献雷达](#文献雷达) |
 | 从一句研究目标建立持久项目 | [许愿式科研](#许愿式科研) |
 | 读懂并复现一篇论文 | [深度调研](#深度调研) |
 | 设计 PCR、qPCR 或克隆方案 | [实验设计](#实验设计) |
@@ -64,7 +66,7 @@ flowchart LR
 <details>
 <summary>30 秒上手清单</summary>
 
-- [ ] 从 [Eve 1.3.0 Release](https://github.com/ForrestGump618/suwen/releases/tag/eve-v1.3.0) 下载并安装 Windows x64 安装包
+- [ ] 从 [Eve 1.4.0 Release](https://github.com/ForrestGump618/suwen/releases/tag/eve-v1.4.0) 下载并安装 Windows x64 安装包
 - [ ] 在“设置 → 模型连接”保存一个可用模型
 - [ ] 选择本地目录或 SSH 工作区
 - [ ] 在研究总览查看课题、运行与后续计划
@@ -79,21 +81,36 @@ flowchart LR
 
 启动后先进入「研究总览」。首页把当前课题、运行质量、Token 与耗时趋势、最近会话、最近运行、后续计划和待确认经验建议放在同一页，不暴露原始 JSON。
 
-<figure class="md-figure">
-  <img
-    src="https://raw.githubusercontent.com/ForrestGump618/suwen/eve-v1.3.0/docs/verification/eve-1.3.0/dashboard-desktop.png"
-    alt="Eve 科研工作台研究总览：课题进度、运行质量、Token 趋势与后续计划"
-    loading="lazy"
-  />
-  <figcaption>来源：Eve 1.3.0 真实 Edge 验收截图，数据来自本地测试 fixture，不代表真实科研运行。</figcaption>
-</figure>
-
 趋势图支持 7 天与 30 天切换，以及 Token、请求数、平均耗时和估算成本四种指标。鼠标悬停或键盘聚焦数据点可查看当天数值；课题卡显示阶段完成比例、当前阶段、阻塞数和下一步，并可进入对应科研愿望。
 
 <details>
 <summary>研究总览的数据从哪里来</summary>
 
 页面只读取现有运行、会话、科研愿望和模型用量的聚合投影，不会因为打开首页而启动任务。没有记录的日期显示为零；没有配置模型价格时，成本保持“未配置”，不伪造估算值。
+
+</details>
+
+### 文献雷达
+
+「文献」页从 Europe PMC、OpenAlex、bioRxiv 和 arXiv 收集候选文献，按主题相关、时效、期刊、跨学科方法和先验工作接地的新颖性排序。研究论文、综述、方法论文和观点文章分开标记。
+
+<figure class="md-figure">
+  <img
+    src="https://raw.githubusercontent.com/ForrestGump618/suwen/eve-v1.4.0/docs/verification/literature-1.4.0/literature-desktop.png"
+    alt="Eve 文献雷达：今日指标、检索条件、文献卡片与审阅入口"
+    loading="lazy"
+  />
+  <figcaption>来源：Eve 1.4.0 真实 Edge 验收截图，数据来自本地测试 fixture，不代表真实数据库检索结果。</figcaption>
+</figure>
+
+支持投喂 PDF、审核反思和技能候选、评论每日文献动态，以及把有价值的思考转入对话。新方法默认成为停用的孤立技能节点，只有用户启用并在真实任务中成功使用后，执行反馈才强化技能图连接。
+
+<details>
+<summary>文献评分与技能边界</summary>
+
+接地新颖性只在检索到发表时间更早的先验工作时计算；找不到先验工作或只有年份、月份时保持未评分。跨学科检索使用拓扑数据分析、网络科学、因果推断、信息论、动力系统等桥接概念，而不是泛化订阅数学或物理分类。
+
+辅助模型可按 `literature.embedding`、`literature.extraction`、`literature.classification`、`reflection.reasoning` 和 `skill.extraction` 分别配置；未配置时沿用角色模型或主模型。
 
 </details>
 
@@ -123,7 +140,7 @@ flowchart LR
 
 在「科研与证据 → 科学工作台」选择研究流程。文献、遗传变异、靶点药物、结构序列、分子设计、测序、单细胞、蛋白代谢组、仪器数据和实验设计使用同一个任务执行框架，结果可在原对话中继续追问或修改。
 
-发行版的共享目录包含 371 项技能，覆盖科研、数据处理和通用工作区操作；用户安装的扩展包在本机合并检索。技能数量表示已收录的流程与资源，实际计算还取决于执行主机的依赖、数据和服务权限。
+发行版的共享目录包含 390 项技能，覆盖科研、数据处理和通用工作区操作；用户安装的扩展包在本机合并检索。技能数量表示已收录的流程与资源，实际计算还取决于执行主机的依赖、数据和服务权限。
 
 ![科学工作台](https://raw.githubusercontent.com/ForrestGump618/suwen/codex/eve-1.0-science/docs/screenshots/science-workbench.png)
 
@@ -245,7 +262,7 @@ flowchart LR
 
 | 项目 | 当前值 |
 | --- | --- |
-| 版本 | `1.3.0` |
+| 版本 | `1.4.0` |
 | 平台 | Windows x64 |
 | 当前交付 | 源码、Windows x64 安装包、SBOM 与校验清单 |
 | 默认界面 | 研究总览 |
@@ -253,7 +270,7 @@ flowchart LR
 | 数据策略 | 结果、轨迹和证据保存在本机工作区 |
 
 <div class="eve-quick-links">
-  <a href="https://github.com/ForrestGump618/suwen/releases/tag/eve-v1.3.0">下载 1.3.0</a>
+  <a href="https://github.com/ForrestGump618/suwen/releases/tag/eve-v1.4.0">下载 1.4.0</a>
   <a href="https://github.com/ForrestGump618/suwen/issues">提交问题</a>
   <a href="https://github.com/ForrestGump618/suwen/discussions">参与讨论</a>
 </div>
@@ -368,9 +385,9 @@ npm start
 
 ## 安装与运行
 
-Eve 面向 Windows x64 桌面环境。发布包、SBOM、校验清单和版本说明见 [GitHub Release eve-v1.3.0](https://github.com/ForrestGump618/suwen/releases/tag/eve-v1.3.0)。安装包未签名，Windows SmartScreen 可能提示；部署前请核对 SHA-256。
+Eve 面向 Windows x64 桌面环境。发布包、SBOM、校验清单和版本说明见 [GitHub Release eve-v1.4.0](https://github.com/ForrestGump618/suwen/releases/tag/eve-v1.4.0)。安装包未签名，Windows SmartScreen 可能提示；部署前请核对 SHA-256。
 
-源码开发需要 Node.js、Python 和项目依赖。完整功能、安装包体量、真实 Edge 验证与未验证边界见 [1.3.0 验收报告](https://github.com/ForrestGump618/suwen/blob/codex/eve-1.0-science/docs/verification/eve-1.3.0/README.md)。
+源码开发需要 Node.js、Python 和项目依赖。完整功能、安装包体量、真实 Edge 验证与未验证边界见 [1.4.0 验收报告](https://github.com/ForrestGump618/suwen/blob/eve-v1.4.0/docs/verification/literature-1.4.0/README.md)。
 
 ## 许可
 
