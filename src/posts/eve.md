@@ -11,9 +11,9 @@ updated: 2026-10-30
 Eve 是一个面向科研工作的桌面智能体。它把文献、实验、数据和计算环境放在同一条可追溯的工作流里，帮助研究者从问题出发，完成资料整理、分析执行、结果核验和报告交付。
 
 <div class="eve-badges">
-  <a href="https://github.com/ForrestGump618/Eve/releases/tag/eve-v1.0.0-20261030"><img alt="Release 1.0.0" src="https://img.shields.io/badge/release-1.0.0-202020"></a>
+  <a href="https://github.com/ForrestGump618/Eve/releases/tag/eve-v1.0.0-20261030-r2"><img alt="Release 1.0.0" src="https://img.shields.io/badge/release-1.0.0-202020"></a>
   <a href="https://github.com/ForrestGump618/Eve/releases"><img alt="Windows x64" src="https://img.shields.io/badge/platform-Windows_x64-202020"></a>
-  <a href="https://github.com/ForrestGump618/Eve/blob/eve-v1.0.0-20261030/LICENSE"><img alt="License" src="https://img.shields.io/badge/license-MIT_/_Apache--2.0-202020"></a>
+  <a href="https://github.com/ForrestGump618/Eve/blob/eve-v1.0.0-20261030-r2/LICENSE"><img alt="License" src="https://img.shields.io/badge/license-MIT_/_Apache--2.0-202020"></a>
   <a href="https://github.com/ForrestGump618/Eve/stargazers"><img alt="GitHub stars" src="https://img.shields.io/github/stars/ForrestGump618/Eve?style=flat&logo=github"></a>
 </div>
 
@@ -66,7 +66,7 @@ flowchart LR
 <details>
 <summary>30 秒上手清单</summary>
 
-- [ ] 从 [Eve 1.0.0 Release](https://github.com/ForrestGump618/Eve/releases/tag/eve-v1.0.0-20261030) 下载并安装 Windows x64 安装包
+- [ ] 从 [Eve 1.0.0 Release](https://github.com/ForrestGump618/Eve/releases/tag/eve-v1.0.0-20261030-r2) 下载并安装 Windows x64 安装包
 - [ ] 在“设置 → 模型连接”保存一个可用模型
 - [ ] 选择本地目录或 SSH 工作区
 - [ ] 在研究总览查看课题、运行与后续计划
@@ -77,11 +77,11 @@ flowchart LR
 
 ### 安装体验
 
-Windows 安装与卸载共六个页面已统一为 Eve 自有界面：欢迎、安装进度、安装完成、卸载确认、卸载进度和卸载完成。页面使用与主程序一致的中性灰、单一蓝色强调色、中文排版和主次操作层级，标准 Windows 向导页面与 `Back / Next / Cancel` 按钮不再显示。
+安装与卸载使用统一的中性灰、蓝色主操作、圆角卡片和中文排版。安装范围可选“仅为我”或“所有用户”，进度随执行状态更新，并遵循系统减少动画设置。
 
 <figure class="md-figure">
   <img
-    src="https://raw.githubusercontent.com/ForrestGump618/Eve/main/docs/verification/eve-1.0.0-release/installer-welcome.png"
+    src="https://raw.githubusercontent.com/ForrestGump618/Eve/eve-v1.0.0-20261030-r2/docs/verification/eve-1.0.0-release/installer-welcome.png"
     alt="Eve 1.0.0 自定义 Windows 安装欢迎页"
     loading="lazy"
   />
@@ -90,14 +90,18 @@ Windows 安装与卸载共六个页面已统一为 Eve 自有界面：欢迎、�
 
 <figure class="md-figure">
   <img
-    src="https://raw.githubusercontent.com/ForrestGump618/Eve/main/docs/verification/eve-1.0.0-release/installer-finish.png"
+    src="https://raw.githubusercontent.com/ForrestGump618/Eve/eve-v1.0.0-20261030-r2/docs/verification/eve-1.0.0-release/installer-finish.png"
     alt="Eve 1.0.0 自定义 Windows 安装完成页"
     loading="lazy"
   />
   <figcaption>来源：Eve 1.0.0 安装完成页；卸载时保留科研项目、技能、记忆和设置。</figcaption>
 </figure>
 
-安装器底层仍由 NSIS 和 Win32 API 承载窗口、文件写入与卸载流程；这里替换的是用户可见的标准向导外观和原生按钮。它不等于零 Win32，也不是对安装包签名或 SmartScreen 的替代。
+安装和卸载共用同一套界面。卸载可取消，进行时显示实际耗时，结束后保留会话、项目、技能、记忆与设置。
+
+![Eve 卸载界面](https://raw.githubusercontent.com/ForrestGump618/Eve/eve-v1.0.0-20261030-r2/docs/verification/eve-1.0.0-release/uninstaller-welcome.png)
+
+本次修复还包括 PDF 解析依赖、后台启动恢复和静默安装路径。安装包为 143,071,342 bytes；SHA-256：`b4c30a63bef9fb13758fae9e19081fb2cce3538b322a20cb68085fa25595fd07`。
 
 ## 能做什么
 
@@ -120,7 +124,7 @@ Windows 安装与卸载共六个页面已统一为 Eve 自有界面：欢迎、�
 
 <figure class="md-figure">
   <img
-    src="https://raw.githubusercontent.com/ForrestGump618/Eve/eve-v1.0.0-20261030/docs/verification/eve-1.0.0-release/literature-desktop.png"
+    src="https://raw.githubusercontent.com/ForrestGump618/Eve/eve-v1.0.0-20261030-r2/docs/verification/eve-1.0.0-release/literature-desktop.png"
     alt="Eve 文献雷达：今日指标、检索条件、文献卡片与审阅入口"
     loading="lazy"
   />
@@ -166,7 +170,7 @@ Windows 安装与卸载共六个页面已统一为 Eve 自有界面：欢迎、�
 
 发行版的共享目录包含 390 项技能，覆盖科研、数据处理、湿实验和通用工作区操作；其中 175 项来自 K-Dense-AI/scientific-agent-skills。用户安装的扩展包在本机合并检索。技能数量表示已收录的流程与资源，实际计算还取决于执行主机的依赖、数据和服务权限。
 
-![科学工作台](https://raw.githubusercontent.com/ForrestGump618/Eve/eve-v1.0.0-20261030/docs/screenshots/science-workbench.png)
+![科学工作台](https://raw.githubusercontent.com/ForrestGump618/Eve/eve-v1.0.0-20261030-r2/docs/screenshots/science-workbench.png)
 
 <details>
 <summary>检查数据，再开始分析</summary>
@@ -186,7 +190,7 @@ Windows 安装与卸载共六个页面已统一为 Eve 自有界面：欢迎、�
 
 把模块关系、实验流程、时序或结果说明整理成可打开的 HTML 页面。聊天中显示简洁的文件卡片，点击后可查看、缩放和切换主题，也可下载 HTML；文件树里可以再次打开。
 
-![交互图解预览](https://raw.githubusercontent.com/ForrestGump618/Eve/eve-v1.0.0-20261030/docs/screenshots/interactive-pages.png)
+![交互图解预览](https://raw.githubusercontent.com/ForrestGump618/Eve/eve-v1.0.0-20261030-r2/docs/screenshots/interactive-pages.png)
 
 <details>
 <summary>怎么使用</summary>
@@ -269,7 +273,7 @@ Windows 安装与卸载共六个页面已统一为 Eve 自有界面：欢迎、�
 
 例如：`使用 science-pubchem-database 查询阿司匹林的分子性质，将结果保存到当前工作区，并注明来源。`
 
-[完整使用说明](https://github.com/ForrestGump618/Eve/blob/eve-v1.0.0-20261030/docs/SCIENCE-TOOLS.md)
+[完整使用说明](https://github.com/ForrestGump618/Eve/blob/eve-v1.0.0-20261030-r2/docs/SCIENCE-TOOLS.md)
 
 </details>
 
@@ -319,7 +323,7 @@ Windows 安装与卸载共六个页面已统一为 Eve 自有界面：欢迎、�
 | 数据策略 | 结果、轨迹和证据保存在本机工作区 |
 
 <div class="eve-quick-links">
-  <a href="https://github.com/ForrestGump618/Eve/releases/tag/eve-v1.0.0-20261030">下载 1.0.0</a>
+  <a href="https://github.com/ForrestGump618/Eve/releases/tag/eve-v1.0.0-20261030-r2">下载 1.0.0</a>
   <a href="https://github.com/ForrestGump618/Eve/issues">提交问题</a>
   <a href="https://github.com/ForrestGump618/Eve/discussions">参与讨论</a>
 </div>
@@ -434,7 +438,7 @@ npm start
 
 ## 安装与运行
 
-Eve 面向 Windows x64 桌面环境。发布包、SBOM、校验清单和版本说明见 [GitHub Release eve-v1.0.0-20261030](https://github.com/ForrestGump618/Eve/releases/tag/eve-v1.0.0-20261030)。安装包未签名，Windows SmartScreen 可能提示；部署前请核对 SHA-256。
+Eve 面向 Windows x64 桌面环境。发布包、SBOM、校验清单和版本说明见 [GitHub Release eve-v1.0.0-20261030-r2](https://github.com/ForrestGump618/Eve/releases/tag/eve-v1.0.0-20261030-r2)。安装包未签名，Windows SmartScreen 可能提示；部署前请核对 SHA-256。
 
 源码开发需要 Node.js、Python 和项目依赖。完整功能、安装器页面、安装包体量、真实 Edge 验证与未验证边界见 [1.0.0 验收报告](https://github.com/ForrestGump618/Eve/blob/main/docs/verification/eve-1.0.0-release/README.md)。
 
