@@ -27,19 +27,17 @@ test("@critical 搜索命中后可点击结果跳转到对应文章", async ({ p
   await expect(page.locator("article.post h1").first()).toBeVisible();
 });
 
-test("@critical 分页进入文章后回退，URL 与列表状态保持一致", async ({ page }) => {
-  await page.goto(ROUTES.page2);
-  await expect(page).toHaveURL(ROUTES.page2);
-  await expect(page.locator("nav.pagination [aria-current='page']")).toHaveText("2");
+test("@critical 首页进入文章后回退，URL 与列表状态保持一致", async ({ page }) => {
+  await page.goto(ROUTES.home);
+  await expect(page.locator(".post-row__link").first()).toBeVisible();
 
   const pagePostLink = page.locator(".post-row__link").first();
-  await expect(pagePostLink).toBeVisible();
   await pagePostLink.click();
   await expect(page).toHaveURL(/\/posts\/.+/);
 
   await page.goBack();
-  await expect(page).toHaveURL(ROUTES.page2);
-  await expect(page.locator("nav.pagination [aria-current='page']")).toHaveText("2");
+  await expect(page).toHaveURL(ROUTES.home);
+  await expect(page.locator(".post-row__link").first()).toBeVisible();
 });
 
 test("@regression 标签与分类列表进入文章后可回退", async ({ page }) => {

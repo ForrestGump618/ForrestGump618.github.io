@@ -1,8 +1,7 @@
 ---
 /**
- * 全局 SEO 头部组件：canonical、Open Graph、Twitter Card、theme-color。
- * 在 Layout.astro 的 <head> 中、页面自定义 head fragment 之前渲染。
- * meta description 仍由各页面通过 slot="head" 提供，避免重复标签。
+ * 全局 SEO 头部组件：canonical、description、Open Graph、Twitter Card、theme-color。
+ * 在 Layout.astro 的 <head> 中渲染；页面不要再手写 meta description，避免重复标签。
  */
 import type { ImageMetadata } from "astro";
 import themeConfig from "@/theme.config.ts";
@@ -53,6 +52,8 @@ const twitterCard = ogImage ? "summary_large_image" : "summary";
 ---
 
 <link rel="canonical" href={canonical} />
+
+<meta name="description" content={ogDescription} />
 
 <meta name="theme-color" media="(prefers-color-scheme: light)" content="#fefefe" />
 <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#1d1d26" />

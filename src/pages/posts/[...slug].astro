@@ -23,6 +23,7 @@ import { createPostContentContainer } from "@/toolkit/posts/createPostContentCon
 import { formatDateLong, formatDateShort } from "@/toolkit/posts/formatDate";
 import { getReadingStats, toReadableText } from "@/toolkit/posts/readingStats";
 import { toPostHref, toTagHref } from "@/toolkit/posts/url";
+import { hasNestedDuplicateName } from "@/toolkit/posts/postId";
 import { resolvePostCover } from "@/toolkit/covers";
 import { wrapRenderedCodeBlocks } from "@/toolkit/wrapRenderedCodeBlocks";
 import { wrapRenderedImages } from "@/toolkit/wrapRenderedImages";
@@ -44,7 +45,7 @@ export async function getStaticPaths() {
 
   const container = await createPostContentContainer();
 
-  return Promise.all(
+  const postPaths = await Promise.all(
     sortedPosts.map(async (post, index) => {
       const prevPost = index > 0 ? sortedPosts[index - 1] : undefined;
       const nextPost =
@@ -129,6 +130,16 @@ export async function getStaticPaths() {
       };
     }),
   );
+
+  // 旧双层 URL（/posts/X/X/）重定向到归一化后的单层地址
+  const redirectPaths = sortedPosts
+    .filter((post) => post.filePath && hasNestedDuplicateName(post.filePath))
+    .map((post) => ({
+      params: { slug: `${post.id}/${post.id.split("/").at(-1)}` },
+      props: { redirectTo: toPostHref(post.id) },
+    }));
+
+  return [...postPaths, ...redirectPaths];
 }
 
 interface Props {
@@ -156,6 +167,13 @@ interface Props {
   headings: import("astro:content").RenderResult["headings"];
 }
 
+const props = Astro.props as Props | { redirectTo: string };
+
+// 旧双层 URL 的静态重定向页
+if ("redirectTo" in props) {
+  return Astro.redirect(props.redirectTo);
+}
+
 const {
   post,
   prevPost,
@@ -166,7 +184,7 @@ const {
   encryptedContent,
   encryptedToc,
   headings,
-} = Astro.props as Props;
+} = props;
 
 const toc: TocItem[] = isEncrypted
   ? []
@@ -255,7 +273,6 @@ const seoImage = cover.Image ?? cover.src ?? undefined;
   tags={post.data.tags ?? undefined}
 >
   <Fragment slot="head">
-    <meta name="description" content={postDescription} />
     {isEncrypted && <meta name="robots" content="noindex, nofollow" />}
   </Fragment>
 

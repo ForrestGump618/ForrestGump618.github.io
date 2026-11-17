@@ -5,9 +5,9 @@ export default defineConfig({
   siteName: "Echo",
   locale: "zh-CN",
 
-  // 首页：每页文章数按编辑式版式确定（首屏 9 篇）
+  // 首页是聚合落地页：最新列表只展示 6 条，分页统一放在归档
   home: {
-    pageSize: 9,
+    pageSize: 6,
     featuredPostId: "eve",
   },
 
@@ -39,13 +39,8 @@ export default defineConfig({
       icon: "i-ri-home-line",
     },
     {
-      text: "关于",
-      href: "/about/",
-      icon: "i-ri-user-3-line",
-    },
-    {
       text: "文章",
-      href: "/random/",
+      href: "/archives/",
       icon: "i-ri-quill-pen-fill",
       dropbox: {
         enable: true,
@@ -61,42 +56,57 @@ export default defineConfig({
             icon: "i-ri-price-tag-3-fill",
           },
           {
-            href: "/archives/",
-            text: "归档",
-            icon: "i-ri-archive-line",
+            href: "/random/",
+            text: "随机阅读",
+            icon: "i-ri-dice-line",
           },
         ],
       },
     },
     {
-      text: "友链",
-      href: "/friends/",
-      icon: "i-ri-link",
+      text: "关于",
+      href: "/about/",
+      icon: "i-ri-user-3-line",
     },
     {
-      text: "动态",
-      href: "/moments/",
-      icon: "i-ri-chat-quote-line",
-    },
-    {
-      text: "留言板",
-      href: "/guestbook/",
-      icon: "i-ri-message-2-line",
-    },
-    {
-      text: "收藏",
-      href: "/stars/",
-      icon: "i-ri-star-line",
-    },
-    {
-      text: "推免信息",
-      href: "/summer/",
-      icon: "i-ri-sun-line",
-    },
-    {
-      text: "统计",
-      href: "/statistics/",
-      icon: "i-ri-bar-chart-box-line",
+      // 无 href：仅作为下拉入口，避免与子项重复的落地页
+      text: "探索",
+      icon: "i-ri-shuffle-line",
+      dropbox: {
+        enable: true,
+        items: [
+          {
+            href: "/stars/",
+            text: "收藏",
+            icon: "i-ri-star-line",
+          },
+          {
+            href: "/moments/",
+            text: "动态",
+            icon: "i-ri-chat-quote-line",
+          },
+          {
+            href: "/guestbook/",
+            text: "留言板",
+            icon: "i-ri-message-2-line",
+          },
+          {
+            href: "/friends/",
+            text: "友链",
+            icon: "i-ri-link",
+          },
+          {
+            href: "/summer/",
+            text: "推免信息",
+            icon: "i-ri-sun-line",
+          },
+          {
+            href: "/statistics/",
+            text: "统计",
+            icon: "i-ri-bar-chart-box-line",
+          },
+        ],
+      },
     },
   ],
 

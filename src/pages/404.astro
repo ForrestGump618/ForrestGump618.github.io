@@ -121,7 +121,7 @@ const categoryNames = [...new Set(published.flatMap((post) => post.data.categori
   .notfound__section-title {
     margin: 0 0 0.75rem;
     padding-bottom: 0.5rem;
-    border-bottom: 1px solid var(--hairline, rgb(0 0 0 / 8%));
+    border-bottom: var(--hairline);
     font-family: var(--font-sans, system-ui, sans-serif);
     font-size: 0.72rem;
     font-weight: 600;
@@ -137,7 +137,7 @@ const categoryNames = [...new Set(published.flatMap((post) => post.data.categori
   }
 
   .notfound__list li {
-    border-bottom: 1px solid var(--hairline, rgb(0 0 0 / 6%));
+    border-bottom: var(--hairline);
   }
 
   .notfound__list li:last-child {

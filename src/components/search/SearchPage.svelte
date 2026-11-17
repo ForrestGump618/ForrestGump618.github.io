@@ -287,7 +287,7 @@
   justify-content: space-between;
   gap: 1rem;
   padding: 0.7rem 0.75rem 0.7rem 1.2rem;
-  border-bottom: 1px solid var(--hairline);
+  border-bottom: var(--hairline);
 }
 
 .search-panel__label {
@@ -401,7 +401,7 @@
 
 .pagefind-component-footer {
   padding-top: 0.6rem;
-  border-top: 1px solid var(--hairline);
+  border-top: var(--hairline);
   color: var(--text-color-subtle);
   font-size: var(--text-2xs);
 }

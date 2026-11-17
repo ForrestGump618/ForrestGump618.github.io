@@ -79,11 +79,11 @@ const items = posts.map((post) => {
     margin: 0;
     padding: 0;
     list-style: none;
-    border-top: 1px solid var(--hairline, rgb(0 0 0 / 8%));
+    border-top: var(--hairline);
   }
 
   .post-list__item {
-    border-bottom: 1px solid var(--hairline, rgb(0 0 0 / 8%));
+    border-bottom: var(--hairline);
   }
 
   .post-list__link {
@@ -156,7 +156,7 @@ const items = posts.map((post) => {
   .post-list__empty {
     margin: 0;
     padding: 3rem 0;
-    border-top: 1px solid var(--hairline, rgb(0 0 0 / 8%));
+    border-top: var(--hairline);
     font-family: var(--font-sans, system-ui, sans-serif);
     font-size: 0.9rem;
     color: var(--text-color-subtle, #8a857c);

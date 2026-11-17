@@ -76,9 +76,9 @@ const showIcp = Boolean(icp?.enable && icp.icpnumber);
 <footer class="site-footer">
   <div class="site-footer__inner">
     <div class="site-footer__brand">
-      <p class="site-footer__name">{siteName}</p>
+      <p class="site-footer__name">{author || siteName}</p>
       <p class="site-footer__note">
-        {author}
+        {siteName} · 学习与记录
       </p>
     </div>
 
@@ -103,8 +103,7 @@ const showIcp = Boolean(icp?.enable && icp.icpnumber);
         © {yearRange} {author || siteName}
         {config.powered !== false && (
           <span class="site-footer__powered">
-            {" · "}由 <a href="https://astro.build/" rel="noopener" target="_blank">Astro</a> 与{" "}
-            <a href="https://github.com/theme-shoka-x/hexo-theme-shokaX" rel="noopener" target="_blank">ShokaX</a> 驱动
+            {" · "}由 <a href="https://astro.build/" rel="noopener" target="_blank">Astro</a> 构建
           </span>
         )}
       </p>

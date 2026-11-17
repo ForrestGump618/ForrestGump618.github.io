@@ -8,7 +8,6 @@
 import Analytics from "@/components/Analytics.astro";
 import CodeBlock from "@/components/CodeBlock.svelte";
 import Footer from "@/components/footer/Footer.astro";
-import Icons from "@/components/Icons.svelte";
 import ImageZoom from "@/components/ImageZoom.svelte";
 import NavBar from "@/components/navbar/NavBar.svelte";
 import SEO from "@/components/SEO.astro";
@@ -143,7 +142,6 @@ const documentTitle = pageTitle
     <a class="skip-link" href="#main">跳转到主要内容</a>
 
     <NavBar client:load name={siteName} navLinks={navLinks} path={Astro.url.pathname} />
-    <Icons />
 
     <div id="container">
       <main id="main" class="site-main">

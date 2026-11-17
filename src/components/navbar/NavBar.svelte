@@ -33,6 +33,24 @@
   let menuToggle = $state<HTMLButtonElement>();
   let desktopNav = $state<HTMLElement>();
   let searchPanel = $state<ReturnType<typeof SearchPage>>();
+  let shortcutHint = $state("Ctrl K");
+  // 滑动悬停胶囊：跟随当前悬停/聚焦的导航项
+  let pillX = $state(0);
+  let pillW = $state(0);
+  let pillVisible = $state(false);
+
+  function movePill(target: HTMLElement | null) {
+    if (!target || !desktopNav) return;
+    const navRect = desktopNav.getBoundingClientRect();
+    const rect = target.getBoundingClientRect();
+    pillX = rect.left - navRect.left;
+    pillW = rect.width;
+    pillVisible = true;
+  }
+
+  function hidePill() {
+    pillVisible = false;
+  }
 
   const normalize = (url: string) => url.replace(/(?:index\.html)?\/?$/, "/");
   const isActive = (href?: string) => {
@@ -91,6 +109,9 @@
   onMount(() => {
     isDark = initTheme(document, window);
     ready = true;
+    if (/Mac|iPhone|iPad/i.test(navigator.platform)) {
+      shortcutHint = "⌘K";
+    }
     let frame = 0;
     function onScroll() {
       if (frame) return;
@@ -103,6 +124,7 @@
     function onResize() {
       closeMenu();
       closeDropdown();
+      hidePill();
     }
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -123,35 +145,71 @@
       <span class="wordmark__name">{name}</span>
     </a>
 
-    <nav class="site-nav" aria-label="主导航" bind:this={desktopNav}>
+    <nav
+      class="site-nav"
+      aria-label="主导航"
+      bind:this={desktopNav}
+      onpointerleave={hidePill}
+      onfocusout={(event) => {
+        if (event.relatedTarget instanceof Node && !event.currentTarget.contains(event.relatedTarget)) {
+          hidePill();
+        }
+      }}
+    >
+      <span
+        class="site-nav__pill"
+        class:is-visible={pillVisible}
+        style={`--pill-x:${pillX}px;--pill-w:${pillW}px`}
+        aria-hidden="true"
+      ></span>
       {#each navLinks as item, index (item.text)}
         {@const hasMenu = item.dropbox?.enable && (item.dropbox.items?.length ?? 0) > 0}
         {#if hasMenu}
           {@const expanded = dropdown === item.text}
+          {@const groupActive = isActive(item.href) || (item.dropbox?.items ?? []).some((sub) => isActive(sub.href))}
           <div
             class="site-nav__group"
             role="group"
-            onpointerenter={(event) => showDropdown(item.text, event.pointerType)}
+            onpointerenter={(event) => {
+              showDropdown(item.text, event.pointerType);
+              if (event.pointerType === "mouse") movePill(event.currentTarget);
+            }}
             onpointerleave={() => { if (!pinned) closeDropdown(); }}
+            onfocusin={(event) => movePill(event.currentTarget)}
             onfocusout={(event) => {
               if (event.relatedTarget instanceof Node && !event.currentTarget.contains(event.relatedTarget)) {
                 closeDropdown();
               }
             }}
           >
-            <a class="site-nav__link" href={item.href ?? "/archives/"}
-              class:is-active={isActive(item.href)}>{item.text}</a>
-            <button
-              class="site-nav__toggle"
-              type="button"
-              disabled={!ready}
-              aria-label={`${item.text}子菜单`}
-              aria-controls={`nav-dropdown-${index}`}
-              aria-expanded={expanded}
-              onclick={() => toggleDropdown(item.text)}
-            >
-              <span class="i-ri-arrow-down-s-line" aria-hidden="true"></span>
-            </button>
+            {#if item.href}
+              <a class="site-nav__link" href={item.href}
+                class:is-active={groupActive}>{item.text}</a>
+              <button
+                class="site-nav__toggle"
+                type="button"
+                disabled={!ready}
+                aria-label={`${item.text}子菜单`}
+                aria-controls={`nav-dropdown-${index}`}
+                aria-expanded={expanded}
+                onclick={() => toggleDropdown(item.text)}
+              >
+                <span class="i-ri-arrow-down-s-line" aria-hidden="true"></span>
+              </button>
+            {:else}
+              <button
+                class="site-nav__link site-nav__link--trigger"
+                type="button"
+                disabled={!ready}
+                class:is-active={groupActive}
+                aria-controls={`nav-dropdown-${index}`}
+                aria-expanded={expanded}
+                onclick={() => toggleDropdown(item.text)}
+              >
+                {item.text}
+                <span class="i-ri-arrow-down-s-line site-nav__chevron" class:is-open={expanded} aria-hidden="true"></span>
+              </button>
+            {/if}
             <div
               class="site-nav__dropdown"
               class:is-visible={expanded}
@@ -171,6 +229,10 @@
             class:is-active={isActive(item.href)}
             href={item.href ?? "#"}
             aria-current={isActive(item.href) ? "page" : undefined}
+            onpointerenter={(event) => {
+              if (event.pointerType === "mouse") movePill(event.currentTarget);
+            }}
+            onfocusin={(event) => movePill(event.currentTarget)}
           >
             {item.text}
           </a>
@@ -181,7 +243,7 @@
     <div class="site-tools">
       <button
         id="search"
-        class="tool-btn"
+        class="tool-btn tool-btn--search"
         type="button"
         aria-label="搜索文章"
         aria-haspopup="dialog"
@@ -197,6 +259,7 @@
           <circle cx="8.8" cy="8.8" r="5.6" fill="none" stroke="currentColor" stroke-width="1.5" />
           <path d="M12.9 12.9l4.2 4.2" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
         </svg>
+        <kbd class="tool-btn__kbd" aria-hidden="true">{shortcutHint}</kbd>
       </button>
 
       <button
@@ -259,15 +322,19 @@
       <nav class="mobile-nav" aria-label="移动端导航">
         {#each navLinks as item (item.text)}
           <div class="mobile-nav__group">
-            <a
-              class="mobile-nav__link"
-              class:is-active={isActive(item.href)}
-              href={item.href ?? "#"}
-              aria-current={isActive(item.href) ? "page" : undefined}
-              onclick={closeMenu}
-            >
-              {item.text}
-            </a>
+            {#if item.href}
+              <a
+                class="mobile-nav__link"
+                class:is-active={isActive(item.href)}
+                href={item.href}
+                aria-current={isActive(item.href) ? "page" : undefined}
+                onclick={closeMenu}
+              >
+                {item.text}
+              </a>
+            {:else}
+              <p class="mobile-nav__label">{item.text}</p>
+            {/if}
             {#if item.dropbox?.enable && (item.dropbox.items?.length ?? 0) > 0}
               <div class="mobile-nav__sub">
                 {#each item.dropbox.items as sub (sub.text)}

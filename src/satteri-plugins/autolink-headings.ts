@@ -37,7 +37,7 @@ export default function autolinkHeadings(
             properties: {
               href: `#${id}`,
               class: className,
-              "aria-label": "Permalink to this heading",
+              "aria-label": "本节锚点链接",
             },
             children: node.children,
           };

@@ -194,7 +194,7 @@
   margin: 2.5em 0 0.85em;
   font-size: clamp(1.35rem, 2.2vw, 1.6rem);
   padding-bottom: 0.5em;
-  border-bottom: 1px solid var(--hairline, rgb(0 0 0 / 8%));
+  border-bottom: var(--hairline);
 }
 
 .body.md h3 {
@@ -251,6 +251,45 @@
 
 .body.md .anchor:hover {
   color: var(--primary-color, #7c3b52);
+}
+
+/* 章节链接复制按钮：悬停/聚焦标题时出现，触屏常显 */
+.body.md .heading-copy {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  margin-left: 0.35rem;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-sm, 8px);
+  background: transparent;
+  color: var(--text-color-subtle, #8a857c);
+  font-size: 0.8em;
+  vertical-align: middle;
+  cursor: pointer;
+  opacity: 0;
+  transition:
+    opacity var(--dur-2, 0.2s) var(--ease-out, ease),
+    color var(--dur-2, 0.2s) var(--ease-out, ease),
+    background-color var(--dur-2, 0.2s) var(--ease-out, ease);
+}
+
+.body.md :is(h2, h3, h4):hover .heading-copy,
+.body.md .heading-copy:focus-visible {
+  opacity: 1;
+}
+
+.body.md .heading-copy:hover {
+  color: var(--primary-color, #7c3b52);
+  background: var(--surface-tinted);
+}
+
+@media (hover: none) {
+  .body.md .heading-copy {
+    opacity: 0.55;
+  }
 }
 
 @media (max-width: 1100px) {
@@ -418,7 +457,7 @@
   height: 0;
   margin: 3em 0;
   border: 0;
-  border-top: 1px solid var(--hairline, rgb(0 0 0 / 8%));
+  border-top: var(--hairline);
 }
 
 /* 图片与图注 */
@@ -453,7 +492,7 @@
 
 .body.md .eve-quick-links a {
   padding: 0.35rem 0.7rem;
-  border: 1px solid var(--hairline, rgb(0 0 0 / 8%));
+  border: var(--hairline);
   border-radius: 999px;
   color: var(--text-color);
   font-size: 0.82rem;
@@ -534,7 +573,7 @@
 .table-container {
   margin: 1.9em 0;
   overflow-x: auto;
-  border: 1px solid var(--hairline, rgb(0 0 0 / 8%));
+  border: var(--hairline);
   border-radius: var(--radius-sm, 4px);
   -webkit-overflow-scrolling: touch;
 }
@@ -560,7 +599,7 @@
 .table-container table :is(th, td) {
   padding: 0.6em 0.85em;
   border: 0;
-  border-top: 1px solid var(--hairline, rgb(0 0 0 / 8%));
+  border-top: var(--hairline);
   vertical-align: top;
   text-align: left;
   font-weight: normal;
@@ -591,8 +630,8 @@
 .body.md details {
   margin: 1.6em 0;
   padding: 0.35em 0;
-  border-top: 1px solid var(--hairline, rgb(0 0 0 / 8%));
-  border-bottom: 1px solid var(--hairline, rgb(0 0 0 / 8%));
+  border-top: var(--hairline);
+  border-bottom: var(--hairline);
 }
 
 .body.md details summary {
@@ -660,7 +699,7 @@
   gap: 0.5rem;
   margin: clamp(2rem, 4vw, 2.75rem) 0 0;
   padding-top: 1.5rem;
-  border-top: 1px solid var(--hairline, rgb(0 0 0 / 8%));
+  border-top: var(--hairline);
   text-align: left;
   font-size: 0.78rem;
 }
@@ -705,7 +744,7 @@
   max-width: var(--reading-width, 43rem);
   margin: clamp(2.5rem, 5vw, 3.5rem) 0 0;
   padding-top: 1.6rem;
-  border-top: 1px solid var(--hairline, rgb(0 0 0 / 8%));
+  border-top: var(--hairline);
 }
 
 .related__title {
@@ -727,11 +766,11 @@
 }
 
 .related__list li {
-  border-bottom: 1px solid var(--hairline, rgb(0 0 0 / 8%));
+  border-bottom: var(--hairline);
 }
 
 .related__list li:first-child {
-  border-top: 1px solid var(--hairline, rgb(0 0 0 / 8%));
+  border-top: var(--hairline);
 }
 
 .related__list a {
@@ -769,7 +808,7 @@
   max-width: var(--reading-width, 43rem);
   margin: clamp(2rem, 4vw, 2.75rem) 0 0;
   padding: 1.35rem 1.5rem;
-  border: 1px solid var(--hairline, rgb(0 0 0 / 8%));
+  border: var(--hairline);
   border-radius: var(--radius-sm, 4px);
   background: var(--surface-subtle, #f7f5f1);
   font-family: var(--font-sans, system-ui, sans-serif);
@@ -824,7 +863,7 @@
   display: grid;
   grid-template-columns: 1fr;
   margin: clamp(2rem, 4vw, 3rem) 0 0;
-  border-top: 1px solid var(--hairline, rgb(0 0 0 / 8%));
+  border-top: var(--hairline);
 }
 
 .post-nav .item {
@@ -832,7 +871,7 @@
 }
 
 .post-nav .item + .item {
-  border-top: 1px solid var(--hairline, rgb(0 0 0 / 8%));
+  border-top: var(--hairline);
 }
 
 .post-nav .item a {
@@ -894,7 +933,7 @@
 
   .post-nav .item + .item {
     border-top: 0;
-    border-left: 1px solid var(--hairline, rgb(0 0 0 / 8%));
+    border-left: var(--hairline);
   }
 
   .post-nav .item.left a {
@@ -911,5 +950,5 @@
   max-width: min(72rem, calc(100% - 2 * var(--gutter, 1.5rem)));
   margin: clamp(2.5rem, 5vw, 4rem) auto 0;
   padding-top: clamp(1.5rem, 3vw, 2rem);
-  border-top: 1px solid var(--hairline, rgb(0 0 0 / 8%));
+  border-top: var(--hairline);
 }

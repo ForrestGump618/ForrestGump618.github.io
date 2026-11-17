@@ -12,6 +12,9 @@ test("@regression 桌面导航可进入关于与友链页面", async ({ page }) 
   await expect(page).toHaveURL(/\/about\/$/);
 
   await page.goto(ROUTES.home);
+  const explore = nav.getByRole("button", { name: "探索", exact: true });
+  await expect(explore).toBeEnabled();
+  await explore.click();
   await nav.getByRole("link", { name: "友链" }).click();
   await expect(page).toHaveURL(/\/friends\/$/);
 });

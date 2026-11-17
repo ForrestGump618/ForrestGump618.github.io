@@ -1,4 +1,5 @@
 import { langBadgeColor } from "./langBadge";
+import { bindHeadingCopyButtons } from "./ui/headingAnchors";
 
 const QUIZ_DATA_BOUND_KEY = "quizBound";
 const TABS_DATA_BOUND_KEY = "tabsBound";
@@ -295,6 +296,7 @@ const initAllTabs = () => {
 const initMdxComponents = () => {
   initQuiz();
   initAllTabs();
+  bindHeadingCopyButtons(document, window);
 };
 
 const setupMdxComponents = () => {

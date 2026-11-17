@@ -71,7 +71,9 @@ const archiveYears = years.map((year) => {
       .map(([month, entry]) => ({
         month,
         href: `/archives/${year}/${fmtNum(month)}/`,
-        ...entry,
+        label: entry.label,
+        count: entry.count,
+        posts: entry.posts,
       })),
   };
 });
@@ -221,7 +223,7 @@ const archiveYears = years.map((year) => {
     align-items: baseline;
     padding: 0.55rem 0.1rem;
     border: 0;
-    border-bottom: 1px solid var(--hairline, rgb(0 0 0 / 8%));
+    border-bottom: var(--hairline);
     text-decoration: none;
     color: inherit;
   }

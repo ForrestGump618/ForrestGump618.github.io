@@ -83,10 +83,13 @@
   --ease-press: cubic-bezier(0.2, 0.8, 0.3, 1.15);
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  /* iOS 式弹性曲线：用于菜单、胶囊等“物理感”位移 */
+  --ease-spring: cubic-bezier(0.32, 0.72, 0, 1);
   --dur-1: 120ms;
   --dur-2: 200ms;
   --dur-3: 260ms;
   --dur-4: 480ms;
+  --dur-spring: 380ms;
 
   /* ---------- 版心 ---------- */
   --container: 72rem;
@@ -111,5 +114,6 @@
     --dur-2: 0ms;
     --dur-3: 0ms;
     --dur-4: 0ms;
+    --dur-spring: 0ms;
   }
 }

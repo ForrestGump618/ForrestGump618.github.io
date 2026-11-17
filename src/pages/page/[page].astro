@@ -1,55 +1,21 @@
 ---
 /**
- * 首页分页（/page/2..N）：复用首页的编辑式列表。
+ * 旧首页分页（/page/2..N）已并入归档：这里只生成跳转页，保住历史链接。
  */
-import Layout from "@/layouts/Layout.astro";
-import HomeContent from "@/components/home/HomeContent.astro";
 import { getCollection } from "astro:content";
 import themeConfig from "@/theme.config";
-import type { CollectionEntry } from "astro:content";
 import type { GetStaticPaths } from "astro";
 
-export const getStaticPaths = (async ({ paginate }) => {
+export const getStaticPaths = (async () => {
   const allPosts = await getCollection("posts");
-  const publishedPosts = allPosts
-    .filter((post) => !post.data.draft)
-    .toSorted((a, b) => b.data.date.getTime() - a.data.date.getTime());
+  const publishedCount = allPosts.filter((post) => !post.data.draft).length;
+  const pageSize = themeConfig.home?.pageSize ?? 6;
+  const lastPage = Math.max(1, Math.ceil(publishedCount / pageSize));
 
-  const pageSize = themeConfig.home?.pageSize ?? 9;
-
-  // 第 1 页由 src/pages/index.astro 输出，这里只生成 /page/2..N
-  const pages = paginate(publishedPosts, { pageSize });
-  return pages.filter((p) => p.params.page !== "1");
+  return Array.from({ length: Math.max(0, lastPage - 1) }, (_, index) => ({
+    params: { page: String(index + 2) },
+  }));
 }) satisfies GetStaticPaths;
 
-const { page } = Astro.props as {
-  page: {
-    data: CollectionEntry<"posts">[];
-    currentPage: number;
-    lastPage: number;
-  };
-};
-
-const brandConfig = themeConfig.brand ?? {};
-const pageTitle = `${brandConfig.title || "Echo"} — ${brandConfig.subtitle || "Learn-Record"} · 第 ${page.currentPage} 页`;
+return Astro.redirect("/archives/");
 ---
-
-<Layout pageTitle={pageTitle} indexPage={true} seoTitle={pageTitle}>
-  <Fragment slot="head">
-    <meta name="description" content={themeConfig.sidebar?.description} />
-  </Fragment>
-
-  <div class="home wrap">
-    <HomeContent
-      posts={page.data}
-      pageInfo={{ currentPage: page.currentPage, lastPage: page.lastPage }}
-      isFirstPage={false}
-    />
-  </div>
-</Layout>
-
-<style>
-  .home {
-    padding-top: clamp(2.5rem, 6vw, 4rem);
-  }
-</style>

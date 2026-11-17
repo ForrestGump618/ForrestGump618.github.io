@@ -340,6 +340,15 @@
     max-width: 100%;
   }
 
+  /* 画廊模式：宿主给定宽高时，图片在框内完整居中展示 */
+  :host([data-fill]) .image-zoom-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+  }
+
   :global(image-zoom .image-zoom-trigger) {
     cursor: zoom-in;
     transform-origin: center;

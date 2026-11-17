@@ -1,7 +1,7 @@
 ---
 /**
  * 文章目录：移动端折叠在正文上方，桌面端固定在右侧。
- * 当前章节高亮由组件内的 IntersectionObserver 完成（无第三方依赖）。
+ * 当前章节高亮由组件内的滚动驱动逻辑完成（无第三方依赖）。
  */
 import type { TocItem } from "@/components/sidebar/SidebarTypes";
 
@@ -47,54 +47,104 @@ const items = toc.filter((item) => item.level >= 2 && item.level <= 3);
 }
 
 <script>
+  /**
+   * 滚动驱动的目录高亮：以“阅读线”（导航下方约 120px）判定当前章节，
+   * 长章节、反向滚动与页底都能正确命中；桌面端附带随动指示条。
+   */
   const initToc = () => {
-    const roots = document.querySelectorAll<HTMLElement>("[data-toc]");
+    const roots = [...document.querySelectorAll<HTMLElement>("[data-toc]")];
     if (roots.length === 0) {
       return;
     }
 
-    const links = [...roots].flatMap((root) =>
-      [...root.querySelectorAll<HTMLAnchorElement>('a[href^="#"]')].map((link) => ({
+    const entries = roots.map((root) => {
+      const links = [...root.querySelectorAll<HTMLAnchorElement>('a[href^="#"]')].map((link) => ({
         link,
         targetId: decodeURIComponent(link.hash.slice(1)),
-      })),
-    );
+      }));
+      const nav = root.querySelector<HTMLElement>(".toc__nav");
+      let indicator: HTMLElement | null = null;
+      if (nav) {
+        indicator = document.createElement("span");
+        indicator.className = "toc__indicator";
+        indicator.setAttribute("aria-hidden", "true");
+        nav.append(indicator);
+      }
+      return { links, nav, indicator };
+    });
 
-    if (links.length === 0) {
-      return;
-    }
-
-    const headings = links
-      .map(({ targetId }) => document.getElementById(targetId))
-      .filter((el): el is HTMLElement => el !== null);
+    const ids = [...new Set(entries.flatMap((entry) => entry.links.map(({ targetId }) => targetId)))];
+    const headings = ids
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => el !== null)
+      .toSorted((a, b) => a.getBoundingClientRect().top - b.getBoundingClientRect().top);
 
     if (headings.length === 0) {
       return;
     }
 
+    let activeId = "";
     const setActive = (id: string) => {
-      for (const { link, targetId } of links) {
-        link.classList.toggle("is-active", targetId === id);
+      if (id === activeId) {
+        return;
+      }
+      activeId = id;
+
+      for (const { links, nav, indicator } of entries) {
+        let activeLink: HTMLAnchorElement | null = null;
+        for (const { link, targetId } of links) {
+          const isActive = targetId === id;
+          link.classList.toggle("is-active", isActive);
+          if (isActive) {
+            activeLink = link;
+          }
+        }
+
+        if (indicator && nav) {
+          if (activeLink) {
+            const navRect = nav.getBoundingClientRect();
+            const linkRect = activeLink.getBoundingClientRect();
+            indicator.style.height = `${linkRect.height}px`;
+            indicator.style.transform = `translateY(${linkRect.top - navRect.top + nav.scrollTop}px)`;
+            indicator.classList.add("is-visible");
+          } else {
+            indicator.classList.remove("is-visible");
+          }
+        }
       }
     };
 
-    // 视口上方 40% 之内、最靠近顶部的标题即当前章节
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries
-          .filter((entry) => entry.isIntersecting)
-          .toSorted((a, b) => a.boundingClientRect.top - b.boundingClientRect.top);
-
-        if (visible.length > 0) {
-          setActive(visible[0].target.id);
+    const update = () => {
+      const probe = window.scrollY + 120;
+      let current = headings[0];
+      for (const heading of headings) {
+        if (heading.getBoundingClientRect().top + window.scrollY <= probe) {
+          current = heading;
+        } else {
+          break;
         }
-      },
-      { rootMargin: "-12% 0px -72% 0px", threshold: [0, 1] },
-    );
+      }
+      // 页底时最后一个章节可能永远到不了阅读线，直接命中末章
+      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4) {
+        current = headings[headings.length - 1];
+      }
+      setActive(current.id);
+    };
 
-    for (const heading of headings) {
-      observer.observe(heading);
-    }
+    let frame = 0;
+    const onScroll = () => {
+      if (frame) {
+        return;
+      }
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        update();
+      });
+    };
+
+    update();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    window.addEventListener("resize", onScroll);
   };
 
   if (document.readyState === "loading") {
@@ -115,8 +165,8 @@ const items = toc.filter((item) => item.level >= 2 && item.level <= 3);
   }
 
   .toc__details {
-    border-top: 1px solid var(--hairline, rgb(0 0 0 / 8%));
-    border-bottom: 1px solid var(--hairline, rgb(0 0 0 / 8%));
+    border-top: var(--hairline);
+    border-bottom: var(--hairline);
     padding: 0.85rem 0;
   }
 
@@ -152,7 +202,26 @@ const items = toc.filter((item) => item.level >= 2 && item.level <= 3);
     overflow-y: auto;
     overscroll-behavior: contain;
     padding-left: 1.15rem;
-    border-left: 1px solid var(--hairline, rgb(0 0 0 / 8%));
+    border-left: var(--hairline);
+  }
+
+  /* 随阅读进度移动的指示条 */
+  .toc__indicator {
+    position: absolute;
+    top: 0;
+    left: -1px;
+    width: 2px;
+    border-radius: 1px;
+    background: var(--primary-color, #7c3b52);
+    opacity: 0;
+    transition:
+      transform var(--dur-2, 0.2s) var(--ease-out, ease),
+      height var(--dur-2, 0.2s) var(--ease-out, ease),
+      opacity var(--dur-2, 0.2s) var(--ease-out, ease);
+  }
+
+  .toc__indicator.is-visible {
+    opacity: 1;
   }
 
   .toc__title {

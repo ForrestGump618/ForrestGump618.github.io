@@ -10,7 +10,8 @@
   import FullscreenExitLine from "@/assets/icons/fullscreen-exit-line.svg";
 
   let container = $state<HTMLElement | null>(null);
-  let copied = $state(false);
+  let copyState = $state<"idle" | "copied" | "failed">("idle");
+  let copyTimer: ReturnType<typeof setTimeout> | undefined;
   let codeLanguage = $state("");
   let isDark = $state(false);
   let isCollapsed = $state(false);
@@ -22,6 +23,14 @@
   let isMultiTab = $state(false);
 
   const COLLAPSE_THRESHOLD = 15;
+
+  function flashCopyState(next: "copied" | "failed") {
+    copyState = next;
+    clearTimeout(copyTimer);
+    copyTimer = setTimeout(() => {
+      copyState = "idle";
+    }, 3000);
+  }
 
   async function copyCode() {
     const slot = container?.querySelector("slot") as HTMLSlotElement;
@@ -36,12 +45,17 @@
 
     try {
       await navigator.clipboard.writeText(code);
-      copied = true;
-      setTimeout(() => {
-        copied = false;
-      }, 3000);
-    } catch (err) {
-      console.error("Failed to copy:", err);
+      flashCopyState("copied");
+    } catch {
+      // 剪贴板不可用（权限/非安全上下文）：选中代码并给出可见提示，让用户手动复制
+      flashCopyState("failed");
+      const selection = window.getSelection();
+      if (selection) {
+        const range = document.createRange();
+        range.selectNodeContents(preElement);
+        selection.removeAllRanges();
+        selection.addRange(range);
+      }
     }
   }
 
@@ -138,6 +152,7 @@
   });
 
   onDestroy(() => {
+    clearTimeout(copyTimer);
     if (typeof window !== "undefined") {
       window.removeEventListener("keydown", handleKeydown);
     }
@@ -183,15 +198,20 @@
       {/if}
     </div>
     <div class="actions">
+      <span class="copy-status" class:failed={copyState === "failed"} role="status" aria-live="polite">
+        {copyState === "copied" ? "已复制" : copyState === "failed" ? "复制失败，已选中代码" : ""}
+      </span>
       <button
         class="action-btn"
-        style="mask-image: url({copied
+        class:copied={copyState === "copied"}
+        style="mask-image: url({copyState === 'copied'
           ? CheckFill.src
-          : FileCopyFill.src}); -webkit-mask-image: url({copied
+          : FileCopyFill.src}); -webkit-mask-image: url({copyState === 'copied'
           ? CheckFill.src
           : FileCopyFill.src});"
         onclick={copyCode}
-        aria-label="Copy code"
+        aria-label="复制代码"
+        title="复制代码"
       ></button>
       <button
         class="action-btn"
@@ -201,7 +221,8 @@
           ? FullscreenExitLine.src
           : FullscreenLine.src});"
         onclick={toggleFullscreen}
-        aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
+        aria-label={isFullscreen ? "退出全屏" : "进入全屏"}
+        title={isFullscreen ? "退出全屏" : "进入全屏"}
       ></button>
     </div>
   </div>
@@ -224,7 +245,7 @@
           ? ArrowDownSLine.src
           : ArrowUpSLine.src});"
         onclick={toggleCollapse}
-        aria-label={isCollapsed ? "Expand code" : "Collapse code"}
+        aria-label={isCollapsed ? "展开代码" : "折叠代码"}
       ></button>
     {/if}
   </div>
@@ -261,7 +282,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0.5rem 1rem;
+    padding: 0.25rem 1rem;
     background-color: var(--surface-code-header);
     min-height: 1.5rem;
     border-top-right-radius: 0.5rem;
@@ -300,28 +321,51 @@
   .actions {
     display: flex;
     flex-direction: row;
-    gap: 0.75rem;
-    padding-right: 1.5rem;
+    align-items: center;
+    gap: 0.25rem;
+    padding-right: 0.5rem;
     color: var(--text-color-muted);
   }
 
+  .copy-status {
+    font-size: 0.75rem;
+    line-height: 1;
+    color: var(--text-color-muted);
+    white-space: nowrap;
+  }
+
+  .copy-status.failed {
+    color: var(--codeblock-dot-red);
+  }
+
+  /* 图标保持 1.1rem，命中区域扩大到 2rem（触屏可达） */
   .action-btn {
     border: none;
     cursor: pointer;
     background-color: var(--codeblock-action-color);
-    width: 1.1rem;
-    height: 1.1rem;
-    mask-size: contain;
+    width: 2rem;
+    height: 2rem;
+    mask-size: 1.1rem;
     mask-repeat: no-repeat;
     mask-position: center;
-    -webkit-mask-size: contain;
+    -webkit-mask-size: 1.1rem;
     -webkit-mask-repeat: no-repeat;
     -webkit-mask-position: center;
-    transition: background-color 0.2s;
+    transition:
+      background-color var(--dur-2, 0.2s) var(--ease-out, ease),
+      scale var(--dur-1, 0.12s) var(--ease-press, ease);
   }
 
   .action-btn:hover {
     background-color: var(--codeblock-action-hover-color);
+  }
+
+  .action-btn:active {
+    scale: 0.9;
+  }
+
+  .action-btn.copied {
+    background-color: var(--codeblock-dot-green);
   }
 
   /* 内容容器 - 支持折叠 */
@@ -358,41 +402,25 @@
     background-color: var(--codeblock-action-color);
     border: 1px solid var(--border-color-muted);
     border-radius: 50%;
-    width: 2rem;
-    height: 2rem;
-    mask-size: 1.75rem;
+    width: 2.25rem;
+    height: 2.25rem;
+    mask-size: 1.4rem;
     mask-repeat: no-repeat;
     mask-position: center;
-    -webkit-mask-size: 1.25rem;
+    -webkit-mask-size: 1.4rem;
     -webkit-mask-repeat: no-repeat;
     -webkit-mask-position: center;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition:
+      background-color var(--dur-2, 0.2s) var(--ease-out, ease),
+      box-shadow var(--dur-2, 0.2s) var(--ease-out, ease);
     box-shadow: var(--codeblock-button-shadow);
     z-index: var(--z-dropdown);
-    animation: float 2s ease-in-out infinite;
-    scale: 1.5;
   }
 
   .collapse-btn:hover {
     background-color: var(--codeblock-action-hover-color);
-    transform: translateX(-50%) scale(1.1);
     box-shadow: var(--codeblock-button-shadow-hover);
-  }
-
-  /* 飘动动画 */
-  @keyframes float {
-    0%,
-    100% {
-      transform: translateX(-50%) translateY(0);
-    }
-    50% {
-      transform: translateX(-50%) translateY(-6px);
-    }
-  }
-
-  .collapse-btn:hover {
-    animation-play-state: paused;
   }
 
   /* 核心：处理插槽内的样式 */
@@ -579,6 +607,17 @@
     to {
       opacity: 0;
       transform: scale(0.95);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .fullscreen,
+    .exiting {
+      animation: none;
+    }
+
+    .content-container {
+      transition: none;
     }
   }
 </style>

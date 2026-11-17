@@ -14,9 +14,6 @@ const description = "欢迎来到这里，如果你对本站有任何疑问、�
 <Layout pageTitle={pageTitle} description={description}>
   <div class="wrap guestbook">
     <div class="guestbook__intro">
-      <p>
-        欢迎来到这里。如果你对本站有任何疑问、建议，或者只是想打个招呼，都非常欢迎留言。
-      </p>
       <ul class="guestbook__tips">
         <li>建议填写昵称与邮箱，这样当我回复时你能第一时间收到通知。</li>
         <li>本站留言系统使用 Waline，不强制注册，请放心交流。</li>
@@ -93,7 +90,7 @@ const description = "欢迎来到这里，如果你对本站有任何疑问、�
   .guestbook__title {
     margin: 0 0 0.9rem;
     padding-bottom: 0.55rem;
-    border-bottom: 1px solid var(--hairline, rgb(0 0 0 / 8%));
+    border-bottom: var(--hairline);
     font-family: var(--font-serif, serif);
     font-size: 1.02rem;
     font-weight: 600;

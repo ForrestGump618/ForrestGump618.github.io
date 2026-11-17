@@ -459,3 +459,81 @@ main {
   border: 0;
   background: var(--border-color);
 }
+
+/* 首屏错峰入场：仅首次加载播放一次，只用 transform/opacity，不产生布局偏移 */
+@media (prefers-reduced-motion: no-preference) {
+  .reveal {
+    animation: reveal-in var(--dur-4) var(--ease-out) both;
+    animation-delay: calc(var(--reveal-i, 0) * 55ms);
+  }
+
+  @keyframes reveal-in {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}
+
+/* Toast 微反馈：底部居中，跟随主题令牌 */
+.toast-region {
+  position: fixed;
+  bottom: max(1.25rem, env(safe-area-inset-bottom));
+  left: 50%;
+  translate: -50%;
+  z-index: var(--z-fullscreen);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  pointer-events: none;
+}
+
+.toast {
+  max-width: min(88vw, 26rem);
+  padding: 0.55rem 1rem;
+  border: var(--hairline);
+  border-radius: var(--radius-full);
+  background: var(--surface-raised);
+  box-shadow: var(--shadow-lg);
+  font-family: var(--font-sans);
+  font-size: var(--text-xs);
+  line-height: var(--leading-snug);
+  color: var(--text-color);
+}
+
+.toast--success {
+  border-color: color-mix(in oklab, var(--color-green) 45%, transparent);
+}
+
+.toast--error {
+  border-color: color-mix(in oklab, var(--color-red) 50%, transparent);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .toast {
+    animation: toast-in var(--dur-3) var(--ease-out) both;
+  }
+
+  @keyframes toast-in {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+}
+
+/* hidden 属性优先于组件 display 声明（搜索栏、筛选结果等依赖它切换可见性） */
+[hidden] {
+  display: none !important;
+}

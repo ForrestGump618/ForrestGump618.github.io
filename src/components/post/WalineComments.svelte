@@ -15,7 +15,8 @@
   const {
     serverURL = "",
     lang = currentLocale,
-    dark = false,
+    // 跟随站点主题：Waline 会在匹配该选择器时启用暗色样式
+    dark = 'html[data-theme="dark"]',
     path = "",
     pagePath = "",
   }: Props = $props();

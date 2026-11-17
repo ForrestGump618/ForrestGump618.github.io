@@ -1,14 +1,14 @@
 ---
 /**
- * 首页主体：精选文章 → 最新笔记（编辑式列表）→ 科研图表带 → 专题分类。
- * 图片只出现在「精选」与「科研图表带」，且均来自内容本身；
- * 其余条目为纯文字排版，避免无关配图与空白占位。
+ * 首页主体：精选文章（整卡可点）→ 最新笔记（紧凑行）→ 漫览（图表画廊）→ 专题分类。
+ * 首页是聚合落地页：精选文章不重复出现在最新列表，分页统一放在归档。
+ * 图片只出现在「精选」与「漫览」，且均来自内容本身。
  */
 import type { CollectionEntry } from "astro:content";
+import { Image } from "astro:assets";
 import CoverMedia from "@/components/media/CoverMedia.astro";
-import Pagination from "@/components/Pagination.astro";
 import { resolvePostCover } from "@/toolkit/covers";
-import { formatDateLong, formatDateShort } from "@/toolkit/posts/formatDate";
+import { formatDateLong, formatDateMachine } from "@/toolkit/posts/formatDate";
 import { getReadingStats } from "@/toolkit/posts/readingStats";
 import { toPostHref } from "@/toolkit/posts/url";
 
@@ -21,22 +21,13 @@ interface HomeCategory {
 
 interface Props {
   posts: CollectionEntry<"posts">[];
-  /** 全量文章池：用于挑选科研图表带（不受当前页码限制） */
+  /** 全量文章池：用于挑选漫览画廊（不受最新列表条数限制） */
   pool?: CollectionEntry<"posts">[];
   featuredPost?: CollectionEntry<"posts">;
   categories?: HomeCategory[];
-  pageInfo?: { currentPage: number; lastPage: number };
-  isFirstPage?: boolean;
 }
 
-const {
-  posts,
-  pool = posts,
-  featuredPost,
-  categories = [],
-  pageInfo,
-  isFirstPage = true,
-} = Astro.props;
+const { posts, pool = posts, featuredPost, categories = [] } = Astro.props;
 
 const excerptOf = (post: CollectionEntry<"posts">, limit = 96) => {
   const raw = (post.data.description || post.body || "")
@@ -62,177 +53,195 @@ const prepare = (post: CollectionEntry<"posts">) => ({
   stats: getReadingStats(post.body ?? ""),
   href: toPostHref(post.id),
   excerpt: excerptOf(post),
-  dateShort: formatDateShort(post.data.date),
+  dateMachine: formatDateMachine(post.data.date),
   dateLong: formatDateLong(post.data.date),
   category: post.data.categories?.[0] ?? "笔记",
 });
 
 const featured = featuredPost ? prepare(featuredPost) : null;
 const latest = posts.map(prepare);
-const sciencePosts = isFirstPage
-  ? pool
-      .filter((post) => post.id !== featuredPost?.id)
-      .map(prepare)
-      .filter((item) => item.cover.band)
-      .slice(0, 3)
-  : [];
+const galleryPosts = pool
+  .filter((post) => post.id !== featuredPost?.id)
+  .map(prepare)
+  .filter((item) => item.cover.band && (item.cover.Image || item.cover.src))
+  .slice(0, 3);
 const hasFeaturedMedia = featured ? featured.cover.kind !== "none" : false;
 
+// 单篇分类合并为一行快捷入口，避免整卡只装一篇文章
+const topicCategories = categories.filter((category) => category.count > 1);
+const singleCategories = categories.filter((category) => category.count === 1);
 ---
 
-{isFirstPage && (
-  <div class="home-opening">
-    <slot name="profile" />
-    {featured && (
-      <section class="home-featured" aria-labelledby="featured-heading">
-        <h2 class="sr-only" id="featured-heading">
-          {featuredPost?.data.sticky ? "置顶文章" : "精选文章"}
-        </h2>
-        <article class:list={["featured", { "featured--text": !hasFeaturedMedia }]}>
-          {hasFeaturedMedia && (
-            <div class="featured__media">
-              <CoverMedia
-                cover={featured.cover}
-                title={featured.post.data.title}
-                variant="wide"
-                eager
-                widths={[320, 480, 640, 960]}
-                sizes="(max-width: 831px) 90vw, (min-width: 1090px) min(29vw, 21rem), 56vw"
-                showCaption={false}
-              />
-            </div>
-          )}
-          <div class="featured__body">
-            <p class="featured__eyebrow">
-              <span class="featured__flag">{featuredPost?.data.sticky ? "置顶" : "精选"}</span>
-              {featured.category}
-            </p>
-            <h3 class="featured__title">{featured.post.data.title}</h3>
-            {featured.excerpt && <p class="featured__excerpt">{featured.excerpt}</p>}
-            <p class="featured__meta">
-              <time datetime={featured.post.data.date.toISOString()}>{featured.dateLong}</time>
-              {featured.stats.readTime > 0 && (
-                <>
-                  <span class="featured__dot" aria-hidden="true">·</span>
-                  约 {featured.stats.readTime} 分钟
-                </>
-              )}
-            </p>
-            <a
-              class="featured__cta action-link action-link--primary"
-              href={featured.href}
-              aria-label={`阅读文章：${featured.post.data.title}`}
-            >
-              阅读文章 <span class="action-link__arrow i-ri-arrow-right-line" aria-hidden="true"></span>
-            </a>
+<div class="home-opening reveal" style="--reveal-i:0">
+  <slot name="profile" />
+  {featured && (
+    <section class="home-featured" aria-labelledby="featured-heading">
+      <h2 class="sr-only" id="featured-heading">
+        {featuredPost?.data.sticky ? "置顶文章" : "精选文章"}
+      </h2>
+      <a
+        class:list={["featured", { "featured--text": !hasFeaturedMedia }]}
+        href={featured.href}
+        aria-label={`阅读文章：${featured.post.data.title}`}
+      >
+        {hasFeaturedMedia && (
+          <div class="featured__media">
+            <CoverMedia
+              cover={featured.cover}
+              title={featured.post.data.title}
+              variant="wide"
+              eager
+              widths={[320, 480, 640, 960]}
+              sizes="(max-width: 831px) 90vw, (min-width: 1090px) min(29vw, 21rem), 56vw"
+              showCaption={false}
+            />
           </div>
-        </article>
-      </section>
-    )}
-  </div>
-)}
+        )}
+        <div class="featured__body">
+          <p class="featured__eyebrow">
+            <span class="featured__flag">{featuredPost?.data.sticky ? "置顶" : "精选"}</span>
+            {featured.category}
+          </p>
+          <h3 class="featured__title">{featured.post.data.title}</h3>
+          {featured.excerpt && <p class="featured__excerpt">{featured.excerpt}</p>}
+          <p class="featured__meta">
+            <time datetime={featured.post.data.date.toISOString()}>{featured.dateLong}</time>
+            {featured.stats.readTime > 0 && (
+              <>
+                <span class="featured__dot" aria-hidden="true">·</span>
+                约 {featured.stats.readTime} 分钟
+              </>
+            )}
+          </p>
+          <span class="featured__cta action-link action-link--primary">
+            阅读文章 <span class="action-link__arrow i-ri-arrow-right-line" aria-hidden="true"></span>
+          </span>
+        </div>
+      </a>
+    </section>
+  )}
+</div>
 
-<section class="home-list" aria-labelledby="latest-heading">
+<section class="home-list reveal" style="--reveal-i:1" aria-labelledby="latest-heading">
   <div class="section-head">
     <div>
-      <h2 class="section-head__title" id="latest-heading">
-        {isFirstPage ? "最新笔记" : `全部笔记 · 第 ${pageInfo?.currentPage ?? 1} 页`}
-      </h2>
+      <h2 class="section-head__title" id="latest-heading">最新笔记</h2>
     </div>
-    {isFirstPage && (
-      <a class="section-head__more" href="/archives/">全部笔记<span aria-hidden="true"> →</span></a>
-    )}
+    <a class="section-head__more" href="/archives/">全部笔记<span aria-hidden="true"> →</span></a>
   </div>
 
   {latest.length === 0 ? (
-    <p class="home-empty">这里还没有文章。</p>
+    <p class="home-empty">
+      这里还没有文章。<a href="/archives/">去归档看看</a>
+    </p>
   ) : (
     <ol class="post-list">
       {latest.map((item) => (
         <li class="post-row">
           <a class="post-row__link" href={item.href}>
-            <span class="post-row__side">
-              <time class="post-row__date" datetime={item.post.data.date.toISOString()}>{item.dateShort}</time>
-              <span class="post-row__cat">{item.category}</span>
-            </span>
             <span class="post-row__main">
-              <span class="post-row__title">{item.post.data.title}</span>
-              {item.excerpt && <span class="post-row__excerpt">{item.excerpt}</span>}
+              <span class="post-row__cat">{item.category}</span>
+              <span class="post-row__title" title={item.post.data.title}>{item.post.data.title}</span>
             </span>
-            <span class="post-row__read">
-              {item.stats.readTime > 0 ? `${item.stats.readTime} 分钟` : ""}
+            <span class="post-row__meta">
+              {item.stats.readTime > 0 && (
+                <span class="post-row__read">{item.stats.readTime} 分钟</span>
+              )}
+              <time class="post-row__date" datetime={item.post.data.date.toISOString()}>{item.dateMachine}</time>
             </span>
           </a>
         </li>
       ))}
     </ol>
   )}
-
-  {pageInfo && pageInfo.lastPage > 1 && (
-    <Pagination currentPage={pageInfo.currentPage} lastPage={pageInfo.lastPage} firstPageHref="/" />
-  )}
 </section>
 
-{sciencePosts.length >= 2 && (
-  <section class="home-figures" aria-labelledby="figures-heading">
+{galleryPosts.length > 0 && (
+  <section class="home-gallery reveal" style="--reveal-i:2" aria-labelledby="gallery-heading">
     <div class="section-head">
       <div>
-        <h2 class="section-head__title" id="figures-heading">科研图表与解剖图解</h2>
+        <h2 class="section-head__title" id="gallery-heading">漫览</h2>
+        <p class="section-head__sub">科研图表与解剖图解，点击图片可放大浏览。</p>
       </div>
     </div>
-    <div class="figure-grid">
-      {sciencePosts.map((item) => (
-        <article class="figure-card">
-          <a class="figure-card__link" href={item.href}>
-            <CoverMedia cover={item.cover} title={item.post.data.title} variant="card" sizes="(max-width: 768px) 92vw, 24rem" />
-            <div class="figure-card__body">
-              <p class="figure-card__kicker">{item.category}</p>
-              <h3 class="figure-card__title">{item.post.data.title}</h3>
-              {(item.cover.caption || item.cover.credit) && (
-                <p class="figure-card__caption">
-                  {item.cover.caption}
-                  {item.cover.caption && item.cover.credit ? " · " : ""}
-                  {item.cover.credit && <span>图源：{item.cover.credit}</span>}
-                </p>
+    <div class="gallery-grid" data-image-zoom-gallery>
+      {galleryPosts.map((item) => (
+        <figure class="gallery-card">
+          <div class="gallery-card__frame">
+            <image-zoom class="gallery-card__zoom" data-fill>
+              {item.cover.Image ? (
+                <Image
+                  src={item.cover.Image}
+                  alt={item.cover.alt}
+                  widths={[320, 480, 640, 960]}
+                  sizes="(max-width: 700px) 92vw, 24rem"
+                  loading="lazy"
+                  decoding="async"
+                  class="gallery-card__img"
+                />
+              ) : (
+                <img
+                  src={item.cover.src}
+                  alt={item.cover.alt}
+                  loading="lazy"
+                  decoding="async"
+                  class="gallery-card__img"
+                />
               )}
-            </div>
-          </a>
-        </article>
+            </image-zoom>
+          </div>
+          <figcaption class="gallery-card__body">
+            <span class="gallery-card__title">{item.post.data.title}</span>
+            <a class="gallery-card__enter" href={item.href}>
+              进入原文 <span class="i-ri-arrow-right-line" aria-hidden="true"></span>
+            </a>
+          </figcaption>
+        </figure>
       ))}
     </div>
   </section>
 )}
 
-{isFirstPage && categories.length > 0 && (
-  <section class="home-topics" aria-labelledby="topics-heading">
+{categories.length > 0 && (
+  <section class="home-topics reveal" style="--reveal-i:3" aria-labelledby="topics-heading">
     <div class="section-head">
       <div>
         <h2 class="section-head__title" id="topics-heading">专题分类</h2>
       </div>
-      <a class="section-head__more" href="/categories/">全部分类<span aria-hidden="true"> →</span></a>
     </div>
     <div class="topic-grid">
-      {categories.map((category) => (
+      {topicCategories.map((category) => (
         <article class="topic-card">
-          <a class="topic-card__link" href={category.href}>
-            <p class="topic-card__head">
-              <span class="topic-card__name">{category.name}</span>
-              <span class="topic-card__count">{category.count}</span>
-            </p>
-            {category.recent.length > 0 && (
-              <ul class="topic-card__list">
-                {category.recent.slice(0, 3).map((entry) => (
-                  <li>{entry.title}</li>
-                ))}
-              </ul>
-            )}
+          <a class="topic-card__head" href={category.href}>
+            <span class="topic-card__name">{category.name}</span>
+            <span class="topic-card__count">{category.count} 篇</span>
           </a>
+          {category.recent.length > 0 && (
+            <ul class="topic-card__list">
+              {category.recent.slice(0, 3).map((entry) => (
+                <li>
+                  <a href={entry.href} title={entry.title}>{entry.title}</a>
+                </li>
+              ))}
+            </ul>
+          )}
         </article>
       ))}
     </div>
+    {singleCategories.length > 0 && (
+      <div class="topic-singles">
+        <span class="topic-singles__label">单篇专题</span>
+        <div class="topic-singles__chips">
+          {singleCategories.map((category) => (
+            <a class="topic-chip" href={category.recent[0]?.href ?? category.href}>
+              {category.name}
+            </a>
+          ))}
+        </div>
+      </div>
+    )}
   </section>
 )}
-
 
 <style>
   .section-head {
@@ -241,7 +250,6 @@ const hasFeaturedMedia = featured ? featured.cover.kind !== "none" : false;
     justify-content: space-between;
     gap: 1.25rem;
     margin-bottom: clamp(1.5rem, 3vw, 2.25rem);
-
   }
 
   .section-head__title {
@@ -251,6 +259,13 @@ const hasFeaturedMedia = featured ? featured.cover.kind !== "none" : false;
     font-weight: 600;
     letter-spacing: -0.005em;
     color: var(--text-color, #23211d);
+  }
+
+  .section-head__sub {
+    margin: 0.4rem 0 0;
+    font-family: var(--font-sans, system-ui, sans-serif);
+    font-size: 0.8rem;
+    color: var(--text-color-subtle, #8a857c);
   }
 
   .section-head__more {
@@ -288,7 +303,11 @@ const hasFeaturedMedia = featured ? featured.cover.kind !== "none" : false;
     border: var(--hairline);
     border-radius: var(--radius-lg);
     background: var(--surface-raised);
-    transition: border-color var(--dur-2) var(--ease-out);
+    color: inherit;
+    text-decoration: none;
+    transition:
+      border-color var(--dur-2) var(--ease-out),
+      box-shadow var(--dur-2) var(--ease-out);
   }
 
   .featured--text {
@@ -322,26 +341,42 @@ const hasFeaturedMedia = featured ? featured.cover.kind !== "none" : false;
 
   .featured__cta {
     margin-top: var(--space-sm);
+    pointer-events: none;
+  }
+
+  .featured:focus-visible {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
   }
 
   @media (prefers-reduced-motion: no-preference) {
-    .featured:has(.featured__cta:focus-visible) .featured__media :global(.cover-media__img) {
+    .featured:focus-visible .featured__media :global(.cover-media__img) {
       transform: scale(1.035);
     }
 
     @media (hover: hover) and (pointer: fine) {
-      .featured:has(.featured__cta:hover) .featured__media :global(.cover-media__img) {
+      .featured:hover {
+        border-color: color-mix(in oklab, var(--primary-color, #7c3b52) 45%, var(--border-color));
+        box-shadow: var(--shadow-md);
+      }
+
+      .featured:hover .featured__media :global(.cover-media__img) {
         transform: scale(1.035);
+      }
+
+      .featured:hover .featured__cta {
+        border-color: var(--link-hover-color);
+        background: var(--link-hover-color);
+      }
+
+      .featured:hover .action-link__arrow {
+        translate: 3px 0;
       }
     }
 
-    .featured:has(.featured__cta:active) .featured__media :global(.cover-media__img) {
+    .featured:active .featured__media :global(.cover-media__img) {
       transform: scale(0.985);
     }
-  }
-
-  .featured:focus-within {
-    border-color: var(--primary-color);
   }
 
   @container (min-width: 47rem) {
@@ -437,7 +472,7 @@ const hasFeaturedMedia = featured ? featured.cover.kind !== "none" : false;
     margin: 0 0.45rem;
   }
 
-  /* ---------- 最新笔记 ---------- */
+  /* ---------- 最新笔记：紧凑行 ---------- */
   .home-list {
     padding-bottom: clamp(2.75rem, 6vw, 4.5rem);
   }
@@ -454,53 +489,50 @@ const hasFeaturedMedia = featured ? featured.cover.kind !== "none" : false;
   }
 
   .post-row__link {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 0.35rem;
-    padding: clamp(1.1rem, 2.2vw, 1.5rem) 0.25rem;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0.8rem 0.25rem;
     text-decoration: none;
     color: inherit;
     transition: background-color var(--dur-2) var(--ease-out);
   }
 
-  .post-row__link:is(:focus-visible, :active) {
+  .post-row__link:is(:hover, :focus-visible, :active) {
     background: color-mix(in oklab, var(--surface-subtle, #f4f2ee) 55%, transparent);
-  }
-
-  .post-row__side {
-    display: flex;
-    align-items: center;
-    gap: 0.7rem;
-    font-family: var(--font-sans, system-ui, sans-serif);
-    font-size: 0.72rem;
-    color: var(--text-color-subtle, #8a857c);
-    font-variant-numeric: tabular-nums;
-  }
-
-  .post-row__date {
-    letter-spacing: 0.04em;
-  }
-
-  .post-row__cat {
-    padding-left: 0.7rem;
-    border-left: var(--hairline);
-    color: var(--primary-color, #7c3b52);
-    letter-spacing: 0.06em;
   }
 
   .post-row__main {
     display: flex;
-    flex-direction: column;
-    gap: 0.3rem;
+    align-items: baseline;
+    gap: 0.7rem;
     min-width: 0;
   }
 
+  .post-row__cat {
+    flex: none;
+    padding: 0.12rem 0.55rem;
+    border-radius: var(--radius-full);
+    background: var(--surface-tinted);
+    font-family: var(--font-sans, system-ui, sans-serif);
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: var(--primary-color, #7c3b52);
+    white-space: nowrap;
+  }
+
   .post-row__title {
+    min-width: 0;
     font-family: var(--font-serif, Georgia, "Noto Serif SC", serif);
-    font-size: clamp(1.05rem, 1.7vw, 1.22rem);
+    font-size: 1.02rem;
     font-weight: 600;
     line-height: 1.5;
     color: var(--text-color, #23211d);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
     transition: color var(--dur-2) var(--ease-out);
   }
 
@@ -508,25 +540,26 @@ const hasFeaturedMedia = featured ? featured.cover.kind !== "none" : false;
     color: var(--primary-color, #7c3b52);
   }
 
-  .post-row__excerpt {
-    font-family: var(--font-sans, system-ui, sans-serif);
-    font-size: 0.86rem;
-    line-height: 1.75;
-    color: var(--text-color-muted, #6b675f);
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-
-  .post-row__read {
-    display: none;
+  .post-row__meta {
+    display: flex;
+    flex: none;
+    align-items: baseline;
+    gap: 1rem;
     font-family: var(--font-sans, system-ui, sans-serif);
     font-size: 0.74rem;
     color: var(--text-color-subtle, #8a857c);
+  }
+
+  .post-row__read {
     font-variant-numeric: tabular-nums;
-    text-align: right;
+    white-space: nowrap;
+  }
+
+  .post-row__date {
+    font-family: var(--font-mono, ui-monospace, monospace);
+    font-size: 0.72rem;
+    letter-spacing: 0.02em;
+    font-variant-numeric: tabular-nums;
   }
 
   .home-empty {
@@ -535,63 +568,86 @@ const hasFeaturedMedia = featured ? featured.cover.kind !== "none" : false;
     color: var(--text-color-subtle, #8a857c);
   }
 
-  /* ---------- 科研图表带 ---------- */
-  .home-figures {
+  .home-empty a {
+    color: var(--primary-color, #7c3b52);
+  }
+
+  /* ---------- 漫览：图表画廊 ---------- */
+  .home-gallery {
     padding-bottom: clamp(2.75rem, 6vw, 4.5rem);
   }
 
-  .figure-grid {
+  .gallery-grid {
     display: grid;
     grid-template-columns: 1fr;
     gap: clamp(1.25rem, 3vw, 2rem);
   }
 
-  .figure-card__link {
-    display: flex;
-    flex-direction: column;
+  .gallery-card {
+    margin: 0;
+    min-width: 0;
+  }
+
+  /* 论文图表多为白底：统一浅色纸面承接，暗色模式下也保持浅色 */
+  .gallery-card__frame {
+    aspect-ratio: 4 / 3;
+    padding: clamp(0.6rem, 1.6vw, 1rem);
+    border: var(--hairline);
+    border-radius: var(--radius-md);
+    background: #fbfaf7;
+    overflow: hidden;
+  }
+
+  .gallery-card__zoom {
+    display: block;
+    width: 100%;
     height: 100%;
-    text-decoration: none;
-    color: inherit;
+    margin: 0;
   }
 
-  .figure-card__body {
-    padding-top: 0.95rem;
+  .gallery-card__img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
   }
 
-  .figure-card__kicker {
-    margin: 0 0 0.4rem;
-    font-family: var(--font-sans, system-ui, sans-serif);
-    font-size: 0.64rem;
-    font-weight: 600;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    color: var(--primary-color, #7c3b52);
+  .gallery-card__body {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.9rem;
+    padding-top: 0.8rem;
   }
 
-  .figure-card__title {
-    margin: 0 0 0.5rem;
+  .gallery-card__title {
+    min-width: 0;
     font-family: var(--font-serif, Georgia, "Noto Serif SC", serif);
-    font-size: 1.02rem;
+    font-size: 0.98rem;
     font-weight: 600;
     line-height: 1.5;
     color: var(--text-color, #23211d);
-  }
-
-  .figure-card__link:hover .figure-card__title {
-    color: var(--primary-color, #7c3b52);
-  }
-
-  .figure-card__caption {
-    margin: 0;
-    font-family: var(--font-sans, system-ui, sans-serif);
-    font-size: 0.76rem;
-    line-height: 1.7;
-    color: var(--text-color-subtle, #8a857c);
     display: -webkit-box;
     -webkit-line-clamp: 2;
     line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
+  }
+
+  .gallery-card__enter {
+    flex: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-family: var(--font-sans, system-ui, sans-serif);
+    font-size: 0.76rem;
+    color: var(--text-color-muted, #6b675f);
+    text-decoration: none;
+    transition: color var(--dur-2) var(--ease-out);
+  }
+
+  .gallery-card__enter:hover,
+  .gallery-card__enter:focus-visible {
+    color: var(--primary-color, #7c3b52);
   }
 
   /* ---------- 专题 ---------- */
@@ -607,19 +663,8 @@ const hasFeaturedMedia = featured ? featured.cover.kind !== "none" : false;
   }
 
   .topic-card {
-    border-bottom: var(--hairline);
-  }
-
-  .topic-card__link {
-    display: block;
     padding: 1.1rem 0.25rem;
-    text-decoration: none;
-    color: inherit;
-    transition: background-color var(--dur-2) var(--ease-out);
-  }
-
-  .topic-card__link:hover {
-    background: color-mix(in oklab, var(--surface-subtle, #f4f2ee) 55%, transparent);
+    border-bottom: var(--hairline);
   }
 
   .topic-card__head {
@@ -627,7 +672,8 @@ const hasFeaturedMedia = featured ? featured.cover.kind !== "none" : false;
     align-items: baseline;
     justify-content: space-between;
     gap: 1rem;
-    margin: 0;
+    text-decoration: none;
+    color: inherit;
   }
 
   .topic-card__name {
@@ -635,9 +681,11 @@ const hasFeaturedMedia = featured ? featured.cover.kind !== "none" : false;
     font-size: 1.1rem;
     font-weight: 600;
     color: var(--text-color, #23211d);
+    transition: color var(--dur-2) var(--ease-out);
   }
 
-  .topic-card__link:hover .topic-card__name {
+  .topic-card__head:hover .topic-card__name,
+  .topic-card__head:focus-visible .topic-card__name {
     color: var(--primary-color, #7c3b52);
   }
 
@@ -657,39 +705,76 @@ const hasFeaturedMedia = featured ? featured.cover.kind !== "none" : false;
     gap: 0.22rem;
   }
 
-  .topic-card__list li {
+  .topic-card__list a {
+    display: block;
     font-family: var(--font-sans, system-ui, sans-serif);
     font-size: 0.8rem;
     line-height: 1.6;
     color: var(--text-color-muted, #6b675f);
+    text-decoration: none;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+    transition: color var(--dur-2) var(--ease-out);
+  }
+
+  .topic-card__list a:hover,
+  .topic-card__list a:focus-visible {
+    color: var(--primary-color, #7c3b52);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .topic-singles {
+    display: flex;
+    align-items: baseline;
+    gap: 0.9rem;
+    padding: 1rem 0.25rem 0;
+  }
+
+  .topic-singles__label {
+    flex: none;
+    font-family: var(--font-sans, system-ui, sans-serif);
+    font-size: 0.72rem;
+    letter-spacing: 0.08em;
+    color: var(--text-color-subtle, #8a857c);
+  }
+
+  .topic-singles__chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+
+  .topic-chip {
+    padding: 0.22rem 0.7rem;
+    border: var(--hairline);
+    border-radius: var(--radius-full);
+    font-family: var(--font-sans, system-ui, sans-serif);
+    font-size: 0.76rem;
+    color: var(--text-color-muted, #6b675f);
+    text-decoration: none;
+    transition:
+      color var(--dur-2) var(--ease-out),
+      border-color var(--dur-2) var(--ease-out),
+      background-color var(--dur-2) var(--ease-out);
+  }
+
+  .topic-chip:hover,
+  .topic-chip:focus-visible {
+    color: var(--primary-color, #7c3b52);
+    border-color: color-mix(in oklab, var(--primary-color, #7c3b52) 40%, transparent);
+    background: var(--surface-tinted);
+  }
+
+  @media (max-width: 567px) {
+    .post-row__read {
+      display: none;
+    }
   }
 
   @media (min-width: 700px) {
-    .post-row__link {
-      grid-template-columns: 8.5rem minmax(0, 1fr) 4.5rem;
-      align-items: baseline;
-      gap: 1.5rem;
-    }
-
-    .post-row__side {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 0.22rem;
-    }
-
-    .post-row__cat {
-      padding-left: 0;
-      border-left: 0;
-    }
-
-    .post-row__read {
-      display: block;
-    }
-
-    .figure-grid {
+    .gallery-grid {
       grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 
@@ -697,7 +782,6 @@ const hasFeaturedMedia = featured ? featured.cover.kind !== "none" : false;
       grid-template-columns: repeat(2, minmax(0, 1fr));
       column-gap: 3rem;
     }
-
   }
 
   @media (min-width: 980px) {
@@ -705,6 +789,5 @@ const hasFeaturedMedia = featured ? featured.cover.kind !== "none" : false;
       grid-template-columns: repeat(4, minmax(0, 1fr));
       column-gap: 2.25rem;
     }
-
   }
 </style>

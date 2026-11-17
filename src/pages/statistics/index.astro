@@ -73,12 +73,12 @@ const year = lastUpdated ? lastUpdated.getFullYear() : new Date().getFullYear();
     grid-template-columns: repeat(1, minmax(0, 1fr));
     gap: 0;
     margin: 0 0 1.25rem;
-    border-top: 1px solid var(--hairline, rgb(0 0 0 / 8%));
+    border-top: var(--hairline);
   }
 
   .statistics-kpi-card {
     padding: 0.85rem 0;
-    border-bottom: 1px solid var(--hairline, rgb(0 0 0 / 8%));
+    border-bottom: var(--hairline);
   }
 
   .statistics-kpi-label {

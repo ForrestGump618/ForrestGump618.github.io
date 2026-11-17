@@ -4,8 +4,9 @@ export interface NavItemType {
    * - 可以是站内路径（如 "/"、"/posts/"）
    * - 也可以是站外 URL
    * - 对于下拉菜单来说，这是父级菜单的链接
+   * - 省略时该项仅作为下拉入口按钮，不产生独立落地页
    */
-  href: string;
+  href?: string;
 
   /**
    * 导航项显示的文本。
@@ -30,6 +31,7 @@ export interface NavItemType {
    */
   dropbox?: {
     enable: boolean;
-    items?: NavItemType[];
+    /** 子菜单项必须带链接（父级才可以省略 href 仅作入口） */
+    items?: Array<NavItemType & { href: string }>;
   };
 }

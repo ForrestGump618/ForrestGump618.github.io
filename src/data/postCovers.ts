@@ -18,7 +18,7 @@ export const postCovers: Record<string, CoverSpec> = {
     tones: ["#eceef1", "#39434c"] as const,
   },
   "Hello World！": { kind: "none" },
-  "LINGER：从单细胞多组学数据推断基因调控网络/LINGER：从单细胞多组学数据推断基因调控网络": {
+  "LINGER：从单细胞多组学数据推断基因调控网络": {
     kind: "scientific",
     image: "posts/LINGER：从单细胞多组学数据推断基因调控网络/LINGER.png",
     alt: "LINGER 模型流程图：bulk 数据预训练与单细胞数据调控网络推断",
@@ -42,7 +42,7 @@ export const postCovers: Record<string, CoverSpec> = {
     kicker: "生信 · 工具",
     tones: ["#e7ebec", "#3b4547"] as const,
   },
-  "suwen-2-1-0/suwen-2-1-0": {
+  "suwen-2-1-0": {
     kind: "scientific",
     image: "posts/suwen-2-1-0/workbench-light.png",
     alt: "素问 Suwen 工作台主界面（浅色主题）",
@@ -95,7 +95,7 @@ export const postCovers: Record<string, CoverSpec> = {
     kicker: "肿瘤学 · 分型",
     tones: ["#f3e9ea", "#513a42"] as const,
   },
-  "单细胞转录组分析实战（一）：数据采集/单细胞转录组分析实战（一）：数据采集": {
+  "单细胞转录组分析实战（一）：数据采集": {
     kind: "scientific",
     image: "posts/单细胞转录组分析实战（一）：数据采集/1.png",
     alt: "PBMC 样本临床信息表（Cell barcode、Sample、Efficacy、细胞类型等）",
@@ -117,7 +117,7 @@ export const postCovers: Record<string, CoverSpec> = {
     kicker: "随笔 · 摘录",
     tones: ["#efe9dd", "#4e4636"] as const,
   },
-  "口腔科学总结/口腔科学总结": {
+  口腔科学总结: {
     kind: "illustration",
     image: "posts/口腔科学总结/a.png",
     alt: "牙体牙髓病诊疗路径思维导图",
@@ -130,7 +130,7 @@ export const postCovers: Record<string, CoverSpec> = {
     kicker: "随笔 · 回忆",
     tones: ["#f4efe7", "#3a3733"] as const,
   },
-  "基于NLP的密钥解码工具：Ciphey/基于NLP的密钥解码工具：Ciphey": {
+  "基于NLP的密钥解码工具：Ciphey": {
     kind: "illustration",
     image: "posts/基于NLP的密钥解码工具：Ciphey/index.gif",
     alt: "Ciphey 命令行解码使用示例（动态图）",
@@ -163,7 +163,7 @@ export const postCovers: Record<string, CoverSpec> = {
     kicker: "医学课程 · 心律",
     tones: ["#f1e8e2", "#5a443a"] as const,
   },
-  "心电图基础参数/心电图基础参数": {
+  心电图基础参数: {
     kind: "scientific",
     image: "posts/心电图基础参数/1.png",
     alt: "心电轴六轴系统示意图（I、II、III、aVR、aVL、aVF 角度关系）",
@@ -171,7 +171,7 @@ export const postCovers: Record<string, CoverSpec> = {
     credit: "文章原图",
     mode: "fit",
   },
-  "心脏听诊总结/心脏听诊总结": {
+  心脏听诊总结: {
     kind: "scientific",
     image: "posts/心脏听诊总结/听诊区.png",
     alt: "心脏瓣膜解剖部位及瓣膜听诊区示意图",
@@ -190,7 +190,7 @@ export const postCovers: Record<string, CoverSpec> = {
     kicker: "文献阅读 · 单基因",
     tones: ["#e9ede6", "#3d4a41"] as const,
   },
-  "文献阅读：自上而下描述肿瘤发展的时空动力学/文献阅读：自上而下描述肿瘤发展的时空动力学": {
+  "文献阅读：自上而下描述肿瘤发展的时空动力学": {
     kind: "scientific",
     image: "posts/文献阅读：自上而下描述肿瘤发展的时空动力学/fx1.jpg",
     alt: "肿瘤时空动力学图形摘要：影像学进展、肿瘤体积演变、内在与外在屏障及肺多细胞生态型",
@@ -264,7 +264,7 @@ export const postCovers: Record<string, CoverSpec> = {
     kicker: "生信 · 资源",
     tones: ["#e7ebec", "#3b4547"] as const,
   },
-  "生物信息学笔记（一）：转录组测序技术/生物信息学笔记（一）：转录组测序技术": {
+  "生物信息学笔记（一）：转录组测序技术": {
     kind: "scientific",
     image: "posts/生物信息学笔记（一）：转录组测序技术/1.png",
     alt: "NEB Next RNA 文库接头连接、U 切除与 PCR 富集流程示意图",
@@ -282,7 +282,7 @@ export const postCovers: Record<string, CoverSpec> = {
     kicker: "生信 · 变换",
     tones: ["#e9ede6", "#3d4a41"] as const,
   },
-  "网络爬虫自动获取教务处最新通知/网络爬虫自动获取教务处最新通知": {
+  网络爬虫自动获取教务处最新通知: {
     kind: "illustration",
     image: "posts/网络爬虫自动获取教务处最新通知/1.png",
     alt: "脚本自动推送教务处通知邮件效果截图",
@@ -291,7 +291,7 @@ export const postCovers: Record<string, CoverSpec> = {
     focus: "50% 50%",
     mode: "fit",
   },
-  "耳鼻咽喉头颈外科学主要知识总结/耳鼻咽喉头颈外科学主要知识总结": {
+  耳鼻咽喉头颈外科学主要知识总结: {
     kind: "scientific",
     image: "posts/耳鼻咽喉头颈外科学主要知识总结/a.png",
     alt: "内耳骨迷路解剖示意图（中英双语标注）",

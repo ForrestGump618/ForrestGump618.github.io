@@ -20,9 +20,11 @@ const featuredPost =
   publishedPosts.find((post) => post.data.sticky) ??
   publishedPosts.find((post) => post.id === themeConfig.home?.featuredPostId);
 
-const pageSize = themeConfig.home?.pageSize ?? 9;
-const lastPage = Math.max(1, Math.ceil(publishedPosts.length / pageSize));
-const pagePosts = publishedPosts.slice(0, pageSize);
+// 精选文章不重复出现在最新列表；首页只展示一页，分页统一放在归档
+const pageSize = themeConfig.home?.pageSize ?? 6;
+const pagePosts = publishedPosts
+  .filter((post) => post.id !== featuredPost?.id)
+  .slice(0, pageSize);
 
 // 专题：按真实分类聚合，附带最近三篇（分类内按日期倒序）
 const categoryCounts = new Map<string, number>();
@@ -45,8 +47,6 @@ const categories = [...categoryCounts.entries()]
   }));
 
 const tagCount = new Set(publishedPosts.flatMap((post) => post.data.tags ?? [])).size;
-const lastModified = (post: (typeof publishedPosts)[number]) => post.data.updated ?? post.data.date;
-const latestPost = publishedPosts.toSorted((a, b) => lastModified(b).getTime() - lastModified(a).getTime())[0];
 
 const brandConfig = themeConfig.brand ?? {};
 const sidebarConfig = themeConfig.sidebar ?? {};
@@ -73,7 +73,6 @@ const pageTitle = `${brandConfig.title || "Echo"} — ${brandConfig.subtitle || 
       pool={publishedPosts}
       featuredPost={featuredPost}
       categories={categories}
-      pageInfo={{ currentPage: 1, lastPage }}
     >
       <HomeHero slot="profile"
         author={sidebarConfig.author || ""}
@@ -85,15 +84,6 @@ const pageTitle = `${brandConfig.title || "Echo"} — ${brandConfig.subtitle || 
           tags: tagCount,
           since: footerConfig.since ?? 2023,
         }}
-        latest={
-          latestPost
-            ? {
-                title: latestPost.data.title,
-                href: toPostHref(latestPost.id),
-                date: lastModified(latestPost),
-              }
-            : undefined
-        }
         social={social}
       />
     </HomeContent>

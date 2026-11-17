@@ -82,7 +82,18 @@ export default defineConfig({
         customElement: true,
       },
     }),
-    sitemap(),
+    sitemap({
+      filter: (page) => {
+        const segments = new URL(page).pathname.split("/").filter(Boolean);
+        // 旧双层文章 URL 与旧分页的重定向页不进入 sitemap
+        if (segments[0] === "page") return false;
+        return !(
+          segments[0] === "posts" &&
+          segments.length >= 3 &&
+          segments.at(-1) === segments.at(-2)
+        );
+      },
+    }),
     hyacinePlugin(),
     mdx(),
   ],

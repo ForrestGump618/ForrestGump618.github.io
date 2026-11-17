@@ -78,7 +78,7 @@ const t = getT();
     width: 100%;
     margin: clamp(2.5rem, 5vw, 3.5rem) 0 0;
     padding-top: 1.25rem;
-    border-top: 1px solid var(--hairline, rgb(0 0 0 / 8%));
+    border-top: var(--hairline);
     font-family: var(--font-sans, system-ui, sans-serif);
   }
 
@@ -130,7 +130,7 @@ const t = getT();
   .pagination .page-number:hover {
     color: var(--text-color, #23211d);
     background: var(--surface-subtle, #f4f2ee);
-    border-color: var(--hairline, rgb(0 0 0 / 8%));
+    border-color: var(--border-color);
   }
 
   .pagination .page-number.current {

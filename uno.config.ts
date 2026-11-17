@@ -43,12 +43,31 @@ function collectConfigIcons() {
   return icons;
 }
 
+// 动态插值（如 class={icon}）无法被提取器发现，统一在此声明；
+// 不再依赖渲染隐藏 span 的 Icons 组件，避免污染 DOM。
 const iconSafeList = [
   ...collectConfigIcons(),
   "flag-line",
   "file-line",
   "external-link-line",
   "close-line",
+  "search-line",
+  "calendar-line",
+  "time-line",
+  "pencil-line",
+  "dice-line",
+  "shuffle-line",
+  "layout-right-2-line",
+  "line-chart-fill",
+  "cup-fill",
+  "megaphone-line",
+  "arrow-right-line",
+  "arrow-right-s-line",
+  "arrow-up-line",
+  "arrow-down-line",
+  "arrow-down-s-line",
+  "arrow-drop-down-fill",
+  "price-tag-3-line",
 ];
 
 export default defineConfig({

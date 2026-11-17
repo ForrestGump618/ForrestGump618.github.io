@@ -68,7 +68,13 @@ test("@regression @responsive 冷启动搜索按一次即打开，关闭后恢�
     await page.goto(ROUTES.home, { waitUntil: "domcontentloaded" });
     await expect(trigger).toBeDisabled();
     await expect(page.locator("#mobile-drawer")).toBeHidden();
-    await expect(page.locator(".site-nav__dropdown")).toBeHidden();
+    expect(
+      await page
+        .locator(".site-nav__dropdown")
+        .evaluateAll((elements) =>
+          elements.every((element) => getComputedStyle(element).visibility === "hidden"),
+        ),
+    ).toBe(true);
     const header = await page.locator(".site-header").boundingBox();
     expect(header?.height).toBeLessThan(80);
   } finally {
@@ -198,8 +204,8 @@ test("@regression @responsive 系统减少动画偏好作用于菜单和搜索",
         .transitionDuration.split(",")
         .some((part) => parseFloat(part) > 0),
     );
-  expect(await hasDuration("#mobile-drawer")).toBe(!reduced);
-  expect(await hasDuration("#site-search")).toBe(!reduced);
+  await expect.poll(() => hasDuration("#mobile-drawer")).toBe(!reduced);
+  await expect.poll(() => hasDuration("#site-search")).toBe(!reduced);
 });
 
 test("@regression @responsive 文章图片可键盘预览，退出后可以立即再次打开", async ({ page }) => {
@@ -221,7 +227,7 @@ test("@regression @responsive 文章图片可键盘预览，退出后可以立�
   await expect(preview).toHaveCount(0);
 });
 
-test("@regression @responsive 首页卡片通过独立操作入口导航", async ({ page }, info) => {
+test("@regression @responsive 首页精选卡片整卡可点击直达文章", async ({ page }, info) => {
   await page.goto(ROUTES.home);
   const profile = page.locator(".profile");
   const about = profile.getByRole("link", { name: "关于我" });
@@ -233,11 +239,9 @@ test("@regression @responsive 首页卡片通过独立操作入口导航", async
   await expect(page).toHaveURL(ROUTES.about);
 
   await page.goto(ROUTES.home);
-  const feature = page.locator(".featured");
-  await feature.locator(".featured__title").click();
-  await expect(page).toHaveURL(ROUTES.home);
-  const read = feature.getByRole("link", { name: /阅读文章：Eve/ });
-  if (info.project.use.hasTouch) await read.tap();
-  else await read.press("Enter");
+  const feature = page.getByRole("link", { name: /阅读文章：Eve/ });
+  await expect(feature).toHaveAttribute("href", POSTS.suwen);
+  if (info.project.use.hasTouch) await feature.locator(".featured__title").tap();
+  else await feature.locator(".featured__title").click();
   await expect(page).toHaveURL(POSTS.suwen);
 });

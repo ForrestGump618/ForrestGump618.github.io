@@ -64,9 +64,9 @@ test("@critical 阅读进度、返回顶部与代码块全屏可用", async ({ p
   await codeBlock.scrollIntoViewIfNeeded();
   await expect(codeBlock).toBeVisible();
 
-  await codeBlock.getByRole("button", { name: "Enter fullscreen" }).click();
-  await expect(codeBlock.getByRole("button", { name: "Exit fullscreen" })).toBeVisible();
+  await codeBlock.getByRole("button", { name: "进入全屏" }).click();
+  await expect(codeBlock.getByRole("button", { name: "退出全屏" })).toBeVisible();
 
   await page.keyboard.press("Escape");
-  await expect(codeBlock.getByRole("button", { name: "Enter fullscreen" })).toBeVisible();
+  await expect(codeBlock.getByRole("button", { name: "进入全屏" })).toBeVisible();
 });
