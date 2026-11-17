@@ -246,7 +246,7 @@ test("@regression @responsive 首页无精选卡片，最新列表首行直达�
       if (info.project.use.hasTouch) await about.tap();
       else await about.press("Enter");
     }
-    await expect(page).toHaveURL(ROUTES.about, { timeout: 2_000 });
+    await expect(page).toHaveURL(ROUTES.about, { timeout: 5_000 });
   }).toPass({ timeout: 20_000 });
 
   await page.goto(ROUTES.home);
@@ -254,11 +254,12 @@ test("@regression @responsive 首页无精选卡片，最新列表首行直达�
   const firstRow = page.locator(".post-row__link").first();
   await expect(firstRow).toHaveAttribute("href", POSTS.suwen);
   await settleEntrance(firstRow);
+  // 退场过渡先播放约 220–360ms 再导航，单次断言预算需覆盖这段延迟与并行争用下的响应
   await expect(async () => {
     if (new URL(page.url()).pathname !== POSTS.suwen) {
       if (info.project.use.hasTouch) await firstRow.tap();
       else await firstRow.click();
     }
-    await expect(page).toHaveURL(POSTS.suwen, { timeout: 2_000 });
+    await expect(page).toHaveURL(POSTS.suwen, { timeout: 5_000 });
   }).toPass({ timeout: 20_000 });
 });

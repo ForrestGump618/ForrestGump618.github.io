@@ -313,6 +313,56 @@ hr {
   flex-direction: column;
 }
 
+/* ===================== 文章翻页退场 ===================== */
+/* 点击文章链接后由 pageTransition 挂上 .is-page-exiting：
+   内容淡出下沉，顶部一道品牌渐变光带扫过；导航在容器外保持常驻。 */
+@media (prefers-reduced-motion: no-preference) {
+  html.is-page-exiting #container {
+    animation: page-exit 220ms var(--ease-out) both;
+  }
+
+  html.is-page-exiting body::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: var(--z-fullscreen);
+    height: 2px;
+    background: linear-gradient(
+      90deg,
+      var(--primary-color),
+      var(--color-aqua),
+      var(--color-purple)
+    );
+    transform-origin: left;
+    animation: page-sweep 220ms var(--ease-out) both;
+    pointer-events: none;
+  }
+}
+
+@keyframes page-exit {
+  from {
+    opacity: 1;
+    transform: none;
+  }
+
+  to {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+
+@keyframes page-sweep {
+  from {
+    transform: scaleX(0);
+  }
+
+  to {
+    transform: scaleX(1);
+  }
+}
+
 main {
   position: relative;
   z-index: var(--z-content);

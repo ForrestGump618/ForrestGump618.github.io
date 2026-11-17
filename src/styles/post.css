@@ -954,3 +954,68 @@
   padding-top: clamp(1.5rem, 3vw, 2rem);
   border-top: var(--hairline);
 }
+
+/* ---------- 翻页入场 ---------- */
+/* 进入文章页时标题区 / 封面 / 正文 / 目录错峰升起，只用 transform 与 opacity，
+   不改变布局；reduced-motion 下整体跳过。 */
+@media (prefers-reduced-motion: no-preference) {
+  .article .post-head__eyebrow {
+    animation: post-enter-rise var(--dur-4) var(--ease-out) 40ms both;
+  }
+
+  .article .post-head__title {
+    animation: post-enter-rise var(--dur-4) var(--ease-out) 100ms both;
+  }
+
+  .article .post-head__meta {
+    animation: post-enter-rise var(--dur-4) var(--ease-out) 180ms both;
+  }
+
+  .article .post-cover {
+    animation: post-enter-cover var(--dur-4) var(--ease-out) 220ms both;
+  }
+
+  .article .body.md {
+    animation: post-enter-rise var(--dur-4) var(--ease-out) 260ms both;
+  }
+
+  .article .toc--desktop {
+    animation: post-enter-side var(--dur-4) var(--ease-out) 320ms both;
+  }
+}
+
+@keyframes post-enter-rise {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes post-enter-cover {
+  from {
+    opacity: 0;
+    transform: scale(1.015);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes post-enter-side {
+  from {
+    opacity: 0;
+    transform: translateX(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}

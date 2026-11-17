@@ -172,9 +172,11 @@ const documentTitle = pageTitle
       import { get } from "svelte/store";
       import { fireworksEnabled } from "@/stores/fireworksStore";
       import { initFireworks } from "@/toolkit/ui/fireworks";
+      import { initPageTransition } from "@/toolkit/ui/pageTransition";
       import { initScrollReveal } from "@/toolkit/ui/scrollReveal";
 
       initScrollReveal(document, window);
+      initPageTransition(document, window);
       initFireworks(document, window, {
         isEnabled: () => get(fireworksEnabled),
       });
