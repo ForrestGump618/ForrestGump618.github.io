@@ -96,6 +96,74 @@ a:hover {
   text-decoration-color: currentColor;
 }
 
+/* 导航仍使用链接，在视觉上给需要明确点击的入口提供按钮反馈。 */
+.action-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2xs);
+  min-height: 2.75rem;
+  padding: var(--space-2xs) var(--space-xs);
+  border: var(--hairline);
+  border-radius: var(--radius-sm);
+  background: var(--surface-raised);
+  color: var(--text-color);
+  font-size: var(--text-xs);
+  font-weight: var(--weight-medium);
+  line-height: var(--leading-snug);
+  text-decoration: none;
+  transition:
+    background-color var(--dur-2) var(--ease-out),
+    border-color var(--dur-2) var(--ease-out),
+    translate var(--dur-2) var(--ease-out),
+    scale var(--dur-1) var(--ease-press);
+}
+
+.action-link--primary {
+  border-color: var(--primary-color);
+  background: var(--primary-color);
+  color: var(--grey-0);
+}
+
+.action-link__arrow {
+  flex: none;
+  transition: translate var(--dur-2) var(--ease-press);
+}
+
+.action-link:focus-visible {
+  border-color: var(--primary-color);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .action-link:hover {
+    border-color: var(--primary-color);
+    color: var(--link-color);
+  }
+
+  .action-link--primary:hover {
+    border-color: var(--link-hover-color);
+    background: var(--link-hover-color);
+    color: var(--grey-0);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  @media (hover: hover) and (pointer: fine) {
+    .action-link:hover {
+      translate: 0 -2px;
+    }
+
+    .action-link:hover .action-link__arrow {
+      translate: 3px 0;
+    }
+  }
+
+  .action-link:active {
+    translate: 0 0;
+    scale: 0.96;
+  }
+}
+
 img,
 svg,
 video,

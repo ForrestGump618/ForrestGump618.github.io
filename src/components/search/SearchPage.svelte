@@ -1,297 +1,164 @@
 <script lang="ts">
-  import { onMount, onDestroy } from "svelte";
-  import { currentLocale, getT } from "@/i18n";
+  import { onMount } from "svelte";
   import { lockBodyScroll } from "@/toolkit/ui/scrollLock";
 
+  let { onOpen }: { onOpen?: () => void } = $props();
+
   const isDev = import.meta.env.DEV;
-  const searchPanelTransitionMs = 350;
-
-  interface Props {
-    selector?: string | HTMLElement;
-    showSearch?: boolean;
-  }
-
-  let { selector, showSearch = $bindable(false) }: Props = $props();
-  const t = getT(currentLocale);
-
-  let internalVisible = $state(false);
-  let rendered = $state(false);
-  let animatedVisible = $state(false);
-  let cleanupListener: (() => void) | null = null;
-  let cleanupKeyboard: (() => void) | null = null;
-  let cleanupThemeObserver: (() => void) | null = null;
-  let panelElement: HTMLDivElement | null = null;
-  let hideTimeoutId: number | null = null;
   const pagefindInstanceName = "global-search";
-  const visible = $derived(selector ? internalVisible : Boolean(showSearch));
+  let panelElement = $state<HTMLDialogElement>();
+  let closeButton = $state<HTMLButtonElement>();
+  let returnFocus: HTMLElement | undefined;
+  let unlock: (() => void) | undefined;
+  let pressOnBackdrop = false;
+  let loading = $state(false);
+  let loaded = $state(false);
+  let failed = $state(false);
   let pagefindTheme = $state<"light" | "dark">("light");
 
-  interface PagefindFocusable extends HTMLElement {
-    focus(): void;
+  function loadPagefindStyles() {
+    return new Promise<void>((resolve, reject) => {
+      const link = document.createElement("link");
+      link.rel = "stylesheet";
+      link.href = "/pagefind/pagefind-component-ui.css";
+      link.addEventListener("load", () => resolve(), { once: true });
+      link.addEventListener("error", () => {
+        link.remove();
+        reject(new Error("Pagefind 样式加载失败"));
+      }, { once: true });
+      document.head.append(link);
+    });
   }
 
-  async function initPagefindComponentUi() {
-    if (isDev) return;
-
+  async function loadPagefind() {
+    if (isDev || loading || loaded) return;
+    loading = true;
+    failed = false;
     try {
       await Promise.all([
         import("@pagefind/component-ui"),
-        import("@pagefind/component-ui/css"),
+        loadPagefindStyles(),
       ]);
+      loaded = true;
     } catch (error) {
-      console.warn("Pagefind Component UI 初始化失败：", error);
+      failed = true;
+      console.warn("Pagefind 加载失败", error);
+    } finally {
+      loading = false;
     }
   }
 
-  function clearHideTimeout() {
-    if (hideTimeoutId === null || typeof window === "undefined") return;
-
-    window.clearTimeout(hideTimeoutId);
-    hideTimeoutId = null;
-  }
-
-  function openSearch() {
-    if (selector) {
-      internalVisible = true;
+  export function openSearch(trigger?: HTMLElement) {
+    if (!panelElement || !closeButton) return;
+    if (panelElement.open) {
+      panelElement.removeAttribute("data-closing");
       return;
     }
-
-    showSearch = true;
-  }
-
-  function closeSearch() {
-    if (selector) {
-      internalVisible = false;
-      return;
-    }
-
-    showSearch = false;
-  }
-
-  function toggleVisibility() {
-    if (selector) {
-      internalVisible = !internalVisible;
-      return;
-    }
-
-    showSearch = !showSearch;
-  }
-
-  async function focusSearchInput() {
-    if (typeof window === "undefined") return;
-    if (isDev) return;
-
-    // 等待 pagefind-input 自定义元素完成升级，
-    // 确保 focus() 能委托到 shadow DOM 内部的 input
-    if (
-      typeof customElements !== "undefined" &&
-      !customElements.get("pagefind-input")
-    ) {
-      await customElements.whenDefined("pagefind-input");
-    }
-
-    window.requestAnimationFrame(() => {
-      const inputComponent =
-        panelElement?.querySelector<PagefindFocusable>("pagefind-input");
-
-      if (!inputComponent || typeof inputComponent.focus !== "function") {
-        return;
-      }
-
-      inputComponent.focus();
-    });
-  }
-
-  function isEditableTarget(target: EventTarget | null) {
-    if (!(target instanceof HTMLElement)) return false;
-
-    return (
-      target instanceof HTMLInputElement ||
-      target instanceof HTMLTextAreaElement ||
-      target instanceof HTMLSelectElement ||
-      target.isContentEditable
-    );
-  }
-
-  function resolveThemeFromRoot(): "light" | "dark" {
-    if (typeof document === "undefined") return "light";
-
-    return document.documentElement.dataset.theme === "dark"
-      ? "dark"
-      : "light";
-  }
-
-  onMount(() => {
-    initPagefindComponentUi();
-
-    // Setup selector listener
-    if (selector) {
-      let element: HTMLElement | null = null;
-
-      if (typeof selector === "string") {
-        element = document.querySelector(selector);
-      } else if (selector instanceof HTMLElement) {
-        element = selector;
-      }
-
-      if (element) {
-        element.addEventListener("click", toggleVisibility);
-        cleanupListener = () => {
-          element?.removeEventListener("click", toggleVisibility);
-        };
-      } else {
-        console.warn("Invalid selector provided for PagefindSearch component.");
-      }
-    }
-
-    const handleKeydown = (event: KeyboardEvent) => {
-      const isSearchShortcut =
-        (event.ctrlKey || event.metaKey) &&
-        event.key.toLowerCase() === "k" &&
-        !event.altKey;
-
-      if (isSearchShortcut && !isEditableTarget(event.target)) {
-        event.preventDefault();
-        openSearch();
-        focusSearchInput();
-        return;
-      }
-
-      if (event.key === "Escape") {
-        closeSearch();
-      }
-    };
-
-    window.addEventListener("keydown", handleKeydown);
-    cleanupKeyboard = () => {
-      window.removeEventListener("keydown", handleKeydown);
-    };
-
-    const root = document.documentElement;
-    const syncPagefindTheme = () => {
-      pagefindTheme = resolveThemeFromRoot();
-    };
-
-    syncPagefindTheme();
-
-    const observer = new MutationObserver(syncPagefindTheme);
-    observer.observe(root, {
-      attributes: true,
-      attributeFilter: ["data-theme"],
-    });
-
-    cleanupThemeObserver = () => {
-      observer.disconnect();
-    };
-  });
-
-  onDestroy(() => {
-    clearHideTimeout();
-
-    if (cleanupListener) {
-      cleanupListener();
-      cleanupListener = null;
-    }
-    if (cleanupKeyboard) {
-      cleanupKeyboard();
-      cleanupKeyboard = null;
-    }
-    if (cleanupThemeObserver) {
-      cleanupThemeObserver();
-      cleanupThemeObserver = null;
-    }
-  });
-
-  $effect(() => {
-    clearHideTimeout();
-
-    if (visible) {
-      rendered = true;
-
-      if (typeof window === "undefined") {
-        animatedVisible = true;
-        return;
-      }
-
-      const frameId = window.requestAnimationFrame(() => {
-        animatedVisible = true;
-      });
-
-      return () => {
-        window.cancelAnimationFrame(frameId);
-      };
-    }
-
-    animatedVisible = false;
-
-    if (typeof window === "undefined") {
-      rendered = false;
-      return;
-    }
-
-    const currentTimeoutId = window.setTimeout(() => {
-      rendered = false;
-      hideTimeoutId = null;
-    }, searchPanelTransitionMs);
-
-    hideTimeoutId = currentTimeoutId;
-
-    return () => {
-      window.clearTimeout(currentTimeoutId);
-      if (hideTimeoutId === currentTimeoutId) {
-        hideTimeoutId = null;
-      }
-    };
-  });
-
-  $effect(() => {
-    if (!visible) return;
-
-    focusSearchInput();
-  });
-
-  $effect(() => {
-    if (typeof document === "undefined" || !visible) return;
-
-    return lockBodyScroll(document, {
+    onOpen?.();
+    returnFocus = trigger;
+    panelElement.showModal();
+    closeButton.focus({ preventScroll: true });
+    unlock = lockBodyScroll(document, {
       innerWidth: window.innerWidth,
       getComputedPaddingInlineEnd: () => window.getComputedStyle(document.body).paddingInlineEnd,
     });
+    if (loaded) focusSearchInput();
+    else void loadPagefind();
+  }
+
+  async function closeSearch() {
+    if (!panelElement?.open || panelElement.hasAttribute("data-closing")) return;
+    if (!CSS.supports("overlay", "auto")) {
+      panelElement.setAttribute("data-closing", "");
+      await Promise.allSettled(panelElement.getAnimations().map((animation) => animation.finished));
+      if (!panelElement?.hasAttribute("data-closing")) return;
+      panelElement.removeAttribute("data-closing");
+    }
+    panelElement.close();
+    unlock?.();
+    unlock = undefined;
+    returnFocus?.focus({ preventScroll: true });
+    returnFocus = undefined;
+  }
+
+  function focusSearchInput() {
+    requestAnimationFrame(() => {
+      if (!panelElement?.open || document.activeElement !== closeButton) return;
+      panelElement.querySelector<HTMLElement>("pagefind-input")?.focus();
+    });
+  }
+
+  function isBackdrop(event: PointerEvent) {
+    if (event.target !== panelElement || !panelElement) return false;
+    const bounds = panelElement.getBoundingClientRect();
+    return event.clientX < bounds.left || event.clientX > bounds.right
+      || event.clientY < bounds.top || event.clientY > bounds.bottom;
+  }
+
+  $effect(() => {
+    if (loaded) focusSearchInput();
+  });
+
+  function onShortcut(event: KeyboardEvent) {
+    if (event.defaultPrevented || event.repeat || !(event.ctrlKey || event.metaKey)
+      || event.altKey || event.shiftKey || event.key.toLowerCase() !== "k") return;
+
+    const editable = event.composedPath().some((item) =>
+      item instanceof HTMLElement && (item.matches("input, textarea, select") || item.isContentEditable),
+    );
+    if (editable) return;
+    event.preventDefault();
+    openSearch();
+  }
+
+  onMount(() => {
+    const root = document.documentElement;
+    const syncTheme = () => {
+      pagefindTheme = root.dataset.theme === "dark" ? "dark" : "light";
+    };
+    syncTheme();
+    const observer = new MutationObserver(syncTheme);
+    observer.observe(root, { attributes: true, attributeFilter: ["data-theme"] });
+    return () => {
+      unlock?.();
+      observer.disconnect();
+    };
   });
 </script>
 
-<div
-  class="search-shell"
-  class:search-shell-visible={animatedVisible}
-  hidden={!rendered}
-  aria-hidden={!animatedVisible}
+<svelte:window onkeydown={onShortcut} />
+<dialog
+  id="site-search"
+  class="pagefind-panel"
+  aria-label="Search"
+  {...{ closedby: "any" }}
+  bind:this={panelElement}
   data-pf-theme={pagefindTheme}
+  oncancel={(event) => {
+    event.preventDefault();
+    void closeSearch();
+  }}
+  onpointerdown={(event) => {
+    if (!("closedBy" in HTMLDialogElement.prototype)) {
+      pressOnBackdrop = isBackdrop(event);
+    }
+  }}
+  onpointerup={(event) => {
+    if (pressOnBackdrop && isBackdrop(event)) void closeSearch();
+    pressOnBackdrop = false;
+  }}
 >
-  <button
-    type="button"
-    class="search-overlay"
-    aria-label="Close search overlay"
-    onclick={closeSearch}
-  ></button>
-
-  <div
-    bind:this={panelElement}
-    class="pagefind-panel"
-    role="dialog"
-    aria-modal="true"
-    aria-label="Search"
-  >
     <div class="search-panel__bar">
       <span class="search-panel__label">
         <span class="search-panel__icon i-ri-search-line" aria-hidden="true"></span>
         全站搜索
       </span>
       <button
+        bind:this={closeButton}
         type="button"
         class="search-panel__close"
         onclick={closeSearch}
         aria-label="Close search"
-        aria-controls="pagefind-results-region"
       >
         <span class="i-ri-close-line" aria-hidden="true"></span>
       </button>
@@ -299,10 +166,14 @@
 
     <div class="search-panel__body">
       {#if isDev}
-        <div class="dev-tip">
-          {t("search.devModeSkipped")}<br />
-          {t("search.buildHint")}
+        <p class="dev-tip">开发模式未生成搜索索引。请构建站点后使用预览验证搜索。</p>
+      {:else if failed}
+        <div class="dev-tip" role="status">
+          搜索加载失败。
+          <button type="button" onclick={loadPagefind}>重试</button>
         </div>
+      {:else if !loaded}
+        <p class="search-panel__loading" role="status">正在加载搜索…</p>
       {:else}
         <div
           class="pagefind-component-shell"
@@ -339,69 +210,76 @@
         </div>
       {/if}
     </div>
-  </div>
-</div>
+</dialog>
 
 <style>
-.search-shell {
-  position: fixed;
-  inset: 0;
-  z-index: var(--z-search-overlay);
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  padding: clamp(1rem, 7vh, 4.5rem) 1rem 1.5rem;
-  pointer-events: none;
-}
+  .pagefind-panel {
+    position: fixed;
+    inset: max(clamp(0.875rem, 7dvh, 4rem), env(safe-area-inset-top)) 0 auto;
+    width: min(calc(100% - 2rem), 43rem);
+    max-width: none;
+    max-height: min(82dvh, calc(100dvh - env(safe-area-inset-bottom) - 2rem));
+    margin: 0 auto;
+    padding: 0;
+    overflow: hidden;
+    background: var(--surface-raised);
+    color: var(--text-color);
+    border: var(--hairline);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--search-panel-shadow);
+    opacity: 0;
+    transform: translateY(-0.5rem) scale(0.985);
+    transition: opacity var(--dur-2) var(--ease-out), transform var(--dur-3) var(--ease-out);
+  }
 
-.search-shell[hidden] {
-  display: none;
-}
+  .pagefind-panel[open] {
+    display: flex;
+    flex-direction: column;
+  }
 
-.search-shell-visible {
-  pointer-events: auto;
-}
+  .pagefind-panel[open]:where(:not([data-closing])) {
+    opacity: 1;
+    transform: none;
+  }
 
-.search-overlay {
-  position: absolute;
-  inset: 0;
-  border: 0;
-  padding: 0;
-  background: color-mix(in oklab, var(--grey-9) 34%, transparent);
-  opacity: 0;
-  cursor: default;
-  transition: opacity var(--dur-2) var(--ease-out);
-}
+  .pagefind-panel::backdrop {
+    background: var(--search-overlay-bg);
+    opacity: 0;
+    transition: opacity var(--dur-2) var(--ease-out);
+  }
 
-.search-shell-visible .search-overlay {
-  opacity: 1;
-}
+  .pagefind-panel[open]:where(:not([data-closing]))::backdrop {
+    opacity: 1;
+  }
 
-.pagefind-panel {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  width: min(100%, 46rem);
-  max-height: min(82vh, 54rem);
-  overflow: hidden;
-  background: var(--surface-raised);
-  border: 1px solid var(--border-color-muted);
-  border-radius: var(--radius-lg);
-  box-shadow:
-    0 32px 80px -44px rgb(28 24 20 / 42%),
-    0 6px 20px -12px rgb(28 24 20 / 16%);
-  opacity: 0;
-  transform: translateY(0.6rem);
-  transition:
-    opacity var(--dur-2) var(--ease-out),
-    transform var(--dur-2) var(--ease-out);
-}
+  @supports (overlay: auto) {
+    .pagefind-panel {
+      transition: opacity var(--dur-2) var(--ease-out), transform var(--dur-3) var(--ease-out),
+        display var(--dur-3), overlay var(--dur-3);
+      transition-behavior: allow-discrete;
+    }
 
-.search-shell-visible .pagefind-panel {
-  opacity: 1;
-  transform: none;
-}
+    .pagefind-panel::backdrop {
+      transition: opacity var(--dur-2) var(--ease-out), display var(--dur-3), overlay var(--dur-3);
+      transition-behavior: allow-discrete;
+    }
+
+    .pagefind-panel:not([open]),
+    .pagefind-panel:not([open])::backdrop {
+      pointer-events: none;
+    }
+  }
+
+  @starting-style {
+    .pagefind-panel[open]:where(:not([data-closing])) {
+      opacity: 0;
+      transform: translateY(-0.5rem) scale(0.985);
+    }
+
+    .pagefind-panel[open]:where(:not([data-closing]))::backdrop {
+      opacity: 0;
+    }
+  }
 
 .search-panel__bar {
   display: flex;
@@ -418,8 +296,6 @@
   gap: 0.5rem;
   color: var(--text-color-muted);
   font-size: var(--text-2xs);
-  letter-spacing: var(--tracking-wider);
-  text-transform: uppercase;
 }
 
 .search-panel__icon {
@@ -431,8 +307,8 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2rem;
-  height: 2rem;
+  width: 2.75rem;
+  height: 2.75rem;
   padding: 0;
   border: 0;
   border-radius: var(--radius-full);
@@ -440,14 +316,16 @@
   color: var(--text-color-muted);
   font-size: 1.05rem;
   cursor: pointer;
-  transition:
-    background-color var(--dur-1) var(--ease-out),
-    color var(--dur-1) var(--ease-out);
+  transition: background-color var(--dur-2) var(--ease-out), scale var(--dur-1) var(--ease-press);
 }
 
-.search-panel__close:hover {
+.search-panel__close:is(:hover, :active) {
   background: var(--surface-subtle);
   color: var(--text-color);
+}
+
+.search-panel__close:active {
+  scale: 0.92;
 }
 
 .search-panel__close:focus-visible {
@@ -463,6 +341,7 @@
   overscroll-behavior: contain;
 }
 
+.search-panel__loading,
 .dev-tip {
   padding: 0.85rem 1rem;
   border: 1px dashed var(--border-color-muted);
@@ -514,7 +393,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
-  max-height: min(48vh, 32rem);
+  max-height: min(48dvh, 32rem);
   overflow-y: auto;
   padding-right: 0.15rem;
   overscroll-behavior: contain;
@@ -549,14 +428,6 @@
 }
 
 @media (max-width: 1023px) {
-  .search-shell {
-    padding: 0.85rem 0.75rem 1rem;
-  }
-
-  .pagefind-panel {
-    max-height: min(88vh, 60rem);
-  }
-
   .search-panel__body {
     padding: 0.85rem 0.95rem 1rem;
   }
@@ -564,7 +435,6 @@
 
 @media (max-width: 768px) {
   .pagefind-panel {
-    max-height: calc(100dvh - 2rem);
     border-radius: var(--radius-md);
   }
 
@@ -573,7 +443,7 @@
   }
 
   .pagefind-component-results {
-    max-height: min(56vh, 30rem);
+    max-height: min(56dvh, 30rem);
   }
 }
 </style>

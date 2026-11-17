@@ -11,7 +11,6 @@ import Footer from "@/components/footer/Footer.astro";
 import Icons from "@/components/Icons.svelte";
 import ImageZoom from "@/components/ImageZoom.svelte";
 import NavBar from "@/components/navbar/NavBar.svelte";
-import SearchPage from "@/components/search/SearchPage.svelte";
 import SEO from "@/components/SEO.astro";
 import PageHeader from "@/components/shell/PageHeader.astro";
 import type { RelatedPost, TocItem, QuickNavigation } from "@/components/sidebar/SidebarTypes";
@@ -23,6 +22,7 @@ import "@/styles/view-transition.css";
 import "@/styles/palette.css";
 import "@/styles/tokens.css";
 import "@/styles/style.css";
+import "@/styles/navigation.css";
 import "@/styles/mdx-components.css";
 import "@/styles/icons.css";
 
@@ -81,24 +81,6 @@ const sidebarConfig = themeConfig.sidebar || {};
 const footerConfig = themeConfig.footer || {};
 const visibilityTitleConfig = themeConfig.visibilityTitle || {};
 
-const sectionLabels: Record<string, string> = {
-  "/about/": "About",
-  "/archives/": "Archive",
-  "/categories/": "Topics",
-  "/tags/": "Tags",
-  "/friends/": "Friends",
-  "/moments/": "Moments",
-  "/guestbook/": "Guestbook",
-  "/stars/": "Stars",
-  "/summer/": "Summer",
-  "/statistics/": "Statistics",
-  "/random/": "Random",
-  "/search/": "Search",
-};
-
-const pathname = Astro.url.pathname;
-const inferredEyebrow = sectionLabels[pathname] ?? (pathname.startsWith("/archives/") ? "Archive" : "");
-const pageEyebrow = eyebrow ?? inferredEyebrow;
 const showPageHeader = !indexPage && !hidePageHeader && Boolean(pageTitle);
 
 // 文档标题：首页用站点名 + 副标题，内页追加站点名
@@ -116,38 +98,9 @@ const documentTitle = pageTitle
 <html lang={currentLocale}>
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
-
-    <!-- 首屏关键样式：在外部样式表到达前固定导航高度，避免导航先展开后收起造成 CLS -->
-    <style is:inline>
-      .site-header {
-        position: sticky;
-        top: 0;
-        display: block;
-        height: 4rem;
-        z-index: 40;
-      }
-      .site-header__inner {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        height: 4rem;
-        padding-inline: 1.25rem;
-        gap: 1rem;
-      }
-      .site-nav {
-        display: flex;
-        align-items: center;
-        gap: 1.25rem;
-      }
-      @media (max-width: 900px) {
-        .site-nav {
-          display: none;
-        }
-      }
-    </style>
 
     <!-- 首屏渲染前同步主题，避免暗色用户闪白（FOUC） -->
     <script is:inline>
@@ -189,13 +142,7 @@ const documentTitle = pageTitle
   <body data-visibility-title-config={JSON.stringify(visibilityTitleConfig)}>
     <a class="skip-link" href="#main">跳转到主要内容</a>
 
-    <NavBar
-      client:load
-      name={siteName}
-      navLinks={navLinks}
-      clickToggleCallback={() => void 0}
-    />
-    <SearchPage client:idle selector="#search" />
+    <NavBar client:load name={siteName} navLinks={navLinks} path={Astro.url.pathname} />
     <Icons />
 
     <div id="container">
@@ -204,7 +151,7 @@ const documentTitle = pageTitle
           <div class="wrap">
             <PageHeader
               title={pageTitle}
-              eyebrow={pageEyebrow}
+              eyebrow={eyebrow}
               description={description}
             />
           </div>

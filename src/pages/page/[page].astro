@@ -11,19 +11,14 @@ import type { GetStaticPaths } from "astro";
 
 export const getStaticPaths = (async ({ paginate }) => {
   const allPosts = await getCollection("posts");
-  const publishedPosts = allPosts.filter((post) => !post.data.draft);
-
-  const regularPosts = publishedPosts
-    .filter((post) => !post.data.sticky)
-    .toSorted(
-      (a, b) =>
-        new Date(b.data.date).getTime() - new Date(a.data.date).getTime(),
-    );
+  const publishedPosts = allPosts
+    .filter((post) => !post.data.draft)
+    .toSorted((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
   const pageSize = themeConfig.home?.pageSize ?? 9;
 
   // 第 1 页由 src/pages/index.astro 输出，这里只生成 /page/2..N
-  const pages = paginate(regularPosts, { pageSize });
+  const pages = paginate(publishedPosts, { pageSize });
   return pages.filter((p) => p.params.page !== "1");
 }) satisfies GetStaticPaths;
 
@@ -47,8 +42,6 @@ const pageTitle = `${brandConfig.title || "Echo"} — ${brandConfig.subtitle || 
   <div class="home wrap">
     <HomeContent
       posts={page.data}
-      stickyPosts={[]}
-      categories={[]}
       pageInfo={{ currentPage: page.currentPage, lastPage: page.lastPage }}
       isFirstPage={false}
     />

@@ -80,11 +80,12 @@
   --shadow-lg: 0 24px 56px -24px oklch(0.3 0.01 92 / 0.34);
 
   /* ---------- Motion ---------- */
+  --ease-press: cubic-bezier(0.2, 0.8, 0.3, 1.15);
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
   --dur-1: 120ms;
   --dur-2: 200ms;
-  --dur-3: 320ms;
+  --dur-3: 260ms;
   --dur-4: 480ms;
 
   /* ---------- 版心 ---------- */

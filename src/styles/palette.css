@@ -3,7 +3,7 @@
  * ------------------------------------------------------------
  * 设计基调：编辑式极简（Editorial Minimalism）
  * - 中性色为骨架：温暖的纸感底色 + 墨色文字 + 发丝级分隔线
- * - 单一强调色：低饱和梅子红（承接 Echo / 樱花的个人气质），只用于链接、
+ * - 单一强调色：低饱和松绿色，只用于链接、
  *   高亮与少量识别性节点，避免大面积彩色。
  * - 灰度色阶（grey-0 → grey-9）在明暗模式下方向相反：
  *   浅色下 grey-0 最亮、grey-9 最暗；深色下 grey-0 最暗、grey-9 最亮。
@@ -61,23 +61,24 @@
   /* ---- 语义色 ---- */
   --surface-page: var(--grey-1);
   --surface-raised: var(--grey-0);
+  --surface-tinted: oklch(0.952 0.023 168);
   --surface-subtle: var(--grey-2);
   --surface-inverse: var(--grey-8);
 
   --body-bg-shadow: var(--grey-2);
   --box-bg-shadow: var(--grey-9-a1);
   --text-color: var(--grey-7);
-  --text-color-muted: var(--grey-5);
-  --text-color-subtle: var(--grey-4);
+  --text-color-muted: var(--grey-6);
+  --text-color-subtle: var(--grey-6);
   --header-text-color: var(--grey-0);
   --border-color: var(--grey-3);
   --border-color-muted: var(--grey-4);
   --line-color: var(--grey-3);
   --hairline: 1px solid var(--border-color);
 
-  --primary-color: var(--color-pink);
-  --link-color: var(--color-pink);
-  --link-hover-color: oklch(0.42 0.1 358);
+  --primary-color: oklch(0.44 0.078 165);
+  --link-color: var(--primary-color);
+  --link-hover-color: oklch(0.34 0.069 165);
 
   --surface-code: oklch(0.975 0.006 95);
   --surface-code-header: oklch(0.958 0.008 92);
@@ -270,6 +271,7 @@
 
   --surface-page: var(--grey-1);
   --surface-raised: var(--grey-2);
+  --surface-tinted: oklch(0.282 0.027 169);
   --surface-subtle: var(--grey-2);
   --surface-inverse: var(--grey-8);
 
@@ -277,15 +279,15 @@
   --box-bg-shadow: oklch(0 0 0);
   --text-color: var(--grey-7);
   --text-color-muted: var(--grey-5);
-  --text-color-subtle: var(--grey-4);
+  --text-color-subtle: var(--grey-5);
   --header-text-color: var(--grey-9);
   --border-color: oklch(0.38 0.01 95);
   --border-color-muted: oklch(0.44 0.012 95);
   --line-color: oklch(0.38 0.01 95);
 
-  --primary-color: var(--color-pink);
-  --link-color: var(--color-pink);
-  --link-hover-color: oklch(0.88 0.05 358);
+  --primary-color: oklch(0.81 0.082 165);
+  --link-color: var(--primary-color);
+  --link-hover-color: oklch(0.89 0.064 165);
 
   --surface-code: oklch(0.25 0.007 95);
   --surface-code-header: oklch(0.22 0.006 95);

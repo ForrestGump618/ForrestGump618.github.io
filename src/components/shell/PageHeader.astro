@@ -38,8 +38,8 @@ const { title, eyebrow, description, meta = [], aside } = Astro.props;
 
 <style>
   .page-header {
-    padding: clamp(2.5rem, 7vw, 4.75rem) 0 clamp(1.5rem, 3.5vw, 2.5rem);
-    border-bottom: 1px solid var(--hairline, rgb(0 0 0 / 8%));
+    padding: var(--rhythm-block) 0 var(--space-md);
+    border-bottom: var(--hairline);
   }
 
   .page-header__row {
@@ -58,9 +58,7 @@ const { title, eyebrow, description, meta = [], aside } = Astro.props;
     font-family: var(--font-sans, system-ui, sans-serif);
     font-size: 0.7rem;
     font-weight: 600;
-    letter-spacing: 0.2em;
-    text-transform: uppercase;
-    color: var(--primary-color, #7c3b52);
+    color: var(--primary-color);
   }
 
   .page-header__title {

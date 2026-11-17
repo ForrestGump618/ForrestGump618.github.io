@@ -7,18 +7,18 @@ import type { ImageMetadata } from "astro";
  * 键统一为「以仓库 src/ 为根的路径」，例如 "posts/口腔科学总结/牙体解剖.png"。
  */
 const assetModules = import.meta.glob<ImageMetadata>(
-  "../assets/images/*.{avif,webp,png,jpg,jpeg}",
+  "../../assets/images/*.{avif,webp,png,jpg,jpeg}",
   { eager: true, import: "default" },
 );
 
 const postModules = import.meta.glob<ImageMetadata>(
-  "../posts/**/*.{avif,webp,png,jpg,jpeg,gif,svg}",
+  "../../posts/**/*.{avif,webp,png,jpg,jpeg,gif,svg}",
   { eager: true, import: "default" },
 );
 
 function toRegistryKey(modulePath: string): string {
   return modulePath
-    .replace(/^\.\.\//, "")
+    .replace(/^(?:\.\.\/)+/, "")
     .replace(/^\/?src\//, "")
     .replace(/^\.\//, "");
 }

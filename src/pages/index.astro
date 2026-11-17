@@ -12,17 +12,17 @@ import themeConfig from "@/theme.config";
 import { toCategoryHref, toPostHref } from "@/toolkit/posts/url";
 
 const allPosts = await getCollection("posts");
-const publishedPosts = allPosts.filter((post) => !post.data.draft);
+const publishedPosts = allPosts
+  .filter((post) => !post.data.draft)
+  .toSorted((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
-const byDateDesc = (a: (typeof publishedPosts)[number], b: (typeof publishedPosts)[number]) =>
-  new Date(b.data.date).getTime() - new Date(a.data.date).getTime();
-
-const stickyPosts = publishedPosts.filter((post) => post.data.sticky === true).toSorted(byDateDesc);
-const regularPosts = publishedPosts.filter((post) => !post.data.sticky).toSorted(byDateDesc);
+const featuredPost =
+  publishedPosts.find((post) => post.data.sticky) ??
+  publishedPosts.find((post) => post.id === themeConfig.home?.featuredPostId);
 
 const pageSize = themeConfig.home?.pageSize ?? 9;
-const lastPage = Math.max(1, Math.ceil(regularPosts.length / pageSize));
-const pagePosts = regularPosts.slice(0, pageSize);
+const lastPage = Math.max(1, Math.ceil(publishedPosts.length / pageSize));
+const pagePosts = publishedPosts.slice(0, pageSize);
 
 // 专题：按真实分类聚合，附带最近三篇（分类内按日期倒序）
 const categoryCounts = new Map<string, number>();
@@ -45,15 +45,17 @@ const categories = [...categoryCounts.entries()]
   }));
 
 const tagCount = new Set(publishedPosts.flatMap((post) => post.data.tags ?? [])).size;
-const latestPost = [...stickyPosts, ...regularPosts][0];
+const lastModified = (post: (typeof publishedPosts)[number]) => post.data.updated ?? post.data.date;
+const latestPost = publishedPosts.toSorted((a, b) => lastModified(b).getTime() - lastModified(a).getTime())[0];
 
 const brandConfig = themeConfig.brand ?? {};
 const sidebarConfig = themeConfig.sidebar ?? {};
 const footerConfig = themeConfig.footer ?? {};
 
 const social = Object.entries(sidebarConfig.social ?? {}).map(([key, value]) => ({
-  label: key === "github" ? "GitHub" : key === "email" ? "Email" : key,
+  label: key === "github" ? "GitHub" : key === "email" ? "邮箱" : key,
   href: value.url,
+  icon: value.icon,
 }));
 
 const pageTitle = `${brandConfig.title || "Echo"} — ${brandConfig.subtitle || "Learn-Record"}`;
@@ -66,43 +68,41 @@ const pageTitle = `${brandConfig.title || "Echo"} — ${brandConfig.subtitle || 
   description={sidebarConfig.description}
 >
   <div class="home wrap">
-    <HomeHero
-      title={brandConfig.title || "Echo"}
-      subtitle={brandConfig.subtitle || "Learn-Record"}
-      author={sidebarConfig.author || ""}
-      description={sidebarConfig.description || ""}
-      avatar={avatar}
-      stats={{
-        posts: publishedPosts.length,
-        categories: categoryCounts.size,
-        tags: tagCount,
-        since: footerConfig.since ?? 2023,
-      }}
-      latest={
-        latestPost
-          ? {
-              title: latestPost.data.title,
-              href: toPostHref(latestPost.id),
-              date: new Date(latestPost.data.date),
-            }
-          : undefined
-      }
-      social={social}
-    />
-
     <HomeContent
       posts={pagePosts}
       pool={publishedPosts}
-      stickyPosts={stickyPosts}
+      featuredPost={featuredPost}
       categories={categories}
       pageInfo={{ currentPage: 1, lastPage }}
-      isFirstPage={true}
-    />
+    >
+      <HomeHero slot="profile"
+        author={sidebarConfig.author || ""}
+        description={sidebarConfig.description || ""}
+        avatar={avatar}
+        stats={{
+          posts: publishedPosts.length,
+          categories: categoryCounts.size,
+          tags: tagCount,
+          since: footerConfig.since ?? 2023,
+        }}
+        latest={
+          latestPost
+            ? {
+                title: latestPost.data.title,
+                href: toPostHref(latestPost.id),
+                date: lastModified(latestPost),
+              }
+            : undefined
+        }
+        social={social}
+      />
+    </HomeContent>
   </div>
 </Layout>
 
 <style>
   .home {
-    padding-top: 0.5rem;
+    container-type: inline-size;
+    padding-top: clamp(1.25rem, 4vw, 3.25rem);
   }
 </style>

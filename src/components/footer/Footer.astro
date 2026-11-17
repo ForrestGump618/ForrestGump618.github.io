@@ -78,7 +78,7 @@ const showIcp = Boolean(icp?.enable && icp.icpnumber);
     <div class="site-footer__brand">
       <p class="site-footer__name">{siteName}</p>
       <p class="site-footer__note">
-        {author ? `${author} · ` : ""}Learn, record, and keep asking better questions.
+        {author}
       </p>
     </div>
 
@@ -122,15 +122,15 @@ const showIcp = Boolean(icp?.enable && icp.icpnumber);
 <style>
   .site-footer {
     margin-top: var(--rhythm-section, 5rem);
-    border-top: 1px solid var(--hairline, rgb(0 0 0 / 8%));
-    background: var(--surface-subtle, #f4f2ee);
+    border-top: var(--hairline);
+    background: var(--surface-tinted);
   }
 
   .site-footer__inner {
     display: grid;
     grid-template-columns: 1fr;
     gap: 1.5rem;
-    max-width: var(--container-wide, 84rem);
+    max-width: calc(var(--container) + 2 * var(--gutter));
     margin: 0 auto;
     padding: clamp(2rem, 5vw, 3.25rem) var(--gutter, clamp(1.25rem, 4vw, 2.75rem));
   }

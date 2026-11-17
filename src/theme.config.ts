@@ -8,6 +8,7 @@ export default defineConfig({
   // 首页：每页文章数按编辑式版式确定（首屏 9 篇）
   home: {
     pageSize: 9,
+    featuredPostId: "eve",
   },
 
   brand: {
@@ -18,7 +19,7 @@ export default defineConfig({
 
   sidebar: {
     author: "Forrest Gump",
-    description: "五颜六色的生活，不能乱七八糟的过",
+    description: "我在这里整理生物信息学、医学和统计学的学习笔记，也记录自己做的开源工具。",
     social: {
       github: {
         url: "https://github.com/forrestgump618",

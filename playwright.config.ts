@@ -17,8 +17,6 @@ export default defineConfig({
   outputDir: "test-results",
   use: {
     baseURL: BASE_URL,
-    // 禁用 view transition，避免 cross-document 导航后 #loading 遮罩永不隐藏导致点击被遮挡
-    contextOptions: { reducedMotion: "reduce" },
     trace: "on-first-retry",
     screenshot: "only-on-failure",
     video: "retain-on-failure",
@@ -32,9 +30,38 @@ export default defineConfig({
   projects: [
     {
       name: "chromium",
+      use: { ...devices["Desktop Chrome"], contextOptions: { reducedMotion: "no-preference" } },
+    },
+    {
+      name: "chromium-reduced",
+      use: { ...devices["Desktop Chrome"], contextOptions: { reducedMotion: "reduce" } },
+    },
+    {
+      name: "chromium-mobile",
+      grep: /@responsive/,
       use: {
-        ...devices["Desktop Chrome"],
+        ...devices["Pixel 5"],
+        viewport: { width: 375, height: 812 },
+        contextOptions: { reducedMotion: "no-preference" },
       },
     },
+    {
+      name: "chromium-mobile-reduced",
+      grep: /@responsive/,
+      use: {
+        ...devices["Pixel 5"],
+        viewport: { width: 375, height: 812 },
+        contextOptions: { reducedMotion: "reduce" },
+      },
+    },
+    ...(process.env.PLAYWRIGHT_WEBKIT === "1"
+      ? [
+          {
+            name: "webkit-mobile",
+            grep: /@responsive/,
+            use: { ...devices["iPhone 13"] },
+          },
+        ]
+      : []),
   ],
 });

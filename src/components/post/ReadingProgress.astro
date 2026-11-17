@@ -57,7 +57,7 @@
     };
 
     backToTop.addEventListener("click", () => {
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      window.scrollTo({ top: 0, behavior: "auto" });
     });
 
     toggleBackToTop();
@@ -85,16 +85,16 @@
 
   .back-to-top {
     position: fixed;
-    right: 1.25rem;
-    bottom: 1.5rem;
+    right: max(var(--space-md), env(safe-area-inset-right));
+    bottom: calc(var(--space-md) + env(safe-area-inset-bottom));
     z-index: var(--z-dropdown, 50);
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 2.4rem;
-    height: 2.4rem;
+    width: 2.75rem;
+    height: 2.75rem;
     padding: 0;
-    border: 1px solid var(--line-color, rgb(0 0 0 / 12%));
+    border: var(--hairline);
     border-radius: 50%;
     background: var(--surface-raised, #fff);
     color: var(--text-color-muted, #6b675f);
@@ -103,9 +103,10 @@
     visibility: hidden;
     transform: translateY(0.4rem);
     transition:
-      opacity 0.24s ease,
-      transform 0.24s ease,
-      visibility 0.24s;
+      opacity var(--dur-2) var(--ease-out),
+      transform var(--dur-2) var(--ease-out),
+      scale var(--dur-1) var(--ease-press),
+      visibility var(--dur-2);
     box-shadow: var(--shadow-xs, 0 1px 2px rgb(0 0 0 / 6%));
   }
 
@@ -118,6 +119,10 @@
   .back-to-top:hover {
     color: var(--primary-color, #7c3b52);
     border-color: color-mix(in oklab, var(--primary-color, #7c3b52) 40%, transparent);
+  }
+
+  .back-to-top:active {
+    scale: 0.93;
   }
 
   @media (min-width: 1100px) {

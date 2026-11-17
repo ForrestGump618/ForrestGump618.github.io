@@ -1,7 +1,7 @@
 <svelte:options customElement="image-zoom" />
 
 <script lang="ts">
-  import { onDestroy, onMount } from "svelte";
+  import { onDestroy, onMount, tick } from "svelte";
   import { currentLocale, getT } from "@/i18n";
   import { lockBodyScroll } from "@/toolkit/ui/scrollLock";
 
@@ -15,10 +15,8 @@
 
   let cleanupImageListeners: (() => void) | null = null;
   let cleanupSlotListener: (() => void) | null = null;
-  let closeTimer: ReturnType<typeof setTimeout> | null = null;
   let isClosing = $state(false);
 
-  const CLOSE_ANIMATION_MS = 220;
   type PreviewImage = { src: string; alt: string };
   type PreviewImageCandidate = PreviewImage & { element: HTMLImageElement };
   const t = getT(currentLocale);
@@ -38,38 +36,19 @@
     previewImages = [];
     previewIndex = 0;
 
-    if (closeTimer) {
-      clearTimeout(closeTimer);
-      closeTimer = null;
-    }
-
     restoreBodyScroll();
   };
 
-  const requestClosePreview = () => {
+  const requestClosePreview = async () => {
     if (!isOpen || isClosing) {
       return;
     }
 
-    const closeAnimationMs =
-      typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches
-        ? 0
-        : CLOSE_ANIMATION_MS;
-
-    if (closeAnimationMs === 0) {
-      finalizeClosePreview();
-      return;
-    }
-
     isClosing = true;
-
-    if (closeTimer) {
-      clearTimeout(closeTimer);
-    }
-
-    closeTimer = setTimeout(() => {
-      finalizeClosePreview();
-    }, closeAnimationMs);
+    await tick();
+    const animations = dialogElement?.getAnimations() ?? [];
+    await Promise.allSettled(animations.map((animation) => animation.finished));
+    finalizeClosePreview();
   };
 
   const syncPreviewWithIndex = () => {
@@ -104,11 +83,6 @@
     const galleryImages = resolvePreviewImages(image);
     if (galleryImages.length === 0) {
       return;
-    }
-
-    if (closeTimer) {
-      clearTimeout(closeTimer);
-      closeTimer = null;
     }
 
     isClosing = false;
@@ -282,11 +256,6 @@
     cleanupSlotListener?.();
     cleanupImageListeners?.();
 
-    if (closeTimer) {
-      clearTimeout(closeTimer);
-      closeTimer = null;
-    }
-
     if (typeof window !== "undefined") {
       window.removeEventListener("keydown", handleWindowKeydown);
     }
@@ -305,7 +274,7 @@
   aria-label={previewAlt || t("imageZoom.dialog")}
   onclick={handleOverlayClick}
   onclose={() => {
-    if (isOpen || isClosing) {
+    if (!dialogElement?.open && (isOpen || isClosing)) {
       finalizeClosePreview();
     }
   }}
@@ -401,7 +370,7 @@
     box-sizing: border-box;
     background: var(--codeblock-overlay-bg, rgba(8, 10, 16, 0.72));
     backdrop-filter: blur(0.35rem);
-    animation: image-zoom-fade-in 220ms ease forwards;
+    animation: image-zoom-fade-in var(--dur-3) var(--ease-out) both;
   }
 
   .image-zoom-overlay.hidden {
@@ -414,7 +383,7 @@
   }
 
   .image-zoom-overlay.closing {
-    animation: image-zoom-fade-out 220ms ease forwards;
+    animation: image-zoom-fade-out var(--dur-3) var(--ease-out) both;
   }
 
   .image-zoom-content {
@@ -425,11 +394,11 @@
     border-radius: 0.5rem;
     box-shadow: 0 0.75rem 2rem var(--grey-9-a15);
     cursor: zoom-out;
-    animation: image-zoom-scale-in 220ms cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+    animation: image-zoom-scale-in var(--dur-3) var(--ease-out) both;
   }
 
   .image-zoom-overlay.closing .image-zoom-content {
-    animation: image-zoom-scale-out 220ms cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    animation: image-zoom-scale-out var(--dur-3) var(--ease-out) both;
   }
 
   .image-zoom-close {
@@ -448,11 +417,11 @@
     transition:
       background-color 0.2s ease,
       transform 0.2s ease;
-    animation: image-zoom-ui-in 220ms ease forwards;
+    animation: image-zoom-ui-in var(--dur-3) var(--ease-out) both;
   }
 
   .image-zoom-overlay.closing .image-zoom-close {
-    animation: image-zoom-ui-out 220ms ease forwards;
+    animation: image-zoom-ui-out var(--dur-3) var(--ease-out) both;
   }
 
   .image-zoom-close:hover {
@@ -476,7 +445,7 @@
     transition:
       background-color 0.2s ease,
       transform 0.2s ease;
-    animation: image-zoom-ui-in 220ms ease forwards;
+    animation: image-zoom-ui-in var(--dur-3) var(--ease-out) both;
   }
 
   .image-zoom-nav:hover {
@@ -499,15 +468,15 @@
     text-align: center;
     max-width: min(92vw, 1100px);
     line-height: 1.5;
-    animation: image-zoom-ui-in 220ms ease forwards;
+    animation: image-zoom-ui-in var(--dur-3) var(--ease-out) both;
   }
 
   .image-zoom-overlay.closing .image-zoom-caption {
-    animation: image-zoom-ui-out 220ms ease forwards;
+    animation: image-zoom-ui-out var(--dur-3) var(--ease-out) both;
   }
 
   .image-zoom-overlay.closing .image-zoom-nav {
-    animation: image-zoom-ui-out 220ms ease forwards;
+    animation: image-zoom-ui-out var(--dur-3) var(--ease-out) both;
   }
 
   @keyframes image-zoom-fade-in {

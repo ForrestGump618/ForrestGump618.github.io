@@ -1,3 +1,4 @@
+import { fileURLToPath } from "node:url";
 import svelte from "@astrojs/svelte";
 import { defineConfig } from "astro/config";
 import { satteri } from "@astrojs/markdown-satteri";
@@ -52,7 +53,6 @@ const mdxAutoImports = [
   "@/components/mdx/Tab.astro",
 ];
 
-import PlayformInline from "@playform/inline";
 import { installProcessWarningFilter } from "./src/toolkit/suppressWatcherWarning";
 import themeConfig from "./src/theme.config.ts";
 
@@ -85,15 +85,12 @@ export default defineConfig({
     sitemap(),
     hyacinePlugin(),
     mdx(),
-    PlayformInline({
-      Logger: 0,
-    }),
   ],
 
   vite: {
     resolve: {
       alias: {
-        "@": new URL("./src", import.meta.url).toString(),
+        "@": fileURLToPath(new URL("./src", import.meta.url)),
       },
     },
     plugins: [esToolkitPlugin()],

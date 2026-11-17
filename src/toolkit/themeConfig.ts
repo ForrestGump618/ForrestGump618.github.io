@@ -329,6 +329,8 @@ interface HomeConfig {
    * - 置顶文章始终显示在首页第一页顶部，不占用分页配额
    */
   pageSize?: number;
+  /** 首页编辑精选文章的内容 ID */
+  featuredPostId?: string;
 
   /**
    * 控制首页标题显示行为

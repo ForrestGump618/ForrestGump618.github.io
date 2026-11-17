@@ -12,7 +12,6 @@ interface TagEntry {
   name: string;
   count: number;
   latestTitle: string;
-  latestHref: string;
 }
 
 const tagMap = new Map<string, { count: number; latest?: (typeof allPosts)[number] }>();
@@ -36,12 +35,10 @@ const tags: TagEntry[] = Array.from(tagMap.entries())
     name,
     count: entry.count,
     latestTitle: entry.latest?.data.title ?? "",
-    latestHref: entry.latest ? `/posts/${entry.latest.id.split("/").map(encodeURIComponent).join("/")}/` : "/",
   }))
   .toSorted((a, b) => b.count - a.count || a.name.localeCompare(b.name, "zh"));
 
 const totalTags = tags.length;
-const maxCount = Math.max(1, ...tags.map((tag) => tag.count));
 ---
 
 <Layout
@@ -60,9 +57,6 @@ const maxCount = Math.max(1, ...tags.map((tag) => tag.count));
             <a class="tag-list__link" href={toTagHref(tag.name)}>
               <span class="tag-list__name">{tag.name}</span>
               <span class="tag-list__count">{tag.count}</span>
-              <span class="tag-list__bar" aria-hidden="true">
-                <span style={`--tag-weight: ${(tag.count / maxCount) * 100}%`} />
-              </span>
               {tag.latestTitle && (
                 <span class="tag-list__latest">{tag.latestTitle}</span>
               )}
@@ -108,19 +102,19 @@ const maxCount = Math.max(1, ...tags.map((tag) => tag.count));
     gap: 0.1rem 0.75rem;
     padding: 1rem 1.15rem 1.1rem;
     overflow: hidden;
-    border: 1px solid var(--hairline, rgb(0 0 0 / 8%));
+    border: var(--hairline);
     border-radius: var(--radius-sm, 4px);
     background: var(--surface-raised, #fff);
     text-decoration: none;
     color: inherit;
     transition:
-      border-color 0.18s ease,
-      background-color 0.18s ease;
+      border-color var(--dur-2) var(--ease-out),
+      background-color var(--dur-2) var(--ease-out);
   }
 
-  .tag-list__link:hover {
+  .tag-list__link:is(:hover, :focus-visible, :active) {
     border-color: color-mix(in oklab, var(--primary-color, #7c3b52) 35%, transparent);
-    background: var(--surface-subtle, #faf8f4);
+    background: var(--surface-tinted);
   }
 
   .tag-list__name {
@@ -137,21 +131,6 @@ const maxCount = Math.max(1, ...tags.map((tag) => tag.count));
     font-size: 0.72rem;
     font-variant-numeric: tabular-nums;
     color: var(--primary-color, #7c3b52);
-  }
-
-  .tag-list__bar {
-    grid-column: 1 / -1;
-    display: block;
-    height: 2px;
-    margin-top: 0.35rem;
-    background: var(--hairline, rgb(0 0 0 / 8%));
-  }
-
-  .tag-list__bar > span {
-    display: block;
-    width: var(--tag-weight, 0%);
-    height: 100%;
-    background: color-mix(in oklab, var(--primary-color, #7c3b52) 55%, transparent);
   }
 
   .tag-list__latest {

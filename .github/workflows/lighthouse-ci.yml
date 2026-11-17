@@ -13,6 +13,10 @@ permissions:
 
 jobs:
   lhci:
+    strategy:
+      fail-fast: false
+      matrix:
+        profile: [mobile, desktop]
     runs-on: ubuntu-latest
     timeout-minutes: 20
 
@@ -37,9 +41,12 @@ jobs:
         run: bun install --frozen-lockfile
 
       - name: Build site
-        run: bun run build:site
+        run: bun run build
 
       - name: Run Lighthouse CI
-        run: bunx --bun lhci autorun --config=.lighthouserc.json
+        run: |
+          flags=()
+          if [[ "${{ matrix.profile }}" == "desktop" ]]; then flags+=(--collect.settings.preset=desktop); fi
+          bunx --bun lhci autorun --config=.lighthouserc.json "${flags[@]}"
         env:
           LHCI_GITHUB_APP_TOKEN: ${{ secrets.LHCI_GITHUB_APP_TOKEN }}
