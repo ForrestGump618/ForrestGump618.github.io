@@ -3,6 +3,7 @@
   import SearchPage from "@/components/search/SearchPage.svelte";
   import { initTheme, toggleThemeWithTransition, type ThemeMode } from "@/toolkit/ui/theme";
   import { computeScrollProgress } from "@/toolkit/ui/scrollProgress";
+  import { createScrollHeightCache } from "@/toolkit/ui/scrollHeightCache";
 
   interface NavDropboxItem {
     href: string;
@@ -115,6 +116,7 @@
       shortcutHint = "⌘K";
     }
     let frame = 0;
+    const heightCache = createScrollHeightCache(document, window);
     function onScroll() {
       if (frame) return;
       frame = requestAnimationFrame(() => {
@@ -122,7 +124,7 @@
         if (progressEl) {
           const progress = computeScrollProgress(
             window.scrollY,
-            document.documentElement.scrollHeight,
+            heightCache.get(),
             window.innerHeight,
           );
           progressEl.style.transform = `scaleX(${progress})`;
@@ -143,6 +145,7 @@
       cancelAnimationFrame(frame);
       window.removeEventListener("scroll", onScroll);
       desktop.removeEventListener("change", onResize);
+      heightCache.destroy();
     };
   });
 </script>

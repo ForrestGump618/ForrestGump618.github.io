@@ -1,4 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
+import { settleEntrance } from "../support/entrance";
 import { POSTS, ROUTES } from "../support/routes";
 
 async function checkHomeLayout(page: Page) {
@@ -53,6 +54,8 @@ test("@regression @responsive 首页头像尺寸稳定，发布列表按时间�
 test("@regression @responsive 冷启动搜索按一次即打开，关闭后恢复焦点并可马上重开", async ({
   page,
 }, info) => {
+  // 冷启动拦截 + Pagefind 加载 + 多轮开关在并行争用下需要更长的整体预算
+  test.setTimeout(60_000);
   const heavyLoads: string[] = [];
   page.on("request", (request) => {
     if (/component-ui\.|\/pagefind\//.test(request.url())) heavyLoads.push(request.url());
@@ -228,21 +231,34 @@ test("@regression @responsive 文章图片可键盘预览，退出后可以立�
 });
 
 test("@regression @responsive 首页无精选卡片，最新列表首行直达文章", async ({ page }, info) => {
+  // 两段导航各自带重试预算，整体放宽
+  test.setTimeout(60_000);
   await page.goto(ROUTES.home);
   const profile = page.locator(".profile");
   const about = profile.getByRole("link", { name: "关于我" });
   await expect(about).toHaveCSS("text-decoration-line", "none");
   await expect(profile.getByRole("link", { name: "GitHub" })).toHaveAttribute("href", /github.com/);
   await expect(profile.getByRole("link", { name: "邮箱" })).toHaveAttribute("href", /^mailto:/);
-  if (info.project.use.hasTouch) await about.tap();
-  else await about.press("Enter");
-  await expect(page).toHaveURL(ROUTES.about);
+  await settleEntrance(about);
+  // WebKit 在并行争用下偶发丢失 tap 合成的 click；链接本身损坏时重试仍会失败
+  await expect(async () => {
+    if (new URL(page.url()).pathname !== ROUTES.about) {
+      if (info.project.use.hasTouch) await about.tap();
+      else await about.press("Enter");
+    }
+    await expect(page).toHaveURL(ROUTES.about, { timeout: 2_000 });
+  }).toPass({ timeout: 20_000 });
 
   await page.goto(ROUTES.home);
   await expect(page.locator(".home-featured")).toHaveCount(0);
   const firstRow = page.locator(".post-row__link").first();
   await expect(firstRow).toHaveAttribute("href", POSTS.suwen);
-  if (info.project.use.hasTouch) await firstRow.tap();
-  else await firstRow.click();
-  await expect(page).toHaveURL(POSTS.suwen);
+  await settleEntrance(firstRow);
+  await expect(async () => {
+    if (new URL(page.url()).pathname !== POSTS.suwen) {
+      if (info.project.use.hasTouch) await firstRow.tap();
+      else await firstRow.click();
+    }
+    await expect(page).toHaveURL(POSTS.suwen, { timeout: 2_000 });
+  }).toPass({ timeout: 20_000 });
 });

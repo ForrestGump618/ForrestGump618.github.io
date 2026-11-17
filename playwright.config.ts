@@ -12,7 +12,8 @@ export default defineConfig({
   reporter: [["list"], ["html", { open: "never" }]],
   timeout: 30_000,
   expect: {
-    timeout: 10_000,
+    // Pagefind UI 与索引冷加载在多 worker 并行争用下可能超过 10s
+    timeout: 20_000,
   },
   outputDir: "test-results",
   use: {

@@ -14,6 +14,7 @@ import CoverMedia from "@/components/media/CoverMedia.astro";
 import { avatar } from "@/components/Images.astro";
 import { currentLocale } from "@/i18n";
 import { getCollection, render } from "astro:content";
+import path from "node:path";
 import themeConfig from "@/theme.config";
 import type { TocItem } from "@/components/sidebar/SidebarTypes";
 import type { EncryptedData } from "@/toolkit/encryption/types";
@@ -24,6 +25,7 @@ import { getReadingStats, toReadableText } from "@/toolkit/posts/readingStats";
 import { toPostHref, toTagHref } from "@/toolkit/posts/url";
 import { hasNestedDuplicateName } from "@/toolkit/posts/postId";
 import { resolvePostCover } from "@/toolkit/covers";
+import { resolveImageSizes } from "@/toolkit/posts/resolveImageSizes";
 import { wrapRenderedCodeBlocks } from "@/toolkit/wrapRenderedCodeBlocks";
 import { wrapRenderedImages } from "@/toolkit/wrapRenderedImages";
 import { wrapCodeGroups } from "@/toolkit/wrapCodeGroups";
@@ -75,11 +77,18 @@ export async function getStaticPaths() {
 
       const { Content, headings } = await render(post);
 
+      // 构建期解析图片真实尺寸并注入 width/height，
+      // 避免懒加载图片落地时撑开布局造成整页重排与滚动卡顿
+      const rawHtml = await container.renderToString(Content);
+      const imageSizes = await resolveImageSizes(rawHtml, {
+        baseDir: post.filePath ? path.dirname(path.resolve(post.filePath)) : undefined,
+        publicDir: path.resolve("public"),
+      });
+
       const renderedHtml = wrapExternalLinks(
         wrapRenderedImages(
-          wrapRenderedTables(
-            wrapCodeGroups(wrapRenderedCodeBlocks(await container.renderToString(Content))),
-          ),
+          wrapRenderedTables(wrapCodeGroups(wrapRenderedCodeBlocks(rawHtml))),
+          imageSizes,
         ),
         { siteUrl: import.meta.env.SITE },
       );

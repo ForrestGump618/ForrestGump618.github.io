@@ -60,4 +60,23 @@ describe("wrapRenderedImages", () => {
     const out = wrapRenderedImages(html);
     expect(out).toContain("<figcaption>cap</figcaption>");
   });
+
+  it("传入尺寸表时注入 width/height 预留纵横比", () => {
+    const html = `<img src="/a.png" alt="alt"/>`;
+    const sizes = new Map([["/a.png", { width: 640, height: 480 }]]);
+    const out = wrapRenderedImages(html, sizes);
+    expect(out).toBe(
+      `<image-zoom><img src="/a.png" alt="alt" width="640" height="480" loading="lazy" decoding="async"></image-zoom>`,
+    );
+  });
+
+  it("已声明尺寸的图片不被覆盖，未命中尺寸表保持原样", () => {
+    const html = `<img src="/a.png" width="10" height="10"/><img src="/b.png"/>`;
+    const sizes = new Map([["/a.png", { width: 640, height: 480 }]]);
+    const out = wrapRenderedImages(html, sizes);
+    expect(out).toContain(
+      '<img src="/a.png" width="10" height="10" loading="lazy" decoding="async">',
+    );
+    expect(out).toContain('<img src="/b.png" loading="lazy" decoding="async">');
+  });
 });

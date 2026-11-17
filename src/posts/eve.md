@@ -81,7 +81,7 @@ flowchart LR
 
 <figure class="md-figure">
   <img
-    src="https://raw.githubusercontent.com/ForrestGump618/Eve/eve-v1.0.0-20261030-r2/docs/verification/eve-1.0.0-release/installer-welcome.png"
+    src="/images/eve/installer-welcome.png"
     alt="Eve 1.0.0 自定义 Windows 安装欢迎页"
     loading="lazy"
   />
@@ -90,7 +90,7 @@ flowchart LR
 
 <figure class="md-figure">
   <img
-    src="https://raw.githubusercontent.com/ForrestGump618/Eve/eve-v1.0.0-20261030-r2/docs/verification/eve-1.0.0-release/installer-finish.png"
+    src="/images/eve/installer-finish.png"
     alt="Eve 1.0.0 自定义 Windows 安装完成页"
     loading="lazy"
   />
@@ -99,7 +99,7 @@ flowchart LR
 
 安装和卸载共用同一套界面。卸载可取消，进行时显示实际耗时，结束后保留会话、项目、技能、记忆与设置。
 
-![Eve 卸载界面](https://raw.githubusercontent.com/ForrestGump618/Eve/eve-v1.0.0-20261030-r2/docs/verification/eve-1.0.0-release/uninstaller-welcome.png)
+![Eve 卸载界面](/images/eve/uninstaller-welcome.png)
 
 本次修复还包括 PDF 解析依赖、后台启动恢复和静默安装路径。安装包为 143,071,342 bytes；SHA-256：`b4c30a63bef9fb13758fae9e19081fb2cce3538b322a20cb68085fa25595fd07`。
 
@@ -124,7 +124,7 @@ flowchart LR
 
 <figure class="md-figure">
   <img
-    src="https://raw.githubusercontent.com/ForrestGump618/Eve/eve-v1.0.0-20261030-r2/docs/verification/eve-1.0.0-release/literature-desktop.png"
+    src="/images/eve/literature-desktop.png"
     alt="Eve 文献雷达：今日指标、检索条件、文献卡片与审阅入口"
     loading="lazy"
   />
@@ -170,7 +170,7 @@ flowchart LR
 
 发行版的共享目录包含 390 项技能，覆盖科研、数据处理、湿实验和通用工作区操作；其中 175 项来自 K-Dense-AI/scientific-agent-skills。用户安装的扩展包在本机合并检索。技能数量表示已收录的流程与资源，实际计算还取决于执行主机的依赖、数据和服务权限。
 
-![科学工作台](https://raw.githubusercontent.com/ForrestGump618/Eve/eve-v1.0.0-20261030-r2/docs/screenshots/science-workbench.png)
+![科学工作台](/images/eve/science-workbench.png)
 
 <details>
 <summary>检查数据，再开始分析</summary>
@@ -190,7 +190,7 @@ flowchart LR
 
 把模块关系、实验流程、时序或结果说明整理成可打开的 HTML 页面。聊天中显示简洁的文件卡片，点击后可查看、缩放和切换主题，也可下载 HTML；文件树里可以再次打开。
 
-![交互图解预览](https://raw.githubusercontent.com/ForrestGump618/Eve/eve-v1.0.0-20261030-r2/docs/screenshots/interactive-pages.png)
+![交互图解预览](/images/eve/interactive-pages.png)
 
 <details>
 <summary>怎么使用</summary>

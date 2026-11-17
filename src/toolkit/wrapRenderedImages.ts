@@ -2,6 +2,7 @@ const IMAGE_TAG_PATTERN = /<img(?<attributes>[^>]*?)\s*\/?>/g;
 
 // 提取 title 属性（双引号或单引号，非空）
 const TITLE_PATTERN = /\btitle=(?<quote>["'])(?<title>[^"']+)\k<quote>/i;
+const SRC_PATTERN = /\bsrc\s*=\s*(["'])(?<src>[^"']+)\1/i;
 
 // 正文图片默认懒加载 + 异步解码，降低首屏与长文页面的加载压力
 const LAZY_ATTRS = ' loading="lazy" decoding="async"';
@@ -10,16 +11,31 @@ const LAZY_ATTRS = ' loading="lazy" decoding="async"';
  * 图片后处理：
  * - 带 title 的图片渲染为 <figure class="md-figure"><image-zoom><img/></image-zoom><figcaption>title</figcaption></figure>
  * - 无 title 的图片保持原有行为：<image-zoom><img/></image-zoom>
+ * - 传入尺寸表时为缺失 width/height 的图片注入真实尺寸，预留纵横比，
+ *   避免懒加载图片落地时撑开布局触发整页重排
  *
  * title 来自 GFM 图片语法 `![alt](src "title")`，satteri 会输出为 <img title="...">。
  * alt 作为无障碍替代文本保留在 img 上，title 用作可见说明。
  */
-export function wrapRenderedImages(html: string): string {
+export function wrapRenderedImages(
+  html: string,
+  sizes?: Map<string, { width: number; height: number }>,
+): string {
   return html.replace(IMAGE_TAG_PATTERN, (_, attributes = "") => {
     // 已声明 loading 属性的图片不做二次处理
     const needsLazy = !/\bloading=/i.test(attributes);
     const lazyAttrs = needsLazy ? LAZY_ATTRS : "";
-    const img = `<img${attributes}${lazyAttrs}>`;
+
+    let sizeAttrs = "";
+    if (sizes && !/\bwidth\s*=/i.test(attributes) && !/\bheight\s*=/i.test(attributes)) {
+      const src = attributes.match(SRC_PATTERN)?.groups?.src;
+      const size = src ? sizes.get(src) : undefined;
+      if (size) {
+        sizeAttrs = ` width="${size.width}" height="${size.height}"`;
+      }
+    }
+
+    const img = `<img${attributes}${sizeAttrs}${lazyAttrs}>`;
     const titleMatch = attributes.match(TITLE_PATTERN);
     if (!titleMatch) {
       return `<image-zoom>${img}</image-zoom>`;

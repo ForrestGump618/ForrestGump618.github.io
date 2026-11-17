@@ -1,9 +1,12 @@
 import { expect, test } from "@playwright/test";
+import { settleEntrance } from "../support/entrance";
 import { POSTS, ROUTES, SEARCH_TERMS } from "../support/routes";
 import { openSearchDialog } from "../support/search";
 import { readTheme, toggleTheme } from "../support/theme";
 
 test("@critical 搜索命中后可点击结果跳转到对应文章", async ({ page }) => {
+  // Pagefind 冷加载 + 跳转核验在并行争用下需要更长的整体预算
+  test.setTimeout(60_000);
   await page.goto(ROUTES.home);
   await openSearchDialog(page);
 
@@ -32,6 +35,7 @@ test("@critical 首页进入文章后回退，URL 与列表状态保持一致", 
   await expect(page.locator(".post-row__link").first()).toBeVisible();
 
   const pagePostLink = page.locator(".post-row__link").first();
+  await settleEntrance(pagePostLink);
   await pagePostLink.click();
   await expect(page).toHaveURL(/\/posts\/.+/);
 

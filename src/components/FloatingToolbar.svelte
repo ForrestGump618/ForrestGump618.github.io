@@ -2,6 +2,7 @@
   import { onMount } from "svelte";
   import { sidebarOpen, toggleSidebar } from "@/stores/sidebarStore";
   import { fireworksEnabled, toggleFireworks } from "@/stores/fireworksStore";
+  import { createScrollHeightCache, type ScrollHeightCache } from "@/toolkit/ui/scrollHeightCache";
   import type { ShokaXThemeConfig } from "@/toolkit/themeConfig";
 
   interface Props {
@@ -15,6 +16,7 @@
   let isMobile = $state(false);
   let isVisible = $state(true);
   let hydrated = $state(false);
+  let heightCache: ScrollHeightCache | null = null;
 
   const percentLabel = $derived(`${Math.max(0, Math.round(scrollPercent))}%`);
   const nyxEnabled = $derived(
@@ -23,8 +25,9 @@
 
   const updateScrollPercent = () => {
     const scrollTop = window.scrollY || document.documentElement.scrollTop;
+    // 读缓存而非 scrollHeight，避免 scroll 事件内强制同步整页布局
     const scrollHeight =
-      document.documentElement.scrollHeight - window.innerHeight;
+      (heightCache?.get() ?? document.documentElement.scrollHeight) - window.innerHeight;
     scrollPercent = scrollHeight > 0 ? (scrollTop / scrollHeight) * 100 : 0;
   };
 
@@ -108,6 +111,7 @@
       return;
 
     hydrated = true;
+    heightCache = createScrollHeightCache(document, window);
     updateScrollPercent();
     updateHasComments();
     updateIsMobile();
@@ -169,6 +173,8 @@
       window.removeEventListener("scroll", updateVisibility);
       window.removeEventListener("resize", updateIsMobile);
       observer?.disconnect();
+      heightCache?.destroy();
+      heightCache = null;
       if (idleTimer) {
         clearTimeout(idleTimer);
       }

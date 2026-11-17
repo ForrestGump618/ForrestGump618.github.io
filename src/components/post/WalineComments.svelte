@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { init, type WalineInstance } from "@waline/client";
+  import type { WalineInstance } from "@waline/client";
   import "@waline/client/style";
   import { onMount } from "svelte";
   import { currentLocale, t } from "@/i18n";
@@ -33,15 +33,24 @@
       pagePath ||
       (typeof window !== "undefined" ? window.location.pathname : "/");
 
-    const waline: WalineInstance | null = init({
-      el: walineEl,
-      serverURL,
-      path: finalPath,
-      lang,
-      dark,
+    // 动态加载评论客户端：避免大水合任务阻塞滚动与阅读
+    let waline: WalineInstance | null = null;
+    let destroyed = false;
+    void import("@waline/client").then(({ init }) => {
+      if (destroyed || !walineEl) {
+        return;
+      }
+      waline = init({
+        el: walineEl,
+        serverURL,
+        path: finalPath,
+        lang,
+        dark,
+      });
     });
 
     return () => {
+      destroyed = true;
       waline?.destroy();
     };
   });

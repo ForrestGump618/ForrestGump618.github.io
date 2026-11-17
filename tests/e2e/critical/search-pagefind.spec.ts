@@ -3,6 +3,8 @@ import { ROUTES, SEARCH_TERMS } from "../support/routes";
 import { openSearchDialog } from "../support/search";
 
 async function openSearchPanel(page: import("@playwright/test").Page) {
+  // 输入框升级与结果渲染各自可能接近全局断言超时，整体预算放宽
+  test.setTimeout(60_000);
   await page.goto(ROUTES.home);
   await openSearchDialog(page);
 

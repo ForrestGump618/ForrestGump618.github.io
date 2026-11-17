@@ -50,7 +50,10 @@ const items = toc.filter((item) => item.level >= 2 && item.level <= 3);
   /**
    * 滚动驱动的目录高亮：以“阅读线”（导航下方约 120px）判定当前章节，
    * 长章节、反向滚动与页底都能正确命中；桌面端附带随动指示条。
+   * 章节偏移与文档高度均缓存，滚动帧内不做强制布局读取。
    */
+  import { createScrollHeightCache } from "@/toolkit/ui/scrollHeightCache";
+
   const initToc = () => {
     const roots = [...document.querySelectorAll<HTMLElement>("[data-toc]")];
     if (roots.length === 0) {
@@ -81,6 +84,16 @@ const items = toc.filter((item) => item.level >= 2 && item.level <= 3);
 
     if (headings.length === 0) {
       return;
+    }
+
+    const heightCache = createScrollHeightCache(document, window);
+    let tops: number[] = [];
+    const measureTops = () => {
+      tops = headings.map((heading) => heading.getBoundingClientRect().top + window.scrollY);
+    };
+    measureTops();
+    if (typeof ResizeObserver === "function") {
+      new ResizeObserver(measureTops).observe(document.body);
     }
 
     let activeId = "";
@@ -116,19 +129,19 @@ const items = toc.filter((item) => item.level >= 2 && item.level <= 3);
 
     const update = () => {
       const probe = window.scrollY + 120;
-      let current = headings[0];
-      for (const heading of headings) {
-        if (heading.getBoundingClientRect().top + window.scrollY <= probe) {
-          current = heading;
+      let currentIndex = 0;
+      for (let i = 0; i < tops.length; i += 1) {
+        if ((tops[i] ?? 0) <= probe) {
+          currentIndex = i;
         } else {
           break;
         }
       }
       // 页底时最后一个章节可能永远到不了阅读线，直接命中末章
-      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 4) {
-        current = headings[headings.length - 1];
+      if (window.innerHeight + window.scrollY >= heightCache.get() - 4) {
+        currentIndex = tops.length - 1;
       }
-      setActive(current.id);
+      setActive(headings[currentIndex].id);
     };
 
     let frame = 0;
