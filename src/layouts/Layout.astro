@@ -2,11 +2,12 @@
 /**
  * 站点外壳：主题引导、SEO、导航、页面标题区、页脚与全局脚本。
  *
- * 设计取向：编辑式极简。裁掉首页巨幅头图、波浪、加载动画、悬浮工具栏与三栏侧栏，
- * 只保留阅读需要的东西；页面自身负责正文容器与内容排版。
+ * 设计取向：编辑式极简 + 克制的氛围动效。页面自身负责正文容器与内容排版；
+ * 悬浮工具栏提供返回顶部 / 阅读进度 / 烟花开关等全局小交互。
  */
 import Analytics from "@/components/Analytics.astro";
 import CodeBlock from "@/components/CodeBlock.svelte";
+import FloatingToolbar from "@/components/FloatingToolbar.svelte";
 import Footer from "@/components/footer/Footer.astro";
 import ImageZoom from "@/components/ImageZoom.svelte";
 import NavBar from "@/components/navbar/NavBar.svelte";
@@ -164,8 +165,19 @@ const documentTitle = pageTitle
       />
     </div>
 
+    <FloatingToolbar client:load nyxPlayer={themeConfig.nyxPlayer} />
+
     <script>
       import "@/toolkit/initMdxComponents";
+      import { get } from "svelte/store";
+      import { fireworksEnabled } from "@/stores/fireworksStore";
+      import { initFireworks } from "@/toolkit/ui/fireworks";
+      import { initScrollReveal } from "@/toolkit/ui/scrollReveal";
+
+      initScrollReveal(document, window);
+      initFireworks(document, window, {
+        isEnabled: () => get(fireworksEnabled),
+      });
     </script>
 
     <script>

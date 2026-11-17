@@ -7,17 +7,17 @@
 
 :root {
   /* ---------- Typography ---------- */
-  /* 正文：系统 UI 无衬线，中英混排优先保证中文黑体的可读性 */
+  /* 全站统一无衬线（Google / DeepMind 式）：系统 UI 字体栈，
+     中英混排优先保证中文黑体的可读性，零网络依赖、零字体交换偏移。 */
   --font-sans:
-    -apple-system, BlinkMacSystemFont, "Segoe UI Variable Text", "Segoe UI", "PingFang SC",
-    "Hiragino Sans GB", "Noto Sans SC", "Source Han Sans SC", "Microsoft YaHei", "Helvetica Neue",
-    Arial, sans-serif;
-  /* 标题：衬线，构建编辑式层次；中文回退到系统宋体 */
-  --font-serif:
-    "Source Serif 4", "Iowan Old Style", "Palatino Linotype", Georgia, "Noto Serif SC",
-    "Source Han Serif SC", "Songti SC", "SimSun", serif;
-  /* 手写体只用于个人化点缀（引文、格言、签名），不承担正文 */
-  --font-kai: "LXGW WenKai", "Kaiti SC", "STKaiti", "KaiTi", var(--font-serif);
+    "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI Variable Text", "Segoe UI",
+    "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Source Han Sans SC", "Microsoft YaHei",
+    "Helvetica Neue", Arial, sans-serif;
+  /* 标题与正文同族，靠字重 / 字距 / 字号建立层次 */
+  --font-display: var(--font-sans);
+  /* 历史组件仍引用 serif / kai 令牌：统一指向无衬线，避免宋体回退 */
+  --font-serif: var(--font-display);
+  --font-kai: var(--font-display);
   --font-mono:
     "Maple Mono", ui-monospace, "SFMono-Regular", "Cascadia Code", "JetBrains Mono", Menlo,
     Consolas, monospace;
@@ -73,11 +73,11 @@
   --radius-lg: 18px;
   --radius-full: 999px;
 
-  /* ---------- Shadows（克制、暖灰投影） ---------- */
-  --shadow-xs: 0 1px 2px oklch(0.3 0.01 92 / 0.06);
-  --shadow-sm: 0 2px 6px -2px oklch(0.3 0.01 92 / 0.1);
-  --shadow-md: 0 10px 24px -16px oklch(0.3 0.01 92 / 0.32);
-  --shadow-lg: 0 24px 56px -24px oklch(0.3 0.01 92 / 0.34);
+  /* ---------- Shadows（克制、冷灰投影） ---------- */
+  --shadow-xs: 0 1px 2px oklch(0.3 0.015 255 / 0.06);
+  --shadow-sm: 0 2px 6px -2px oklch(0.3 0.015 255 / 0.1);
+  --shadow-md: 0 10px 24px -16px oklch(0.3 0.015 255 / 0.32);
+  --shadow-lg: 0 24px 56px -24px oklch(0.3 0.015 255 / 0.34);
 
   /* ---------- Motion ---------- */
   --ease-press: cubic-bezier(0.2, 0.8, 0.3, 1.15);

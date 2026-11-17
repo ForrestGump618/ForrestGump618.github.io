@@ -1,0 +1,107 @@
+---
+/**
+ * 首页实验室：两个可玩的小交互。
+ * 光晕粒子随指针流动（可暂停），反应速度测试记录最佳成绩。
+ */
+import AuroraCanvas from "@/components/home/AuroraCanvas.svelte";
+import ReactionTest from "@/components/home/ReactionTest.svelte";
+---
+
+<section class="home-lab" aria-labelledby="lab-heading">
+  <div class="section-head">
+    <div>
+      <h2 class="section-head__title" id="lab-heading">实验室</h2>
+      <p class="section-head__sub">一点可玩的小交互：光晕随指针流动，反射弧测一测。</p>
+    </div>
+  </div>
+  <div class="lab-grid">
+    <article class="lab-card" data-scroll-reveal style="--reveal-i:0">
+      <h3 class="lab-card__title">光晕粒子</h3>
+      <AuroraCanvas client:load />
+      <p class="lab-card__hint">移动指针扰动粒子，右下角可暂停。</p>
+    </article>
+    <article class="lab-card" data-scroll-reveal style="--reveal-i:1">
+      <h3 class="lab-card__title">反应速度</h3>
+      <ReactionTest client:load />
+      <p class="lab-card__hint">成绩保存在本机，随时再来一次。</p>
+    </article>
+  </div>
+</section>
+
+<style>
+  .home-lab {
+    padding-bottom: clamp(2.75rem, 6vw, 4.5rem);
+  }
+
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1.25rem;
+    margin-bottom: clamp(1.5rem, 3vw, 2.25rem);
+  }
+
+  .section-head__title {
+    margin: 0;
+    font-family: var(--font-serif, Georgia, "Noto Serif SC", serif);
+    font-size: clamp(1.35rem, 2.4vw, 1.75rem);
+    font-weight: 600;
+    letter-spacing: -0.005em;
+    color: var(--text-color, #23211d);
+  }
+
+  .section-head__sub {
+    margin: 0.4rem 0 0;
+    font-family: var(--font-sans, system-ui, sans-serif);
+    font-size: 0.8rem;
+    color: var(--text-color-subtle, #8a857c);
+  }
+
+  .lab-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(1.25rem, 3vw, 2rem);
+  }
+
+  .lab-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+    min-width: 0;
+    padding: clamp(0.9rem, 2vw, 1.25rem);
+    border: var(--hairline);
+    border-radius: var(--radius-lg);
+    background: var(--surface-raised);
+    box-shadow: var(--shadow-card-soft);
+    transition:
+      border-color var(--dur-2) var(--ease-out),
+      box-shadow var(--dur-2) var(--ease-out);
+  }
+
+  .lab-card:hover {
+    border-color: color-mix(in oklab, var(--primary-color) 35%, var(--border-color));
+    box-shadow: var(--shadow-card-soft-hover);
+  }
+
+  .lab-card__title {
+    margin: 0;
+    font-family: var(--font-sans, system-ui, sans-serif);
+    font-size: 0.82rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: var(--text-color-muted, #6b675f);
+  }
+
+  .lab-card__hint {
+    margin: 0;
+    font-family: var(--font-sans, system-ui, sans-serif);
+    font-size: var(--text-2xs);
+    color: var(--text-color-subtle, #8a857c);
+  }
+
+  @media (min-width: 700px) {
+    .lab-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+</style>

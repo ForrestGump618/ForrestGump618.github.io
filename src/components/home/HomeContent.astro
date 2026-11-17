@@ -1,14 +1,14 @@
 ---
 /**
- * 首页主体：精选文章（整卡可点）→ 最新笔记（紧凑行）→ 漫览（图表画廊）→ 专题分类。
- * 首页是聚合落地页：精选文章不重复出现在最新列表，分页统一放在归档。
- * 图片只出现在「精选」与「漫览」，且均来自内容本身。
+ * 首页主体：个人 Hero → 最新笔记（紧凑行）→ 漫览（图表画廊）→ 专题分类 → 实验室。
+ * 首页是聚合落地页：只展示一页，分页统一放在归档。
+ * 图片只出现在「漫览」，且均来自内容本身。
  */
 import type { CollectionEntry } from "astro:content";
 import { Image } from "astro:assets";
-import CoverMedia from "@/components/media/CoverMedia.astro";
+import HomeLab from "@/components/home/HomeLab.astro";
 import { resolvePostCover } from "@/toolkit/covers";
-import { formatDateLong, formatDateMachine } from "@/toolkit/posts/formatDate";
+import { formatDateMachine } from "@/toolkit/posts/formatDate";
 import { getReadingStats } from "@/toolkit/posts/readingStats";
 import { toPostHref } from "@/toolkit/posts/url";
 
@@ -23,22 +23,10 @@ interface Props {
   posts: CollectionEntry<"posts">[];
   /** 全量文章池：用于挑选漫览画廊（不受最新列表条数限制） */
   pool?: CollectionEntry<"posts">[];
-  featuredPost?: CollectionEntry<"posts">;
   categories?: HomeCategory[];
 }
 
-const { posts, pool = posts, featuredPost, categories = [] } = Astro.props;
-
-const excerptOf = (post: CollectionEntry<"posts">, limit = 96) => {
-  const raw = (post.data.description || post.body || "")
-    .replace(/!\[[^\]]*\]\([^)]*\)/g, "")
-    .replace(/<[^>]+>/g, "")
-    .replace(/[#*`_>|-]/g, " ")
-    .replace(/\s+/g, " ")
-    .trim();
-
-  return raw.length > limit ? `${raw.slice(0, limit).trimEnd()}…` : raw;
-};
+const { posts, pool = posts, categories = [] } = Astro.props;
 
 const prepare = (post: CollectionEntry<"posts">) => ({
   post,
@@ -52,20 +40,15 @@ const prepare = (post: CollectionEntry<"posts">) => ({
   }),
   stats: getReadingStats(post.body ?? ""),
   href: toPostHref(post.id),
-  excerpt: excerptOf(post),
   dateMachine: formatDateMachine(post.data.date),
-  dateLong: formatDateLong(post.data.date),
   category: post.data.categories?.[0] ?? "笔记",
 });
 
-const featured = featuredPost ? prepare(featuredPost) : null;
 const latest = posts.map(prepare);
 const galleryPosts = pool
-  .filter((post) => post.id !== featuredPost?.id)
   .map(prepare)
   .filter((item) => item.cover.band && (item.cover.Image || item.cover.src))
   .slice(0, 3);
-const hasFeaturedMedia = featured ? featured.cover.kind !== "none" : false;
 
 // 单篇分类合并为一行快捷入口，避免整卡只装一篇文章
 const topicCategories = categories.filter((category) => category.count > 1);
@@ -74,52 +57,6 @@ const singleCategories = categories.filter((category) => category.count === 1);
 
 <div class="home-opening reveal" style="--reveal-i:0">
   <slot name="profile" />
-  {featured && (
-    <section class="home-featured" aria-labelledby="featured-heading">
-      <h2 class="sr-only" id="featured-heading">
-        {featuredPost?.data.sticky ? "置顶文章" : "精选文章"}
-      </h2>
-      <a
-        class:list={["featured", { "featured--text": !hasFeaturedMedia }]}
-        href={featured.href}
-        aria-label={`阅读文章：${featured.post.data.title}`}
-      >
-        {hasFeaturedMedia && (
-          <div class="featured__media">
-            <CoverMedia
-              cover={featured.cover}
-              title={featured.post.data.title}
-              variant="wide"
-              eager
-              widths={[320, 480, 640, 960]}
-              sizes="(max-width: 831px) 90vw, (min-width: 1090px) min(29vw, 21rem), 56vw"
-              showCaption={false}
-            />
-          </div>
-        )}
-        <div class="featured__body">
-          <p class="featured__eyebrow">
-            <span class="featured__flag">{featuredPost?.data.sticky ? "置顶" : "精选"}</span>
-            {featured.category}
-          </p>
-          <h3 class="featured__title">{featured.post.data.title}</h3>
-          {featured.excerpt && <p class="featured__excerpt">{featured.excerpt}</p>}
-          <p class="featured__meta">
-            <time datetime={featured.post.data.date.toISOString()}>{featured.dateLong}</time>
-            {featured.stats.readTime > 0 && (
-              <>
-                <span class="featured__dot" aria-hidden="true">·</span>
-                约 {featured.stats.readTime} 分钟
-              </>
-            )}
-          </p>
-          <span class="featured__cta action-link action-link--primary">
-            阅读文章 <span class="action-link__arrow i-ri-arrow-right-line" aria-hidden="true"></span>
-          </span>
-        </div>
-      </a>
-    </section>
-  )}
 </div>
 
 <section class="home-list reveal" style="--reveal-i:1" aria-labelledby="latest-heading">
@@ -157,7 +94,7 @@ const singleCategories = categories.filter((category) => category.count === 1);
 </section>
 
 {galleryPosts.length > 0 && (
-  <section class="home-gallery reveal" style="--reveal-i:2" aria-labelledby="gallery-heading">
+  <section class="home-gallery" aria-labelledby="gallery-heading">
     <div class="section-head">
       <div>
         <h2 class="section-head__title" id="gallery-heading">漫览</h2>
@@ -165,8 +102,8 @@ const singleCategories = categories.filter((category) => category.count === 1);
       </div>
     </div>
     <div class="gallery-grid" data-image-zoom-gallery>
-      {galleryPosts.map((item) => (
-        <figure class="gallery-card">
+      {galleryPosts.map((item, index) => (
+        <figure class="gallery-card" data-scroll-reveal style={`--reveal-i:${index}`}>
           <div class="gallery-card__frame">
             <image-zoom class="gallery-card__zoom" data-fill>
               {item.cover.Image ? (
@@ -203,15 +140,15 @@ const singleCategories = categories.filter((category) => category.count === 1);
 )}
 
 {categories.length > 0 && (
-  <section class="home-topics reveal" style="--reveal-i:3" aria-labelledby="topics-heading">
+  <section class="home-topics" aria-labelledby="topics-heading">
     <div class="section-head">
       <div>
         <h2 class="section-head__title" id="topics-heading">专题分类</h2>
       </div>
     </div>
     <div class="topic-grid">
-      {topicCategories.map((category) => (
-        <article class="topic-card">
+      {topicCategories.map((category, index) => (
+        <article class="topic-card" data-scroll-reveal style={`--reveal-i:${index % 4}`}>
           <a class="topic-card__head" href={category.href}>
             <span class="topic-card__name">{category.name}</span>
             <span class="topic-card__count">{category.count} 篇</span>
@@ -242,6 +179,8 @@ const singleCategories = categories.filter((category) => category.count === 1);
     )}
   </section>
 )}
+
+<HomeLab />
 
 <style>
   .section-head {
@@ -278,8 +217,17 @@ const singleCategories = categories.filter((category) => category.count === 1);
     transition: color var(--dur-2) var(--ease-out);
   }
 
+  .section-head__more span {
+    display: inline-block;
+    transition: translate var(--dur-2) var(--ease-out);
+  }
+
   .section-head__more:hover {
     color: var(--primary-color, #7c3b52);
+  }
+
+  .section-head__more:hover span {
+    translate: 3px 0;
   }
 
   .home-opening {
@@ -287,189 +235,6 @@ const singleCategories = categories.filter((category) => category.count === 1);
     grid-template-columns: minmax(0, 1fr);
     gap: var(--space-md);
     margin-bottom: var(--rhythm-block);
-  }
-
-  .home-featured,
-  .featured {
-    min-width: 0;
-    height: 100%;
-  }
-
-  .featured {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr);
-    grid-template-rows: auto 1fr;
-    overflow: hidden;
-    border: var(--hairline);
-    border-radius: var(--radius-lg);
-    background: var(--surface-raised);
-    color: inherit;
-    text-decoration: none;
-    transition:
-      border-color var(--dur-2) var(--ease-out),
-      box-shadow var(--dur-2) var(--ease-out);
-  }
-
-  .featured--text {
-    grid-template-rows: 1fr;
-  }
-
-  .featured__media {
-    overflow: hidden;
-    padding: var(--space-xs) var(--space-xs) 0;
-  }
-
-  .featured__media :global(.cover-media__frame) {
-    aspect-ratio: 2.55;
-    padding: var(--space-2xs);
-  }
-
-  .featured__media :global(.cover-media__img) {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    transition: transform var(--dur-3) var(--ease-out);
-  }
-
-  .featured__body {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: center;
-    padding: var(--space-sm) clamp(1.125rem, 2.4vw, 1.75rem) var(--space-md);
-  }
-
-  .featured__cta {
-    margin-top: var(--space-sm);
-    pointer-events: none;
-  }
-
-  .featured:focus-visible {
-    outline: 2px solid var(--primary-color);
-    outline-offset: 2px;
-  }
-
-  @media (prefers-reduced-motion: no-preference) {
-    .featured:focus-visible .featured__media :global(.cover-media__img) {
-      transform: scale(1.035);
-    }
-
-    @media (hover: hover) and (pointer: fine) {
-      .featured:hover {
-        border-color: color-mix(in oklab, var(--primary-color, #7c3b52) 45%, var(--border-color));
-        box-shadow: var(--shadow-md);
-      }
-
-      .featured:hover .featured__media :global(.cover-media__img) {
-        transform: scale(1.035);
-      }
-
-      .featured:hover .featured__cta {
-        border-color: var(--link-hover-color);
-        background: var(--link-hover-color);
-      }
-
-      .featured:hover .action-link__arrow {
-        translate: 3px 0;
-      }
-    }
-
-    .featured:active .featured__media :global(.cover-media__img) {
-      transform: scale(0.985);
-    }
-  }
-
-  @container (min-width: 47rem) {
-    .home-opening {
-      grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
-    }
-  }
-
-  @container (min-width: 62rem) {
-    .featured {
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-      grid-template-rows: 1fr;
-    }
-
-    .featured__media {
-      display: flex;
-      align-items: stretch;
-      padding: var(--space-xs) 0 var(--space-xs) var(--space-xs);
-    }
-
-    .featured__media :global(.cover-media) {
-      display: flex;
-      align-items: center;
-      width: 100%;
-      background: var(--surface-subtle);
-    }
-
-    .featured__media :global(.cover-media__frame) {
-      background: transparent;
-      border: 0;
-      aspect-ratio: 1.2;
-    }
-
-    .featured--text {
-      grid-template-columns: minmax(0, 1fr);
-    }
-  }
-
-  .featured__eyebrow {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    margin: 0 0 0.9rem;
-    font-family: var(--font-sans, system-ui, sans-serif);
-    font-size: 0.72rem;
-    font-weight: 500;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--text-color-muted, #6b675f);
-  }
-
-  .featured__flag {
-    padding: 0.14rem 0.5rem;
-    border: 1px solid color-mix(in oklab, var(--primary-color, #7c3b52) 40%, transparent);
-    border-radius: 999px;
-    font-size: 0.62rem;
-    font-weight: 600;
-    letter-spacing: 0.14em;
-    color: var(--primary-color, #7c3b52);
-  }
-
-  .featured__title {
-    margin: 0 0 var(--space-2xs);
-    font-family: var(--font-serif, Georgia, "Noto Serif SC", serif);
-    font-size: clamp(1.35rem, 2.6vw, 2.25rem);
-    font-weight: 600;
-    line-height: 1.3;
-    letter-spacing: -0.01em;
-    color: var(--text-color, #23211d);
-  }
-
-  .featured--text .featured__title {
-    font-size: clamp(1.9rem, 4.2vw, 3rem);
-  }
-
-  .featured__excerpt {
-    margin: 0 0 var(--space-xs);
-    font-family: var(--font-sans, system-ui, sans-serif);
-    font-size: 0.95rem;
-    line-height: 1.85;
-    color: var(--text-color-muted, #55524c);
-  }
-
-  .featured__meta {
-    margin: 0;
-    font-family: var(--font-sans, system-ui, sans-serif);
-    font-size: 0.78rem;
-    color: var(--text-color-subtle, #8a857c);
-    font-variant-numeric: tabular-nums;
-  }
-
-  .featured__dot {
-    margin: 0 0.45rem;
   }
 
   /* ---------- 最新笔记：紧凑行 ---------- */
@@ -508,6 +273,11 @@ const singleCategories = categories.filter((category) => category.count === 1);
     align-items: baseline;
     gap: 0.7rem;
     min-width: 0;
+    transition: translate var(--dur-2) var(--ease-out);
+  }
+
+  .post-row__link:is(:hover, :focus-visible) .post-row__main {
+    translate: 3px 0;
   }
 
   .post-row__cat {
@@ -560,6 +330,11 @@ const singleCategories = categories.filter((category) => category.count === 1);
     font-size: 0.72rem;
     letter-spacing: 0.02em;
     font-variant-numeric: tabular-nums;
+    transition: color var(--dur-2) var(--ease-out);
+  }
+
+  .post-row__link:is(:hover, :focus-visible) .post-row__date {
+    color: var(--primary-color, #7c3b52);
   }
 
   .home-empty {
@@ -588,14 +363,17 @@ const singleCategories = categories.filter((category) => category.count === 1);
     min-width: 0;
   }
 
-  /* 论文图表多为白底：统一浅色纸面承接，暗色模式下也保持浅色 */
+  /* 论文图表多为白底：统一冷白纸面承接，暗色模式下也保持浅色 */
   .gallery-card__frame {
     aspect-ratio: 4 / 3;
     padding: clamp(0.6rem, 1.6vw, 1rem);
     border: var(--hairline);
     border-radius: var(--radius-md);
-    background: #fbfaf7;
+    background: #fafbfc;
     overflow: hidden;
+    transition:
+      border-color var(--dur-2) var(--ease-out),
+      box-shadow var(--dur-2) var(--ease-out);
   }
 
   .gallery-card__zoom {
@@ -609,6 +387,7 @@ const singleCategories = categories.filter((category) => category.count === 1);
     max-width: 100%;
     max-height: 100%;
     object-fit: contain;
+    transition: transform var(--dur-3) var(--ease-out);
   }
 
   .gallery-card__body {
@@ -645,9 +424,29 @@ const singleCategories = categories.filter((category) => category.count === 1);
     transition: color var(--dur-2) var(--ease-out);
   }
 
+  .gallery-card__enter span {
+    transition: translate var(--dur-2) var(--ease-out);
+  }
+
   .gallery-card__enter:hover,
   .gallery-card__enter:focus-visible {
     color: var(--primary-color, #7c3b52);
+  }
+
+  .gallery-card__enter:hover span,
+  .gallery-card__enter:focus-visible span {
+    translate: 3px 0;
+  }
+
+  @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
+    .gallery-card:hover .gallery-card__frame {
+      border-color: color-mix(in oklab, var(--primary-color, #7c3b52) 35%, var(--border-color));
+      box-shadow: var(--shadow-card-hover);
+    }
+
+    .gallery-card:hover .gallery-card__img {
+      transform: scale(1.02);
+    }
   }
 
   /* ---------- 专题 ---------- */
@@ -665,6 +464,11 @@ const singleCategories = categories.filter((category) => category.count === 1);
   .topic-card {
     padding: 1.1rem 0.25rem;
     border-bottom: var(--hairline);
+    transition: background-color var(--dur-2) var(--ease-out);
+  }
+
+  .topic-card:hover {
+    background: color-mix(in oklab, var(--surface-subtle) 45%, transparent);
   }
 
   .topic-card__head {
@@ -757,7 +561,8 @@ const singleCategories = categories.filter((category) => category.count === 1);
     transition:
       color var(--dur-2) var(--ease-out),
       border-color var(--dur-2) var(--ease-out),
-      background-color var(--dur-2) var(--ease-out);
+      background-color var(--dur-2) var(--ease-out),
+      translate var(--dur-1) var(--ease-press);
   }
 
   .topic-chip:hover,
@@ -765,6 +570,7 @@ const singleCategories = categories.filter((category) => category.count === 1);
     color: var(--primary-color, #7c3b52);
     border-color: color-mix(in oklab, var(--primary-color, #7c3b52) 40%, transparent);
     background: var(--surface-tinted);
+    translate: 0 -1px;
   }
 
   @media (max-width: 567px) {

@@ -537,3 +537,59 @@ main {
 [hidden] {
   display: none !important;
 }
+
+/* 滚动入场：IntersectionObserver 标记 pending → in，仅 transform/opacity */
+@media (prefers-reduced-motion: no-preference) {
+  .scroll-reveal-pending {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+
+  .scroll-reveal-pending.scroll-reveal-in {
+    opacity: 1;
+    transform: none;
+    transition:
+      opacity var(--dur-4) var(--ease-out),
+      transform var(--dur-4) var(--ease-out);
+    transition-delay: calc(var(--reveal-i, 0) * 60ms);
+  }
+}
+
+/* 主题化滚动条：宽度 / 轨道 / 滑块取自站点调色板 */
+html {
+  scrollbar-width: thin;
+  scrollbar-color: var(--grey-4) var(--grey-1);
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--grey-1);
+}
+
+::-webkit-scrollbar-thumb {
+  border: 3px solid transparent;
+  border-radius: var(--radius-full);
+  background: var(--grey-4);
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in oklab, var(--primary-color) 65%, var(--grey-4));
+  background-clip: content-box;
+}
+
+::selection {
+  background: color-mix(in oklab, var(--primary-color) 22%, transparent);
+}
+
+/* 点击烟花画布：全屏覆盖但不拦截任何交互 */
+.fireworks-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-fullscreen);
+  pointer-events: none;
+}

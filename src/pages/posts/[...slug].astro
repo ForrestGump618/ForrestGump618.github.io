@@ -9,7 +9,6 @@ import PostFooter from "@/components/post/PostFooter.astro";
 import PostNav from "@/components/post/PostNav.astro";
 import AiSummaryCard from "@/components/post/AiSummaryCard.astro";
 import ArticleToc from "@/components/post/ArticleToc.astro";
-import ReadingProgress from "@/components/post/ReadingProgress.astro";
 import WalineComments from "@/components/post/WalineComments.svelte";
 import CoverMedia from "@/components/media/CoverMedia.astro";
 import { avatar } from "@/components/Images.astro";
@@ -275,8 +274,6 @@ const seoImage = cover.Image ?? cover.src ?? undefined;
   <Fragment slot="head">
     {isEncrypted && <meta name="robots" content="noindex, nofollow" />}
   </Fragment>
-
-  <ReadingProgress />
 
   <div class="article wrap" data-pagefind-ignore={isEncrypted ? "all" : undefined}>
     <Breadcrumb categories={post.data.categories ?? undefined} />

@@ -1,7 +1,7 @@
 ---
 /**
- * 首页：个人 Hero + 编辑式内容区。
- * 只使用真实内容图片（精选封面、科研图表），不再随机取风景图填充。
+ * 首页：个人 Hero + 编辑式内容区 + 可玩实验室。
+ * 只使用真实内容图片（科研图表、笔记配图），不再随机取风景图填充。
  */
 import Layout from "@/layouts/Layout.astro";
 import HomeHero from "@/components/shell/HomeHero.astro";
@@ -16,15 +16,9 @@ const publishedPosts = allPosts
   .filter((post) => !post.data.draft)
   .toSorted((a, b) => b.data.date.getTime() - a.data.date.getTime());
 
-const featuredPost =
-  publishedPosts.find((post) => post.data.sticky) ??
-  publishedPosts.find((post) => post.id === themeConfig.home?.featuredPostId);
-
-// 精选文章不重复出现在最新列表；首页只展示一页，分页统一放在归档
+// 首页只展示一页最新笔记，分页统一放在归档
 const pageSize = themeConfig.home?.pageSize ?? 6;
-const pagePosts = publishedPosts
-  .filter((post) => post.id !== featuredPost?.id)
-  .slice(0, pageSize);
+const pagePosts = publishedPosts.slice(0, pageSize);
 
 // 专题：按真实分类聚合，附带最近三篇（分类内按日期倒序）
 const categoryCounts = new Map<string, number>();
@@ -71,7 +65,6 @@ const pageTitle = `${brandConfig.title || "Echo"} — ${brandConfig.subtitle || 
     <HomeContent
       posts={pagePosts}
       pool={publishedPosts}
-      featuredPost={featuredPost}
       categories={categories}
     >
       <HomeHero slot="profile"

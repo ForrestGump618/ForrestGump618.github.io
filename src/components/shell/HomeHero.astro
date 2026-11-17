@@ -1,6 +1,7 @@
 ---
 import { Image } from "astro:assets";
 import type { ImageMetadata } from "astro";
+import QuoteLine from "@/components/home/QuoteLine.svelte";
 
 interface Props {
   author: string;
@@ -34,6 +35,7 @@ const { author, description, avatar, stats, social = [] } = Astro.props;
     </div>
   </div>
   <p class="profile__bio">{description}</p>
+  <QuoteLine client:load />
   <div class="profile__links">
     <a class="action-link action-link--primary" href="/about/">
       关于我 <span class="action-link__arrow i-ri-arrow-right-line" aria-hidden="true"></span>
@@ -54,6 +56,9 @@ const { author, description, avatar, stats, social = [] } = Astro.props;
 
 <style>
   .profile {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
     display: flex;
     flex-direction: column;
     min-width: 0;
@@ -62,6 +67,48 @@ const { author, description, avatar, stats, social = [] } = Astro.props;
     border: var(--hairline);
     border-radius: var(--radius-lg);
     background: var(--surface-tinted);
+  }
+
+  /* 极光辉光：三团品牌色缓慢漂移，营造 DeepMind 式的冷调氛围。
+     用 background-position 而非 transform 漂移，避免产生可滚动溢出。 */
+  .profile::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background:
+      radial-gradient(38% 46% at 18% 22%, var(--aurora-blue), transparent 70%),
+      radial-gradient(34% 42% at 82% 18%, var(--aurora-violet), transparent 70%),
+      radial-gradient(42% 50% at 62% 88%, var(--aurora-teal), transparent 72%);
+    background-size:
+      160% 160%,
+      150% 150%,
+      170% 170%;
+    background-repeat: no-repeat;
+    animation: aurora-drift 28s ease-in-out infinite alternate;
+    pointer-events: none;
+  }
+
+  @keyframes aurora-drift {
+    from {
+      background-position:
+        0% 0%,
+        100% 0%,
+        50% 100%;
+    }
+
+    to {
+      background-position:
+        100% 100%,
+        0% 100%,
+        20% 0%;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .profile::before {
+      animation: none;
+    }
   }
 
   .profile__identity {

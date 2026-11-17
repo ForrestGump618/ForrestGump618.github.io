@@ -38,4 +38,8 @@ export const ICON_CLASSES = [
   "i-ri-arrow-down-line",
   "i-ri-arrow-drop-down-fill",
   "i-ri-price-tag-3-line",
+  "i-ri-refresh-line",
+  "i-ri-pause-line",
+  "i-ri-play-line",
+  "i-ri-magic-line",
 ] as const;

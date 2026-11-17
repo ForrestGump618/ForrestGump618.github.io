@@ -8,7 +8,7 @@ async function checkHomeLayout(page: Page) {
     const before = profile.getBoundingClientRect();
     await image.decode();
     const after = profile.getBoundingClientRect();
-    const article = document.querySelector(".home-featured")!.getBoundingClientRect();
+    const article = document.querySelector(".home-list")!.getBoundingClientRect();
     return {
       viewport: document.documentElement.clientWidth,
       content: document.documentElement.scrollWidth,
@@ -227,7 +227,7 @@ test("@regression @responsive 文章图片可键盘预览，退出后可以立�
   await expect(preview).toHaveCount(0);
 });
 
-test("@regression @responsive 首页精选卡片整卡可点击直达文章", async ({ page }, info) => {
+test("@regression @responsive 首页无精选卡片，最新列表首行直达文章", async ({ page }, info) => {
   await page.goto(ROUTES.home);
   const profile = page.locator(".profile");
   const about = profile.getByRole("link", { name: "关于我" });
@@ -239,9 +239,10 @@ test("@regression @responsive 首页精选卡片整卡可点击直达文章", as
   await expect(page).toHaveURL(ROUTES.about);
 
   await page.goto(ROUTES.home);
-  const feature = page.getByRole("link", { name: /阅读文章：Eve/ });
-  await expect(feature).toHaveAttribute("href", POSTS.suwen);
-  if (info.project.use.hasTouch) await feature.locator(".featured__title").tap();
-  else await feature.locator(".featured__title").click();
+  await expect(page.locator(".home-featured")).toHaveCount(0);
+  const firstRow = page.locator(".post-row__link").first();
+  await expect(firstRow).toHaveAttribute("href", POSTS.suwen);
+  if (info.project.use.hasTouch) await firstRow.tap();
+  else await firstRow.click();
   await expect(page).toHaveURL(POSTS.suwen);
 });

@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { sidebarOpen, toggleSidebar } from "@/stores/sidebarStore";
+  import { fireworksEnabled, toggleFireworks } from "@/stores/fireworksStore";
   import type { ShokaXThemeConfig } from "@/toolkit/themeConfig";
 
   interface Props {
@@ -13,6 +14,7 @@
   let hasComments = $state(false);
   let isMobile = $state(false);
   let isVisible = $state(true);
+  let hydrated = $state(false);
 
   const percentLabel = $derived(`${Math.max(0, Math.round(scrollPercent))}%`);
   const nyxEnabled = $derived(
@@ -34,10 +36,15 @@
     isMobile = window.innerWidth <= 1023;
   };
 
+  const scrollBehavior = (): ScrollBehavior =>
+    window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      ? "auto"
+      : "smooth";
+
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
-      behavior: "smooth",
+      behavior: scrollBehavior(),
     });
   };
 
@@ -48,7 +55,7 @@
     }
 
     target.scrollIntoView({
-      behavior: "smooth",
+      behavior: scrollBehavior(),
       block: "start",
     });
   };
@@ -100,6 +107,7 @@
     if (typeof window === "undefined" || typeof document === "undefined")
       return;
 
+    hydrated = true;
     updateScrollPercent();
     updateHasComments();
     updateIsMobile();
@@ -168,12 +176,29 @@
   });
 </script>
 
-<ul class="floating-toolbar" class:is-hidden={!isVisible}>
+<ul
+  class="floating-toolbar"
+  class:is-hidden={!isVisible}
+  inert={!isVisible}
+  data-hydrated={hydrated ? "true" : undefined}
+>
   <li class="tool top">
-    <button type="button" onclick={scrollToTop} aria-label="返回顶部">
+    <button type="button" data-back-to-top onclick={scrollToTop} aria-label="返回顶部">
       <i class="i-ri-arrow-up-line"></i>
     </button>
     <span class="percent">{percentLabel}</span>
+  </li>
+  <li class="tool">
+    <button
+      type="button"
+      onclick={toggleFireworks}
+      aria-label={$fireworksEnabled ? "关闭点击烟花" : "开启点击烟花"}
+      aria-pressed={$fireworksEnabled}
+      title="点击烟花"
+      class:is-off={!$fireworksEnabled}
+    >
+      <i class="i-ri-magic-line"></i>
+    </button>
   </li>
   {#if hasComments}
     <li class="tool">
@@ -223,16 +248,16 @@
     padding: 0.5rem 0.4rem;
     margin: 0;
     list-style: none;
-    border-radius: 0.75rem;
-    background: var(--grey-1-a7);
+    border-radius: var(--radius-md, 0.75rem);
+    background: color-mix(in oklab, var(--surface-raised) 82%, transparent);
     color: var(--text-color);
-    border: 1px solid var(--grey-3);
-    box-shadow: 0 0.5rem 1.25rem var(--box-bg-shadow);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-md);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     transition:
-      transform 0.2s ease,
-      opacity 0.2s ease;
+      transform var(--dur-2, 0.2s) var(--ease-out, ease),
+      opacity var(--dur-2, 0.2s) var(--ease-out, ease);
   }
 
   .floating-toolbar.is-hidden {
@@ -254,13 +279,20 @@
     height: 2.125rem;
     border-radius: 0.625rem;
     border: none;
-    background: var(--grey-2-a0);
+    background: transparent;
     color: inherit;
     cursor: pointer;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.2s ease;
+    transition:
+      color var(--dur-1, 0.15s) var(--ease-out, ease),
+      background-color var(--dur-1, 0.15s) var(--ease-out, ease),
+      transform var(--dur-1, 0.15s) var(--ease-press, ease);
+  }
+
+  .tool button:active {
+    transform: scale(0.92);
   }
 
   .tool button i {
@@ -270,13 +302,16 @@
   .tool button:hover,
   .tool button:focus-visible {
     color: var(--primary-color);
-    background: var(--color-pink-light);
-    box-shadow: 0 0.5rem 1rem var(--color-pink-light-a3);
+    background: color-mix(in oklab, var(--primary-color) 12%, transparent);
   }
 
   .tool button.active {
     color: var(--primary-color);
-    background: var(--color-pink-light);
+    background: color-mix(in oklab, var(--primary-color) 12%, transparent);
+  }
+
+  .tool button.is-off {
+    color: var(--text-color-subtle);
   }
 
   .percent {

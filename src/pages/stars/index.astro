@@ -88,9 +88,16 @@ const totalCount = starCategories.reduce((sum, category) => sum + category.items
 
       for (const item of items) {
         const hit = !query || (item.dataset.text ?? "").includes(query);
+        const wasHidden = item.hidden;
         item.hidden = !hit;
         if (hit) {
           matched += 1;
+          // 重新出现的卡片淡入，让筛选结果的变化可感知
+          if (wasHidden) {
+            item.classList.remove("stars-item-in");
+            void item.offsetWidth;
+            item.classList.add("stars-item-in");
+          }
         }
       }
 
@@ -209,6 +216,24 @@ const totalCount = starCategories.reduce((sum, category) => sum + category.items
 
   .stars-section {
     margin-bottom: 2.5rem;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .stars-item-in {
+      animation: stars-item-in var(--dur-3, 0.3s) var(--ease-out, ease) both;
+    }
+
+    @keyframes stars-item-in {
+      from {
+        opacity: 0;
+        transform: translateY(6px);
+      }
+
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
   }
 
   .stars-section__title {

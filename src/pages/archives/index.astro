@@ -89,8 +89,12 @@ const archiveYears = years.map((year) => {
     </p>
 
     {
-      archiveYears.map((yearEntry) => (
-        <section class="archive-year">
+      archiveYears.map((yearEntry, index) => (
+        <section
+          class="archive-year"
+          data-scroll-reveal
+          style={`--reveal-i:${index % 3}`}
+        >
           <header class="archive-year__head">
             <h2>
               <a href={yearEntry.href}>{yearEntry.year}</a>

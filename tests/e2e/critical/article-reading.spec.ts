@@ -36,7 +36,7 @@ test("@critical 阅读进度、返回顶部与代码块全屏可用", async ({ p
   await expect
     .poll(async () => {
       return page.evaluate(() => {
-        const bar = document.querySelector("[data-reading-progress-bar]");
+        const bar = document.querySelector(".site-header__progress");
         if (!bar) {
           return 0;
         }

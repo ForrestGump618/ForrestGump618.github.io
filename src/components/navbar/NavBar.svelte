@@ -1,7 +1,8 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import SearchPage from "@/components/search/SearchPage.svelte";
-  import { initTheme, toggleTheme, type ThemeMode } from "@/toolkit/ui/theme";
+  import { initTheme, toggleThemeWithTransition, type ThemeMode } from "@/toolkit/ui/theme";
+  import { computeScrollProgress } from "@/toolkit/ui/scrollProgress";
 
   interface NavDropboxItem {
     href: string;
@@ -32,6 +33,7 @@
   let drawer = $state<HTMLElement>();
   let menuToggle = $state<HTMLButtonElement>();
   let desktopNav = $state<HTMLElement>();
+  let progressEl = $state<HTMLElement>();
   let searchPanel = $state<ReturnType<typeof SearchPage>>();
   let shortcutHint = $state("Ctrl K");
   // 滑动悬停胶囊：跟随当前悬停/聚焦的导航项
@@ -117,6 +119,14 @@
       if (frame) return;
       frame = requestAnimationFrame(() => {
         scrolled = window.scrollY > 8;
+        if (progressEl) {
+          const progress = computeScrollProgress(
+            window.scrollY,
+            document.documentElement.scrollHeight,
+            window.innerHeight,
+          );
+          progressEl.style.transform = `scaleX(${progress})`;
+        }
         frame = 0;
       });
     }
@@ -268,9 +278,11 @@
         aria-label={isDark === "dark" ? "切换到浅色模式" : "切换到深色模式"}
         title="切换主题"
         disabled={!ready}
-        onclick={() => (isDark = toggleTheme(document, window, isDark))}
+        onclick={() => (isDark = toggleThemeWithTransition(document, window, isDark))}
       >
-        {#if isDark === "dark"}
+        {#key isDark}
+          <span class="tool-btn__theme-icon">
+            {#if isDark === "dark"}
           <svg width="17" height="17" viewBox="0 0 20 20" aria-hidden="true">
             <circle cx="10" cy="10" r="3.6" fill="none" stroke="currentColor" stroke-width="1.4" />
             <path
@@ -291,7 +303,9 @@
               stroke-linejoin="round"
             />
           </svg>
-        {/if}
+            {/if}
+          </span>
+        {/key}
       </button>
 
       <button
@@ -348,6 +362,40 @@
         {/each}
       </nav>
   </div>
+
+  <span class="site-header__progress" bind:this={progressEl} aria-hidden="true"></span>
 </header>
 
 <SearchPage bind:this={searchPanel} onOpen={() => { closeMenu(); closeDropdown(); }} />
+
+<style>
+  .site-header__progress {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    height: 2px;
+    background: var(--gradient-brand);
+    transform: scaleX(0);
+    transform-origin: 0 50%;
+    pointer-events: none;
+  }
+
+  .tool-btn__theme-icon {
+    display: inline-flex;
+    animation: theme-icon-in var(--dur-2, 0.2s) var(--ease-out, ease-out);
+  }
+
+  @keyframes theme-icon-in {
+    from {
+      opacity: 0;
+      transform: rotate(-90deg) scale(0.6);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tool-btn__theme-icon {
+      animation: none;
+    }
+  }
+</style>

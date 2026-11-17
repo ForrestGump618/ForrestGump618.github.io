@@ -845,6 +845,8 @@
   border: 0;
   color: var(--link-color, var(--primary-color, #7c3b52));
   text-decoration: none;
+  /* 长 permalink 含百分号编码，不允许断行时会撑破版权框 */
+  overflow-wrap: anywhere;
 }
 
 #copyright a:hover {

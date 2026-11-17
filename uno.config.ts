@@ -68,6 +68,10 @@ const iconSafeList = [
   "arrow-down-s-line",
   "arrow-drop-down-fill",
   "price-tag-3-line",
+  "refresh-line",
+  "pause-line",
+  "play-line",
+  "magic-line",
 ];
 
 export default defineConfig({

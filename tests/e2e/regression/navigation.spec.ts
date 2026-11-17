@@ -46,12 +46,16 @@ test("@regression 移动端文章目录可展开", async ({ page }) => {
 
 test("@regression 文章页返回顶部按钮在长文中可用", async ({ page }) => {
   await page.goto(POSTS.suwen);
+  const toolbar = page.locator(".floating-toolbar");
+  await expect(toolbar).toHaveAttribute("data-hydrated", "true");
 
   await page.evaluate(() => {
     document.documentElement.style.scrollBehavior = "auto";
     window.scrollTo(0, document.body.scrollHeight);
   });
 
+  // 向下滚动时工具栏短暂隐藏，停止滚动后恢复
+  await expect(toolbar).not.toHaveClass(/is-hidden/);
   const backToTop = page.locator("button[data-back-to-top]");
   await expect(backToTop).toBeVisible();
   await backToTop.click();
