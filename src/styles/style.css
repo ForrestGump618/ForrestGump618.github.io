@@ -62,7 +62,6 @@ h6 {
   font-weight: var(--weight-semibold);
   line-height: var(--leading-tight);
   letter-spacing: var(--tracking-tight);
-  text-wrap: balance;
 }
 
 p,
@@ -404,7 +403,6 @@ main {
   color: var(--text-color-muted);
   font-size: var(--text-lead);
   line-height: var(--leading-normal);
-  text-wrap: pretty;
 }
 
 .muted {
@@ -588,14 +586,15 @@ main {
   display: none !important;
 }
 
-/* 滚动入场：IntersectionObserver 标记 pending → in，仅 transform/opacity */
+/* 滚动入场：IntersectionObserver 标记 pending → in，仅 transform/opacity。
+   入场等字体落定（html.fonts-ready）后再播放，避免 webfont swap 的重排与动效抢帧 */
 @media (prefers-reduced-motion: no-preference) {
   .scroll-reveal-pending {
     opacity: 0;
     transform: translateY(14px);
   }
 
-  .scroll-reveal-pending.scroll-reveal-in {
+  html.fonts-ready .scroll-reveal-pending.scroll-reveal-in {
     opacity: 1;
     transform: none;
     transition:
@@ -603,6 +602,18 @@ main {
       transform var(--dur-4) var(--ease-out);
     transition-delay: calc(var(--reveal-i, 0) * 60ms);
   }
+}
+
+/* 恒在首屏外的重文本区跳过离屏布局与 shaping，降低首屏首次 Layout 成本；
+   auto 记住渲染后的真实尺寸，滚入时不产生可见偏移 */
+.comment,
+.site-footer {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 480px;
+}
+
+.site-footer {
+  contain-intrinsic-size: auto 360px;
 }
 
 /* 主题化滚动条：宽度 / 轨道 / 滑块取自站点调色板 */
@@ -641,5 +652,16 @@ html {
   position: fixed;
   inset: 0;
   z-index: var(--z-fullscreen);
+  pointer-events: none;
+}
+
+/* 按压圆环：pointerdown 即刻反馈，动画由 pressRing 以 WAAPI 驱动 */
+.press-ring {
+  position: fixed;
+  z-index: var(--z-fullscreen);
+  width: 84px;
+  height: 84px;
+  border-radius: 50%;
+  border: 1.5px solid color-mix(in oklab, var(--primary-color) 65%, transparent);
   pointer-events: none;
 }

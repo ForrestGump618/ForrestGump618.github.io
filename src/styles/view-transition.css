@@ -1,7 +1,11 @@
-/* 标题的轻量入场。页面导航与历史恢复使用浏览器原生流程。 */
+/* 标题的轻量入场。页面导航与历史恢复使用浏览器原生流程。
+   入场等字体落定（html.fonts-ready）后播放，避免 swap 重排与动效抢帧。 */
 @media (prefers-reduced-motion: no-preference) {
-  .page-header__title,
-  .post-head__title {
+  html.js-motion:not(.fonts-ready) :is(.page-header__title, .post-head__title) {
+    opacity: 0;
+  }
+
+  html.fonts-ready :is(.page-header__title, .post-head__title) {
     animation: title-arrival var(--dur-2) var(--ease-out) both;
   }
 

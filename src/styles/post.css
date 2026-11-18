@@ -162,7 +162,6 @@
 
 .body.md p {
   margin: 0 0 1.35em;
-  text-wrap: pretty;
 }
 
 .body.md p:last-child {
@@ -175,7 +174,6 @@
   font-weight: 600;
   line-height: 1.4;
   letter-spacing: -0.006em;
-  text-wrap: balance;
   color: var(--text-color, #23211d);
   scroll-margin-top: calc(var(--nav-height, 4rem) + 1.5rem);
 }
@@ -517,6 +515,15 @@
   .body.md .eve-quick-links a:hover {
     transform: none;
   }
+
+  .post .tags .icon {
+    transition: none;
+  }
+
+  .post .tags a:hover .icon,
+  .post .tags a:focus-visible .icon {
+    transform: none;
+  }
 }
 
 .body.md .md-figure {
@@ -717,7 +724,9 @@
   text-decoration: none;
   transition:
     border-color 0.18s ease,
-    color 0.18s ease;
+    color 0.18s ease,
+    background-color 0.18s ease,
+    scale var(--dur-1, 0.12s) var(--ease-press, ease);
 }
 
 .post .tags a::before {
@@ -726,8 +735,12 @@
 
 .post .tags a:hover {
   border-color: color-mix(in oklab, var(--primary-color, #7c3b52) 45%, transparent);
-  background: none;
+  background: color-mix(in oklab, var(--primary-color, #7c3b52) 7%, transparent);
   color: var(--primary-color, #7c3b52);
+}
+
+.post .tags a:active {
+  scale: 0.96;
 }
 
 .post .tags a:not(:last-child) {
@@ -737,6 +750,15 @@
 .post .tags .icon {
   font-size: 0.95em;
   opacity: 0.75;
+  transition:
+    transform var(--dur-spring, 0.3s) var(--ease-spring, ease-out),
+    opacity var(--dur-2, 0.2s) var(--ease-out, ease-out);
+}
+
+.post .tags a:hover .icon,
+.post .tags a:focus-visible .icon {
+  transform: rotate(-14deg) scale(1.18);
+  opacity: 1;
 }
 
 /* ---------- 相关阅读 ---------- */
@@ -957,29 +979,43 @@
 
 /* ---------- 翻页入场 ---------- */
 /* 进入文章页时标题区 / 封面 / 正文 / 目录错峰升起，只用 transform 与 opacity，
-   不改变布局；reduced-motion 下整体跳过。 */
+   不改变布局；等字体落定后再播放，避免 swap 重排与动效抢帧；
+   reduced-motion 下整体跳过。 */
 @media (prefers-reduced-motion: no-preference) {
-  .article .post-head__eyebrow {
+  html.js-motion:not(.fonts-ready)
+    .article
+    :is(
+      .post-head__eyebrow,
+      .post-head__title,
+      .post-head__meta,
+      .post-cover,
+      .body.md,
+      .toc--desktop
+    ) {
+    opacity: 0;
+  }
+
+  html.fonts-ready .article .post-head__eyebrow {
     animation: post-enter-rise var(--dur-4) var(--ease-out) 40ms both;
   }
 
-  .article .post-head__title {
+  html.fonts-ready .article .post-head__title {
     animation: post-enter-rise var(--dur-4) var(--ease-out) 100ms both;
   }
 
-  .article .post-head__meta {
+  html.fonts-ready .article .post-head__meta {
     animation: post-enter-rise var(--dur-4) var(--ease-out) 180ms both;
   }
 
-  .article .post-cover {
+  html.fonts-ready .article .post-cover {
     animation: post-enter-cover var(--dur-4) var(--ease-out) 220ms both;
   }
 
-  .article .body.md {
+  html.fonts-ready .article .body.md {
     animation: post-enter-rise var(--dur-4) var(--ease-out) 260ms both;
   }
 
-  .article .toc--desktop {
+  html.fonts-ready .article .toc--desktop {
     animation: post-enter-side var(--dur-4) var(--ease-out) 320ms both;
   }
 }

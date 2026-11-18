@@ -109,6 +109,14 @@ const { author, description, avatar, stats, social = [] } = Astro.props;
     .profile::before {
       animation: none;
     }
+
+    .profile__avatar {
+      transition: none;
+    }
+
+    .profile__avatar:hover {
+      transform: none;
+    }
   }
 
   .profile__identity {
@@ -126,6 +134,11 @@ const { author, description, avatar, stats, social = [] } = Astro.props;
     border: var(--hairline);
     border-radius: 50%;
     background: var(--surface-raised);
+    transition: transform var(--dur-spring, 0.3s) var(--ease-spring, ease-out);
+  }
+
+  .profile__avatar:hover {
+    transform: rotate(-3deg) scale(1.05);
   }
 
   .profile h1 {

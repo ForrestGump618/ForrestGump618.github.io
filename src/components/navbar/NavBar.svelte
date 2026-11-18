@@ -156,6 +156,7 @@
   <div class="site-header__inner">
     <a class="wordmark" href="/" onclick={closeMenu} aria-label={`${name} 首页`}>
       <span class="wordmark__name">{name}</span>
+      <span class="wordmark__dot" aria-hidden="true"></span>
     </a>
 
     <nav
@@ -321,15 +322,18 @@
         bind:this={menuToggle}
         onclick={() => (menuOpen = !menuOpen)}
       >
-        {#if menuOpen}
-          <svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true">
-            <path d="M5 5l10 10M15 5L5 15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-          </svg>
-        {:else}
-          <svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true">
-            <path d="M3 6h14M3 10h14M3 14h9" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-          </svg>
-        {/if}
+        <svg
+          class="menu-icon"
+          class:is-open={menuOpen}
+          width="18"
+          height="18"
+          viewBox="0 0 20 20"
+          aria-hidden="true"
+        >
+          <path class="menu-icon__top" d="M3 6h14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+          <path class="menu-icon__mid" d="M3 10h14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+          <path class="menu-icon__bot" d="M3 14h14" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+        </svg>
       </button>
     </div>
   </div>
@@ -337,8 +341,8 @@
   <div class="mobile-scrim" aria-hidden="true"></div>
   <div class="mobile-drawer" id="mobile-drawer" inert={!menuOpen} bind:this={drawer}>
       <nav class="mobile-nav" aria-label="移动端导航">
-        {#each navLinks as item (item.text)}
-          <div class="mobile-nav__group">
+        {#each navLinks as item, index (item.text)}
+          <div class="mobile-nav__group" style={`--i:${index}`}>
             {#if item.href}
               <a
                 class="mobile-nav__link"
@@ -387,6 +391,54 @@
   .tool-btn__theme-icon {
     display: inline-flex;
     animation: theme-icon-in var(--dur-2, 0.2s) var(--ease-out, ease-out);
+  }
+
+  /* 汉堡 → X 形变：同一路径组过渡，可中途反向 */
+  .menu-icon path {
+    transform-box: view-box;
+    transform-origin: 10px 10px;
+    transition:
+      transform var(--dur-2, 0.2s) var(--ease-spring, ease-out),
+      opacity var(--dur-1, 0.12s) var(--ease-out, ease-out);
+  }
+
+  .menu-icon.is-open .menu-icon__top {
+    transform: translateY(4px) rotate(45deg);
+  }
+
+  .menu-icon.is-open .menu-icon__mid {
+    opacity: 0;
+    transform: scaleX(0.4);
+  }
+
+  .menu-icon.is-open .menu-icon__bot {
+    transform: translateY(-4px) rotate(-45deg);
+  }
+
+  .wordmark {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.18rem;
+  }
+
+  .wordmark__dot {
+    width: 0.32rem;
+    height: 0.32rem;
+    border-radius: var(--radius-full, 999px);
+    background: var(--primary-color);
+    transition: transform var(--dur-spring, 0.3s) var(--ease-spring, ease-out);
+  }
+
+  .wordmark:hover .wordmark__dot,
+  .wordmark:focus-visible .wordmark__dot {
+    transform: scale(1.5);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .menu-icon path,
+    .wordmark__dot {
+      transition: none;
+    }
   }
 
   @keyframes theme-icon-in {

@@ -17,13 +17,15 @@
   border-color: var(--border-color);
 }
 
-/* 滚动后切换为玻璃质感；不支持 backdrop-filter 时保持实色背景 */
-@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-  .site-header.is-scrolled,
-  .site-header.is-open {
-    background: var(--nav-bg);
-    -webkit-backdrop-filter: blur(18px) saturate(1.6);
-    backdrop-filter: blur(18px) saturate(1.6);
+/* 滚动后桌面端切换为玻璃质感；移动端保持实色（扁平 + 省掉每帧背景模糊光栅化） */
+@media (min-width: 900px) {
+  @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .site-header.is-scrolled,
+    .site-header.is-open {
+      background: var(--nav-bg);
+      -webkit-backdrop-filter: blur(18px) saturate(1.6);
+      backdrop-filter: blur(18px) saturate(1.6);
+    }
   }
 }
 
@@ -305,6 +307,7 @@
   padding: var(--space-2xs) var(--space-sm);
 }
 
+/* ---------- 移动端：全宽抽屉 sheet + 分段工具簇 ---------- */
 .mobile-nav__group + .mobile-nav__group {
   border-top: var(--hairline);
 }
@@ -321,6 +324,115 @@
 
 .mobile-nav__sublink {
   font-size: var(--text-xs);
+}
+
+@media (max-width: 899px) {
+  .site-tools {
+    gap: 2px;
+    padding: 3px;
+    border: var(--hairline);
+    border-radius: var(--radius-full);
+    background: var(--surface-raised);
+  }
+
+  .tool-btn {
+    width: 2.4rem;
+    height: 2.4rem;
+  }
+
+  .tool-btn--search {
+    min-width: 2.4rem;
+    padding-inline: 0;
+  }
+
+  .wordmark {
+    font-size: 1.35rem;
+  }
+
+  .mobile-drawer {
+    inset-inline: 0;
+    width: auto;
+    border-inline: 0;
+    border-top: 0;
+    border-radius: 0 0 var(--radius-md) var(--radius-md);
+    transform: translateY(-0.6rem);
+  }
+
+  .mobile-nav {
+    gap: var(--space-3xs);
+    padding: var(--space-xs) var(--gutter) var(--space-sm);
+  }
+
+  .mobile-nav__group + .mobile-nav__group {
+    border-top: 0;
+  }
+
+  /* 开抽屉时分组错峰升起；关闭沿同一路径收回，可中途反向 */
+  .is-open .mobile-nav__group {
+    animation: drawer-rise var(--dur-3) var(--ease-out) both;
+    animation-delay: calc(var(--i, 0) * 45ms);
+  }
+
+  .mobile-nav__link {
+    min-height: 3rem;
+    padding-inline: var(--space-2xs);
+    border-radius: var(--radius-sm);
+    font-size: 0.95rem;
+    font-weight: var(--weight-medium);
+    transition:
+      color var(--dur-2) var(--ease-out),
+      background-color var(--dur-1) var(--ease-out),
+      scale var(--dur-1) var(--ease-press);
+  }
+
+  .mobile-nav__link:active {
+    scale: 0.99;
+    background: var(--surface-tinted);
+  }
+
+  .mobile-nav__label {
+    min-height: 2.25rem;
+    padding-inline: var(--space-2xs);
+    font-size: var(--text-xs);
+    letter-spacing: var(--tracking-wide);
+    color: var(--text-color-subtle);
+  }
+
+  .mobile-nav__sub {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--space-2xs);
+    padding: 0 var(--space-2xs) var(--space-2xs);
+  }
+
+  .mobile-nav__sublink {
+    justify-content: center;
+    min-height: 2.5rem;
+    border: var(--hairline);
+    border-radius: var(--radius-sm);
+    font-size: var(--text-xs);
+    transition:
+      color var(--dur-2) var(--ease-out),
+      border-color var(--dur-2) var(--ease-out),
+      background-color var(--dur-2) var(--ease-out),
+      scale var(--dur-1) var(--ease-press);
+  }
+
+  .mobile-nav__sublink:active {
+    scale: 0.97;
+  }
+
+  .mobile-nav__sublink.is-active {
+    border-color: color-mix(in oklab, var(--primary-color) 45%, transparent);
+    background: color-mix(in oklab, var(--primary-color) 8%, transparent);
+  }
+}
+
+@keyframes drawer-rise {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
 }
 
 @media (min-width: 900px) {
@@ -342,5 +454,10 @@
 @media (prefers-reduced-motion: reduce) {
   .site-nav__pill {
     transition: opacity var(--dur-2) linear;
+  }
+
+  /* 错峰延迟不受 --dur 归零影响，需整体关闭抽屉升起动画 */
+  .is-open .mobile-nav__group {
+    animation: none;
   }
 }

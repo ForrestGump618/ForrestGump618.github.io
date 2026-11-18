@@ -183,8 +183,12 @@ test("@regression @responsive 移动菜单可中途反向，开启和关闭时�
   await expect(trigger).toBeFocused();
 
   await activate();
-  if (info.project.use.hasTouch) await page.touchscreen.tap(5, 260);
-  else await page.mouse.click(5, 260);
+  // 抽屉为全宽 sheet：遮罩只留在抽屉底边以下，按实际底边取点击点
+  const drawerBox = (await drawer.boundingBox())!;
+  const viewportHeight = page.viewportSize()!.height;
+  const scrimY = Math.min(viewportHeight - 4, drawerBox.y + drawerBox.height + 6);
+  if (info.project.use.hasTouch) await page.touchscreen.tap(5, scrimY);
+  else await page.mouse.click(5, scrimY);
   await expect(trigger).toHaveAttribute("aria-expanded", "false");
   expect(await position()).toEqual(before);
 

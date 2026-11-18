@@ -66,6 +66,8 @@ export default defineConfig({
   trailingSlash: "always",
   build: {
     format: "directory",
+    // 内联全部样式表：省掉移动端首屏的阻塞式 CSS 请求往返
+    inlineStylesheets: "always",
   },
 
   prefetch: {

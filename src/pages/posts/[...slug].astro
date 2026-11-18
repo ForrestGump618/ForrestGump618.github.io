@@ -28,6 +28,7 @@ import { resolvePostCover } from "@/toolkit/covers";
 import { resolveImageSizes } from "@/toolkit/posts/resolveImageSizes";
 import { wrapRenderedCodeBlocks } from "@/toolkit/wrapRenderedCodeBlocks";
 import { wrapRenderedImages } from "@/toolkit/wrapRenderedImages";
+import { stripInlineTextColors } from "@/toolkit/stripInlineColors";
 import { wrapCodeGroups } from "@/toolkit/wrapCodeGroups";
 import { wrapExternalLinks } from "@/toolkit/wrapExternalLinks";
 import { wrapRenderedTables } from "@/toolkit/wrapRenderedTables";
@@ -85,12 +86,14 @@ export async function getStaticPaths() {
         publicDir: path.resolve("public"),
       });
 
-      const renderedHtml = wrapExternalLinks(
-        wrapRenderedImages(
-          wrapRenderedTables(wrapCodeGroups(wrapRenderedCodeBlocks(rawHtml))),
-          imageSizes,
+      const renderedHtml = stripInlineTextColors(
+        wrapExternalLinks(
+          wrapRenderedImages(
+            wrapRenderedTables(wrapCodeGroups(wrapRenderedCodeBlocks(rawHtml))),
+            imageSizes,
+          ),
+          { siteUrl: import.meta.env.SITE },
         ),
-        { siteUrl: import.meta.env.SITE },
       );
 
       if (post.data.encrypted && post.data.password) {

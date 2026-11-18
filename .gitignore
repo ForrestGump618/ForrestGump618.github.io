@@ -42,3 +42,4 @@ playwright-report/
 
 # local scratch (audit reports, screenshots, logs)
 .scratch/
+.lighthouseci/

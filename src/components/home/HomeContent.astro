@@ -86,6 +86,11 @@ const singleCategories = categories.filter((category) => category.count === 1);
               )}
               <time class="post-row__date" datetime={item.post.data.date.toISOString()}>{item.dateMachine}</time>
             </span>
+            <span class="post-row__arrow" aria-hidden="true">
+              <svg width="14" height="14" viewBox="0 0 20 20">
+                <path d="M4 10h11M11 5.5L15.5 10 11 14.5" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </span>
           </a>
         </li>
       ))}
@@ -335,6 +340,30 @@ const singleCategories = categories.filter((category) => category.count === 1);
 
   .post-row__link:is(:hover, :focus-visible) .post-row__date {
     color: var(--primary-color, #7c3b52);
+  }
+
+  /* 悬停时箭头从右侧滑入：常驻占位避免行内布局跳动，触屏端不占位 */
+  .post-row__arrow {
+    display: none;
+    flex: none;
+    align-self: center;
+    color: var(--primary-color, #7c3b52);
+    opacity: 0;
+    translate: -6px 0;
+    transition:
+      opacity var(--dur-2) var(--ease-out),
+      translate var(--dur-spring) var(--ease-spring);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .post-row__arrow {
+      display: inline-flex;
+    }
+
+    .post-row__link:is(:hover, :focus-visible) .post-row__arrow {
+      opacity: 1;
+      translate: 0 0;
+    }
   }
 
   .home-empty {

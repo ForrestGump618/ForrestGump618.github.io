@@ -307,6 +307,14 @@
   .tool button:focus-visible {
     color: var(--primary-color);
     background: color-mix(in oklab, var(--primary-color) 12%, transparent);
+    transform: translateY(-2px);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .tool button:hover,
+    .tool button:focus-visible {
+      transform: none;
+    }
   }
 
   .tool button.active {

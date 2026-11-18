@@ -102,11 +102,25 @@ const documentTitle = pageTitle
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link
       rel="preload"
-      href="/fonts/poetry-subset.woff2"
+      href="/fonts/poetry-core.woff2"
       as="font"
       type="font/woff2"
       crossorigin
+      fetchpriority="high"
     />
+    <script is:inline>
+      // 入场动效等字体落定再播放：swap 的整页重排不与动效抢帧。
+      // 双 rAF 确保字体请求已发起；绝对兜底 1.2s，慢网也不久藏内容；
+      // js-motion 保证无 JS 时内容不被隐藏。
+      document.documentElement.classList.add("js-motion");
+      const settleFonts = () => document.documentElement.classList.add("fonts-ready");
+      requestAnimationFrame(() =>
+        requestAnimationFrame(() => {
+          Promise.race([document.fonts.ready, new Promise((r) => setTimeout(r, 500))]).then(settleFonts);
+          setTimeout(settleFonts, 1200);
+        }),
+      );
+    </script>
     <meta name="generator" content={Astro.generator} />
 
     <!-- 首屏渲染前同步主题，避免暗色用户闪白（FOUC） -->
@@ -172,7 +186,7 @@ const documentTitle = pageTitle
       />
     </div>
 
-    <FloatingToolbar client:load nyxPlayer={themeConfig.nyxPlayer} />
+    <FloatingToolbar client:idle nyxPlayer={themeConfig.nyxPlayer} />
 
     <script>
       import "@/toolkit/initMdxComponents";
@@ -180,10 +194,12 @@ const documentTitle = pageTitle
       import { fireworksEnabled } from "@/stores/fireworksStore";
       import { initFireworks } from "@/toolkit/ui/fireworks";
       import { initPageTransition } from "@/toolkit/ui/pageTransition";
+      import { initPressRing } from "@/toolkit/ui/pressRing";
       import { initScrollReveal } from "@/toolkit/ui/scrollReveal";
 
       initScrollReveal(document, window);
       initPageTransition(document, window);
+      initPressRing(document, window);
       initFireworks(document, window, {
         isEnabled: () => get(fireworksEnabled),
       });

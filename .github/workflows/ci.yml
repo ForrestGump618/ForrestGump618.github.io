@@ -37,6 +37,9 @@ jobs:
 
       - name: Install dependencies
         run: bun install --frozen-lockfile
+        env:
+          # 上游 onnxruntime CUDA 二进制包已 404；静态构建只需 CPU EP
+          ONNXRUNTIME_NODE_INSTALL_CUDA: skip
 
       - name: Cache Playwright browsers
         uses: actions/cache@v4
