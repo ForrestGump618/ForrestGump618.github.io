@@ -238,11 +238,14 @@
   margin-left: auto;
 }
 
-/* 搜索按钮：桌面端展示快捷键提示，移动端保持圆形图标 */
+/* 搜索按钮：桌面端展示快捷键提示，移动端保持圆形图标；
+   flex 布局须显式居中，否则隐藏 kbd 后图标靠左、工具簇右侧留空错位 */
 .tool-btn--search {
   width: auto;
   min-width: 2.75rem;
   display: flex;
+  align-items: center;
+  justify-content: center;
   gap: 0.4rem;
   padding-inline: 0.7rem;
 }

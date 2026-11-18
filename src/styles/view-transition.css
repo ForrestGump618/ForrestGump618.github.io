@@ -1,8 +1,9 @@
 /* 标题的轻量入场。页面导航与历史恢复使用浏览器原生流程。
+   只位移不隐藏：标题常是首屏 LCP，须首次绘制即可见；
    入场等字体落定（html.fonts-ready）后播放，避免 swap 重排与动效抢帧。 */
 @media (prefers-reduced-motion: no-preference) {
   html.js-motion:not(.fonts-ready) :is(.page-header__title, .post-head__title) {
-    opacity: 0;
+    transform: translateY(0.2rem);
   }
 
   html.fonts-ready :is(.page-header__title, .post-head__title) {

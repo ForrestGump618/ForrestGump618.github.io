@@ -25,10 +25,28 @@
     path: string;
   } = $props();
 
-  let isDark = $state<ThemeMode>("light");
+  function readBootTheme(): ThemeMode {
+    if (typeof document === "undefined") return "light";
+    return document.documentElement.dataset.theme === "dark" ? "dark" : "light";
+  }
+
+  function readBootMenu(): boolean {
+    if (typeof document === "undefined") return false;
+    return document.querySelector(".site-header")?.classList.contains("is-open") === true;
+  }
+
+  // 必须在 Svelte 绑定事件之前交还控制权（onMount 太晚）：
+  // 否则水合瞬间的点击会被 boot 脚本与 island 各处理一次，开关原地不动
+  if (typeof document !== "undefined") {
+    const bootHeader = document.querySelector<HTMLElement>(".site-header");
+    if (bootHeader) bootHeader.dataset.hydrated = "true";
+  }
+
+  let isDark = $state<ThemeMode>(readBootTheme());
   let ready = $state(false);
   let scrolled = $state(false);
-  let menuOpen = $state(false);
+  // 水合前由 Layout 的内联 boot 脚本接管开关，这里直接采纳 DOM 现状，避免水合瞬间回弹
+  let menuOpen = $state(readBootMenu());
   let dropdown = $state<string>();
   let pinned = false;
   let drawer = $state<HTMLElement>();
@@ -279,6 +297,7 @@
       <button
         class="tool-btn"
         type="button"
+        data-theme-toggle
         aria-label={isDark === "dark" ? "切换到浅色模式" : "切换到深色模式"}
         title="切换主题"
         disabled={!ready}

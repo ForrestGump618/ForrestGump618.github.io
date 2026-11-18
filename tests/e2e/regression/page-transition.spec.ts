@@ -5,7 +5,7 @@ import { POSTS, ROUTES } from "../support/routes";
 const isReducedProject = (info: TestInfo) =>
   info.project.use.contextOptions?.reducedMotion === "reduce";
 
-test("@regression @responsive 点击文章链接先播放退场动效再导航", async ({ page }, info) => {
+test("@regression @responsive 点击文章链接立即导航并并行播放退场动效", async ({ page }, info) => {
   test.setTimeout(60_000);
   const reduced = isReducedProject(info);
   await page.goto(ROUTES.home);
@@ -15,7 +15,7 @@ test("@regression @responsive 点击文章链接先播放退场动效再导航",
   await settleEntrance(firstRow);
 
   // 用 MutationObserver + sessionStorage 记录退场类名与动画名：
-  // 导航会销毁当前文档，直接断言类名存在竞态，sessionStorage 可跨导航读取
+  // 退场类名与导航同步发起，文档随后被替换，sessionStorage 可跨导航读取
   await page.evaluate(() => {
     sessionStorage.removeItem("exit-observed");
     sessionStorage.removeItem("exit-animation");

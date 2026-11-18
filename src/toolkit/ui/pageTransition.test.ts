@@ -1,12 +1,10 @@
 import { describe, expect, test } from "bun:test";
 import {
-  PAGE_EXIT_ANIMATION,
   PAGE_EXIT_CLASS,
   isPlainPrimaryClick,
   resolvePostNavigation,
   runExitSequence,
   type ClickLike,
-  type ExitClock,
   type ExitHost,
 } from "./pageTransition";
 
@@ -87,100 +85,39 @@ class FakeClassList {
   }
 }
 
-class FakeClock implements ExitClock {
-  private nextId = 1;
-  private handlers = new Map<number, () => void>();
-  cleared: number[] = [];
-
-  setTimeout(handler: () => void, _ms: number): number {
-    const id = this.nextId++;
-    this.handlers.set(id, handler);
-    return id;
-  }
-
-  clearTimeout(id: number): void {
-    this.cleared.push(id);
-    this.handlers.delete(id);
-  }
-
-  fireAll() {
-    const handlers = Array.from(this.handlers.values());
-    this.handlers.clear();
-    for (const handler of handlers) handler();
-  }
-
-  get pending() {
-    return this.handlers.size;
-  }
-}
-
 const makeHost = () => {
   const classList = new FakeClassList();
-  const listeners: ((event: { animationName: string }) => void)[] = [];
-  const host: ExitHost = {
-    documentElement: { classList },
-    addEventListener(_type, listener) {
-      listeners.push(listener);
-    },
-    removeEventListener(_type, listener) {
-      const index = listeners.indexOf(listener);
-      if (index >= 0) listeners.splice(index, 1);
-    },
-  };
-  const emit = (animationName: string) => {
-    const snapshot = Array.from(listeners);
-    for (const listener of snapshot) listener({ animationName });
-  };
-  return { host, classList, listeners, emit };
+  const host: ExitHost = { documentElement: { classList } };
+  return { host, classList };
 };
 
 describe("runExitSequence", () => {
   test("reduced-motion 立即导航且不挂退出类名", () => {
     const { host, classList } = makeHost();
-    const clock = new FakeClock();
     let navigated = 0;
 
-    runExitSequence(host, clock, () => navigated++, true);
+    runExitSequence(host, () => navigated++, true);
 
     expect(navigated).toBe(1);
     expect(classList.contains(PAGE_EXIT_CLASS)).toBe(false);
-    expect(clock.pending).toBe(0);
   });
 
-  test("退场动画结束后导航一次并清理兜底定时器与监听器", () => {
-    const { host, classList, listeners, emit } = makeHost();
-    const clock = new FakeClock();
+  test("挂上退出类名的同一时刻立即导航，不等待动画", () => {
+    const { host, classList } = makeHost();
     let navigated = 0;
+    let classAtNavigate = false;
 
-    runExitSequence(host, clock, () => navigated++, false);
+    runExitSequence(
+      host,
+      () => {
+        navigated++;
+        classAtNavigate = classList.contains(PAGE_EXIT_CLASS);
+      },
+      false,
+    );
 
+    expect(navigated).toBe(1);
+    expect(classAtNavigate).toBe(true);
     expect(classList.contains(PAGE_EXIT_CLASS)).toBe(true);
-    expect(navigated).toBe(0);
-
-    emit("reveal-in");
-    expect(navigated).toBe(0);
-
-    emit(PAGE_EXIT_ANIMATION);
-    expect(navigated).toBe(1);
-    expect(clock.pending).toBe(0);
-    expect(listeners.length).toBe(0);
-
-    emit(PAGE_EXIT_ANIMATION);
-    expect(navigated).toBe(1);
-  });
-
-  test("动画未触发时由兜底定时器导航且不重复", () => {
-    const { host, classList, emit } = makeHost();
-    const clock = new FakeClock();
-    let navigated = 0;
-
-    runExitSequence(host, clock, () => navigated++, false);
-    expect(classList.contains(PAGE_EXIT_CLASS)).toBe(true);
-
-    clock.fireAll();
-    expect(navigated).toBe(1);
-
-    emit(PAGE_EXIT_ANIMATION);
-    expect(navigated).toBe(1);
   });
 });

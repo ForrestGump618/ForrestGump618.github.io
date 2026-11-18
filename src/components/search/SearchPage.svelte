@@ -119,6 +119,16 @@
     syncTheme();
     const observer = new MutationObserver(syncTheme);
     observer.observe(root, { attributes: true, attributeFilter: ["data-theme"] });
+    // boot 脚本可能在水合前已打开面板：接管滚动锁与索引加载，避免停在“正在加载”
+    if (panelElement?.open) {
+      returnFocus = document.getElementById("search") ?? undefined;
+      unlock = lockBodyScroll(document, {
+        innerWidth: window.innerWidth,
+        getComputedPaddingInlineEnd: () =>
+          window.getComputedStyle(document.body).paddingInlineEnd,
+      });
+      void loadPagefind();
+    }
     return () => {
       unlock?.();
       observer.disconnect();

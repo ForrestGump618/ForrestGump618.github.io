@@ -72,7 +72,8 @@ test("@regression @responsive 冷启动搜索按一次即打开，关闭后恢�
   const dialog = page.locator("dialog#site-search");
   try {
     await page.goto(ROUTES.home, { waitUntil: "domcontentloaded" });
-    await expect(trigger).toBeDisabled();
+    // boot 脚本在解析期接管头部开关：水合前即可点击，且不提前加载 Pagefind
+    await expect(trigger).toBeEnabled();
     await expect(page.locator("#mobile-drawer")).toBeHidden();
     expect(
       await page
@@ -83,14 +84,15 @@ test("@regression @responsive 冷启动搜索按一次即打开，关闭后恢�
     ).toBe(true);
     const header = await page.locator(".site-header").boundingBox();
     expect(header?.height).toBeLessThan(80);
+    if (info.project.use.hasTouch) await trigger.tap();
+    else await trigger.click();
+    await expect(dialog).toHaveAttribute("open", "");
+    await expect(dialog.locator(".search-panel__loading")).toBeVisible();
+    expect(heavyLoads).toEqual([]);
   } finally {
     hydration.resolve();
   }
   await expect(trigger).toBeEnabled();
-  expect(heavyLoads).toEqual([]);
-  if (info.project.use.hasTouch) await trigger.tap();
-  else await trigger.click();
-  await expect(dialog).toHaveAttribute("open", "");
   const input = dialog.locator("pagefind-input input");
   await expect(input).toBeFocused();
   await input.fill("Eve");
@@ -112,6 +114,65 @@ test("@regression @responsive 冷启动搜索按一次即打开，关闭后恢�
   await expect(dialog).toHaveAttribute("open", "");
   await page.keyboard.press("Escape");
   await expect(dialog).not.toHaveAttribute("open");
+});
+
+test("@regression @responsive 水合前头部开关即可用，水合后状态不回弹也不重复触发", async ({
+  page,
+}, info) => {
+  test.setTimeout(60_000);
+  await page.setViewportSize({ width: 375, height: 640 });
+  const hydration = Promise.withResolvers<void>();
+  await page.route(/\/_astro\/NavBar\.[^/]+\.js$/, async (route) => {
+    await hydration.promise;
+    await route.continue();
+  });
+  const themeBtn = page.locator("[data-theme-toggle]");
+  const menuBtn = page.locator(".tool-btn--menu");
+  const header = page.locator(".site-header");
+  const drawer = page.locator("#mobile-drawer");
+  let bootTheme = "";
+  try {
+    await page.goto(ROUTES.home, { waitUntil: "domcontentloaded" });
+    await expect(themeBtn).toBeEnabled();
+    await expect(menuBtn).toBeEnabled();
+
+    const before = await page.evaluate(() => document.documentElement.dataset.theme);
+    if (info.project.use.hasTouch) await themeBtn.tap();
+    else await themeBtn.click();
+    const after = await page.evaluate(() => document.documentElement.dataset.theme);
+    expect(after).not.toBe(before);
+    bootTheme = after ?? "";
+    expect(await page.evaluate(() => localStorage.getItem("shokax-color-scheme"))).toBe(after);
+
+    if (info.project.use.hasTouch) await menuBtn.tap();
+    else await menuBtn.click();
+    await expect(header).toHaveClass(/is-open/);
+    await expect(menuBtn).toHaveAttribute("aria-expanded", "true");
+    await expect(drawer).toBeVisible();
+  } finally {
+    hydration.resolve();
+  }
+
+  // 水合后采纳 boot 状态：主题与抽屉都不回弹
+  await page.waitForFunction(
+    () => document.querySelector<HTMLElement>(".site-header")?.dataset.hydrated === "true",
+  );
+  expect(await page.evaluate(() => document.documentElement.dataset.theme)).toBe(bootTheme);
+  await expect(header).toHaveClass(/is-open/);
+  await expect(drawer).toBeVisible();
+
+  // 控制权已交还 Svelte：单次点击只翻转一次（boot 与 island 不得叠加触发）
+  if (info.project.use.hasTouch) await menuBtn.tap();
+  else await menuBtn.click();
+  await expect(menuBtn).toHaveAttribute("aria-expanded", "false");
+  await expect(header).not.toHaveClass(/is-open/);
+
+  const themeNow = await page.evaluate(() => document.documentElement.dataset.theme);
+  if (info.project.use.hasTouch) await themeBtn.tap();
+  else await themeBtn.click();
+  await expect
+    .poll(() => page.evaluate(() => document.documentElement.dataset.theme))
+    .not.toBe(themeNow);
 });
 
 test("@regression 桌面下拉跨区悬停、键盘聚焦和 Escape 可连续操作", async ({ page }) => {
@@ -264,7 +325,7 @@ test("@regression @responsive 首页无精选卡片，最新列表首行直达�
   const firstRow = page.locator(".post-row__link").first();
   await expect(firstRow).toHaveAttribute("href", POSTS.suwen);
   await settleEntrance(firstRow);
-  // 退场过渡先播放约 220–360ms 再导航，单次断言预算需覆盖这段延迟与并行争用下的响应
+  // 退场动效与新页请求并行、不阻塞导航；预算覆盖并行争用下的响应
   await expect(async () => {
     if (new URL(page.url()).pathname !== POSTS.suwen) {
       if (info.project.use.hasTouch) await firstRow.tap();

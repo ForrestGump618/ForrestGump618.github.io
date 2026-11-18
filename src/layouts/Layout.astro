@@ -102,24 +102,35 @@ const documentTitle = pageTitle
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link
       rel="preload"
-      href="/fonts/poetry-core.woff2"
+      href="/fonts/poetry-lcp.woff2"
       as="font"
       type="font/woff2"
       crossorigin
       fetchpriority="high"
     />
+    <link
+      rel="preload"
+      href="/fonts/poetry-core.woff2"
+      as="font"
+      type="font/woff2"
+      crossorigin
+      fetchpriority="low"
+    />
     <script is:inline>
       // 入场动效等字体落定再播放：swap 的整页重排不与动效抢帧。
-      // 双 rAF 确保字体请求已发起；绝对兜底 1.2s，慢网也不久藏内容；
+      // 解析完成后再等字体（此时字体请求已发起）：500ms 竞争上限 + 1.2s 绝对兜底；
+      // 入场只位移不隐藏，首屏文本首绘即可见（LCP 不受门控影响）；
       // js-motion 保证无 JS 时内容不被隐藏。
       document.documentElement.classList.add("js-motion");
       const settleFonts = () => document.documentElement.classList.add("fonts-ready");
-      requestAnimationFrame(() =>
-        requestAnimationFrame(() => {
-          Promise.race([document.fonts.ready, new Promise((r) => setTimeout(r, 500))]).then(settleFonts);
-          setTimeout(settleFonts, 1200);
-        }),
-      );
+      const parsed =
+        document.readyState === "loading"
+          ? new Promise((r) => document.addEventListener("DOMContentLoaded", r, { once: true }))
+          : Promise.resolve();
+      parsed
+        .then(() => Promise.race([document.fonts.ready, new Promise((r) => setTimeout(r, 500))]))
+        .then(settleFonts);
+      setTimeout(settleFonts, 1200);
     </script>
     <meta name="generator" content={Astro.generator} />
 
@@ -163,7 +174,106 @@ const documentTitle = pageTitle
   <body data-visibility-title-config={JSON.stringify(visibilityTitleConfig)}>
     <a class="skip-link" href="#main">跳转到主要内容</a>
 
-    <NavBar client:load name={siteName} navLinks={navLinks} path={Astro.url.pathname} />
+    <NavBar client:idle name={siteName} navLinks={navLinks} path={Astro.url.pathname} />
+
+    <script is:inline>
+      // 头部开关在解析期即可用：水合前由本脚本接管主题/菜单/搜索，
+      // 点击不再被 disabled 吞掉；NavBar 水合后写上 data-hydrated 交还控制权。
+      (function () {
+        var header = document.querySelector(".site-header");
+        if (!header) return;
+        var drawer = document.getElementById("mobile-drawer");
+        var menuBtn = header.querySelector(".tool-btn--menu");
+        var themeBtn = header.querySelector("[data-theme-toggle]");
+        var searchBtn = document.getElementById("search");
+        var dialog = document.getElementById("site-search");
+        var hydrated = function () {
+          return header.dataset.hydrated === "true";
+        };
+        [menuBtn, themeBtn, searchBtn].forEach(function (btn) {
+          if (btn) btn.disabled = false;
+        });
+        if (themeBtn) {
+          themeBtn.addEventListener("click", function () {
+            if (hydrated()) return;
+            var next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+            document.documentElement.dataset.theme = next;
+            themeBtn.setAttribute(
+              "aria-label",
+              next === "dark" ? "切换到浅色模式" : "切换到深色模式",
+            );
+            // 存储键与 toolkit/ui/theme.ts 保持一致，水合后 initTheme 才能读到同一意图
+            try {
+              localStorage.setItem("shokax-color-scheme", next);
+            } catch (e) {
+              /* 存储不可用时仅切换本次会话 */
+            }
+          });
+        }
+        if (menuBtn && drawer) {
+          var setMenu = function (open) {
+            header.classList.toggle("is-open", open);
+            drawer.inert = !open;
+            menuBtn.setAttribute("aria-expanded", String(open));
+            menuBtn.setAttribute("aria-label", open ? "关闭菜单" : "打开菜单");
+          };
+          menuBtn.addEventListener("click", function () {
+            if (hydrated()) return;
+            setMenu(!header.classList.contains("is-open"));
+          });
+          // 与 island 一致：点击抽屉外或按 Escape 关闭，避免水合前后行为不一致
+          document.addEventListener("pointerdown", function (event) {
+            if (hydrated() || !header.classList.contains("is-open")) return;
+            var target = event.target;
+            if (target instanceof Node && !drawer.contains(target) && !menuBtn.contains(target)) {
+              setMenu(false);
+            }
+          });
+          document.addEventListener("keydown", function (event) {
+            if (hydrated() || event.key !== "Escape") return;
+            if (header.classList.contains("is-open")) {
+              setMenu(false);
+              menuBtn.focus({ preventScroll: true });
+            }
+          });
+        }
+        if (searchBtn && dialog) {
+          var openPanel = function () {
+            if (hydrated() || dialog.open) return;
+            dialog.showModal();
+            var close = dialog.querySelector(".search-panel__close");
+            if (close) close.focus({ preventScroll: true });
+          };
+          searchBtn.addEventListener("click", openPanel);
+          // 水合前关闭按钮也得可用：boot 能开面板，就必须能关面板
+          var closeBtn = dialog.querySelector(".search-panel__close");
+          if (closeBtn) {
+            closeBtn.addEventListener("click", function () {
+              if (hydrated() || !dialog.open) return;
+              dialog.close();
+              searchBtn.focus({ preventScroll: true });
+            });
+          }
+          // 与 SearchPage 一致：Ctrl/⌘+K 开面板，但输入框聚焦时不抢占
+          document.addEventListener("keydown", function (event) {
+            if (hydrated()) return;
+            if (!(event.ctrlKey || event.metaKey) || event.key.toLowerCase() !== "k") return;
+            var active = document.activeElement;
+            if (
+              active instanceof HTMLElement &&
+              (active.tagName === "INPUT" ||
+                active.tagName === "TEXTAREA" ||
+                active.tagName === "SELECT" ||
+                active.isContentEditable)
+            ) {
+              return;
+            }
+            event.preventDefault();
+            openPanel();
+          });
+        }
+      })();
+    </script>
 
     <div id="container">
       <main id="main" class="site-main">
@@ -190,18 +300,37 @@ const documentTitle = pageTitle
 
     <script>
       import "@/toolkit/initMdxComponents";
-      import { get } from "svelte/store";
-      import { fireworksEnabled } from "@/stores/fireworksStore";
       import { initFireworks } from "@/toolkit/ui/fireworks";
       import { initPageTransition } from "@/toolkit/ui/pageTransition";
       import { initPressRing } from "@/toolkit/ui/pressRing";
       import { initScrollReveal } from "@/toolkit/ui/scrollReveal";
 
+      // 烟花开关先读本机偏好；store 依赖 Svelte 运行时，
+      // 留到 load 后再订阅，避免首屏为一个小开关拉入整包运行时。
+      let fireworksOn = true;
+      try {
+        fireworksOn = window.localStorage.getItem("echo-fireworks") !== "off";
+      } catch {
+        /* 存储不可用时默认开启 */
+      }
+      const syncFireworksStore = () => {
+        void import("@/stores/fireworksStore").then(({ fireworksEnabled }) => {
+          fireworksEnabled.subscribe((value) => {
+            fireworksOn = value;
+          });
+        });
+      };
+      if (document.readyState === "complete") {
+        syncFireworksStore();
+      } else {
+        window.addEventListener("load", syncFireworksStore, { once: true });
+      }
+
       initScrollReveal(document, window);
       initPageTransition(document, window);
       initPressRing(document, window);
       initFireworks(document, window, {
-        isEnabled: () => get(fireworksEnabled),
+        isEnabled: () => fireworksOn,
       });
     </script>
 

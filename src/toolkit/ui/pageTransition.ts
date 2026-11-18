@@ -1,11 +1,10 @@
 /**
- * 文章翻页过渡：点击文章链接时先播放退场动效再导航，进入文章页由 CSS 错峰入场。
- * 决策逻辑为纯函数，退场编排器接受注入的宿主与时钟，便于单元测试。
+ * 文章翻页过渡：点击文章链接时立即发起导航，同时挂上退场类名。
+ * MPA 在新页响应提交前不会卸载旧文档，退场动效恰好在新页请求窗口内并行播放，
+ * 输入路径零附加延迟。决策逻辑为纯函数，便于单元测试。
  */
 
 export const PAGE_EXIT_CLASS = "is-page-exiting";
-export const PAGE_EXIT_ANIMATION = "page-exit";
-const EXIT_FALLBACK_MS = 360;
 const EXIT_RESTORE_MS = 1500;
 
 export interface ClickLike {
@@ -55,58 +54,19 @@ export interface ClassListLike {
 
 export interface ExitHost {
   documentElement: { classList: ClassListLike };
-  addEventListener(
-    type: "animationend",
-    listener: (event: { animationName: string }) => void,
-  ): void;
-  removeEventListener(
-    type: "animationend",
-    listener: (event: { animationName: string }) => void,
-  ): void;
-}
-
-export interface ExitClock {
-  setTimeout(handler: () => void, ms: number): number;
-  clearTimeout(id: number): void;
 }
 
 /**
- * 播放退场：挂上退出类名，等退场动画结束（或兜底超时）后导航，仅导航一次。
- * reduced 为 true 时跳过动效立即导航。
+ * 挂上退出类名并立即导航，不等待退场动画结束。
+ * reduced 为 true 时跳过动效，仅导航。
  */
-export const runExitSequence = (
-  host: ExitHost,
-  clock: ExitClock,
-  navigate: () => void,
-  reduced: boolean,
-): void => {
-  if (reduced) {
-    navigate();
-    return;
-  }
-
-  let done = false;
-  let fallbackId: number | undefined;
-
-  const finish = () => {
-    if (done) return;
-    done = true;
-    if (fallbackId !== undefined) clock.clearTimeout(fallbackId);
-    host.removeEventListener("animationend", onAnimationEnd);
-    navigate();
-  };
-
-  const onAnimationEnd = (event: { animationName: string }) => {
-    if (event.animationName === PAGE_EXIT_ANIMATION) finish();
-  };
-
-  host.addEventListener("animationend", onAnimationEnd);
-  host.documentElement.classList.add(PAGE_EXIT_CLASS);
-  fallbackId = clock.setTimeout(finish, EXIT_FALLBACK_MS);
+export const runExitSequence = (host: ExitHost, navigate: () => void, reduced: boolean): void => {
+  if (!reduced) host.documentElement.classList.add(PAGE_EXIT_CLASS);
+  navigate();
 };
 
 /**
- * 在文档上挂载文章翻页过渡。点击符合条件的文章链接时先退场再导航；
+ * 在文档上挂载文章翻页过渡。点击符合条件的文章链接时立即导航并并行播放退场；
  * pageshow（含 bfcache 恢复）时清理退出状态，避免回退后内容停留在淡出态。
  */
 export const initPageTransition = (doc: Document, win: Window): void => {
@@ -145,25 +105,15 @@ export const initPageTransition = (doc: Document, win: Window): void => {
 
     event.preventDefault();
 
-    if (win.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      win.location.href = href;
-      return;
-    }
-
+    const reduced = win.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const container = doc.querySelector("#container");
-    if (!container) {
-      win.location.href = href;
-      return;
-    }
-
     exiting = true;
     runExitSequence(
       doc,
-      win,
       () => {
         win.location.href = href;
       },
-      false,
+      reduced || !container,
     );
 
     // 导航被取消（如 beforeunload 挽留）时恢复内容，避免页面停在淡出态

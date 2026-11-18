@@ -1,7 +1,7 @@
 ---
 import { Image } from "astro:assets";
 import type { ImageMetadata } from "astro";
-import QuoteLine from "@/components/home/QuoteLine.svelte";
+import QuoteLine from "@/components/home/QuoteLine.astro";
 
 interface Props {
   author: string;
@@ -35,7 +35,7 @@ const { author, description, avatar, stats, social = [] } = Astro.props;
     </div>
   </div>
   <p class="profile__bio">{description}</p>
-  <QuoteLine client:load />
+  <QuoteLine />
   <div class="profile__links">
     <a class="action-link action-link--primary" href="/about/">
       关于我 <span class="action-link__arrow i-ri-arrow-right-line" aria-hidden="true"></span>

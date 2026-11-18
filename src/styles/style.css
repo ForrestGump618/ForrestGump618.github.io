@@ -508,7 +508,8 @@ main {
   background: var(--border-color);
 }
 
-/* 首屏错峰入场：仅首次加载播放一次，只用 transform/opacity，不产生布局偏移 */
+/* 首屏错峰入场：仅首次加载播放一次，只位移不隐藏——
+   首屏文本是 LCP 候选，opacity 从 0 起会把首绘推迟到动效结束 */
 @media (prefers-reduced-motion: no-preference) {
   .reveal {
     animation: reveal-in var(--dur-4) var(--ease-out) both;
@@ -517,12 +518,10 @@ main {
 
   @keyframes reveal-in {
     from {
-      opacity: 0;
       transform: translateY(10px);
     }
 
     to {
-      opacity: 1;
       transform: none;
     }
   }
@@ -586,20 +585,17 @@ main {
   display: none !important;
 }
 
-/* 滚动入场：IntersectionObserver 标记 pending → in，仅 transform/opacity。
+/* 滚动入场：IntersectionObserver 标记 pending → in，只位移不隐藏，
+   避免首屏边缘的卡片因 opacity 0 错过首次绘制（LCP）；
    入场等字体落定（html.fonts-ready）后再播放，避免 webfont swap 的重排与动效抢帧 */
 @media (prefers-reduced-motion: no-preference) {
   .scroll-reveal-pending {
-    opacity: 0;
     transform: translateY(14px);
   }
 
   html.fonts-ready .scroll-reveal-pending.scroll-reveal-in {
-    opacity: 1;
     transform: none;
-    transition:
-      opacity var(--dur-4) var(--ease-out),
-      transform var(--dur-4) var(--ease-out);
+    transition: transform var(--dur-4) var(--ease-out);
     transition-delay: calc(var(--reveal-i, 0) * 60ms);
   }
 }
