@@ -16,6 +16,7 @@ import PageHeader from "@/components/shell/PageHeader.astro";
 import type { RelatedPost, TocItem, QuickNavigation } from "@/components/sidebar/SidebarTypes";
 import { currentLocale } from "@/i18n";
 import themeConfig from "@/theme.config.ts";
+import poetryCoreFace from "@/styles/poetry-core.css?raw";
 
 import "@vtbag/element-crossing?url";
 import "@/styles/view-transition.css";
@@ -108,14 +109,6 @@ const documentTitle = pageTitle
       crossorigin
       fetchpriority="high"
     />
-    <link
-      rel="preload"
-      href="/fonts/poetry-core.woff2"
-      as="font"
-      type="font/woff2"
-      crossorigin
-      fetchpriority="low"
-    />
     <script is:inline>
       // 入场动效等字体落定再播放：swap 的整页重排不与动效抢帧。
       // 解析完成后再等字体（此时字体请求已发起）：500ms 竞争上限 + 1.2s 绝对兜底；
@@ -132,6 +125,77 @@ const documentTitle = pageTitle
         .then(settleFonts);
       setTimeout(settleFonts, 1200);
     </script>
+    <script is:inline>
+      // 空闲水合推迟到首屏最大内容绘制之后：requestIdleCallback 会在等图的网络空窗提前触发，
+      // 使岛的水合与首绘争抢主线程和带宽（慢机上整包运行时被计入 LCP 依赖）。
+      // 以首个 LCP 候选为释放信号；无 PerformanceObserver 时退回 load；4s 兜底保证必然水合。
+      // 头部交互由解析期 boot 脚本兜底，推迟水合不影响可点性。
+      (function () {
+        var native = window.requestIdleCallback
+          ? window.requestIdleCallback.bind(window)
+          : function (cb) {
+              return window.setTimeout(function () {
+                cb({ didTimeout: false, timeRemaining: function () { return 50; } });
+              }, 1);
+            };
+        var nativeCancel = window.cancelIdleCallback
+          ? window.cancelIdleCallback.bind(window)
+          : window.clearTimeout.bind(window);
+        var queue = [];
+        var released = false;
+        var release = function () {
+          if (released) return;
+          released = true;
+          var pending = queue.splice(0);
+          for (var i = 0; i < pending.length; i++) native(pending[i].cb);
+        };
+        var scheduleRelease = function () {
+          window.requestAnimationFrame(release);
+        };
+        var loadFallback = function () {
+          if (document.readyState === "complete") {
+            scheduleRelease();
+          } else {
+            window.addEventListener("load", scheduleRelease, { once: true });
+          }
+        };
+        if (window.PerformanceObserver) {
+          try {
+            var observer = new PerformanceObserver(function (list) {
+              if (list.getEntries().length > 0) {
+                observer.disconnect();
+                scheduleRelease();
+              }
+            });
+            observer.observe({ type: "largest-contentful-paint", buffered: true });
+          } catch (e) {
+            loadFallback();
+          }
+        } else {
+          loadFallback();
+        }
+        setTimeout(release, 4000);
+        window.requestIdleCallback = function (cb) {
+          if (released) return native(cb);
+          queue.push({ cb: cb });
+          return 1000000 + queue.length;
+        };
+        window.cancelIdleCallback = function (id) {
+          if (id >= 1000000) {
+            var item = queue[id - 1000001];
+            if (item) item.cb = function () {};
+            return;
+          }
+          nativeCancel(id);
+        };
+      })();
+    </script>
+    <!-- 核心字体 face 随空闲队列在首屏 LCP 后注入：提前声明会被计入渲染阻塞；
+         注入前对应字走度量匹配回退，swap 无布局偏移，回访命中缓存即时无感。 -->
+    <script
+      is:inline
+      set:html={`requestIdleCallback(function(){var l=document.createElement("link");l.rel="preload";l.href="/fonts/poetry-core.woff2";l.as="font";l.type="font/woff2";l.crossOrigin="anonymous";l.fetchPriority="low";document.head.appendChild(l);var s=document.createElement("style");s.textContent=${JSON.stringify(poetryCoreFace)};document.head.appendChild(s);});`}
+    />
     <meta name="generator" content={Astro.generator} />
 
     <!-- 首屏渲染前同步主题，避免暗色用户闪白（FOUC） -->
@@ -306,7 +370,7 @@ const documentTitle = pageTitle
       import { initScrollReveal } from "@/toolkit/ui/scrollReveal";
 
       // 烟花开关先读本机偏好；store 依赖 Svelte 运行时，
-      // 留到 load 后再订阅，避免首屏为一个小开关拉入整包运行时。
+      // 排进与岛水合相同的空闲释放队列，避免首屏为一个小开关拉入整包运行时。
       let fireworksOn = true;
       try {
         fireworksOn = window.localStorage.getItem("echo-fireworks") !== "off";
@@ -320,11 +384,7 @@ const documentTitle = pageTitle
           });
         });
       };
-      if (document.readyState === "complete") {
-        syncFireworksStore();
-      } else {
-        window.addEventListener("load", syncFireworksStore, { once: true });
-      }
+      window.requestIdleCallback(syncFireworksStore);
 
       initScrollReveal(document, window);
       initPageTransition(document, window);
