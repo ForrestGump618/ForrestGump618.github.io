@@ -52,7 +52,6 @@
     display: inline-block;
     position: relative;
     left: 0;
-    box-shadow: var(--shadow-float-soft);
   }
 
   @media (min-width: 1024px) {

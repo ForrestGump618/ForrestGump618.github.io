@@ -331,7 +331,7 @@ const hasRenderedContent =
     position: relative;
     background: var(--grey-0);
     border: 0.0625rem solid var(--grey-3);
-    border-radius: 0.875rem;
+    border-radius: var(--radius-md, 8px);
     box-shadow: var(--shadow-card-base);
     overflow: hidden;
     padding: 1rem 1rem 1.05rem;
@@ -345,7 +345,6 @@ const hasRenderedContent =
   .extra-empty-card:hover {
     transform: translateY(-0.1875rem);
     border-color: color-mix(in srgb, var(--color-pink) 24%, var(--grey-3));
-    box-shadow: 0 0 2rem var(--box-bg-shadow);
   }
 
   .extra-card__head,
@@ -447,7 +446,7 @@ const hasRenderedContent =
     background: var(--grey-0);
     border: 0.0625rem solid
       color-mix(in srgb, var(--color-pink) 14%, var(--grey-3));
-    border-radius: 0.75rem;
+    border-radius: var(--radius-md, 8px);
     color: var(--grey-7);
     cursor: pointer;
     display: flex;

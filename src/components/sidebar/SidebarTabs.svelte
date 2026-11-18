@@ -55,7 +55,7 @@
     font-size: 0.8125rem;
     padding: 0.3125rem 0.9375rem;
     color: var(--grey-5);
-    border-radius: 0.625rem;
+    border-radius: var(--radius-sm, 5px);
     text-align: center;
     text-decoration: none;
     background-color: color-mix(in oklch, var(--grey-9) 8%, transparent);
@@ -73,10 +73,5 @@
       var(--color-orange)
     );
     color: var(--grey-0);
-    box-shadow: 0 0.25rem 0.625rem var(--color-pink-a3);
-  }
-
-  .tab .item.active:hover {
-    box-shadow: 0 0 0.75rem var(--color-pink);
   }
 </style>

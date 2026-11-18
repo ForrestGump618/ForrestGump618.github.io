@@ -550,7 +550,7 @@ main {
   border: var(--hairline);
   border-radius: var(--radius-full);
   background: var(--surface-raised);
-  box-shadow: var(--shadow-lg);
+  box-shadow: none;
   font-family: var(--font-sans);
   font-size: var(--text-xs);
   line-height: var(--leading-snug);

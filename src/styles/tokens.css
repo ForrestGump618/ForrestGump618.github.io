@@ -5,19 +5,28 @@
  * 命名保持 kebab-case，尺寸统一 rem（1rem = 16px）。
  */
 
+/* 阅读层字体：poetize 诗意字体的站内字符子集（约 466KB），
+   覆盖现有全部正文与标题用字；生僻字逐字回退到文学衬线。 */
+@font-face {
+  font-family: "Echo Poetry";
+  src: url("/fonts/poetry-subset.woff2") format("woff2");
+  font-display: swap;
+}
+
 :root {
   /* ---------- Typography ---------- */
-  /* 全站统一无衬线（Google / DeepMind 式）：系统 UI 字体栈，
-     中英混排优先保证中文黑体的可读性，零网络依赖、零字体交换偏移。 */
+  /* UI 层：系统无衬线字体栈，用于控件、元信息与标签，零字体交换偏移 */
   --font-sans:
     "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI Variable Text", "Segoe UI",
     "Noto Sans SC", "PingFang SC", "Hiragino Sans GB", "Source Han Sans SC", "Microsoft YaHei",
     "Helvetica Neue", Arial, sans-serif;
+  /* 阅读层：诗意字体 + 文学衬线回退，用于文章正文与标题 */
+  --font-literary: "Echo Poetry", "Noto Serif SC", "Songti SC", "SimSun", serif;
   /* 标题与正文同族，靠字重 / 字距 / 字号建立层次 */
-  --font-display: var(--font-sans);
-  /* 历史组件仍引用 serif / kai 令牌：统一指向无衬线，避免宋体回退 */
-  --font-serif: var(--font-display);
-  --font-kai: var(--font-display);
+  --font-display: var(--font-literary);
+  /* 历史组件仍引用 serif / kai 令牌：统一指向阅读层 */
+  --font-serif: var(--font-literary);
+  --font-kai: var(--font-literary);
   --font-mono:
     "Maple Mono", ui-monospace, "SFMono-Regular", "Cascadia Code", "JetBrains Mono", Menlo,
     Consolas, monospace;
@@ -66,11 +75,11 @@
   --rhythm-heading: 2.4em;
   --rhythm-paragraph: 1.15em;
 
-  /* ---------- Radius ---------- */
+  /* ---------- Radius（poetize 式小圆角，扁平克制） ---------- */
   --radius-xs: 4px;
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 18px;
+  --radius-sm: 5px;
+  --radius-md: 8px;
+  --radius-lg: 10px;
   --radius-full: 999px;
 
   /* ---------- Shadows（克制、冷灰投影） ---------- */

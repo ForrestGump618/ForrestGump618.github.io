@@ -368,7 +368,7 @@
   --pf-scroll-shadow: transparent;
   --pf-shadow-sm: var(--shadow-card-base);
   --pf-shadow-md: var(--shadow-card-hover);
-  --pf-shadow-lg: var(--shadow-lg);
+  --pf-shadow-lg: none;
   --pf-outline-focus: var(--primary-color);
   --pf-outline-width: 2px;
   --pf-outline-offset: 2px;

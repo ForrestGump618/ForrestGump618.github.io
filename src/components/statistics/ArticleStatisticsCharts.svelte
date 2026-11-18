@@ -479,7 +479,7 @@
 
   .chart-card {
     border: 1px solid color-mix(in srgb, var(--grey-4) 24%, transparent);
-    border-radius: 0.875rem;
+    border-radius: var(--radius-md, 8px);
     background: color-mix(in srgb, var(--grey-1) 94%, transparent);
     box-shadow: var(--shadow-card-soft);
     padding: 0.25rem;

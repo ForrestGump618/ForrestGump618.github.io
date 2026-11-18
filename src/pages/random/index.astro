@@ -134,10 +134,9 @@ const msgNoScript = t("random.noScript");
     align-items: center;
     gap: 1rem;
     padding: 2.5rem 3rem;
-    border-radius: 1rem;
+    border-radius: var(--radius-lg, 10px);
     background: linear-gradient(135deg, var(--grey-0), var(--grey-1));
-    border: 1px solid var(--grey-2);
-    box-shadow: 0 0.6rem 1.5rem var(--box-bg-shadow);
+    border: var(--hairline);
     max-width: 22rem;
     width: 100%;
   }
@@ -154,8 +153,6 @@ const msgNoScript = t("random.noScript");
       var(--color-blue),
       var(--color-purple, var(--color-blue))
     );
-    box-shadow: 0 0.25rem 0.75rem
-      color-mix(in srgb, var(--color-blue) 35%, transparent);
   }
 
   .icon-spin {

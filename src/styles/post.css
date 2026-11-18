@@ -147,7 +147,7 @@
 
 /* ---------- 正文排版 ---------- */
 .body.md {
-  font-family: var(--font-sans, system-ui, sans-serif);
+  font-family: var(--font-literary, "Noto Serif SC", serif);
   font-size: 1.0625rem;
   line-height: 1.92;
   letter-spacing: 0.008em;
@@ -710,8 +710,8 @@
   align-items: center;
   gap: 0.3em;
   padding: 0.3em 0.72em;
-  border: 1px solid var(--line-color, rgb(0 0 0 / 12%));
-  border-radius: 999px;
+  border: 1px solid transparent;
+  border-radius: var(--radius-sm, 5px);
   background: none;
   color: var(--text-color-muted, #6b675f);
   text-decoration: none;

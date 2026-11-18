@@ -4,6 +4,9 @@ import { POSTS, ROUTES } from "../support/routes";
 
 async function checkHomeLayout(page: Page) {
   const layout = await page.evaluate(async () => {
+    //  webfont swap 会重排文字高度：稳定性断言须在字体就绪后测量，
+    //  否则 decode 窗口内恰好发生 swap 会被误判为图片布局抖动
+    await document.fonts.ready;
     const profile = document.querySelector(".profile")!;
     const image = profile.querySelector("img")!;
     const before = profile.getBoundingClientRect();
@@ -214,6 +217,9 @@ test("@regression @responsive 系统减少动画偏好作用于菜单和搜索",
 test("@regression @responsive 文章图片可键盘预览，退出后可以立即再次打开", async ({ page }) => {
   await page.goto(POSTS.suwen);
   const image = page.locator(".post-content image-zoom img[tabindex='0']").first();
+  // 首张触发图可能是懒加载外部徽章：先滚入视口触发加载，
+  // 避免 WebKit 在并行争用下对未加载懒图判 hidden
+  await image.scrollIntoViewIfNeeded();
   await expect(image).toBeVisible();
   const preview = page.locator("image-zoom dialog[open]");
 

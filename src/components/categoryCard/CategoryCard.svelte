@@ -155,7 +155,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    border-radius: 0.375rem;
+    border-radius: var(--radius-md, 8px);
     height: 100%;
     width: 100%;
     backface-visibility: hidden;
@@ -208,7 +208,6 @@
     top: 0.625rem;
     padding: 0 0.3125rem;
     border-radius: 0.3125rem;
-    box-shadow: 0 0 0.3125rem 0.0625rem var(--grey-9-a6);
     background: var(--grey-9-a5);
     z-index: var(--z-content);
   }
@@ -230,7 +229,6 @@
 
   .item.active .info {
     transform: rotateY(0deg);
-    box-shadow: 0 0 2rem var(--box-bg-shadow);
   }
 
   .item:nth-child(even).active .cover {
@@ -400,7 +398,6 @@
     border-radius: 5rem;
     left: 0.5rem;
     top: 0.8rem;
-    box-shadow: 0 0 0.6rem 0.6rem var(--color-pink-a3);
     background-color: var(--color-pink-a3);
     transition: transform 0.3s ease;
   }

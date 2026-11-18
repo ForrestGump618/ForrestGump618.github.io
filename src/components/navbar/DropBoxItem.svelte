@@ -29,7 +29,7 @@
 
 <style>
   .box-shadow {
-    box-shadow: 0 0.3125rem 1.25rem -0.25rem var(--grey-9-a1);
+    box-shadow: none;
   }
 
   .dropbox-menu {
@@ -49,6 +49,5 @@
       var(--color-pink) 0,
       var(--color-orange) 100%
     );
-    box-shadow: 0 0 0.75rem var(--color-pink-a3);
   }
 </style>

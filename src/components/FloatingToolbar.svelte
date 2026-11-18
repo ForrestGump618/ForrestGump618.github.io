@@ -254,13 +254,11 @@
     padding: 0.5rem 0.4rem;
     margin: 0;
     list-style: none;
-    border-radius: var(--radius-md, 0.75rem);
-    background: color-mix(in oklab, var(--surface-raised) 82%, transparent);
+    border-radius: var(--radius-md, 0.5rem);
+    background: var(--surface-raised);
     color: var(--text-color);
-    border: 1px solid var(--border-color);
-    box-shadow: var(--shadow-md);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+    border: var(--hairline);
+    box-shadow: none;
     transition:
       transform var(--dur-2, 0.2s) var(--ease-out, ease),
       opacity var(--dur-2, 0.2s) var(--ease-out, ease);
@@ -283,7 +281,7 @@
   .tool button {
     width: 2.125rem;
     height: 2.125rem;
-    border-radius: 0.625rem;
+    border-radius: var(--radius-sm, 5px);
     border: none;
     background: transparent;
     color: inherit;

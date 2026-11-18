@@ -126,11 +126,9 @@
       var(--color-orange)
     );
     color: var(--grey-0);
-    box-shadow: 0 0.25rem 0.625rem var(--color-pink-a3);
   }
 
   .menu .item.active:hover {
-    box-shadow: 0 0 0.75rem var(--color-pink);
     color: var(--grey-0);
   }
 </style>

@@ -89,7 +89,7 @@ const { links } = Astro.props;
     flex-direction: column;
     min-height: 12rem;
     padding: 1.15rem 1.25rem 1.25rem;
-    border-radius: 0.875rem;
+    border-radius: var(--radius-md, 8px);
     background: var(--grey-0);
     border: 1px solid color-mix(in srgb, var(--friend-accent) 14%, var(--grey-3));
     box-shadow: var(--shadow-card-base);
@@ -130,7 +130,6 @@ const { links } = Astro.props;
   .friend-card:hover {
     transform: translateY(-0.3rem);
     border-color: color-mix(in srgb, var(--friend-accent) 28%, var(--grey-3));
-    box-shadow: 0 0 2rem var(--box-bg-shadow);
   }
 
   .friend-body {
@@ -150,13 +149,12 @@ const { links } = Astro.props;
   .friend-avatar img {
     width: 4.5rem;
     height: 4.5rem;
-    border-radius: 1rem;
+    border-radius: var(--radius-md, 8px);
     object-fit: cover;
     background: var(--grey-2);
     border: 1px solid color-mix(in srgb, var(--friend-accent) 18%, var(--grey-3));
-    box-shadow: 0 0.45rem 0.9rem var(--grey-9-a1);
-    will-change: transform, box-shadow;
-    transition: box-shadow 0.3s ease;
+    will-change: transform;
+    transition: transform 0.3s ease;
   }
 
   .friend-content {
@@ -230,9 +228,6 @@ const { links } = Astro.props;
   .friend-card:hover .friend-avatar img,
   .friend-card:focus-within .friend-avatar img {
     transform: translateY(-0.15rem);
-    box-shadow:
-      0 0.45rem 0.9rem var(--grey-9-a1),
-      0 0 0.75rem color-mix(in srgb, var(--friend-accent) 42%, transparent);
   }
 
   .site-preview {
@@ -241,7 +236,7 @@ const { links } = Astro.props;
     height: 9rem;
     max-height: 0;
     margin-bottom: 0;
-    border-radius: 0.75rem;
+    border-radius: var(--radius-md, 8px);
     overflow: hidden;
     border: 1px solid color-mix(in srgb, var(--friend-accent) 16%, var(--grey-3));
     background: var(--grey-1);
@@ -310,7 +305,7 @@ const { links } = Astro.props;
     .friend-avatar img {
       width: 4rem;
       height: 4rem;
-      border-radius: 0.75rem;
+      border-radius: var(--radius-md, 8px);
     }
 
     .friend-content {

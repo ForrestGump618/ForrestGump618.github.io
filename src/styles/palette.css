@@ -160,14 +160,15 @@
   --loading-cat-fur-light: oklch(0.89 0.035 78);
   --loading-cat-fur-dark: oklch(0.69 0.08 66);
 
-  /* 阴影：克制、冷灰投影 */
-  --shadow-card-base: 0 1px 2px oklch(0.29 0.016 255 / 0.06);
-  --shadow-card-hover: 0 12px 28px -18px oklch(0.29 0.016 255 / 0.35);
-  --shadow-card-soft: 0 1px 2px oklch(0.29 0.016 255 / 0.05);
-  --shadow-card-soft-hover: 0 8px 20px -14px oklch(0.29 0.016 255 / 0.3);
-  --shadow-float-soft: 0 8px 24px -12px oklch(0.29 0.016 255 / 0.28);
-  --shadow-sidebar-mobile: 0 8px 30px -10px oklch(0.29 0.016 255 / 0.3);
-  --shadow-dark-elevated: 0 16px 32px -24px oklch(0 0 0 / 0.6);
+  /* 阴影：poetize 式极扁平 —— 常驻表面一律无投影，靠发丝边框分层；
+     仅搜索浮层等临时覆盖层保留投影（见 --search-panel-shadow） */
+  --shadow-card-base: none;
+  --shadow-card-hover: none;
+  --shadow-card-soft: none;
+  --shadow-card-soft-hover: none;
+  --shadow-float-soft: none;
+  --shadow-sidebar-mobile: none;
+  --shadow-dark-elevated: none;
 
   /* 搜索浮层：贴合瓷面，不用玻璃拟态 */
   --search-overlay-bg: oklch(0.21 0.014 255 / 0.35);
@@ -356,13 +357,13 @@
   --loading-cat-fur-light: oklch(0.86 0.05 78);
   --loading-cat-fur-dark: oklch(0.66 0.09 66);
 
-  --shadow-card-base: 0 1px 2px oklch(0 0 0 / 0.3);
-  --shadow-card-hover: 0 14px 32px -20px oklch(0 0 0 / 0.7);
-  --shadow-card-soft: 0 1px 2px oklch(0 0 0 / 0.3);
-  --shadow-card-soft-hover: 0 10px 24px -16px oklch(0 0 0 / 0.7);
-  --shadow-float-soft: 0 8px 24px -12px oklch(0 0 0 / 0.6);
-  --shadow-sidebar-mobile: 0 8px 30px -10px oklch(0 0 0 / 0.6);
-  --shadow-dark-elevated: 0 16px 32px -24px oklch(0 0 0 / 0.8);
+  --shadow-card-base: none;
+  --shadow-card-hover: none;
+  --shadow-card-soft: none;
+  --shadow-card-soft-hover: none;
+  --shadow-float-soft: none;
+  --shadow-sidebar-mobile: none;
+  --shadow-dark-elevated: none;
 
   --search-overlay-bg: oklch(0.08 0.008 255 / 0.6);
   --search-panel-shadow: 0 24px 60px -24px oklch(0 0 0 / 0.8);

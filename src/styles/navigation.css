@@ -213,7 +213,7 @@
   border: var(--hairline);
   border-radius: var(--radius-md);
   background: var(--surface-raised);
-  box-shadow: var(--shadow-lg);
+  box-shadow: none;
   transition:
     opacity var(--dur-2) var(--ease-out),
     transform var(--dur-spring) var(--ease-spring),

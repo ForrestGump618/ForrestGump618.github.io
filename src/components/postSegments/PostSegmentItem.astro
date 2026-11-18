@@ -108,7 +108,8 @@ const {
     min-width: calc(100% - 2rem);
     height: 14rem;
     margin: 1rem;
-    border-radius: 0.625rem;
+    border: var(--hairline);
+    border-radius: var(--radius-md, 8px);
     background: var(--grey-0);
     box-shadow: var(--shadow-card-base);
     transition:
@@ -118,7 +119,7 @@ const {
   }
 
   .segment-item:hover {
-    box-shadow: 0 0 2rem var(--box-bg-shadow);
+    border-color: color-mix(in srgb, var(--primary-color) 30%, var(--border-color));
   }
 
   .segment-item:hover .cover img {
@@ -166,7 +167,7 @@ const {
     min-width: 0;
     margin-right: 1.5rem;
     clip-path: polygon(0 0, 92% 0%, 100% 100%, 0% 100%);
-    border-radius: 0.625rem 0 0 0.625rem;
+    border-radius: var(--radius-md, 8px) 0 0 var(--radius-md, 8px);
     overflow: hidden;
     flex-shrink: 0;
     aspect-ratio: 16 / 9;
@@ -311,7 +312,7 @@ const {
       height: 14rem;
       margin: 0;
       clip-path: polygon(0 0, 100% 0, 100% 92%, 0 100%);
-      border-radius: 0.625rem 0.625rem 0 0;
+      border-radius: var(--radius-md, 8px) var(--radius-md, 8px) 0 0;
     }
 
     .info,
